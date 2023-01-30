@@ -1,0 +1,195 @@
+<div class="row">
+  <div class="col-md-10">
+    <div class="card">
+      <form [formGroup]="houseAccountForm" novalidate>
+        <div class="card-body">
+          <h6 class="card-title">
+            <div class="form-group"> {{title}} </div>
+          </h6>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="accountCode">Account Code</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="accountCode" formControlName="accountCode" placeholder="Account Code"
+                    required maxlength="100">
+                  <div *ngIf="submitted && house.accountCode.errors?.required" class="alert-text">
+                    Account Code is required
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="accountName">Account Name</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="accountName" formControlName="accountName" placeholder="Account Name"
+                    required maxlength="250">
+                  <div *ngIf="submitted && house.accountName.errors?.required" class="alert-text">
+                    Account Name is required
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="paymentTerms">Payment Terms</label>
+                <div class="col-sm-8">
+                  <select class="form-control" id="paymentTerms" formControlName="paymentTerms" required>
+                    <option value="">{{'--Select--'}}</option>
+                    <option value="One Week">{{'One Week'}}</option>
+                    <option value="Two Week">{{'Two Week'}}</option>
+                    <option value="Tree Week'">{{'Tree Week'}}</option>
+                    <option value="One Month">{{'One Month'}}</option>
+                  </select>
+                  <div *ngIf="submitted && house.paymentTerms.errors?.required" class="alert-text">
+                    Payment Terms is required
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="creditLimit">Credit Limit</label>
+                <div class="col-sm-8 input-icon">
+                  <input numbersOnly type="number" min="0" class="form-control" formControlName="creditLimit" id="creditLimit"
+                    placeholder="Credit Limit" required>
+                  <i>$</i>
+                </div>
+                <div *ngIf="submitted && house.creditLimit.errors?.required" class="alert-text">
+                  Credit Limit is required
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="fedId">Fed ID</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="fedId" placeholder="Fed ID" formControlName="fedID"
+                    required maxlength="100">
+                  <div *ngIf="submitted && house.fedID.errors?.required" class="alert-text">
+                    Fed ID is required
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="name">Contact Name</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="name" placeholder="Contact Name" formControlName="name"
+                    required maxlength="10">
+                  <div *ngIf="submitted && house.name.errors?.required" class="alert-text">
+                    Contact Name is required
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="phoneNo">Phone No</label>
+                <div class="col-sm-8">
+                  <input numbersOnly type="text" class="form-control" id="phoneNo" formControlName="phoneNo" (blur)="formatPhoneNumber(house.phoneNo)"
+                    placeholder="(000)000-0000" pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$" required
+                    maxlength="20">
+                  <div *ngIf="submitted && house.phoneNo.errors?.required" class="alert-text">
+                    Phone No is required
+                  </div>
+                  <!-- <div *ngIf="submitted && house.phoneNo.errors?.pattern" class="alert-text">
+                    Phone No is invalid
+                  </div> -->
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="email">Email</label>
+                <div class="col-sm-8">
+                  <input type="text" minlength="3" maxlength="250" class="form-control" id="email" placeholder="Email"
+                    formControlName="email" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" required>
+                  <div *ngIf="submitted && house.email.errors?.required" class="alert-text">
+                    Email Id is required
+                  </div>
+                  <!-- <div *ngIf="submitted && house.email.errors?.pattern" class="alert-text">
+                     Email Id  is invalid
+                   </div> -->
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="address">Address</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="address" placeholder="Address" formControlName="address"
+                    maxlength="250">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="city">City</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="city" placeholder="City" maxlength="100" formControlName="city">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="county">County</label>
+                <div class="col-sm-8">
+                  <select class="form-control" id="county" formControlName="countyCode" name="countyCode" (change)="onCountyChange()"
+                    required>
+                    <option value="">--Select County--</option>
+                    <option *ngFor="let item of countyList" [value]="item.countyCode">{{item.countyName}}</option>
+                  </select>
+                  <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+                  <div *ngIf="submitted && house.countyCode.errors?.required" class="alert-text">
+                    County Code is required
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="stateCode">State Code</label>
+                <div class="col-sm-8">
+                  <select class="form-control" id="stateCode" formControlName="stateCode" name="stateCode" (change)="onStaeChange()"
+                    required>
+                    <option value="">--Select State--</option>
+                    <option *ngFor="let item of stateList" [value]="item.stateCode">{{item.stateName}}</option>
+                  </select>
+                  <div *ngIf="submitted && house.stateCode.errors?.required" class="alert-text">
+                    State Code is required
+                  </div>
+                  <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="zipCode">Zip Code</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" minlength="5" maxlength="5" id="zipCode" formControlName="zipCode"
+                    placeholder="Zip Code">
+                  <div *ngIf="house.zipCode.errors?.minlength" class="alert-text">
+                    Zip Code must be 5 digit.
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="fax">Fax</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="fax" formControlName="fax" maxlength="250" placeholder="Fax">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="webSite">Web Site</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="webSite" formControlName="webSite" placeholder="Web Site"
+                    pattern="^\w+([\.-]?\w+)*(\.\w{2,3})+$" maxlength="100">
+                  <div *ngIf="submitted && house.webSite.errors?.pattern" class="alert-text">
+                    Web Site is not valid
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="row justify-content-between">
+            <div class="col-sm-12">
+              <button type="submit" class="btn btn-md btn-primary mr-3" (click)="editOrSave($event)">&nbsp;{{isEdit?'Update':'Save'}}</button>&nbsp;
+              <button type="submit" class="btn btn-md btn-primary mr-3" (click)="editOrSaveClose($event)">&nbsp;{{isEdit?'Update
+                & Close':'Save & Close'}}</button>&nbsp;
+              <button type="button" class="btn btn-md btn-cstorebo mr-3" (click)="reset()" *ngIf="!isEdit">&nbsp;{{'Reset'}}</button>
+              <button type="button" class="btn btn-md btn-cstorebo mr-3" (click)="backToList()">&nbsp;
+                {{'Back To House Acoount List'}}</button>
+            </div>
+            <!-- <div class="col-sm-4">
+              <button type="button" class="btn btn-md btn-cstorebo" (click)="backToList()"><i class="fa fa-backward"></i>&nbsp;{{'Back
+                To House Acoount List'}}</button>
+            </div> -->
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

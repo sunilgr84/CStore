@@ -1,0 +1,37 @@
+export class Vendor {
+    vendorID: number;
+    companyID: number;
+    vendorCode: string;
+    isActive: Boolean;
+    isFuelVendor: Boolean;
+    vendorName: string;
+    doesVendorSupportEDIInvoice: Boolean;
+    vendorAddressLine1: string;
+    vendorAddressLine2: string;
+    city: string;
+    stateCode: string;
+    countyCode: string;
+    zipCode: string;
+    companyPhoneNo: string;
+    webSite: string;
+    fax: string;
+    salesContactE_mail: string;
+    salesContactName: string;
+    salesContactPhoneNo: string;
+    lastModifiedBy: string;
+    lastModifiedDateTime: Date;
+    createdBy: string;
+    createdDateTime: Date;
+    countyName: string;
+    stateName: string;
+    paymentID: number;
+    methodOfPaymentID: number;
+    paymentSourceID: number;
+    methodOfPaymentDescription: string;
+    sourceName: string;
+    amountPaid: number;
+    storeName: string;
+    dateOfPayment: Date;
+    dateOfIssue: Date;
+    actualPaymentDate: Date;
+}

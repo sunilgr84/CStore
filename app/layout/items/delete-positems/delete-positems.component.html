@@ -1,0 +1,11 @@
+<app-page-header [heading]="'Deleted POS Items'" [icon]="'fa-delete'"></app-page-header>
+<div>
+  <!-- <button (click)="isShowCols=!isShowCols;showHideCols(isShowCols)">Item</button> -->
+  <div class="custom-control custom-checkbox">
+    <input type="checkbox" class="custom-control-input" name="showItem" id="showItem" (click)="isShowCols=!isShowCols;showHideCols(isShowCols)"
+      maxlength="250" />
+    <label class="custom-control-label padding-right-10" for="showItem">Show Item</label>
+  </div>
+  <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (gridReady)="onGridReady($event)">
+  </app-cstore-grid>
+</div>

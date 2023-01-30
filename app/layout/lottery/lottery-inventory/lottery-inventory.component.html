@@ -1,0 +1,195 @@
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Lottery Inventory</h5>
+    <div class="row mt-3">
+
+      <label class="form-group has-float-label col-sm-3" *ngIf="storeLocationList && storeLocationList.length!==1">
+        <ng-select [items]="storeLocationList" [selectOnTab]="true" bindLabel="storeName" bindValue="storeLocationID"
+          labelForId="storeLocationID" placeholder="Select Location" [(ngModel)]="advanSearch.storeLocationID">
+        </ng-select>
+        <span>Store Location</span>
+      </label>
+
+      <label class="form-group has-float-label col-sm-3" *ngIf="storeLocationList && storeLocationList.length===1">
+        <input readonly type="text" class="form-control" [value]="storeLocationList[0].storeName">
+        <span>Store Location</span>
+      </label>
+      <div *ngIf="isLoading">
+        <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+      </div>
+
+      <label class="has-float-label col-sm-3">
+        <app-datepicker name="bDate" id="bDate" (dateChange)="dateChange($event)" [inputDate]="advanSearch.invDate">
+        </app-datepicker>
+        <span>Date</span>
+      </label>
+
+      <label class="form-group has-float-label col-sm-3">
+        <ng-select [items]="lotteryPackInventoryList" [selectOnTab]="true" bindLabel="lotteryPackInventoryTypeName"
+          bindValue="lotteryPackInventoryTypeID" labelForId="lotteryPackInventoryTypeID"
+          placeholder="Select Inventory Type" [(ngModel)]="advanSearch.lotteryPackInventoryTypeID">
+        </ng-select>
+        <span>Inventory Type</span>
+      </label>
+      <div class="col-sm-3">
+        <button type="button" class="btn btn-md btn-primary" (click)="onAdvanSearch()">{{'Search'}}</button>
+        <button *ngIf="showForceOpenBtn && rowData.length>0 && isSubmmitedValue" type="button" class="ml-1 btn btn-cstorebo" (click)="forceOpen()">Force Open
+        </button>
+      </div>
+      <!-- <label class="has-float-label col-sm-4" *ngIf="isScanMode">
+        <input type="text" class="form-control" name="UPCCode" [(ngModel)]="UPCBarCode" #UPCCode="ngModel"
+        (blur)="scanBarcodeMode()">
+        <span>UPC Code</span>
+      </label> -->
+      <!-- <button type="button" (click)="exportToPDF()" [disabled]="rowData && rowData.length <= 0"
+          class="btn btn-md btn-primary">Export
+          PDF</button> -->
+    </div>
+    <div class="row mb-2">
+      <div class="col-sm-3">
+        <div *ngIf="isShowScanMode && ! isSubmmitedValue" class=" custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="scanMode" [(ngModel)]="isScanMode"
+            #isScanModes="ngModel" (change)="onScanBarcode($event)">
+          <label class="custom-control-label" for="scanMode">Scan Mode</label>
+        </div>
+        <div class="shiftclose cursor-pointer mt-2" (click)="GoToCloseShift()">{{closeDayMsg}}
+          <span class="tooltiptext">Go To Close Shift</span>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <label *ngIf="isScanMode" class="d-inline">
+          <input type="text" #barcodeInput class="form-control" [(ngModel)]="UPCBarCode"
+            (keyup.enter)="scanBarcodeMode()" (blur)="scanBarcodeMode()" placeholder="Bar code scanner">
+          <!-- <span>Bar Code</span> -->
+        </label>
+      </div>
+      <div class="col-sm-3">
+        <div class="p-2">
+          <span class="badge badge-primary all-sold">a</span>
+          <span class="ml-2">All Sold</span>
+          <span class="badge badge-primary startZero ml-3">a</span>
+          <span class="ml-2">New Pack</span>
+        </div>
+      </div>
+     
+      <div class="col-sm-1 text-right">
+        <button *ngIf="isSubmmitedValue" type="button" class="btn btn-cstorebo" (click)="exportToPrint()"><i
+            class="fa fa-print"></i></button>
+      </div>
+      <div class="col-sm-2">
+        <div class="inner-addon right-addon w-100">
+          <span>
+            <i class="fa fa-search card-title" aria-hidden="true"></i>
+          </span>
+          <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+            placeholder="Filter Search" [(ngModel)]="filterText" name="filterText">
+        </div>
+      </div>
+      <!-- <div class="col-sm-12 mb-4"> -->
+      <!-- <app-editable-grid [rowData]="rowData" [editGridOptions]="gridOptions" (cellValueChanged)="SaveLotteryHistoryandSale($event)" (gridReady)="onGridReady($event)">
+        </app-editable-grid> -->
+    </div>
+    <div class="row">
+      <div class="col-sm-12" *ngIf="!isSubmmitedValue">
+        <div #printableGrid *ngIf="rowData && rowData.length >= 100">
+          <app-editable-grid [rowData]="rowData" [editGridOptions]="editableGridOptions" [textFilter]="filterText"
+            (cellValueChanged)="cellValueChanged($event)" [gridHeight]="'1505px'" (gridReady)="onGridReady($event)">
+          </app-editable-grid>
+        </div>
+        <div #printableGrid *ngIf="rowData && rowData.length < 100">
+          <app-editable-grid [rowData]="rowData" [editGridOptions]="editableGridOptions" [textFilter]="filterText"
+            (cellValueChanged)="cellValueChanged($event)" (gridReady)="onGridReady($event)">
+          </app-editable-grid>
+        </div>
+      </div>
+      <div class="col-sm-12" *ngIf="isSubmmitedValue">
+        <div #printableGrid *ngIf="rowData && rowData.length >= 100 ">
+          <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" [gridHeight]="'1505'"
+            (gridReady)="onGridReady($event)">
+          </app-cstore-grid>
+        </div>
+
+        <div #printableGrid *ngIf="rowData && rowData.length < 100 ">
+          <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (gridReady)="onGridReady($event)">
+          </app-cstore-grid>
+        </div>
+      </div>
+
+      <div class="mt-3 offset-sm-8 col-sm-4 " *ngIf="rowData && rowData.length > 0">
+        <div class="mb-3 row">
+          <h5 class="col-sm-5"><strong>{{'Total'}}</strong></h5>
+          <div class="col-sm-7 row">
+            <h5 class="col-sm-6"><strong>{{totalSoldQty}}</strong></h5>
+            <h5 class="col-sm-6"><strong>$ {{totalAmount.toFixed(2)}}</strong></h5>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-5"><strong>Online Ticket Sales</strong></label>
+          <div class="col-sm-7">
+            <div class="input-icon">
+              <label class="form-group has-float-label currency">
+                <input type="text" decimalOnly [readonly]="isSubmmitedValue" (input)="calculateNetLotteryAmt()"
+                  class="form-control" [(ngModel)]="advanSearch.lotteryOnlineSaleAmount"
+                  placeholder="Online Ticket Sales">
+                <span>Online Ticket Sales </span>
+              </label>
+              <i *ngIf="advanSearch.lotteryOnlineSaleAmount">$</i>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-5"><strong>Online Payout</strong></label>
+          <div class="col-sm-7">
+            <div class="input-icon">
+              <label class="form-group has-float-label currency">
+                <input type="text" decimalOnly [readonly]="isSubmmitedValue" (input)="onPayoutChange()"
+                  class="form-control" [(ngModel)]="advanSearch.lotteryOnlinePayout"
+                  placeholder="Online Ticket Sales">
+                <span>Online Payout</span>
+              </label>
+              <i *ngIf="advanSearch.lotteryOnlinePayout">$</i>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-5"><strong>Scratchoff Payout</strong></label>
+          <div class="col-sm-7">
+            <div class="input-icon">
+              <label class="form-group has-float-label currency">
+                <input type="text" decimalOnly [readonly]="isSubmmitedValue" (input)="onPayoutChange()"
+                  class="form-control" [(ngModel)]="advanSearch.lotteryScartchOffPayout"
+                  placeholder="Online Ticket Sales">
+                <span>Scratchoff Payout</span>
+              </label>
+              <i *ngIf="advanSearch.lotteryScartchOffPayout">$</i>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-5"><strong>Total Payout</strong></label>
+          <div class="col-sm-7">
+            <div class="input-icon">
+              <label class="form-group has-float-label currency">
+                <input type="text" decimalOnly [readonly]="isSubmmitedValue" (input)="calculateNetLotteryAmt()"
+                  class="form-control" [(ngModel)]="advanSearch.lotteryPayOutAmount" placeholder="Total Payout">
+                <span>Total Payout </span>
+              </label>
+              <i *ngIf="advanSearch.lotteryPayOutAmount">$</i>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-5"><strong>Net Lottery Sales</strong></label>
+          <h5 class="col-sm-7"><strong>$ {{NetLotteryAmt.toFixed(2)}}</strong></h5>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <button type="button" class="btn btn-primary float-right" [disabled]="isSubmmitedValue"
+              (click)="closeAllShift()">
+              {{closeButtonName}} Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

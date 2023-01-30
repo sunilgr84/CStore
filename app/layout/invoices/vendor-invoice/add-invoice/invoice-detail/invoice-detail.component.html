@@ -1,0 +1,530 @@
+<div class="row">
+  <button *ngIf="isSoftCopyOpen" class="close-pdf-button" (click)="closePdfButton()"><i
+      class="fa fa-times"></i></button>
+  <div [ngClass]="isSoftCopyOpen?'col-sm-7 mt-2':'col-sm-12 mt-2'">
+    <div class="row mb-3" *ngIf="isSoftCopyOpen">
+      <div [ngClass]="isSoftCopyOpen?'col-sm-12':'col-sm-7'">
+        <div class="row">
+          <div class="col-sm-12 mb-2" *ngIf="invoiceDetailLable">
+            <strong> {{invoiceDetailLable.invoiceStatusDescription}} |
+              Vendor : {{invoiceDetailLable.vendorName}} |
+              Invoice Amount : {{invoiceAmount}}
+              Invoice No: {{invoiceDetailLable.invoiceNo}} |
+              Invoice Date : {{invoiceDetailLable.invoiceDate |date :'MM-dd-yyyy'}} </strong>
+          </div>
+          <div class="col-sm-12">
+            <app-cstore-grid [hidden]="true" [rowData]="rowDataDepartment" [cStoreGridOptions]="gridOptionsDepartment"
+              (gridReady)="onGridDepartmentReady($event)">
+            </app-cstore-grid>
+            <button type="button" class="btn btn-md btn-primary mt-3 mr-3" (click)="backToList()">Back To List</button>
+            <!-- <button type="button" class="btn btn-md btn-primary mt-3" (click)="closePdfButton()">Close</button> -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <form [formGroup]="invoiceDetailsForm" *ngIf="isAddMoreInvoice" class="form-border mb-2">
+
+      <div class="row mt-1">
+        <label class="form-group has-float-label col-sm-2" [hidden]="true">
+          <input type="text" class="form-control" id="srNo" formControlName="sequenceNumber" placeholder="Sr No.">
+          <span for="srNo">Sr No.</span>
+        </label>
+
+        <label [ngClass]="isSoftCopyOpen?'form-group has-float-label col-sm-4':'form-group has-float-label col-sm-2'"
+          [hidden]="_isSearchUPC">
+          <input #itemVendorCode type="text" class="form-control" formControlName="vendorItemCode"
+            (keydown.Tab)="searchVendorCode($event.target.value)" (keyup.enter)="searchVendorCode($event.target.value)"
+            placeholder="Vendor Code">
+          <span for="vendorCode"> Vendor Code</span>
+        </label>
+
+        <label
+          [ngClass]="isSoftCopyOpen && !_isSearchUPC?'form-group has-float-label col-sm-4':'form-group has-float-label col-sm-2'">
+          <input numbersOnly type="text" maxlength="15" class="form-control" id="upcCode" formControlName="posCode"
+            (keydown.Tab)="searchUPCCode($event.target.value)" (keyup.enter)="searchUPCCode($event.target.value)"
+            placeholder="UPC Code" #upcCode required>
+          <span for="upcCode"> UPC Code</span>
+        </label>
+        <label class="form-group has-float-label col-sm-2" [hidden]="!_isSearchUPC">
+          <input readonly type="text" class="form-control" id="description" formControlName="description"
+            placeholder="Description">
+          <span for="description"> Description</span>
+        </label>
+
+        <label class="form-group has-float-label col-sm-2" [hidden]="!_isSearchUPC">
+          <input #caseInUnit numeric maxlength="4" type="text" class="form-control" formControlName="unitsInCase"
+            id="unitCase" placeholder="Unit Case" required (blur)="unitInCaseChange()">
+          <span> Unit In Case</span>
+        </label>
+        <label class="form-group has-float-label col-sm-2" [hidden]="!_isSearchUPC">
+          <input nagetiveNumberstOnly type="text" maxlength="4" class="form-control " id="unitQty" #unitQtyf
+            (blur)="calculateBuyingUnitQtyFrm()" formControlName="buyingUnitQuantity" placeholder="Buying Unit Qty"
+            required>
+          <span for="unitQty"> Buying Unit Qty</span>
+        </label>
+
+        <label class="form-group has-float-label col-sm-2" [hidden]="!_isSearchUPC">
+          <input nagetiveNumberstOnly type="text" maxlength="4" class="form-control " (blur)="calculateUnitPerCostFrm()"
+            formControlName="buyingCaseQuantity" id="buyingCaseQty" placeholder="Buying Case Qty" required>
+          <span for="buyingCaseQty"> Buying Case Qty</span>
+        </label>
+
+
+        <!-- [hidden]="!fv.buyingUnitQuantity&& fv.buyingUnitQuantity===0" -->
+        <div class="col-sm-2" [hidden]="!_isSearchUPC">
+          <div class="input-icon">
+            <label class="form-group has-float-label currency">
+              <input numberThreeDecimalOnly type="text" class="form-control" formControlName="invoiceValuePrice"
+                id="buyingCost" placeholder=" Buying Cost" required (blur)="calculateCaseCost()">
+              <span for="buyingCost"> Buying Cost </span>
+            </label>
+            <i *ngIf="invoiceDetailsForm.get('invoiceValuePrice').value">$</i>
+          </div>
+        </div>
+        <!-- [hidden]="!fv.buyingCaseQuantity&&fv.buyingCaseQuantity===0" -->
+        <div [hidden]="!_isSearchUPC" class="col-sm-2">
+          <div class="input-icon">
+            <label class="form-group has-float-label currency">
+              <input floatOnly type="text" class="form-control " formControlName="casePrice" id="caseCost"
+                (blur)="calculateBuyingCost()" placeholder=" Case Cost" required>
+              <span for="caseCost"> Case Cost </span>
+            </label>
+            <i *ngIf="invoiceDetailsForm.get('casePrice').value">$</i>
+          </div>
+        </div>
+        <div [hidden]="!_isSearchUPC" class="col-sm-2">
+          <div class="input-icon">
+            <label class="form-group has-float-label currency">
+              <input nagetiveFloatOnly type="text" class="form-control" formControlName="totalItemCost" id="totalCost"
+                (blur)="totalCostChange()" placeholder=" Total Cost" required>
+              <span for="totalCost"> Total Cost </span>
+            </label>
+            <i *ngIf="invoiceDetailsForm.get('totalItemCost').value">$</i>
+          </div>
+        </div>
+
+        <label class="form-group has-float-label col-sm-2" [hidden]="!_isSearchUPC">
+          <input numberTwoDecimalOnly type="text" class="form-control" formControlName="regularSellPrice" id="selling"
+            placeholder=" Selling" required (blur)="calculateMargin()">
+          <span> Selling Price</span>
+        </label>
+
+        <label class="form-group has-float-label col-sm-2" [hidden]="!_isSearchUPC">
+          <input floatOnly type="text" class="form-control" formControlName="profitMargin" id="margin"
+            placeholder=" Margin" required (blur)="calculateMargin()">
+          <span> Margin</span>
+        </label>
+
+
+      </div>
+      <div class="row mb-2">
+        <div class="col-sm-12">
+
+          <button type="button" class="btn btn-md btn-primary mr-2" id="closeModal" (click)="isAddMoreInvoice=false">
+            Close</button>
+          <button type="button" class="btn btn-md btn-primary mr-2" (click)="resetInvoiceDetailForm()">
+            Reset</button> <button type="button" class="btn btn-md btn-primary mr-2"
+            (click)="addNewInvoiceAndClose(false)"> Save
+          </button>
+          <!-- <button type="button" class="btn btn-md btn-primary mr-2" (click)="addNewInvoiceAndClose(true)"> Save
+              Close</button> -->
+
+        </div>
+      </div>
+    </form>
+    <!-- <div class="row"> -->
+    <!-- <div class="col-sm-2">
+        <label class="form-group has-float-label">
+          <ng-select [items]="viewList" bindValue="id" bindLabel="name" placeholder="View"
+            (change)="changeGrid($event)"></ng-select>
+          <span>View</span>
+        </label>
+      </div> -->
+    <!-- <div class="col-sm-7"></div> -->
+    <!-- <div class="col-sm-7 text-right"> -->
+    <!-- <button type="button" class="btn btn-md btn-primary mb-2 mr-1" (click)="bulkUpdateInvoiceDetailChanges()">Save
+          Detail Changes
+        </button> -->
+    <!-- <button type="button" class="btn btn-md btn-primary mb-2 " (click)="bulkDeleteInvoiceDetails()">Delete
+          Details
+        </button> -->
+    <!-- </div> -->
+    <!-- <div class="col-sm-5 text-right">
+        <button *ngIf="!isAddMoreInvoice" [hidden]="isAddMoreInvoice" type="button"
+          class="btn btn-md btn-cstorebo btnsub btn-custom mb-1 mr-1"
+          (click)="isAddMoreInvoice=!isAddMoreInvoice;resetInvoiceDetailForm()">
+          <i class="fa fa-plus" aria-hidden="true"></i>
+        </button>
+        <span *ngIf="!isAddMoreInvoice" class="mr-3 mb-2 card-title" [hidden]="isAddMoreInvoice"
+          (click)="isAddMoreInvoice=!isAddMoreInvoice;resetInvoiceDetailForm()">Add New </span>
+        <button type="button" class="btn btn-md btn-cstorebo btnsub btn-custom mb-1 mr-1 ml-2 float-right"
+          (click)="refreshSellingPrice()">
+          <i class="fa fa-refresh" aria-hidden="true"></i>
+        </button>
+        <div class="inner-addon right-addon float-right">
+          <span>
+            <i class="fa fa-search card-title" aria-hidden="true"></i>
+          </span>
+          <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+            placeholder="Filter Search" [(ngModel)]="filterText" name="filterText">
+        </div>
+      </div> -->
+    <!-- </div> -->
+    <div class="row">
+      <div class="col-md-12">
+        <button *ngIf="rowData.length > 0" type="button"
+          class="btn btn-md btn-cstorebo btnsub btn-custom mb-1 mr-1 ml-2 float-right" placement="bottom"
+          ngbTooltip="Refresh Selling Prices" (click)="refreshSellingPrice()">
+          <i class="fa fa-refresh" aria-hidden="true"></i>
+        </button>
+        <div *ngIf="rowData.length > 0" class="inner-addon right-addon float-right">
+          <span>
+            <i class="fa fa-search card-title" aria-hidden="true"></i>
+          </span>
+          <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+            placeholder="Filter Search" [(ngModel)]="filterText" name="filterText">
+        </div>
+        <span class="float-right" *ngIf="!disableEditing">
+          <button *ngIf="!isAddMoreInvoice" [hidden]="isAddMoreInvoice" type="button"
+            class="btn btn-md btn-cstorebo btnsub btn-custom mb-1 mr-1" placement="bottom" ngbTooltip="Add New"
+            (click)="isAddMoreInvoice=!isAddMoreInvoice;resetInvoiceDetailForm()">
+            <i class="fa fa-plus" aria-hidden="true"></i>
+          </button>
+          <span *ngIf="!isAddMoreInvoice" class="mr-3 mb-2 card-title cpointer" [hidden]="isAddMoreInvoice"
+            (click)="isAddMoreInvoice=!isAddMoreInvoice;resetInvoiceDetailForm()">Add New </span>
+        </span>
+      </div>
+      <div class="col-sm-12 view-tabs">
+        <ngb-tabset *ngIf="rowData.length > 0" #ctdTabset="ngbTabset">
+          <ngb-tab title="All ({{rowData.length}})" id="tab1">
+            <ng-template ngbTabContent>
+              <app-editable-grid [rowData]="rowData" [editGridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+                (edit)="editAction($event)" (delete)="deleteInvoiceDetails($event)" [textFilter]="filterText"
+                [fontSizeDecrease]="isSoftCopyOpen" (save)="saveInvoiceDetails($event)"
+                (cellClicked)="onCellClickedInvoiceGrid($event)"></app-editable-grid>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab title="< 10% ({{bellowTen.length}})" id="tab2">
+            <ng-template ngbTabContent>
+              <app-editable-grid [rowData]="bellowTen" [editGridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+                (edit)="editAction($event)" (delete)="deleteInvoiceDetails($event)" [textFilter]="filterText"
+                [fontSizeDecrease]="isSoftCopyOpen" (save)="saveInvoiceDetails($event)"
+                (cellClicked)="onCellClickedInvoiceGrid($event)"></app-editable-grid>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab title="10% < 20% ({{betweenTenToTwenty.length}})" id="tab3">
+            <ng-template ngbTabContent>
+              <app-editable-grid [rowData]="betweenTenToTwenty" [editGridOptions]="gridOptions"
+                (gridReady)="onGridReady($event)" (edit)="editAction($event)" (delete)="deleteInvoiceDetails($event)"
+                [textFilter]="filterText" [fontSizeDecrease]="isSoftCopyOpen" (save)="saveInvoiceDetails($event)"
+                (cellClicked)="onCellClickedInvoiceGrid($event)">
+              </app-editable-grid>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab title="20% < 30% ({{betweenTwentyToThirty.length}})" id="tab4">
+            <ng-template ngbTabContent>
+              <app-editable-grid [rowData]="betweenTwentyToThirty" [editGridOptions]="gridOptions"
+                (gridReady)="onGridReady($event)" (edit)="editAction($event)" (delete)="deleteInvoiceDetails($event)"
+                [textFilter]="filterText" [fontSizeDecrease]="isSoftCopyOpen" (save)="saveInvoiceDetails($event)"
+                (cellClicked)="onCellClickedInvoiceGrid($event)">
+              </app-editable-grid>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab title="30% < 40% ({{betweenThirtyToForty.length}})" id="tab5">
+            <ng-template ngbTabContent>
+              <app-editable-grid [rowData]="betweenThirtyToForty" [editGridOptions]="gridOptions"
+                (gridReady)="onGridReady($event)" (edit)="editAction($event)" (delete)="deleteInvoiceDetails($event)"
+                [textFilter]="filterText" [fontSizeDecrease]="isSoftCopyOpen" (save)="saveInvoiceDetails($event)"
+                (cellClicked)="onCellClickedInvoiceGrid($event)">
+              </app-editable-grid>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab title="> 40% ({{greaterForty.length}})" id="tab6">
+            <ng-template ngbTabContent>
+              <app-editable-grid [rowData]="greaterForty" [editGridOptions]="gridOptions"
+                (gridReady)="onGridReady($event)" (edit)="editAction($event)" (delete)="deleteInvoiceDetails($event)"
+                [textFilter]="filterText" [fontSizeDecrease]="isSoftCopyOpen" (save)="saveInvoiceDetails($event)"
+                (cellClicked)="onCellClickedInvoiceGrid($event)">
+              </app-editable-grid>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab title="New Item ({{newItems.length}})" id="tab7">
+            <ng-template ngbTabContent>
+              <app-editable-grid [rowData]="newItems" [editGridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+                (edit)="editAction($event)" (delete)="deleteInvoiceDetails($event)" [textFilter]="filterText"
+                [fontSizeDecrease]="isSoftCopyOpen" (save)="saveInvoiceDetails($event)"
+                (cellClicked)="onCellClickedInvoiceGrid($event)"></app-editable-grid>
+            </ng-template>
+          </ngb-tab>
+        </ngb-tabset>
+      </div>
+    </div>
+    <!-- <div class="form-group">
+        <ngb-tabset type="pills">
+          <ngb-tab class="col-sm-1" title="All">
+            <ng-template ngbTabContent>
+              <app-editable-grid [rowData]="rowData" [editGridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+                (edit)="editAction($event)" (delete)="deleteInvoiceDetails($event)" (rowSelected)="invoiceDetailRowSelected($event)"></app-editable-grid>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab title="< 10%">
+            <ng-template ngbTabContent>
+              <app-editable-grid [rowData]="bellowTen" [editGridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+                (edit)="editAction($event)" (delete)="deleteInvoiceDetails($event)"></app-editable-grid>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab title="10% < 20%">
+            <ng-template ngbTabContent>
+              <app-editable-grid [rowData]="betweenTenToTwenty" [editGridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+                (edit)="editAction($event)" (delete)="deleteInvoiceDetails($event)">
+              </app-editable-grid>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab title="20% < 30%">
+            <ng-template ngbTabContent>
+              <app-editable-grid [rowData]="betweenTwentyToThirty" [editGridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+                (edit)="editAction($event)" (delete)="deleteInvoiceDetails($event)">
+              </app-editable-grid>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab title="30% < 40%">
+            <ng-template ngbTabContent>
+              <app-editable-grid [rowData]="betweenThirtyToForty" [editGridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+                (edit)="editAction($event)" (delete)="deleteInvoiceDetails($event)">
+              </app-editable-grid>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab title="> 40%">
+            <ng-template ngbTabContent>
+              <app-editable-grid [rowData]="greaterForty" [editGridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+                (edit)="editAction($event)" (delete)="deleteInvoiceDetails($event)">
+              </app-editable-grid>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab title="New Item">
+            <ng-template ngbTabContent>
+              <app-editable-grid [rowData]="newItems" [editGridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+                (edit)="editAction($event)" (delete)="deleteInvoiceDetails($event)"></app-editable-grid>
+            </ng-template>
+          </ngb-tab>
+        </ngb-tabset>
+      </div> -->
+
+    <div class="row mt-5 form-group">
+      <div [ngClass]="isSoftCopyOpen?'col-sm-6':'col-sm-5'">
+        <div class="form-group text-right" *ngIf="!disableEditing">
+          <button type="button" class="btn btn-md btn-cstorebo btnsub btn-custom" (click)="onInsertRowAt()"
+            placement="bottom" ngbTooltip="Add Charges">
+            <i class="fa fa-plus" aria-hidden="true"></i></button>
+          <span class="ml-2 card-title cpointer" (click)="onInsertRowAt()">Add Charges </span>
+        </div>
+        <div class="form-group">
+          <app-editable-grid [rowData]="invoiceChargesGridRowData" [editGridOptions]="invoiceChargesOptions"
+            (gridReady)="onReady($event)" (delete)="deleteChargesInvoiceDetails($event)"
+            (edit)="saveInvoiceCharges($event)" (save)="saveInvoiceCharges($event)">
+          </app-editable-grid>
+        </div>
+      </div>
+      <div [ngClass]="isSoftCopyOpen?'col-sm-6':'col-sm-7'">
+        <div class="form-group text-right" *ngIf="!disableEditing">
+          <button type="button" class="btn btn-md btn-cstorebo btnsub btn-custom" (click)="onInsertRowPaymentGrid()"
+            placement="bottom" ngbTooltip="Add Payment Details">
+            <i class="fa fa-plus" aria-hidden="true"></i></button>
+          <span class="ml-2 card-title cpointer" (click)="onInsertRowPaymentGrid()">Payment Details</span>
+        </div>
+        <div class="form-group ">
+          <app-editable-grid [rowData]="invoicePaymentGridRowData" [editGridOptions]="invoicePaymentOptions"
+            (gridReady)="onInvoicePaymentReady($event)" (delete)="deleteInvoicePaymentDetails($event)"
+            (edit)="saveInvoicePaymentDetails($event)" (save)="saveInvoicePaymentDetails($event)"
+            (print)="printCheck($event)" (cellValueChanged)="onCellValueChanged($event)">
+          </app-editable-grid>
+          <!-- [gridWidth]="'710px'" -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isSoftCopyOpen" class="col-sm-5 mt-2">
+    <div id="iframeContainer">
+      <!-- <div class="row justify-content-end col-sm-12 mb-3">
+          <button type="button" class="btn btn-primary" (click)="closePdf()"> Close PDF </button>
+        </div> -->
+    </div>
+  </div>
+</div>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Invoice Detail</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!-- <div class="card"> -->
+    <form [formGroup]="invoiceDetailsForm">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="row">
+              <label class="form-group has-float-label col-sm-12">
+                <input type="text" class="form-control" id="srNo" formControlName="sequenceNumber" placeholder="Sr No.">
+                <span for="srNo">Sr No.</span>
+              </label>
+            </div>
+            <div class="row">
+              <label class="form-group has-float-label col-sm-12">
+                <input type="text" id="itemVendorCode" class="form-control" formControlName="vendorItemCode"
+                  (keydown.Tab)="searchVendorCode($event.target.value)"
+                  (keyup.enter)="searchVendorCode($event.target.value)" placeholder="Vendor Code">
+                <span for="vendorCode"> Vendor Code</span>
+              </label>
+            </div>
+            <div class="row">
+              <label class="form-group has-float-label col-sm-12">
+                <input numbersOnly type="text" class="form-control" id="upcCode" formControlName="posCode"
+                  (keydown.Tab)="searchUPCCode($event.target.value)" (keyup.enter)="searchUPCCode($event.target.value)"
+                  placeholder="UPC Code" #upcCode required>
+                <span for="upcCode"> UPC Code</span>
+              </label>
+            </div>
+            <div class="row">
+              <label class="form-group has-float-label col-sm-12">
+                <textarea class="form-control" id="description" formControlName="description"
+                  placeholder="Description"></textarea>
+                <span for="description"> Description</span>
+              </label>
+            </div>
+            <div class="row">
+              <label class="form-group has-float-label col-sm-12">
+                <input decimalOnly type="text" [maxLength]="4" class="form-control" formControlName="unitsInCase"
+                  id="unitCase" placeholder="Unit Case" required (blur)="unitInCaseChange()">
+                <span> Unit In Case</span>
+              </label>
+            </div>
+
+          </div>
+          <div class="col-sm-6">
+            <div class="">
+              <div class="input-icon">
+                <label class="form-group has-float-label currency">
+                  <input floatOnly type="text" class="form-control" formControlName="invoiceValuePrice" id="buyingCost"
+                    placeholder=" Buying Cost" required (blur)="calculateCaseCost()">
+                  <span for="buyingCost"> Buying Cost </span>
+                </label>
+                <i *ngIf="invoiceDetailsForm.get('invoiceValuePrice').value">$</i>
+              </div>
+            </div>
+            <div class="row">
+              <label class="form-group has-float-label col-sm-12">
+                <input nagetiveNumberstOnly [maxLength]="4" type="text" class="form-control "
+                  (blur)="calculateUnitPerCostFrm()" formControlName="buyingCaseQuantity" id="buyingCaseQty"
+                  placeholder="Buying Case Qty" required>
+                <span for="buyingCaseQty"> Buying Case Qty</span>
+              </label>
+            </div>
+            <div class="row">
+              <label class="form-group has-float-label col-sm-12">
+                <input nagetiveNumberstOnly [maxLength]="4" type="text" class="form-control " id="unitQty" #unitQtyf
+                  (blur)="calculateBuyingUnitQtyFrm()" formControlName="buyingUnitQuantity"
+                  placeholder="Buying Unit Qty" required>
+                <span for="unitQty"> Buying Unit Qty</span>
+              </label>
+            </div>
+            <div class="">
+              <div class="input-icon">
+                <label class="form-group has-float-label currency">
+                  <input floatOnly type="text" class="form-control " formControlName="casePrice" id="caseCost"
+                    (blur)="calculateBuyingCost()" placeholder=" Case Cost" required>
+                  <span for="caseCost"> Case Cost </span>
+                </label>
+                <i *ngIf="invoiceDetailsForm.get('casePrice').value">$</i>
+              </div>
+            </div>
+            <div class="">
+              <div class="input-icon">
+                <label class="form-group has-float-label currency">
+                  <input nagetiveFloatOnly type="text" class="form-control" formControlName="totalItemCost"
+                    id="totalCost" (blur)="totalCostChange()" placeholder=" Total Cost" required>
+                  <span for="totalCost"> Total Cost </span>
+                </label>
+                <i *ngIf="invoiceDetailsForm.get('totalItemCost').value">$</i>
+              </div>
+            </div>
+            <div class="row">
+              <label class="form-group has-float-label col-sm-12">
+                <input decimalOnly type="text" class="form-control" formControlName="regularSellPrice" id="selling"
+                  placeholder=" Selling" required (blur)="calculateMargin()">
+                <span> Selling Price</span>
+              </label>
+            </div>
+            <div class="row">
+              <label class="form-group has-float-label col-sm-12">
+                <input floatOnly type="text" class="form-control" formControlName="profitMargin" id="margin"
+                  placeholder=" Margin" required (blur)="calculateMargin()">
+                <span> Margin</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <!-- </div> -->
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="offset-sm-1 btn btn-md btn-primary" (click)="resetInvoiceDetailForm()"> Reset</button>
+    <button type="button" class="offset-sm-1 btn btn-md btn-primary" (click)="addNewInvoiceAndClose(false)"> Save
+      New</button>
+    <button type="button" class="offset-sm-1 btn btn-md btn-primary" (click)="addNewInvoiceAndClose(true)"> Save
+      Close</button>
+    <!-- <button type="button" class="btn btn-md btn-success"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save & Close
+      </button> -->
+    <button type="button" class="offset-sm-1 btn btn-md btn-primary" id="closeModal"
+      (click)="modal.close('Save Click')">
+      Close</button>
+  </div>
+</ng-template>
+
+<ng-template #modalContent let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">{{modalTitle}}</h5>
+    <button type="button" class="close" id="mergeItemClose" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="col-sm-12 row">
+      <button type="button" class="btn  ml-2 btn-primary" (click)="mergeItemYes()"> Yes </button>
+      <div class="col-sm-1"></div>
+      <button type="button" class="btn  btn-danger" (click)="mergeItemNo()"> No </button>
+    </div>
+  </div>
+</ng-template>
+<ng-template #modalAddItemContent let-close="close">
+  <div class="modal-header">
+    <h5 class="card-title">Add new item</h5>
+    <button type="button" class="close" id="close_addItemModel" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-invoice-add-item [upcCode]="upcCodeInput" (closeModel)="closeModel($event)"></app-invoice-add-item>
+  </div>
+</ng-template>
+
+<ng-template #confirmAddItem let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">{{'Are you sure you want to create new item ?'}}</h5>
+    <button type="button" class="close" id="mergeItemClose" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="col-sm-12 row">
+      <button type="button" class="btn  ml-2 btn-primary" (click)="mergeItemYes()"> Yes </button>
+      &nbsp; &nbsp;
+      <button type="button" class="btn  btn-danger" (click)="mergeItemNo()"> No </button>
+    </div>
+  </div>
+</ng-template>

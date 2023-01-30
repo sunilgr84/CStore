@@ -1,0 +1,184 @@
+<app-page-header [heading]="'Fuel / Store Competitor'" [icon]="'fa-bar-chart-o'"></app-page-header>
+<div class="" *ngIf="true">
+  <div class="card">
+    <div class="card-body">
+      <div class="card-title col-sm-12">
+        <h5 class="col-sm-12"> Store Competitor</h5>
+      </div>
+      <div class="col-sm-8">
+        <div class="mt-3">
+          <div class="row">
+            <div class="col-sm-6">
+              <label class="col-sm-12 form-group has-float-label">
+                <div *ngIf="storeLocationList && storeLocationList.length!==1">
+                  <ng-select [items]="storeLocationList" [selectOnTab]="true" [multiple]="true" bindLabel="storeName"
+                    [hideSelected]="true" bindValue="storeLocationID" labelForId="id" placeholder="Store Location"
+                    [(ngModel)]="_storeLocationId" (change)="selectStoreLocation(_storeLocationId)" groupBy="companyID"
+                    [selectableGroup]="true" [selectableGroupAsModel]="false">
+                    <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                        <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                    </ng-template>
+                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                      <div class="ng-value" *ngFor="let item of items | slice:0:4">
+                        <span class="ng-value-label">
+                          {{item.storeName}}</span>
+                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                      </div>
+                      <div class="ng-value" *ngIf="items.length > 2">
+                        <span class="ng-value-label">{{items.length - 2}} more...</span>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                </div>
+                <input readonly type="text" *ngIf="storeLocationList && storeLocationList.length===1"
+                  class="form-control" [value]="storeLocationList[0].storeName">
+                <span>Store Location</span>
+                <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+              </label>
+            </div>
+            <div class="col-sm-4 ml-3">
+              <button type="button" class="btn btn-md btn-primary" (click)="addMore()"> Add More</button>
+            </div>
+          </div>
+        </div>
+        <!-- Add new store competitor -->
+        <div *ngIf="isAddUpdate" class="mt-3">
+          <form #storeCompetitorForm="ngForm" novalidate>
+            <div class="">
+              <div class="row">
+                <div class="col-sm-6">
+                  <label class="col-sm-12 form-group has-float-label">
+                    <input type="text" class="form-control" [(ngModel)]="storeCompetitor.storeCompetitorName"
+                      name="storeCompetitorName" #storeCompetitorName="ngModel" placeholder="Competitor Name" required>
+                    <span> Competitor Name</span>
+                  </label>
+                </div>
+                <div class="col-sm-6">
+                  <label class="col-sm-12 form-group has-float-label">
+                    <div *ngIf="storeLocationList && storeLocationList.length!==1">
+                      <ng-select [(ngModel)]="storeCompetitor.storeLocationID" name="storeLocationID"
+                        #storeLocationID="ngModel" placeholder="Store Location" required>
+                        <ng-option *ngFor="let arr of storeLocationList" [value]="arr.storeLocationID">{{arr.storeName}}
+                        </ng-option>
+                      </ng-select>
+                    </div>
+                    <input readonly type="text" *ngIf="storeLocationList && storeLocationList.length===1"
+                      class="form-control" [value]="storeLocationList[0].storeName">
+                    <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+                    <span>Store Location</span>
+                  </label>
+                </div>
+              </div>
+              <div class="row ">
+                <div class="col-sm-4">
+                  <label class="form-group has-float-label col-sm-12">
+                    <input type="text" class="form-control" placeholder="City" maxlength="100" id="city" name="city">
+                    <span for="city">City</span>
+                  </label>
+                </div>
+                <div class=" col-sm-4">
+                  <label class="form-group has-float-label col-sm-12">
+                    <div>
+                      <select placeholder="Select State" class="form-control" id="stateCode" name="stateCode">
+                        <option value="">Select State</option>
+                        <option *ngFor="let state of stateList" [value]="state.stateCode">{{state.stateName}}</option>
+                      </select>
+                      <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+                    </div>
+                    <span for="stateCode"> State</span>
+                  </label>
+                </div>
+                <div class="col-sm-4">
+                  <label class=" has-float-label col-sm-12">
+                    <input numbersOnly type="text" minlength="5" maxlength="5" class="form-control"
+                      placeholder="ZIP Code" id="zipCode" name="zipCode">
+                    <!-- 
+                  <div *ngIf="store.zipCode.errors?.minlength" class="alert alert-danger">
+                    Zip Code must be 5 digit.
+                  </div> -->
+                    <span for="zipCode">ZIP Code</span>
+                  </label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <label class="form-group has-float-label col-sm-12">
+                    <ng-select [items]="brandList" [selectOnTab]="true" bindLabel="brandName" bindValue="brandID"
+                      labelForId="brandID" placeholder="Brand"></ng-select>
+                    <span>Brand</span>
+                  </label>
+                </div>
+              </div>
+              <div class="col-sm-8">
+                <button type="button" [disabled]="!storeCompetitorForm.valid" class="btn btn-md btn-primary"
+                  (click)="onSubmit(storeCompetitorForm)">
+                  {{isEdit?'Update':'Save'}}</button>
+                <!-- <button type="button" class="btn btn-md btn-primary" (click)="backToList()">
+                Back To List</button> -->
+              </div>
+            </div>
+          </form>
+        </div>
+        <!-- End Add new Store Competitor -->
+
+      </div>
+      <div class="col-sm-12">
+        <div class="mt-3 row">
+          <div class="row justify-content-end margin-bottom-5 col-sm-12">
+            <div class="inner-addon right-addon">
+              <span> <i class="fa fa-search card-title" aria-hidden="true"></i> </span>
+              <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+                placeholder="Filter Search" [(ngModel)]="filterText" name="filterText">
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-12">
+          <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+            (edit)="editAction($event)" [textFilter]="filterText" (delete)="deleteAction($event)">
+          </app-cstore-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="" *ngIf="false">
+  <div class="col-sm-6" style="height: 500px;">
+    <form #storeCompetitorForm="ngForm" novalidate>
+      <div class="card">
+        <div class="card-header">
+          <strong>{{isEdit?'Editing Store Competitor':'Add Store Competitor'}}</strong>
+        </div>
+        <div class="card-body">
+          <div class="form-group form-inline">
+            <label class="control-label col-sm-4">{{'Competitor Name'}}</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" [(ngModel)]="storeCompetitor.storeCompetitorName"
+                name="storeCompetitorName" #storeCompetitorName="ngModel" placeholder="Competitor Name" required>
+            </div>
+          </div>
+          <div class="form-group form-inline">
+            <label class="control-label col-sm-4">{{'Location'}}</label>
+            <div class="col-sm-8">
+              <ng-select [(ngModel)]="storeCompetitor.storeLocationID" name="storeLocationID" #storeLocationID="ngModel"
+                placeholder="Store Location" required>
+                <ng-option *ngFor="let arr of storeLocationList" [value]="arr.storeLocationID">{{arr.storeName}}
+                </ng-option>
+              </ng-select>
+              <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+            </div>
+
+          </div>
+          <div class="col-sm-8 offset-md-4">
+            <button type="button" [disabled]="!storeCompetitorForm.valid" class="btn btn-md btn-success"
+              (click)="onSubmit(storeCompetitorForm)">
+              {{isEdit?'Update & Close':'Save & Close'}}</button> &nbsp;
+            <button type="button" class="btn btn-md btn-primary" (click)="backToList()">
+              Back To List</button>
+          </div>
+
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

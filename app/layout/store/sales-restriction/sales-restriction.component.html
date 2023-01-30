@@ -1,0 +1,46 @@
+<div class="container-fluid mt-3">
+  <div class="card-body">
+    <div class="row form-group">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="margin-bottom-3 col-sm-12">
+            <button type="button" class="btn btn-md btn-cstorebo btnsub btn-custom" (click)="addNew()">
+              <i class="fa fa-plus" aria-hidden="true"></i></button>
+            <span class="ml-2 card-title" (click)="addNew()">Add New Sales Restriction</span>
+          </div>
+          <!-- <div class="row justify-content-end margin-bottom-5 col-sm-8">
+            <div class="row">
+              <div class="input-group" style="width: 230px; float: right;">
+                <input type="text" class="form-control" aria-label="Default"
+                  aria-describedby="inputGroup-sizing-default" placeholder="Filter Search" [(ngModel)]="filterText"
+                  name="filterText">
+              </div>
+            </div>
+          </div> -->
+        </div>
+
+
+      </div>
+      <div class="col-md-12">
+        <div style="margin-top:1rem; box-sizing: border-box;">
+          <app-editable-grid [rowData]="rowData" (delete)="deleteAction($event)" [editGridOptions]="gridOptions"
+          (gridReady)="onGridReady($event)" (edit)="editOrSave($event,true)" [gridHeight]="'350px'"
+            (save)="editOrSave($event,false)">
+          </app-editable-grid>
+        </div>
+      </div>
+    </div>
+    <div class="form-group col-sm-12">
+      <div class="row justify-content-between">
+        <div class="justify-content-start col-sm-12">
+          <div class="text-right">
+            <button type="button" class="btn btn-md btn-cstorebo btnsub mr-3" (click)="onNavigateFuelSetup()">
+              Add Fuel Setup</button>
+            <button type="button" class="btn btn-md btn-cstorebo mr-3" (click)="backToMainList()">
+              &nbsp; Back to Store List </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,8 @@
+<div class="expansion-body no-gutters">
+  <div *ngIf="isShow" class="col-12 multipliers">
+    <app-adv-pagination-grid [rowData]="multiplierGridRowData" (gridReady)="onMultiplierGridReady($event)"
+      [paginationGridOptions]="multiplierGridOptions" (save)="saveMultiplier($event)" (edit)="onEdit($event)"
+      (delete)="deleteMultiplierAction($event)" (cancel)="onCancel($event)" [agGridTheme]="'inline-edit'">
+    </app-adv-pagination-grid>
+  </div>
+</div>

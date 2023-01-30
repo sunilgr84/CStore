@@ -1,0 +1,65 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title ml-3 mb-3"><strong>Move Pack</strong> </h4>
+    <form #movePackForm="ngForm" novalidate>
+      <div class="row mt-3">
+        <div class="col-sm-10">
+          <div class="row">
+            <label class="form-group has-float-label col-sm-6"
+              *ngIf="storeLocationList && storeLocationList.length!==1">
+              <select class="form-control" [(ngModel)]="movePack.storeLocationID" #storeLocationID="ngModel"
+                name="storeLocationID" (change)="selectActivePack(movePack.storeLocationID)" required>
+                <option value="">--Select Store Location--</option>
+                <option *ngFor="let store of storeLocationList" [value]="store.storeLocationID">
+                  {{store.storeName}}</option>
+              </select>
+              <div *ngIf="submitted && storeLocationID.errors?.required" class="alert alert-danger">
+                Store Location in required
+              </div>
+              <span>Store Location</span>
+            </label>
+            <label class="form-group has-float-label col-sm-6"
+              *ngIf="storeLocationList && storeLocationList.length===1">
+              <input readonly type="text" class="form-control" [value]="storeLocationList[0].storeName">
+              <span>Store Location</span>
+            </label>
+            <label class="form-group has-float-label col-sm-6">
+              <ng-select [items]="lotteryPackList" [selectOnTab]="true" bindLabel="packNumber" bindValue="packNumber"
+                [(ngModel)]="movePack.packNo" name="packNumber" #packNumber="ngModel" labelForId="packNumber"
+                placeholder="Select Pack Number" (change)="getCurrentBinNo()" required>
+              </ng-select>
+              <img src="assets/images/small-spinner.gif" *ngIf="isPackNumberLoading">
+              <div *ngIf="submitted && packNumber.errors?.required" class="alert alert-danger">
+                Pack Number in required
+              </div>
+              <span> Pack Number</span>
+            </label>
+            <label class="form-group has-float-label col-sm-6">
+              <input type="text" [(ngModel)]="movePack.currentBinNo" name="currentBinNo" #currentBinNo="ngModel"
+                readonly class="form-control" placeholder="Current Bin Number">
+              <span> Current Bin No</span>
+            </label>
+            <label class="form-group has-float-label col-sm-6">
+              <input numbersOnly type="text" [(ngModel)]="movePack.binNo" name="binNo" #binNo="ngModel"
+                class="form-control" maxlength="16" placeholder="Bin Number" id=binNumber required>
+              <div *ngIf="submitted && binNo.errors?.required" class="alert alert-danger">
+                Bin Number in required
+              </div>
+              <span> Bin Number</span>
+            </label>
+          </div>
+          <div class="row mt-3 mb-5">
+            <div class="col-sm-6 mb-5">
+              <button type="button" class="btn   btn-md btn-primary mr-3" (click)="reset()">
+                Reset</button>
+              <button type="button" class="btn btn-md btn-primary" (click)="updateMovePack(movePackForm)">
+                Move Pack</button>
+              &nbsp;
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>

@@ -1,0 +1,288 @@
+
+// btn colors
+
+// button base style
+%btn-base-root {
+  color: inherit;
+  border: 0;
+  cursor: pointer;
+  margin: 0;
+  display: inline-flex;
+  outline: 0;
+  padding: 0;
+  position: relative;
+  align-items: center;
+  user-select: none;
+  border-radius: 0;
+  vertical-align: middle;
+  -moz-appearance: none;
+  justify-content: center;
+  text-decoration: none;
+  background-color: transparent;
+  -webkit-appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  font-family: $normalized_font_family;
+  &:disabled {
+    cursor: default;
+    pointer-events: none;
+    color: rgba(0, 0, 0, 0.26);
+  }
+  &:focus {
+    outline: 0 !important;
+  }
+}
+
+// button style
+.v-btn {
+  @extend %btn-base-root;
+  color: rgba(0, 0, 0, 0.87);
+  padding: 6px 16px;
+  font-size: 0.875rem;
+  min-width: #{$spacing_base * 8};
+  box-sizing: border-box;
+  font-weight: $fw_regular;
+  line-height: 1.75;
+  border-radius: #{$spacing_base/2};
+  letter-spacing: 0.02857em;
+  min-width: 100px;
+
+  // start and end icons
+  & .v-btn-start-icon {
+    display: inherit;
+    color: inherit;
+    font-size: 0.875rem;
+    margin-left: -4px;
+    margin-right: 8px;
+  }
+  & .v-btn-end-icon {
+    display: inherit;
+    color: inherit;
+    font-size: 0.875rem;
+    margin-right: -4px;
+    margin-left: 8px;
+  }
+
+  // size
+  &.v-btn-small {
+    font-size: 0.8125rem;
+    & .v-btn-start-icon {
+      font-size: 0.75rem;
+      margin-left: -2px;
+    }
+    & .v-btn-end-icon {
+      font-size: 0.75rem;
+      margin-right: -2px;
+    }
+  }
+  &.v-btn-large {
+    font-size: 0.9375rem;
+    & .v-btn-start-icon {
+      font-size: 22px;
+    }
+    & .v-btn-end-icon {
+      font-size: 22px;
+    }
+  }
+
+  // color
+  @each $name, $color in $color_btn {
+    &.v-btn-#{$name} {
+      color: $color;
+    }
+  }
+}
+
+// main button styles
+.v-btn-text {
+  @extend .v-btn;
+  padding: 6px 8px;
+
+  // size
+  &.v-btn-small {
+    padding: 4px 5px;
+  }
+  &.v-btn-large {
+    padding: 8px 11px;
+  }
+
+  // color
+  @each $name, $color in $color_btn {
+    &.v-btn-#{$name} {
+      color: $color;
+    }
+  }
+}
+
+.v-btn-contained {
+  @extend .v-btn;
+  color: rgba(0, 0, 0, 0.87);
+  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+  background-color: #e0e0e0;
+
+  // size
+  &.v-btn-small {
+    padding: 4px 10px;
+  }
+  &.v-btn-large {
+    padding: 8px 22px;
+  }
+
+  // color
+  @each $name, $color in $color_btn {
+    &.v-btn-#{$name} {
+      color: white;
+      background-color: $color;
+    }
+  }
+}
+
+.v-btn-outlined {
+  @extend .v-btn;
+  border: 2px solid rgba(0, 0, 0, 0.23);
+  padding: 4px 15px;
+
+  // size
+  &.v-btn-small {
+    padding: 3px 9px;
+  }
+  &.v-btn-large {
+    padding: 7px 21px;
+  }
+
+  // color
+  @each $name, $color in $color_btn {
+    &.v-btn-#{$name} {
+      color: $color;
+      border-color: $color;
+    }
+  }
+}
+
+.v-btn-rounded {
+  border-radius: 24px;
+}
+
+// icon button root style
+.v-btn-icon {
+  @extend %btn-base-root;
+  color: rgba(0, 0, 0, 0.87);
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  font-size: 0.875rem;
+  min-width: 0;
+  box-sizing: border-box;
+  min-height: 36px;
+  font-weight: 500;
+  line-height: 1.75;
+  border-radius: 50%;
+  letter-spacing: 0.02857em;
+  text-transform: uppercase;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  & > [class^="flaticon-"],
+  & > [class^="icon-"],
+  [class*=" flaticon-"],
+  [class*=" icon-"] {
+    font-size: 0.875rem;
+    font-weight: $fw_bold;
+  }
+
+  // size
+  &.v-small {
+    height: 28px;
+    width: 28px;
+    min-height: 28px;
+    & > [class^="flaticon-"],
+    & > [class^="icon-"],
+    [class*=" flaticon-"],
+    [class*=" icon-"] {
+      font-size: 0.75rem;
+    }
+  }
+
+  // size
+  &.v-medium {
+    height: 42px;
+    width: 42px;
+    & > [class^="flaticon-"],
+    & > [class^="icon-"],
+    [class*=" flaticon-"],
+    [class*=" icon-"] {
+      font-size: 1rem;
+    }
+  }
+
+  // size
+  &.v-large {
+    height: 48px;
+    width: 48px;
+    & > [class^="flaticon-"],
+    & > [class^="icon-"],
+    [class*=" flaticon-"],
+    [class*=" icon-"] {
+      font-size: 1.125rem;
+    }
+  }
+
+  &.v-contained {
+    box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2),
+      0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12);
+    background-color: #e0e0e0;
+    &:hover {
+      background-color: #e0e0e0;
+    }
+
+    // color
+    @each $name, $color in $color_btn {
+      &.v-#{$name} {
+        background-color: $color;
+        color: white;
+      }
+    }
+  }
+
+  &.v-outlined {
+    border: 2px solid #e0e0e0;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    // color
+    @each $name, $color in $color_btn {
+      &.v-#{$name} {
+        border-color: $color;
+        color: $color;
+        &:hover {
+          background-color: rgba($color, 0.1);
+        }
+      }
+    }
+  }
+
+  // color
+  @each $name, $color in $color_btn {
+    &.v-#{$name} {
+      color: $color;
+    }
+  }
+}
+
+// btn action wrapper
+.v-btn-action-wrapper {
+  display: flex;
+  align-items: center;
+  & > button,
+  & > [class^="btn-"] {
+    margin-right: 8px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}

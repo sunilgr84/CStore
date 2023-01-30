@@ -1,0 +1,13 @@
+footer {
+    position: fixed;
+    width: 100%;
+    cursor: pointer;
+    padding: 12px;
+    bottom: 0;
+    z-index: 9;
+    left:0;
+    color: #999;
+    background: #2f353a;
+    border-top: 1px solid #999;
+    transition: all 0.2s ease-in-out;
+}

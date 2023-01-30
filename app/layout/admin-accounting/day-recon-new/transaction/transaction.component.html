@@ -1,0 +1,356 @@
+<app-dialog [isOpen]="isOpen" [ngClass]="{'dialog-open': isOpen}" [fullscreen]="true" class="dialog-aside-panel"
+  dialogLabel="Transactions" (onClose)="onDialogClose($event)">
+  <app-dialog-header [headerTemplate]="dialogHeaderTemplate"></app-dialog-header>
+  <app-dialog-body>
+    <div class="row" *ngIf="showTransactions">
+      <div class="col-md-12 txn-grid">
+        <div class="text-right mb-2">
+          <button type="button" class="btn btn-md btn-primary mr-1" (click)="openAddPurchases($event)">Import
+            Purchases</button>
+          <button type="button" class="btn btn-md btn-primary mr-1" (click)="openAddIncome($event)">Add
+            Income</button>
+          <button type="button" class="btn btn-md btn-primary" (click)="openAddExpenses($event)">Add
+            Expense</button>
+        </div>
+        <app-cstore-grid [rowData]="purchasesRowData" [cStoreGridOptions]="purchasesGridOptions"
+          (gridReady)="onPurchasesGridReady($event)" (viewFile)="viewFileAction($event)"
+          (viewFileDelete)="viewFileDeleteAction($event)">
+        </app-cstore-grid>
+      </div>
+    </div>
+    <div *ngIf="showAddPurchases">
+      <div class="card-header pt-2 pb-2 bg-white">
+        <div class="col-md-12 p-0">
+          <div class="form-inline mt-2">
+            <!-- <div class="custom-control custom-radio mr-3">
+              <input type="radio" class="custom-control-input" id="addPurchase" [(ngModel)]="purchaseType"
+                value="addPurchase" (change)="purchaseTypeChange($event)" />
+              <label class="custom-control-label padding-right-10 text-dark ft-16" for="addPurchase">Add Purchases</label>
+            </div>
+            <div class="custom-control custom-radio mr-3">
+              <input type="radio" class="custom-control-input" id="importPurchase" [(ngModel)]="purchaseType"
+                value="importPurchase" (change)="purchaseTypeChange($event)" />
+              <label class="custom-control-label padding-right-10 text-dark ft-16" for="importPurchase">Import
+                Purchases</label>
+            </div> -->
+            <label class="padding-right-10 text-dark ft-16" for="importPurchase">Import
+              Purchases</label>
+            <!-- <div class="close-purchase">
+              <a href="JavaScript:void(0);" class="closebtn" (click)="closePurchaseSideContainer();">&times;</a>
+            </div> -->
+          </div>
+        </div>
+      </div>
+      <form [formGroup]="addPurchasesForm" novalidate>
+        <div class="card-body" *ngIf="showAddPurchases">
+          <div class="row">
+            <label class="form-group has-float-label col-sm-6">
+              <ng-select [items]="vendorList" [hideSelected]="true" [closeOnSelect]="true" bindLabel="vendorName"
+                bindValue="vendorID" placeholder="Select Vendor" (change)="getPaymentSource($event)"
+                formControlName="vendorid">
+              </ng-select>
+              <div *ngIf="addPurchasesSubmitted && purchasesForm.vendorid.errors?.required" class="alert alert-danger">
+                Vendor Selection Required
+              </div>
+              <span>Vendor</span>
+            </label>
+            <label class="col-sm-6 has-float-label">
+              <app-datepicker (dateChange)="dateChange($event,'dob')" [inputDate]="purchaseInvDate"
+                name="purchaseInvDate">
+              </app-datepicker>
+              <div *ngIf="addPurchasesSubmitted && purchasesForm.invoicedate.errors?.required"
+                class="alert alert-danger">
+                Invoice Date Required
+              </div>
+              <span> Invoice Date</span>
+            </label>
+          </div>
+          <div class="row">
+            <label class="has-float-label col-sm-6">
+              <input type="text" class="form-control" placeholder="Invoice Number" formControlName="invoiceno"
+                maxlength="250">
+              <div *ngIf="addPurchasesSubmitted && purchasesForm.invoiceno.errors?.required" class="alert alert-danger">
+                Invoice Number Required
+              </div>
+              <span>Invoice Number</span>
+            </label>
+            <label class="has-float-label col-sm-6">
+              <input type="number" class="form-control" placeholder="Invoice Amount($)" formControlName="invoiceAmount"
+                (keyup)="invoiceAmountChanges($event)">
+              <div *ngIf="addPurchasesSubmitted && purchasesForm.invoiceAmount.errors?.required"
+                class="alert alert-danger">
+                Invoice Amount Required
+              </div>
+              <span>Invoice Amount($)</span>
+            </label>
+          </div>
+
+          <div class="row mt-3">
+            <label class="form-group has-float-label col-sm-6">
+              <ng-select [items]="paymentSourceList" [hideSelected]="true" [closeOnSelect]="true"
+                bindLabel="bankNickName" bindValue="paymentSourceID" placeholder="Payment Source"
+                (change)="getMethodOfpaymentByPaymentSrc($event)" formControlName="paymentSourceID">
+              </ng-select>
+              <div *ngIf="addPurchasesSubmitted && purchasesForm.paymentSourceID.errors?.required"
+                class="alert alert-danger">
+                Payment Source Selection Required
+              </div>
+              <span>Payment Source</span>
+            </label>
+            <label class="form-group has-float-label col-sm-6">
+              <ng-select [items]="filteredMOPList" [hideSelected]="true" [closeOnSelect]="true"
+                bindLabel="methodOfPaymentDescription" bindValue="methodOfPaymentID" placeholder="Payment Method"
+                formControlName="methodOfPaymentId">
+              </ng-select>
+              <div *ngIf="addPurchasesSubmitted && purchasesForm.methodOfPaymentId.errors?.required"
+                class="alert alert-danger">
+                Payment Method Selection Required
+              </div>
+              <span>Payment Method</span>
+            </label>
+          </div>
+          <div class="row mt-3">
+            <div class="col-sm-6">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" formControlName="sameAsInv">
+                <label class="form-check-label" for="sameAsInv">
+                  Same As Invoice Amount
+                </label>
+              </div>
+            </div>
+            <label class="has-float-label col-sm-6">
+              <input type="number" class="form-control" placeholder="Paid Amount"
+                formControlName="invoicePaymentAmount">
+              <div *ngIf="addPurchasesSubmitted && purchasesForm.invoicePaymentAmount.errors?.required"
+                class="alert alert-danger">
+                Paid Amount Required
+              </div>
+              <span>Paid Amount</span>
+            </label>
+          </div>
+          <div class="row mt-3">
+            <label class="has-float-label col-sm-12">
+              <input type="text" class="form-control" placeholder="Memo" name="memo" maxlength="250"
+                formControlName="memo">
+              <span>Memo</span>
+            </label>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="mb-1">
+                <label style="font-size:15px;">Invoice Image</label>
+                <span class="col-md-4">
+                  <label class="btn1 btn-xs">
+                    <span style="display: inline-block ml-4">
+                      <i class="fa fa-upload" style="font-size: 22px;"></i>
+                      <input style="display:none" name="invoiceImage" type="file"
+                        accept="image/jpeg, image/png,image/jpg" class="form-control-file"
+                        (change)="uploadInvoiceImage(file.files)" #file>
+                    </span>
+                  </label>
+                </span>
+                <span class="image-card mt-1 form-group" *ngIf="invoiceImageURL">
+                  <i class="fa fa-close delete" (click)="deleteInvoiceImage()"></i>
+                  <img [src]="invoiceImageURL" class="form-control" name="invoiceImageURL" class="image">
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6"></div>
+            <div class="col-md-6 text-right">
+              <button type="button" class="btn btn-md btn-primary"
+                (click)="closeUpdates()">Cancel</button>
+              <button type="button" class="btn btn-md btn-primary ml-3" (click)="savePurchases()">Save</button>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="card-body p-3" *ngIf="showImportPurchase">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <label class="padding-right-10 text-dark ft-16" for="importPurchase">Vendor Invoices</label>
+          </div>
+          <div class="col-sm-3 text-right">
+            <button type="button" *ngIf="importPurchasesRowData?.length > 0" class="btn btn-md btn-primary ml-2"
+              (click)="updatePayment()">Import</button>
+          </div>
+          <div class="col-sm-3">
+            <input type="text" class="form-control" placeholder="Filter" [(ngModel)]="searchPurchases"
+              maxlength="250" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <app-cstore-grid [rowData]="importPurchasesRowData" [textFilter]="searchPurchases"
+              [cStoreGridOptions]="importPurchasesGridOptions" (gridReady)="onImportPurchasesGridReady($event)"
+              (rowSelected)="onRowSelected($event)">
+            </app-cstore-grid>
+          </div>
+        </div>
+        <div class="row mb-2 mt-3">
+          <div class="col-sm-6">
+            <label class="padding-right-10 text-dark ft-16" for="importPurchase">Fuel Invoices</label>
+          </div>
+          <div class="col-sm-3 text-right">
+            <button type="button" *ngIf="importFuelPurchasesRowData?.length > 0" class="btn btn-md btn-primary ml-2"
+              (click)="updateFuelPayment()">Import</button>
+          </div>
+          <div class="col-sm-3">
+            <input type="text" class="form-control" placeholder="Filter" [(ngModel)]="searchFuelPurchases"
+              maxlength="250" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <app-cstore-grid [rowData]="importFuelPurchasesRowData" [textFilter]="searchFuelPurchases"
+              [cStoreGridOptions]="importFuelPurchasesGridOptions" (gridReady)="onImportFuelPurchasesGridReady($event)"
+              (rowSelected)="onFuelRowSelected($event)">
+            </app-cstore-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="showAddIncExp">
+      <form [formGroup]="addIncomeForm" novalidate>
+        <div class="card-header pt-2 pb-2 bg-white">
+          <div class="col-md-12 p-0">
+            <label class="mt-1 mb-1">
+              <span class="font-weight-bold" style="color: black;">Add {{isExpense?'Expense':'Income'}}</span>
+            </label>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <label class="form-group has-float-label col-sm-6">
+              <ng-select [items]="vendorList" [hideSelected]="true" [closeOnSelect]="true" bindLabel="vendorName"
+                bindValue="vendorID" placeholder="Payment Acc" (change)="getPaymentSource($event)"
+                formControlName="VendorID">
+              </ng-select>
+              <div *ngIf="addIncomeFormSubmitted && incomeForm.VendorID.errors?.required" class="alert alert-danger">
+                Payment Acc Selection Required
+              </div>
+              <span>Payment Acc</span>
+            </label>
+            <label class="has-float-label col-sm-6">
+              <div class="input-icon">
+                <input decimalOnly type="text" class="form-control  has-float-label currency" placeholder="Amount"
+                  formControlName="Amount" maxlength="250" (focusout)="onAmountFocusOut($event)">
+                <i>$</i>
+              </div>
+              <div *ngIf="addIncomeFormSubmitted && incomeForm.VendorID.errors?.required" class="alert alert-danger">
+                Amount Required
+              </div>
+              <span>Amount</span>
+            </label>
+          </div>
+          <div class="row mt-3">
+            <label class="form-group has-float-label col-sm-6">
+              <ng-select [items]="paymentSourceList" [hideSelected]="true" [closeOnSelect]="true"
+                bindLabel="bankNickName" bindValue="paymentSourceID" placeholder="Payment Source"
+                (change)="getMethodOfpaymentByPaymentSrcIncome($event)" formControlName="paymentSourceID">
+              </ng-select>
+              <div *ngIf="addIncomeFormSubmitted && incomeForm.paymentSourceID.errors?.required"
+                class="alert alert-danger">
+                Payment Source Selection Required
+              </div>
+              <span>Payment Source</span>
+            </label>
+            <label class="form-group has-float-label col-sm-3">
+              <ng-select [items]="filteredMOPList" [hideSelected]="true" [closeOnSelect]="true"
+                bindLabel="methodOfPaymentDescription" bindValue="methodOfPaymentID" placeholder="Payment Method"
+                formControlName="methodOfPaymentId" (change)="paymentMethodChange($event)">
+              </ng-select>
+              <div *ngIf="addIncomeFormSubmitted && incomeForm.methodOfPaymentId.errors?.required"
+                class="alert alert-danger">
+                Payment Method Selection Required
+              </div>
+              <span>Payment Method</span>
+            </label>
+            <label class="has-float-label col-sm-3" *ngIf="showSaveIncomeCheckNum">
+              <input type="text" class="form-control" placeholder="Check Number" formControlName="CheckNumber"
+                maxlength="250">
+              <span>Check Number</span>
+            </label>
+          </div>
+          <div class="row mt-3">
+            <label class="has-float-label col-sm-6">
+              <textarea formControlName="Notes" class="form-control" rows="4"></textarea>
+              <!-- <input type="text" class="form-control" placeholder="Memo" formControlName="Notes" maxlength="250"> -->
+              <span>Memo</span>
+            </label>
+            <label class="form-group has-float-label col-sm-6">
+              <!-- <ng-select [items]="chartOfAccountCategories" [closeOnSelect]="true" [hideSelected]="true"
+                bindLabel="chartOfAccountCategoryName" placeholder="Select Category" bindValue="chartOfAccountCategoryID"
+                formControlName="ChartOfAccountCategoryID">
+              </ng-select>
+              <div *ngIf="addIncomeFormSubmitted && incomeForm.ChartOfAccountCategoryID.errors?.required"
+                class="alert alert-danger">
+                Category Selection Required
+              </div>
+              <span>Category</span> -->
+              <h5>{{selectedChartOfCatc}}</h5>
+            </label>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-md-6">
+              <div class="mb-1">
+                <!-- <label style="font-size:15px;">Document Upload</label> -->
+                <span class="col-md-4">
+                  <label class="btn1 btn-xs">
+                    <span style="display: inline-block ml-4">
+                      <!-- <i class="fa fa-upload" style="font-size: 22px;"></i> -->
+                      <input name="incomeDocumentFiles" type="file" multiple="multiple" #fileInput
+                        accept="image/jpeg, image/png,image/jpg" class="form-control-file"
+                        (change)="uploadIncomeDocuments($event)" (click)="deleteImage()">
+                    </span>
+                  </label>
+                </span>
+                <span class="image-card mt-1 form-group" *ngIf="invoiceImageURL">
+                  <i class="fa fa-close delete" (click)="deleteInvoiceImage()"></i>
+                  <img [src]="invoiceImageURL" class="form-control" name="invoiceImageURL" class="image">
+                </span>
+              </div>
+            </div>
+            <div class="col-md-6 text-right">
+              <button type="button" class="btn btn-md btn-primary" (click)="closeUpdates();deleteImage()">Cancel</button>
+              <button type="button" class="btn btn-md btn-primary" (click)="saveIncome()">Save</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </app-dialog-body>
+</app-dialog>
+
+<ng-template #dialogHeaderTemplate>
+  <header class="dialog-header-container">
+    <div class="col">
+      <div class="dialog-title-wrapper">
+        <div class="dialog-title space-wrapper d-inline-flex">
+          <div class="mr-2">
+            <span>Transaction:&nbsp;</span>
+            <span style="color: #C3C3C3">{{totalTransactions|currency}}</span>
+          </div>
+
+          <div class="mr-2">
+            <span>Reconciled Pay Out : &nbsp;</span>
+            <span style="color: #C3C3C3">{{reconciledPayOut|currency}}</span>
+          </div>
+
+          <div class="mr-2">
+            <span>Unreconciled Pay Out :&nbsp;</span>
+            <span style="color: #C3C3C3">{{unreconciledPay|currency}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-auto">
+      <button class="v-btn-icon" (click)="onDialogClose($event)">
+        <i class="flaticon-cancel"></i>
+      </button>
+    </div>
+  </header>
+</ng-template>

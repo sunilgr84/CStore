@@ -1,0 +1,273 @@
+<div id="overlay" (click)="closeSideContainer()"></div>
+<div id="mySidecontainer" [ngClass]="sideContainer">
+  <a href="JavaScript:void(0);" class="closebtn" (click)="closeSideContainer()">&times;</a>
+  <div [hidden]="view">
+    <div class="col-md-6 top-container">
+      <h5 *ngIf="!companySetupForm.value.id">Add Scan Data Setup</h5>
+      <h5 *ngIf="companySetupForm.value.id">Update Scan Data Setup</h5>
+    </div>
+    <hr>
+    <div class="main-side-container">
+      <!-- <h5>Nielsen's file transfer information</h5> -->
+      <form [formGroup]="companySetupForm" (ngSubmit)="onCompanySetupFormSubmit()">
+        <div class="form-row">
+          <div class="col">
+            <label for="manufacturerId">Manufacturer Name</label>
+            <select #manufaturer_name class="custom-select" formControlName="manufacturerId"
+              (change)="getManufacturerSetupDetail($event.target.value)" required>
+              <option value="">Select Manufacturer</option>
+              <option *ngFor="let manufacturer of manufacturers" [value]="manufacturer.id">
+                {{ manufacturer.name }}
+              </option>
+            </select>
+            <div
+              *ngIf="companySetupForm.get('manufacturerId').invalid && (companySetupForm.get('manufacturerId').dirty || companySetupForm.get('manufacturerId').touched)"
+              class="alert alert-danger">
+              <div *ngIf="companySetupForm.get('manufacturerId').errors.required">
+                Manufacturer Name is required!!.
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="customSwitch1" formControlName="isChainOfStores">
+              <label class="custom-control-label" for="customSwitch1">Is Chain Of Stores</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-row"></div>
+        <div class="form-row">
+
+          <div class="col" *ngIf="!companySetupForm.value.isChainOfStores">
+            <label for="storeId">Store Location</label>
+            <select class="custom-select" formControlName="storeId" (change)="onStoreIdChange($event.target.value)">
+              <option value="">Select Store</option>
+              <option *ngFor="let store of stores" [value]="store.storeLocationID">
+                {{ store.storeName }}
+              </option>
+            </select>
+          </div>
+          <div class="col">
+            <label for="accountNo">Account Number</label>
+            <input type="text" class="form-control" formControlName="accountNo" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col">
+            <label for="submissionDay">Submission Day</label>
+            <select class="custom-select" formControlName="submissionDay" (change)="checkSubmission()">
+              <option value="">Select Day</option>
+              <option value="monday">Monday</option>
+              <option value="tuesday">Tuesday</option>
+              <option value="wednesday">Wednesday</option>
+              <option value="thursday">Thursday</option>
+              <option value="friday">Friday</option>
+              <option value="saturday">Saturday</option>
+              <option value="sunday">Sunday</option>
+            </select>
+            <div
+              *ngIf="(companySetupForm.get('submissionDay').dirty || companySetupForm.get('submissionDay').touched)"
+              class="alert alert-danger">
+              <div *ngIf="tempSubmissionDayFlag">
+                Submission Day is required!!.
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <label for="submissionDay">Submission Type</label>
+            <select class="custom-select" formControlName="submissionTypeId"
+              (change)="onSubmissionTypeIdChange($event.target.value)">
+              <option [value]="0">Select Submission Type</option>
+              <option *ngFor="let st of submissionTypes" [value]="st.id">
+                {{ st.name }}
+              </option>
+            </select>
+            <div
+            *ngIf="(companySetupForm.get('submissionTypeId').dirty || companySetupForm.get('submissionTypeId').touched)"
+            class="alert alert-danger">
+            <div *ngIf="tempSubmissionTypeFlag">
+              Submission Type is required!!.
+            </div>
+          </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col">
+            <label>File Name Format</label>
+            <ng-select class="my-custom-select" [items]="fileFormatName" [multiple]="true" [closeOnSelect]="false"
+              [searchable]="false" bindLabel="name" [formControl]="fileFormatNameControl"
+              placeholder="Select File Name Format" (add)="addFileFormatName($event)"
+              (remove)="removeFileFormatName($event)" (clear)="clearFileFormatName()">
+            </ng-select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col">
+            <label for="fileFormat">File Format</label>
+            <select class="custom-select" formControlName="fileFormat">
+              <option value="">Select File Format</option>
+              <option value="PIPE">PIPE</option>
+              <option value="JSON">JSON</option>
+            </select>
+          </div>
+          <div class="col">
+            <label for="hostName">Host Name</label>
+            <input type="text" class="form-control" formControlName="hostName" />
+            <div *ngIf="companySetupForm.get('hostName').invalid" class="alert alert-danger">
+              <div *ngIf="companySetupForm.get('hostName').errors.required">
+                Host Name is required!!.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col">
+            <label for="userName">Username</label>
+            <input type="text" class="form-control" formControlName="userName" />
+            <div *ngIf="companySetupForm.get('userName').invalid" class="alert alert-danger">
+              <div *ngIf="companySetupForm.get('userName').errors.required">
+                Username is required!!.
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" formControlName="password" />
+            <div *ngIf="companySetupForm.get('password').invalid" class="alert alert-danger">
+              <div *ngIf="companySetupForm.get('password').errors.required">
+                Password is required!!.
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <label for="connectionType">Connection Type</label>
+            <select class="custom-select" formControlName="connectionType">
+              <option value="">Select Connection Type</option>
+              <option value="ftp">FTP</option>
+              <option value="sftp">SFTP</option>
+            </select>
+            <div *ngIf="companySetupForm.get('connectionType').invalid" class="alert alert-danger">
+              <div *ngIf="companySetupForm.get('connectionType').errors.required">
+                Connection Type is required!!.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col">
+            <label class="form-control-placeholder" for="port">Port</label>
+            <input type="number" class="form-control" formControlName="port" id="port" />
+            <div *ngIf="companySetupForm.get('port').invalid" class="alert alert-danger">
+              <div *ngIf="companySetupForm.get('port').errors.required">
+                Port is required!!.
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <label class="form-control-placeholder" for="notes">Notes</label>
+            <input type="text" class="form-control" id="notes" formControlName="notes" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col">
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="emailNot" formControlName="isChainOfStores"
+                #emailNot>
+              <label class="custom-control-label" for="emailNot">Email Notification</label>
+            </div>
+          </div>
+          <div class="col">
+            <label *ngIf="emailNot.checked">Add Email ID</label>
+            <mat-form-field class="example-chip-list" *ngIf="emailNot.checked">
+              <mat-chip-list #chipList aria-label="Email selection" id="chip">
+                <mat-chip *ngFor="let email of emails" [selectable]="true" [removable]="true"
+                  (removed)="removeEmail(email)">
+                  {{email.name}} <span matChipRemove>X</span>
+                </mat-chip>
+                <input [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="addEmail($event)">
+              </mat-chip-list>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="align-bottom row">
+          <div *ngIf="companySetupForm.valid" class="col-md-4">
+            <button class="my-btn my-sec-btn" type="button" (click)="testConnection()">
+              Test Connection
+            </button>
+          </div>
+          <div class="col" [ngClass]="{'col-md-8': companySetupForm.valid}">
+            <div class="form-row manuf-btn-container float-right">
+              <div class="col">
+                <button class="my-btn my-sec-btn" type="button" (click)="closeSideContainer()">
+                  Cancel
+                </button>
+              </div>
+              <div class="col">
+                <button *ngIf="!companySetupForm.value.id" class="my-btn my-primary-btn" type="submit">
+                  Add
+                </button>
+                <button *ngIf="companySetupForm.value.id" class="my-btn my-primary-btn" type="submit">
+                  Update
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div [hidden]="!view">
+    <h3>View</h3>
+    <hr>
+    <div class="main-side-container">
+      <div class="row lable-row" *ngFor="let view of viewData">
+        <div class="col" *ngIf="view.key!=='id'">
+          <label>{{view.key}}</label>
+        </div>
+        <div class="col" *ngIf="view.key!=='id'">
+          <span>{{view.value}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="main">
+  <div>
+    <button class="my-btn my-primary-btn float-right" id="add-manufact-btn" (click)="openSideContainer(false,false)">
+      <i class="fa fa-plus" aria-hidden="true"></i> Add New
+    </button>
+  </div>
+  <table>
+    <thead>
+      <th>Sr No.</th>
+      <th>Manufacturer Name</th>
+      <th>Store Name</th>
+      <th>Account No.</th>
+      <th>File Format Name</th>
+      <th>Submission Day</th>
+      <th>Actions</th>
+    </thead>
+    <tbody *ngIf="rowData && rowData.length > 0">
+      <tr *ngFor="let row of rowData; let i = index;">
+        <td>{{ (i+1)? (i+1): '-' }}</td>
+        <td>{{ row.manufacturerName? row.manufacturerName: '-' }}</td>
+        <td>{{ row.storeName? row.storeName:'-' }}</td>
+        <td>{{ row.accountNo? row.accountNo: '-' }}</td>
+        <td>{{ row.fileNameFormat? row.fileNameFormat: '-' }}</td>
+        <td class="text-capitalize">{{ row.submissionDay? row.submissionDay: '-'}}</td>
+        <td>
+          <i class="fa fa-pencil fa-fw action-icon" aria-hidden="true" (click)="openSideContainer(row)"></i>
+          <i class="fa fa-eye fa-fw action-icon" aria-hidden="true" (click)="openSideContainer(row,true)"></i>
+          <i class="fa fa-ban fa-fw action-icon" aria-hidden="true" (click)="openConfirmationModal(row.id)"></i>
+        </td>
+      </tr>
+    </tbody>
+    <tbody *ngIf="!rowData || rowData.length === 0">
+      <tr>
+        <td colspan="7" class="text-center"> No records found</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

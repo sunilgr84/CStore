@@ -1,0 +1,27 @@
+<app-page-header [heading]="'Super Items Search'" [icon]="'fa-bar-chart-o'"></app-page-header>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="row">
+      <div class="col-sm-3">
+        <label for="posCode">POS Code</label>
+        <input type="text" class="form-control" name="posCode" id="posCode" aria-describedby="posCode" placeholder="POS Code"
+          maxlength="250">
+      </div>
+      <div class="col-sm-3">
+        <label for="itemDescription">Item Description</label>
+        <input type="text" class="form-control" name="itemDescription" id="itemDescription" aria-describedby="itemDescription"
+          placeholder="Item Description" maxlength="250">
+      </div>
+      <div class="col-sm-3">
+        <div class="custom-btn">
+          <button class="btn btn-md btn-primary "><i class="fa fa-search"></i>&nbsp;Search</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="col-sm-12">
+    <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (gridReady)="getGridReady($event)">
+    </app-cstore-grid>
+  </div>
+</div>

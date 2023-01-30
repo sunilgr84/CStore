@@ -1,0 +1,19 @@
+<div class="row">
+  <div class="col-sm-12 grid">
+    <button type="button" class="btn btn-md btn-cstorebo btnsub btn-custom" (click)="onInsertRowAt()">
+      <i class="fa fa-plus" aria-hidden="true"></i></button>
+    <span class="ml-2 card-title" (click)="onInsertRowAt()"> <strong>Add More Item</strong> </span>
+  </div>
+  <div class="col-md-9 grid">
+    <app-editable-grid [rowData]="itemRowData" [editGridOptions]="editGridOptions" (gridReady)="onReady($event)"
+      (delete)="deleteItemRow($event)" (edit)="addEdit($event)" (save)="addEdit($event)" (cellValueChanged)="onCellValueChanged($event)"
+      [gridHeight]="'380px'">
+    </app-editable-grid>
+  </div>
+  <div class="col-sm-9 mt-3">
+    <div class="row justify-content-end">
+      <button type="button" class="btn btn-md btn-primary" (click)="backToList()">
+        Back To Vendor List</button>
+    </div>
+  </div>
+</div>

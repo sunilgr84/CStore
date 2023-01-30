@@ -1,0 +1,62 @@
+<div class="card">
+  <div class="card-body">
+    <div class="row form-group">
+
+      <div class="col-sm-3 custom-control custom-radio">
+        <input type="radio" class="custom-control-input" (click)="weeklyReportClick()" id="weeklySaleReport"
+          name="defaultExampleRadios">
+        <label class="custom-control-label" for="weeklySaleReport">Weekly Sale Report</label>
+      </div>
+
+      <div class="col-sm-3 custom-control custom-radio">
+        <input type="radio" class="custom-control-input" (click)="weeklyReportClick()" id="weeklyPurchaseReport"
+          name="defaultExampleRadios">
+        <label class="custom-control-label" for="weeklyPurchaseReport">Weekly Purchase Report</label>
+      </div>
+
+      <div class="col-sm-4 custom-control custom-radio">
+        <input type="radio" class="custom-control-input" (click)="weeklySaleByDepartmentTypeReportClick()"
+          id="weeklySaleByDepartmentTypeReport" name="defaultExampleRadios">
+        <label class="custom-control-label" for="weeklySaleByDepartmentTypeReport">Weekly Sale By DepartmentType
+          Report</label>
+      </div>
+
+    </div>
+
+    <div class="row">
+
+      <div class="col-sm-3">
+        <label class="col-sm-12 form-group has-float-label">
+          <!-- <label class="col-sm-4" for="date">Start Date</label>
+        <app-datepicker [isMaxDate]="true" class="col-sm-8" [inputDate]="inputDOB" name="dob" id="date"></app-datepicker> -->
+          <app-daterangepicker [selectedDateRange]="selectedDateRange" (dateRangeSelecetd)="dateRangeChange($event)">
+          </app-daterangepicker>
+          <span> Select Date Range</span>
+        </label>
+      </div>
+      <div class="col-sm-3 form-group">
+        <label class="col-sm-5" for="storeLocation">Store Location</label>
+        <ng-select class="col-sm-12" [items]="LocationList" [multiple]="true" [closeOnSelect]="false"
+          [hideSelected]="true" bindLabel="storeName" placeholder="Store Location">
+        </ng-select>
+      </div>
+    <!-- </div>
+
+    <div class="row"> -->
+      <!-- <div class="row col-sm-4">
+        <label class="col-sm-4" for="date">End Date</label>
+        <app-datepicker  [isMaxDate]="true" class="col-sm-8" [inputDate]="inputDOB" name="dob" id="date"></app-datepicker>
+      </div> -->
+      <div *ngIf="isShowDepartmentType" class="col-sm-3 form-group">
+        <label class="col-sm-5" for="storeLocation">Department Type</label>
+        <ng-select class="col-sm-12" [items]="LocationList" [multiple]="true" [closeOnSelect]="false"
+          [hideSelected]="true" bindLabel="storeName" placeholder="Department Type">
+        </ng-select>
+      </div>
+      <div class="col-sm-3">
+        <button class="btn btn-md btn-primary mr-3">Open PDF</button>
+      </div>
+
+    </div>
+  </div>
+</div>

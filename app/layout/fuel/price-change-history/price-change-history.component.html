@@ -1,0 +1,128 @@
+<div class="card">
+  <app-page-header
+    [heading]="'Fuel Price Change History'"
+    [icon]="'fa-edit'"
+  ></app-page-header>
+  <div class="card-body price-history">
+    <h5 class="card-title mb-3">{{ "Fuel Price Change History" }}</h5>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="row m-0">
+          <div class="col-sm-3 p-0">
+            <label class="form-group has-float-label">
+              <div *ngIf="storeLocationList && storeLocationList.length !== 1">
+                <ng-select
+                  [items]="storeLocationList"
+                  [selectOnTab]="true"
+                  bindLabel="storeName"
+                  bindValue="storeLocationID"
+                  labelForId="storeLocationID"
+                  placeholder="Store Location"
+                  name="storeLocationList"
+                  ngDefaultControl
+                  [(ngModel)]="_storeLocationId"
+                  (change)="getStoreFuelGrades()"
+                >
+                </ng-select>
+              </div>
+              <input
+                readonly
+                type="text"
+                *ngIf="storeLocationList && storeLocationList.length === 1"
+                class="form-control"
+                [value]="storeLocationList[0].storeName"
+              />
+              <span for="stores">Store Location</span>
+            </label>
+          </div>
+          <div class="col-sm-3">
+            <label class="form-group has-float-label">
+              <div *ngIf="storeFuelGradeList && storeFuelGradeList.length !== 1">
+                <ng-select
+                  [items]="storeFuelGradeList"
+                  [selectOnTab]="true"
+                  bindLabel="storeFuelGradeName"
+                  bindValue="storeFuelGradeID"
+                  labelForId="storeFuelGradeID"
+                  placeholder="Store Grade"
+                  name="storeFuelGradeID"
+                  ngDefaultControl
+                  [(ngModel)]="_storeFuelGradeId"
+                >
+                </ng-select>
+              </div>
+              <input
+                readonly
+                type="text"
+                *ngIf="storeFuelGradeList && storeFuelGradeList.length === 1"
+                class="form-control"
+                [value]="storeFuelGradeList[0].storeFuelGradeName"
+              />
+              <span for="stores">Store Grade</span>
+            </label>
+          </div>
+          <div class="col-sm-3">
+            <label class="form-group has-float-label mb-0">
+              <app-daterangepicker
+                [(ngModel)]="selectedDateRange"
+                (dateRangeSelecetd)="onDateRangeChange($event)"
+                name="selectedDateRange"
+                ngDefaultControl
+              >
+              </app-daterangepicker>
+              <span> Select Date Range</span>
+            </label>
+          </div>
+          <div class="col-sm-3">
+            <button class="btn btn-md btn-primary" type="button" (click)="getFuelPriceChangeHistory()">Search</button>
+          </div>
+          <div class="col-sm-12 p-0 pt-2">
+            <div class="row">
+              <div class="col-md-12" id="table-date-time">
+                <table class="table">
+                  <thead>
+                    <th>Fuel Grade</th>
+                    <th>Price Change Date</th>
+                    <th>Old Price</th>
+                    <th>New Price</th>
+                    <th>Price Changed By</th>
+                  </thead>
+                  <tbody>
+                    <ng-container
+                      *ngIf="
+                        priceHistory && priceHistory.length > 0;
+                        else noRecord
+                      "
+                    >
+                      <tr *ngFor="let ph of priceHistory">
+                        <td>{{ ph?.storeFuelGradeName }}</td>
+                        <td>{{ ph?.modifiedDateTime }}</td>
+                        <td>{{ ph?.oldPrice }}</td>
+                        <td>{{ ph?.newPrice }}</td>
+                        <td>{{ ph?.modifiedBy }}</td>
+                      </tr>
+                    </ng-container>
+                    <ng-template #noRecord>
+                      <tr>
+                        <td
+                          *ngIf="!isLoading; else loader"
+                          colspan="5"
+                          class="text-center"
+                        >
+                          No record found.
+                        </td>
+                        <ng-template #loader>
+                          <td colspan="5" class="text-center">Loading...</td>
+                        </ng-template>
+                      </tr>
+                    </ng-template>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,407 @@
+<!-- <div class="card"> -->
+<div class="row">
+  <div class="col-md-1">
+    <!--  <div style="margin-top: 10%;">
+      <i class="fa fa-refresh  float-right p-2" title="Refresh all widgets" (click)="onRefreshWidgets($event)"></i>
+    </div> -->
+  </div>
+  <div class="col-md-3 offset-md-8 justify-content-end float-right">
+    <div class="dropdown">
+      <div *ngIf="!isStoreLoading">
+        <div id="header-store-db" style="min-width:190px;max-width: 270px;" *ngIf="storeLocationList.length>1">
+          <ng-select [items]="storeLocationList" [hideSelected]="true" bindLabel="storeDetailName"
+            bindValue="storeLocationID" placeholder="Select Store Location" [(ngModel)]="storeLocationId"
+            (change)="storeLocationChange(storeLocationId)">
+            <ng-template ng-option-tmp let-item="item">
+              <div placement="left"
+                ngbTooltip="Client ID : {{pad(selectedCompanyId.toString(),4) +'-'+ pad(item.storeLocationID.toString(),5)}}"
+                container="body" tooltipClass="tooltip-custom-bggreen">
+                {{item.storeDetailName}}
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+
+        <div class="single-company" *ngIf="storeLocationList.length===1">
+          <span> {{storeLocationList[0].storeDetailName}}</span>
+        </div>
+      </div>
+      <div class="modal-body" *ngIf="isStoreLoading">
+        <img src="assets/images/small-spinner.gif">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row dashbaoard-card mb-3">
+  <div class="col-md-12">
+    <div class="row">
+      <!-- Fuel Sales -->
+      <div class="col-sm-4 mt-2">
+        <div class="card card-div card-row1">
+          <div class="card-body">
+            <h5 class="mb-3">Fuel Sales</h5>
+            <canvas chart-colours="colours" *ngIf="fuelSales &&  fuelSales.length > 0" baseChart [data]="fuelSales"
+              [colors]="doughnutColors" [labels]="fuelSalesPieChartLabels" chartType="doughnut"
+              (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)" [options]="fuelChartOptions">
+            </canvas>
+            <ul class="mt-2 mb-0" *ngIf="fuelSales &&  fuelSales.length > 0">
+              <li *ngFor="let option of fuelSalesPieChartLabels;let i=index;">
+                <span class="colorLegend" [style.background-color]=doughnutColors[0].backgroundColor[i]></span>&nbsp;
+                {{option}}
+              </li>
+            </ul>
+            <div class="chartEmptyState" *ngIf="fuelSales.length === 0">
+              <h6 class="data-not-available">
+                Data not available
+              </h6>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Department Type Sales -->
+      <div class="col-sm-4 mt-2">
+        <div class="card card-div card-row1">
+          <div class="card-body">
+            <h5 class="mb-3">Department Type Sales</h5>
+            <canvas chart-colours="colours"
+              *ngIf="departmentTypeSales && departmentTypeSales.length  > 0 && isShowdepartmentType" baseChart
+              [colors]="doughnutColors" [data]="departmentTypeSales" [labels]="departmentTypeSalesPieChartLabels"
+              chartType="doughnut" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"
+              [options]="deptOptions">
+            </canvas>
+            <ul class="mt-2 mb-0" *ngIf="departmentTypeSales && departmentTypeSales.length  > 0 && isShowdepartmentType">
+              <li *ngFor="let option of departmentTypeSalesPieChartLabels;let i=index;">
+                <span class="colorLegend" [style.background-color]=doughnutColors[0].backgroundColor[i]></span>&nbsp;
+                {{option}}
+              </li>
+              <br>
+            </ul>
+            <div class="chartEmptyState"
+              *ngIf="(departmentTypeSales && departmentTypeSales.length === 0 ) || !isShowdepartmentType">
+              <h6 class="data-not-available">
+                Data not available
+              </h6>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Scan Percentage -->
+      <div class="col-sm-4 mt-2">
+        <div class="card card-div card-row1">
+          <div class="card-body">
+            <h5 class="mb-3">Scan Rate</h5>
+            <canvas chart-colours="colours" *ngIf="scanPercentageChartData && scanPercentageChartData.length  > 0"
+              baseChart [colors]="scanPercentColors" [data]="scanPercentageChartData"
+              [labels]="scanPercentageChartLabels" chartType="doughnut" (chartHover)="chartHovered($event)"
+              (chartClick)="chartClicked($event)" [options]="scanPercentOptions">
+            </canvas>
+            <ul class="mt-2 mb-0" *ngIf="scanPercentageChartData && scanPercentageChartData.length  > 0">
+              <li *ngFor="let option of scanPercentageChartLabels;let i=index;">
+                <span class="colorLegend" [style.background-color]=scanPercentColors[0].backgroundColor[i]></span>&nbsp;
+                {{option}}
+              </li>
+            </ul>
+            <div class="chartEmptyState" *ngIf="scanPercentageChartData && scanPercentageChartData.length === 0 ">
+              <h6 class="data-not-available">
+                Data not available
+              </h6>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 mt-2" hidden>
+      <div style="display: block;" *ngIf="lineChartFuelLabels.length > 0">
+        <canvas baseChart width="400" height="150" [datasets]="lineChartFuelData" [labels]="lineChartFuelLabels"
+          [options]="lineChartOptions" [colors]="lineChartFuelColors" [legend]="lineChartLegend"
+          [chartType]="lineChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+      </div>
+    </div>
+    <div class="col-sm-6 mt-2" hidden>
+      <div style="display: block;" *ngIf="lineChartItemLabels.length > 0">
+        <canvas baseChart width="400" height="150" [datasets]="lineChartItemData" [labels]="lineChartItemLabels"
+          [options]="lineChartOptions" [colors]="lineChartItemColors" [legend]="lineChartLegend"
+          [chartType]="lineChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row dashbaoard-card mb-3">
+  <!-- <div class="col-md-12">
+    <div class="row"> -->
+  <!-- Critical Statistics -->
+  <div class="col-sm-4 mt-2">
+    <div class="card card-div card-row2">
+      <!-- <div class="ref-edit-icon float-right">
+          <i class="fa fa-external-link float-right p-2" (click)="onWidgetdetails($event)" title="Details"></i>
+          <i class="fa fa-refresh float-right p-2" title="Refresh"
+            (click)="getCriticalStatByBusinessDate($event)"></i>
+        </div> -->
+      <div class="card-body">
+        <h5 class="mb-3">Critical Statistics</h5>
+        <div *ngIf="criticalStats.length > 0 " class="table-wrapper-scroll-y widget-scrollbar">
+          <table class="table table-bordered table-striped mb-0 table-sm">
+            <thead>
+              <tr>
+                <th scope="col">Statistics Name</th>
+                <th scope="col">Count</th>
+                <th scope="col">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of criticalStats">
+                <td>{{item.statName}}</td>
+                <td>{{item.countValue}}</td>
+                <td>{{item.amount | currency}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div *ngIf="criticalStats.length === 0" class="emptyState">
+          <h6 class="data-not-available">
+            Data not available
+          </h6>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Promotions -->
+  <div class="col-sm-4 mt-2">
+    <div class="card card-div card-row2">
+      <div class="card-body">
+        <h5 class="mb-3">Promotions</h5>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            Transaction Count <span class="currency-format">{{transcationCount}}</span>
+          </li>
+          <li class="list-group-item">
+            Total Discount <span class="currency-format">{{totalDiscount | currency}}</span>
+          </li>
+          <li class="list-group-item">
+            Sales Amount<span class="currency-format">{{totalSalesAmount | currency}}</span>
+          </li>
+          <li class="list-group-item">
+            Sales Qty <span class="currency-format">{{totalSalesQty}}</span>
+          </li>
+        </ul>
+        <!-- <div *ngIf="promotionsRowData.length > 0 ">
+          <app-expandable-grid [rowData]="promotionsRowData" [expandableGridOptions]="promotionsGridOptions"
+            (gridReady)="onPromotionsGridReady($event)" >
+          </app-expandable-grid>
+        </div>
+        <h6 *ngIf="promotionsRowData.length === 0 " class="data-not-available">
+          Data not available
+        </h6> -->
+      </div>
+    </div>
+  </div>
+  <!-- Top Selling Items By Dept -->
+  <div class="col-sm-4 mt-2">
+    <div class="card card-div card-row2">
+      <div class="card-body">
+        <h5 class="mb-3">
+          Top Selling Items By Department
+          <div class="ref-edit-icon float-right">
+            <i class="fa fa-refresh float-right cursor-pointer p-1" title="Refresh"
+              (click)="getTopSellingItemsByDept()"></i>
+          </div>
+        </h5>
+        <div *ngIf="topSellingItemsByDept.length > 0 " class="table-wrapper-scroll-y widget-scrollbar">
+          <table class="table table-bordered table-striped mb-0 table-sm">
+            <thead>
+              <tr>
+                <th scope="col">Description</th>
+                <th scope="col">Qty</th>
+                <th scope="col">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of topSellingItemsByDept">
+                <td>{{item.description}}</td>
+                <td>{{item.tq}}</td>
+                <td>{{item.tAmount}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="emptyState" *ngIf="topSellingItemsByDept.length === 0">
+          <h6 class="data-not-available">
+            Data not available
+          </h6>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Purchases -->
+  <!-- <div class="col-sm-4 mt-2">
+    <div class="card card-div">
+      <div class="card-body">
+        <div class="mb-3">
+          <h5>Purchases</h5>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            Total Item Cost <span class="currency-format">{{purchase?.TotalItemCost ? purchase.TotalItemCost : 0
+              |currency}}</span>
+          </li>
+          <li class="list-group-item">
+            Total Item Purchase <span class="currency-format">{{purchase?.TotalItemPurchase ?
+              purchase.TotalItemPurchase : 0}}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div> -->
+  <!-- Lottery -->
+  <div *ngIf="showLottery" class="col-sm-4 mt-2">
+    <div class="card card-div">
+      <!--  <div class="ref-edit-icon float-right">
+            <i class="fa fa-external-link float-right p-2" (click)="onWidgetdetails($event)" title="Details"></i>
+            <i class="fa fa-refresh float-right p-2" title="Refresh"
+              (click)="getWidgetsDataForFuelandLottery($event)"></i>
+          </div> -->
+      <div class="card-body">
+        <div class="mb-3">
+          <h6 class="text-left">Lottery</h6>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            Books Confirmed <span class="currency-format">{{fuelandLottery?.booksConfirmed ?
+              fuelandLottery.booksConfirmed : 0 |currency}}</span>
+          </li>
+          <li class="list-group-item">
+            Books Activated <span class="currency-format">{{fuelandLottery?.booksActivated ?
+              fuelandLottery.booksActivated : 0|currency}}</span>
+          </li>
+          <li class="list-group-item">
+            Lottery Tickets Sold <span class="currency-format">{{fuelandLottery?.lotteryTicketsSold ?
+              fuelandLottery.lotteryTicketsSold : 0|currency}}</span>
+          </li>
+          <li class="list-group-item">
+            Lottery Tickets Cashed <span class="currency-format">{{fuelandLottery?.lotteryTicketsCashed ?
+              fuelandLottery.lotteryTicketsCashed : 0|currency}}</span>
+          </li>
+          <li class="list-group-item">
+            Online Sales <span class="currency-format">{{fuelandLottery?.onlineSales ? fuelandLottery.onlineSales :
+              0|currency}}</span>
+          </li>
+          <li class="list-group-item">
+            Online Cashes <span class="currency-format">{{fuelandLottery?.onlineCashes ? fuelandLottery.onlineCashes
+              : 0|currency}}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- </div>
+  </div> -->
+</div>
+<!-- </div> -->
+
+
+
+<!-- Fuel Delivery -->
+<!--    <div class="col-sm-6 mt-2">
+        <div class="card card-div">
+          <div class="ref-edit-icon float-right">
+            <i class="fa fa-external-link float-right p-2" (click)="onWidgetdetails($event)" title="Details"></i>
+            <i class="fa fa-refresh float-right p-2" title="Refresh" (click)="getWidgetFuelDelivery($event)"></i>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <h5>Fuel Delivery</h5>
+            </div>
+            <ul class="list-group list-group-flush" *ngIf="fuelDelivery">
+              <li class="list-group-item">
+                {{fuelDelivery |currency}}
+              </li>
+            </ul>
+            <div *ngIf="!fuelDelivery" class="emptyState">
+              <h6 class="data-not-available">
+                Data not available
+              </h6>
+            </div>
+          </div>
+        </div>
+      </div> -->
+<div class="row dashbaoard-card mb-3">
+  <!-- Top Trending Items -->
+  <div class="col-sm-4 mt-2" hidden>
+    <div class="card card-div">
+      <div class="ref-edit-icon float-right">
+        <i class="fa fa-external-link float-right p-2" (click)="onWidgetdetails($event)" title="Details"></i>
+        <i class="fa fa-refresh float-right p-2" title="Refresh" (click)="getTopSellingItems()"></i>
+      </div>
+      <div class="card-body">
+        <div class="mb-4">
+          <h5>Top Trending Items</h5>
+        </div>
+        <!---->
+        <div *ngIf="topTrendingItems.length > 0 " class="table-wrapper-scroll-y widget-scrollbar">
+          <table class="table table-bordered table-striped mb-0 table-sm">
+            <thead>
+              <tr>
+                <th scope="col">UPC Code</th>
+                <th scope="col">Description</th>
+                <th scope="col">Qty</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of topTrendingItems">
+                <td>{{item.upcCode}}</td>
+                <td>{{item.description}}</td>
+                <td>{{item.count}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="emptyState" *ngIf="topTrendingItems.length === 0">
+          <h6 class="data-not-available">
+            Data not available
+          </h6>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Top Selling Items -->
+  <div class="col-sm-4 mt-2">
+    <div class="card card-div">
+      <div class="card-body">
+        <div class="mb-3">
+          <h5>
+            Top Selling Items
+            <div class="ref-edit-icon float-right">
+              <!-- <i class="fa fa-external-link float-right p-2" (click)="onWidgetdetails($event)" title="Details"></i> -->
+              <i class="fa fa-refresh float-right cursor-pointer p-1" title="Refresh"
+                (click)="getTopSellingItems()"></i>
+            </div>
+          </h5>
+        </div>
+        <div *ngIf="topSellingItems.length > 0 " class="table-wrapper-scroll-y widget-scrollbar">
+          <table class="table table-bordered table-striped mb-0 table-sm">
+            <thead>
+              <tr>
+                <th scope="col">UPC Code</th>
+                <th scope="col">Description</th>
+                <th scope="col">Qty</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of topSellingItems">
+                <td>{{item.fullUPCCode}}</td>
+                <td>{{item.description}}</td>
+                <td>{{item.tq}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="emptyState" *ngIf="topSellingItems.length === 0">
+          <h6 class="data-not-available">
+            Data not available
+          </h6>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,229 @@
+<div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title col-sm-12 mb-4">
+            {{title}}
+            <button *ngIf="!showForm" type="button" class="btn btn-md btn-cstorebo float-right mb-1"
+              (click)="onAddHouseAccount()">
+              <i class="fa fa-plus" aria-hidden="true"></i> Add New</button>
+          </h5>
+
+          <form [formGroup]="houseAccountForm" novalidate>
+            <div class="col-sm-12 mt-3" *ngIf="showForm">
+              <div class="row">
+                
+                <label class="form-group has-float-label col-sm-3">
+                  <input type="text" class="form-control" id="accountCode"
+                    formControlName="accountCode" placeholder="Account Code" required
+                    maxlength="250" (blur)="checkAccountCode()">
+                  <span for="accountCode">Account Code</span>
+                  <div *ngIf="submitted && house.accountCode.errors?.required"
+                    class="alert alert-danger">
+                    Account Code is required
+                  </div>
+                </label>
+
+                <label class="form-group has-float-label col-sm-3">
+                  <input type="text" class="form-control" id="accountName"
+                    formControlName="accountName" placeholder="Account Code" required
+                    maxlength="250" (blur)="checkAccountName()">
+                  <span for="accountName">Account Name</span>
+                  <div *ngIf="submitted && house.accountName.errors?.required"
+                    class="alert alert-danger">
+                    Account Name is required
+                  </div>
+                </label>
+
+                <label #paymentTerms class="form-group has-float-label col-sm-3">
+                  <select class="form-control" id="paymentTerms" formControlName="paymentTerms" required>
+                    <option value="">Select Payment Terms</option>
+                    <option *ngFor="let item of paymentTermsArray" [value]="item">
+                      {{item}}</option>
+                  </select>
+                  <span for="paymentTerms">Payment Terms</span>
+                  <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+                  <div *ngIf="submitted && house.paymentTerms.errors?.required" class="alert alert-danger">
+                    Payment terms is required
+                  </div>
+                </label>
+
+                <label class="form-group has-float-label col-sm-3">
+                  <input type="text" class="form-control" id="creditLimit"
+                    formControlName="creditLimit" placeholder="Credit Limit" required
+                    maxlength="250">
+                  <span for="creditLimit">Credit Limit</span>
+                  <div *ngIf="submitted && house.creditLimit.errors?.required"
+                    class="alert alert-danger">
+                    Credit Limit is required
+                  </div>
+                </label>
+
+
+                <label class="form-group has-float-label col-sm-3">
+                  <input type="text" class="form-control" id="fedID"
+                    formControlName="fedID" placeholder="Fed ID" required
+                    maxlength="250">
+                  <span for="fedID">Fed ID</span>
+                  <div *ngIf="submitted && house.fedID.errors?.required"
+                    class="alert alert-danger">
+                    Fed ID is required
+                  </div>
+                </label>
+
+
+                <label class="form-group has-float-label col-sm-3">
+                  <input type="text" class="form-control" id="name"
+                    formControlName="name" placeholder="Contact Name" required
+                    maxlength="250">
+                  <span for="name">Contact Name</span>
+                  <div *ngIf="submitted && house.name.errors?.required"
+                    class="alert alert-danger">
+                    Contact Name is required
+                  </div>
+                </label>
+
+                <label class="form-group has-float-label col-sm-3">
+                  <input type="text" class="form-control" id="phoneNo"
+                    formControlName="phoneNo" placeholder="Phone No (000)000-0000" required
+                    maxlength="250">
+                  <span for="phoneNo">Phone No (000)000-0000</span>
+                  <div *ngIf="submitted && house.phoneNo.errors?.required"
+                    class="alert alert-danger">
+                    Phone No is required
+                  </div>
+                  <div *ngIf="submitted && house.phoneNo.errors?.pattern"
+                    class="alert alert-danger">
+                    You have entered an invalid phone number!
+                  </div>
+                </label>
+
+                <label class="form-group has-float-label col-sm-3">
+                  <input type="text" class="form-control" id="email"
+                    formControlName="email" placeholder="Email" required
+                    maxlength="250">
+                  <span for="email">Email</span>
+                  <div *ngIf="submitted && house.email.errors?.required"
+                    class="alert alert-danger">
+                    Email is required
+                  </div>
+                  <div *ngIf="submitted && house.email.errors?.email"
+                    class="alert alert-danger">
+                    You have entered an invalid email address!
+                  </div>
+                </label>
+
+                  <label class="form-group has-float-label  pr-0   col-sm-3">
+                    <input type="text" class="form-control" name="address" placeholder="Address"
+                      formControlName="address" id="address"
+                      (onAddressChange)="handleAddressChange($event)" ngx-google-places-autocomplete
+                      #placesRef="ngx-places" [options]="options">
+                    <span for="address"> Address </span>
+                  </label>
+
+                  <label class="form-group has-float-label  pr-0   col-sm-3">
+                    <input type="text" class="form-control" id="city" name="city" placeholder="City"
+                      formControlName="city">
+                    <span for="city"> City </span>
+                  </label>
+
+                  <label class="form-group has-float-label   pr-0  col-sm-3">
+                    <select class="form-control" required formControlName="stateName" (change)="onStaeChange(false)"
+                      id="stateName">
+                      <option value="">--Select State--</option>
+                      <option *ngFor="let item of stateList" [value]="item.stateName">{{item.stateName}}</option>
+                    </select>
+                    <span for="stateName"> State </span>
+                    <div *ngIf="submitted && house.stateName.errors?.required" class="alert alert-danger">
+                      State is required
+                    </div>
+                    <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+                  </label>
+
+                  <label class="form-group has-float-label  pr-0   col-sm-3">
+                    <select class="form-control" formControlName="countyName" id="county">
+                      <option value="">--Select County--</option>
+                      <option *ngFor="let item of countyFilterList" [value]="item.countyName">{{item.countyName}}
+                      </option>
+                    </select>
+                    <span for="county"> County </span>
+                    <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+                  </label>
+
+                <label class="form-group has-float-label   pr-0  col-sm-3">
+                    <input type="text" class="form-control" minlength="5" maxlength="5" placeholder="Zip Code"
+                      formControlName="zipCode" id="zipCode">
+                    <span for="zipCode"> Zip Code </span>
+                    <div *ngIf="submitted && house.stateName.errors?.maxlength" class="alert alert-danger">
+                      Zip Code must be 5 digit!
+                    </div>
+                  </label>
+
+
+               
+              </div>
+              <div class="col-sm-12 text-right mb-3 pr-0">
+                <button type="button" class="btn btn-md btn-primary mr-3" (click)="reset()">
+                  Cancel
+                </button>
+                <button type="button" class="btn btn-md btn-primary mr-3" (click)="updateOrSave($event)">
+                  {{isEdit?'Update':'Save'}}</button>
+              </div>
+            </div>
+          </form>
+          <div class="row mb-2">
+            <div class="row justify-content-end  col-sm-12">
+              <div class="inner-addon right-addon">
+                <span> <i class="fa fa-search card-title" aria-hidden="true"></i> </span>
+                <input type="text" class="form-control" aria-label="Default"
+                  aria-describedby="inputGroup-sizing-default" placeholder="Filter Search" [(ngModel)]="filterText"
+                  name="filterText">
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 mb-3">
+            <app-cstore-grid [cStoreGridOptions]="gridOptions" [rowData]="rowData" (gridReady)="onGridReady($event)"
+              [textFilter]="filterText" (edit)="editAction($event); addUpdateDetails=true;"
+              (delete)="deleteAction($event)"></app-cstore-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<!-- <app-page-header [icon]="'fa-bar-chart-o'" [heading]="'House Account'"></app-page-header>
+<div class="row">
+  <div class="row col-sm-12 pr-0">
+    <div class="col-md-6">
+      
+      <span class="ml-2 card-title">House Account</span>
+    </div>
+    <div class="row justify-content-end pr-0 col-md-6">
+      <div class="col-md-12">  
+      <button type="button" style="float: right;" class="btn btn-md btn-cstorebo btnsub btn-custom " (click)="onInsertRowAt()">
+        <i class="fa fa-plus" aria-hidden="true"></i> Add New</button>
+      </div>
+      <div class="col-md-12">
+      <div class="inner-addon right-addon" style="width: 230px; float: right;">
+        <span>
+          <i class="fa fa-search card-title" aria-hidden="true"></i>
+        </span>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+          placeholder="Filter Search" [(ngModel)]="filterText" name="filterText">
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-12 mt-3">
+    <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (edit)="editAction($event)" (gridReady)="onGridReady($event)"
+      (delete)="deleteAction($event)"></app-cstore-grid>
+  </div>
+</div> -->

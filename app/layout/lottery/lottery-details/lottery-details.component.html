@@ -1,0 +1,39 @@
+<!-- <div class="card">
+
+  <div class="card-body">
+  <ngb-tabset #tabs="ngbTabset" type="pills" [destroyOnHide]="false" (tabChange)="tabChange($event)">
+    <ngb-tab id="tab-game" title="Add Game">
+      <ng-template ngbTabContent>
+        <app-add-game></app-add-game>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab id="tab-confirm" title="Confirm Pack">
+      <ng-template ngbTabContent>
+        <app-confirm-pack [activeTab]="_activeTab" [editData]="setData" [storeList]="storeLocationList"
+          (changeTabs)="selectTab($event)"></app-confirm-pack>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab id="tab-activate" title="Activate Pack">
+      <ng-template ngbTabContent>
+        <app-activate-pack [activeTab]="_activeTab" (changeTabs)="selectTab($event)" [storeList]="storeLocationList">
+        </app-activate-pack>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab id="tab-move" title="Move Pack">
+      <ng-template ngbTabContent>
+        <app-move-pack [activeTab]="_activeTab" [storeList]="storeLocationList"></app-move-pack>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab id="tab-return" title="Return Pack">
+      <ng-template ngbTabContent>
+        <app-return-pack [activeTab]="_activeTab" [storeList]="storeLocationList"></app-return-pack>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab title="Lottery Inventory">
+      <ng-template ngbTabContent>
+        <app-lottery-inventory></app-lottery-inventory>
+      </ng-template>
+    </ngb-tab>
+  </ngb-tabset>
+</div>
+</div> -->

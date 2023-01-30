@@ -1,0 +1,14 @@
+<div class="row">
+  <div class="col-sm-12 mt-1 text-right" [hidden]="isDefault">
+    <button type="button" class="btn btn-md btn-cstorebo btnsub btn-custom" (click)="addRowMultiplier()">
+      <i class="fa fa-plus" aria-hidden="true"></i></button>
+    <span class="ml-2 mt-2 card-title" (click)="addRowMultiplier()">Add Multiplier</span>
+  </div>
+  <div class="col-sm-12 mt-2">
+    <app-editable-grid [rowData]="multiplierRowData" [editGridOptions]="multiplierGridOptions" [gridHeight]="'300px'"
+      (gridReady)="onMultiplierGridReady($event)" (cellValueChanged)="onCellValueChanged($event)"
+      (delete)="!isDefault?deleteMultiplierAction($event):''" (edit)="saveMultiplier($event)"
+      (save)="saveMultiplier($event)">
+    </app-editable-grid>
+  </div>
+</div>

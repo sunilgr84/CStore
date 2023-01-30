@@ -1,0 +1,48 @@
+<div class="container-fluid mt-3">
+  <div class="card-body">
+    <div class="row  form-group">
+      <div class="col-sm-12">
+        <div class="row justify-content-between">
+          <div class="margin-bottom-3 col-sm-4">
+            <button type="button" class="btn btn-md btn-cstorebo btnsub btn-custom" (click)="addNew()">
+              <i class="fa fa-plus" aria-hidden="true"></i></button>
+            <span class="ml-2 card-title" (click)="addNew()">Add New Store Location Fees</span>
+          </div>
+          <div class=" col-sm-4">
+            <div class="inner-addon right-addon">
+              <span>
+                <i class="fa fa-search card-title" aria-hidden="true"></i>
+              </span>
+              <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+                placeholder="Filter Search" [(ngModel)]="filterText" name="filterText"
+                (input)="onFilterTextBoxChanged()">
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style="height: 100%; margin-top:1rem; box-sizing: border-box;">
+            <app-editable-grid [rowData]="rowData" [gridHeight]="'300px'" (delete)="deleteAction($event)"
+              [editGridOptions]="gridOptions" (gridReady)="getGridReady($event)" (edit)="editOrSave($event,true)"
+              (save)="editOrSave($event,false)">
+            </app-editable-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 form-group">
+      <div class="row justify-content-between">
+        <div class="">
+          <!-- <button class="btn btn-md btn-danger" (click)="resetGrid()"> Reset </button> -->
+        </div>
+        <div class="col-sm-12 justify-content-start">
+          <div class="text-right">
+            <button type="button" class="btn btn-md btn-cstorebo btnsub mr-3" (click)="onNavigateMOP()">
+              Add Method of Payment</button>
+            <button type="button" class="btn btn-md btn-cstorebo" (click)="backToMainList()">
+              &nbsp; Back to Store List </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

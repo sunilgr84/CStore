@@ -1,0 +1,134 @@
+<div [@routerTransition]>
+  <!-- <app-page-header [heading]="'Add Stores'" [icon]="'fa-bar-chart-o'"></app-page-header> -->
+  <div class="card store-list-ag-grid-custome">
+    <div class="card-body" *ngIf="!isAddStores">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="margin-bottom-5 col-sm-4">
+            <button type="button" class="btn btn-md btn-cstorebo" (click)="addStore(true)">
+              <i class="fa fa-plus"></i> Add Store</button>
+          </div>
+          <div class="row justify-content-end margin-bottom-5 col-sm-8">
+
+            <div class="inner-addon right-addon">
+              <span>
+                <i class="fa fa-search card-title" aria-hidden="true"></i>
+              </span>
+              <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+                placeholder="Filter Search" [(ngModel)]="filterText" name="filterText">
+
+            </div>
+          </div>
+        </div>
+        <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+          [textFilter]="filterText" (edit)="editAction($event)" (delete)="delAction($event)"></app-cstore-grid>
+      </div>
+    </div>
+
+    <div *ngIf="isAddStores" class="add-stores">
+      <div class="card-body">
+        <h5 class="card-title" *ngIf="hederTitle">{{hederTitle}}</h5>
+        <ngb-tabset type="pills" #tabs="ngbTabset" (tabChange)="tabChange($event)">
+          <ngb-tab id="tab-store-information" title="Store Information">
+            <ng-template ngbTabContent>
+              <app-store-informtion [storeInfoData]="editRowData" (enableTabs)="enableAllTabs($event)"
+                (changeTabs)="selectTab($event)" (backToStoreList)="backToStoreList($event)"></app-store-informtion>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab id="tab-sales-tax-setup" title="Sales Tax Setup" [disabled]="isEnableTab">
+            <ng-template ngbTabContent>
+              <app-sales-tax [storeLocationID]="storeLocationID" (backToStoreList)="backToStoreList($event)"
+                (changeTabs)="selectTab($event)">
+              </app-sales-tax>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab id="tab-sales-restriction" title="Sales Restriction" [disabled]="isEnableTab">
+            <ng-template ngbTabContent>
+              <app-sales-restriction [storeLocationID]="storeLocationID" (backToStoreList)="backToStoreList($event)"
+                (changeTabs)="selectTab($event)">
+              </app-sales-restriction>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab id="tab-fuel-setup" title="Fuel Setup" [disabled]="isEnableTab">
+            <ng-template ngbTabContent>
+              <app-fuel-grade-mapping [storeLocationId]="storeLocationID" (backToStoreList)="backToStoreList($event)"
+                (changeTabs)="selectTab($event)">
+              </app-fuel-grade-mapping>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab id="tab-store-fees" title="Store Fees" [disabled]="isEnableTab">
+            <ng-template ngbTabContent>
+              <app-store-fees [storeLocationID]="storeLocationID" (backToStoreList)="backToStoreList($event)"
+                (changeTabs)="selectTab($event)">
+              </app-store-fees>
+            </ng-template>
+          </ngb-tab>
+          <!-- <ngb-tab title="Store Guidline" [disabled]="isEnableTab">
+        <ng-template ngbTabContent>
+          <app-store-guidlines></app-store-guidlines>
+        </ng-template>
+      </ngb-tab> -->
+          <ngb-tab id="tab-method-of-payment" title="Method Of Payment" [disabled]="isEnableTab">
+            <ng-template ngbTabContent>
+              <app-payment-method [storeLocationID]="storeLocationID" (backToStoreList)="backToStoreList($event)"
+                (changeTabs)="selectTab($event)">
+              </app-payment-method>
+            </ng-template>
+          </ngb-tab>
+          <!-- <ngb-tab title="Payment Categories" [disabled]="isEnableTab">
+        <ng-template ngbTabContent>
+          <app-payment-categories></app-payment-categories>
+        </ng-template>
+      </ngb-tab>
+    -->
+          <ngb-tab id="tab-store-services" title="Store Services" [disabled]="isEnableTab">
+            <ng-template ngbTabContent>
+              <app-store-services [storeLocationID]="storeLocationID" (backToStoreList)="backToStoreList($event)"
+                (changeTabs)="selectTab($event)">
+              </app-store-services>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab id="tab-store-lottery-setting" title="Lottery Settings" [disabled]="isEnableTab">
+            <ng-template ngbTabContent>
+              <app-store-lottery-setting [storeInfoData]="editRowData" [storeLocationID]="storeLocationID" [lotteryStateCode]="lotteryStateCode">
+              </app-store-lottery-setting>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab id="tab-accounting" title="Accounting" [disabled]="isEnableTab">
+            <ng-template ngbTabContent>
+              <app-accouting [storeLocationID]="storeLocationID" (backToStoreList)="backToStoreList($event)">
+              </app-accouting>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab title="Billing /Subscription" [disabled]="true">
+            <ng-template ngbTabContent>
+              <app-billing-subscription></app-billing-subscription>
+            </ng-template>
+          </ngb-tab>
+           <ngb-tab id="tab-setting-time-off" title="Setting (Time off)" [disabled]="isEnableTab">
+            <ng-template ngbTabContent>
+              <app-setting-time-off [storeLocationID]="storeLocationID" (backToStoreList)="backToStoreList($event)"
+                (changeTabs)="selectTab($event)">
+              </app-setting-time-off>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab id="tab-scheduling-setting" title="Setting (Scheduling)" [disabled]="isEnableTab">
+            <ng-template ngbTabContent>
+              <app-scheduling-setting [storeLocationID]="storeLocationID" (backToStoreList)="backToStoreList($event)"
+                (changeTabs)="selectTab($event)">
+              </app-scheduling-setting>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab id="tab-timesheet-timeoff" title="Timesheet (Time off)" [disabled]="isEnableTab">
+            <ng-template ngbTabContent>
+              <app-timesheet-timeoff [storeLocationID]="storeLocationID" (backToStoreList)="backToStoreList($event)"
+                (changeTabs)="selectTab($event)">
+              </app-timesheet-timeoff>
+            </ng-template>
+          </ngb-tab>
+        </ngb-tabset>
+      </div>
+
+    </div>
+  </div>
+</div>

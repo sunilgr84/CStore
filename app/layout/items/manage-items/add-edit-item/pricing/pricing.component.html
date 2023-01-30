@@ -1,0 +1,121 @@
+<div>
+  <div #addItemPricingHeader class="pmc-header pmc-container-primary" style="border-radius: 8px 8px 0 0;">
+    <div class="col pmc-space-wrapper" (click)="handleScroll(addItemPricingHeader)">
+      <div class="pmc-title-wrapper">
+        <span class="pmc-title pmc-space-wrapper">
+          <span>Pricing</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="col-auto pmc-space-wrapper" [hidden]="true">
+      <div class="field-wrapper">
+        <input type="text" class="field-input" />
+      </div>
+    </div>
+    <div class="col-auto" [hidden]="true">
+      <div class="d-flex align-items-center">
+        <span class="text-label text-label-small bg-info" style="margin-right: 4px">M</span>
+        <span class="text-caption color-primary">Set Common Multipack Identifier</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="pmc-body pt-0">
+    <div class="col-12" *ngIf="isMultipleStores" style="border-bottom: 1px solid #e1e1e1;">
+      <div class="row align-items-center gutter-bottom">
+        <div class="col">
+          <div class="row mt-2">
+            <div class="col-5">
+              <div class="field-group">
+                <label for="selectStoresGroups" class="field-label">Select Stores/Groups from the grid
+                  below</label>
+                <div class="field-wrapper  p-none">
+                  <ng-select [items]="storesList" [hideSelected]="true" [multiple]="true" [(ngModel)]="selectedStores"
+                    bindLabel="storeName" bindValue="storeLocationID" placeholder="Select Store Location"
+                    [closeOnSelect]="false" (change)="onStoreSelection($event)" class="field-select">
+                    <ng-template ng-label-tmp let-item="item" let-clear="clear">
+                      <span class="ng-value-label">{{item.storeName}}</span>
+                      <span class="ng-value-icon flaticon-cancel right" (click)="clear(item)" aria-hidden="true">
+                      </span>
+                    </ng-template>
+                  </ng-select>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-2">
+              <div class="field-group">
+                <label for="costPrice" class="field-label">Cost Price</label>
+                <div class="field-wrapper">
+                  <span class="pr-1">$</span>
+                  <input numberTwoDecimalOnly type="number" [(ngModel)]="inventoryValuePrice" class="field-input">
+                </div>
+              </div>
+            </div>
+
+            <div class="col-2">
+              <div class="field-group">
+                <label for="sellPrice" class="field-label">Selling Price</label>
+                <div class="field-wrapper">
+                  <span class="pr-1">$</span>
+                  <input numberTwoDecimalOnly type="number" [(ngModel)]="sellingPrice" class="field-input">
+                </div>
+              </div>
+            </div>
+
+            <div class="col-auto pmc-space-wrapper">
+              <button class="v-btn-contained v-btn-info mt-18" (click)="applyPricing()">Apply Pricing</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="row mt-2">
+        <div class="col-9 mt-2">
+          <span>No Colour : Current</span>&nbsp;&nbsp;
+          <span><span style="background: red;width: 1em;">&nbsp;&nbsp;&nbsp;&nbsp;</span> : Error</span>&nbsp;&nbsp;
+          <span><span style="background: #01b401;width: 1em;">&nbsp;&nbsp;&nbsp;&nbsp;</span> : Push To
+            POS</span>&nbsp;&nbsp;
+          <span><span style="background: orange;width: 1em;">&nbsp;&nbsp;&nbsp;&nbsp;</span> : In Progress</span>
+        </div>
+        <div class="col-3">
+          <!-- <label for="isItemMultipack" class="field-label">Units</label> -->
+          <label class="field-switch-wrapper float-right">
+            <input type="checkbox" (change)="onCaseChange($event)" class="field-switch-input" id="Units" />
+            <span class="field-switch-label" data-on="Units" data-off="Case"></span>
+            <span class="field-switch-handle"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 p-none pricing-grid" *ngIf="isShow">
+      <!-- <app-ag-grid [agGridTheme]="'inline-edit'" [rowData]="editStoreItemsRowData" [editGridOptions]="storeItemsGridEditableOptions"
+            (gridReady)="onEditGridReady($event)"
+                [autoSizeCols]="true">
+            </app-ag-grid> -->
+
+
+      <app-adv-pagination-grid (gridReady)="onEditGridReady($event)" [rowData]="editStoreItemsRowData"
+        [agGridTheme]="'inline-edit'" [paginationGridOptions]="storeItemsGridEditableOptions"
+        (cancel)="onCancel($event)" (edit)="onEdit($event)" (save)="editPriceingGrid($event)"
+        (suspend)="suspendAction($event)" (cellValueChanged)="onCellValueChanged($event)"
+        (rowSelected)="onRowSelected($event)" (cellButtonClick)="onCellButtonClick($event)"
+        [showOverlayComponent]="showOverlayComponent" (onBackClick)="onOverlayBackClick($event)"
+        (rowEditingStopped)="onRowEditingStopped($event)">
+        <div *ngIf="overlayComponentData">
+          <app-add-multi-packs [itemId]="itemID" [storeLocationID]="overlayComponentData.node.data.storeLocationID"
+            [unitsInCase]="unitsInCase"></app-add-multi-packs>
+        </div>
+
+      </app-adv-pagination-grid>
+    </div>
+  </div>
+</div>
+<!-- confirm remove dialog for ag-grid -->
+<app-dialog-confirm-remove [isDialogOpen]="isConfirmRemoveOpen" [dialogTitle]="'Are you sure you want to suspend it ?'"
+  (onClose)="handleConfirmRemoveClose($event)">
+</app-dialog-confirm-remove>

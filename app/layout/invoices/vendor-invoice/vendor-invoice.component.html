@@ -1,0 +1,218 @@
+<div class="main-content-wrap d-flex flex-column">
+  <div class="main-content">
+    <section *ngIf="!isAddNew">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card m-1">
+            <form novalidate [formGroup]="advanceSearchForm">
+              <div class="card-header">
+                <div class="col-sm-3" *ngIf="storeLocationList && storeLocationList.length!==1">
+                  <ng-select [items]="storeLocationList" [closeOnSelect]="false" formControlName="locationCriteria"
+                    [hideSelected]="true" [multiple]="true" bindLabel="storeName" placeholder="Store Location"
+                    groupBy="companyID" [selectableGroup]="true" [selectableGroupAsModel]="false">
+                    <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                      <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                    </ng-template>
+                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                      <div class="ng-value" *ngFor="let item of items | slice:0:4">
+                        <span class="ng-value-label">
+                          {{item.storeName}}</span>
+                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                      </div>
+                      <div class="ng-value" *ngIf="items.length > 2">
+                        <span class="ng-value-label">{{items.length - 2}} more...</span>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                </div>
+                <div class="col-sm-3">
+                  <ng-select [items]="vendorList" [multiple]="true" [hideSelected]="true" [closeOnSelect]="false"
+                    bindLabel="vendorName" placeholder="Vendor" formControlName="vendorCriteria" groupBy="companyID"
+                    [selectableGroup]="true" [selectableGroupAsModel]="false">
+                    <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                      <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                    </ng-template>
+                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                      <div class="ng-value" *ngFor="let item of items | slice:0:4">
+                        <span class="ng-value-label">
+                          {{item.vendorName}}</span>
+                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                      </div>
+                      <div class="ng-value" *ngIf="items.length > 2">
+                        <span class="ng-value-label">{{items.length - 2}} more...</span>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                </div>
+                <div class="col-sm-3">
+                  <app-daterangepicker class="invoice-daterange" [selectedDateRange]="selectedDateRange"
+                    (dateRangeSelecetd)="dateRangeChange($event)">
+                  </app-daterangepicker>
+                </div>
+                <div class="col-sm-3 p-0">
+                  <label>
+                    <i (click)="isAdvanceSearchOpen=!isAdvanceSearchOpen"
+                      class="fa fa-filter fa fa-filter m-1 cursor-pointer fs-12"></i>
+                  </label>
+                  <button type="button" class="btn btn-md btn-primary ml-2 mw-80" (click)="invoiceSearch()">
+                    Search</button>
+                  <button type="button" class="btn btn-md btn-primary ml-2 mw-80" (click)="addNew(true)">
+                    <i class="fa fa-plus" aria-hidden="true"></i> Add New</button>
+                </div>
+              </div>
+              <div *ngIf="isAdvanceSearchOpen" class="pmc-container pmc-absolute-container">
+                <div class="pmc-header">
+                  <div class="col">
+                    <div class="pmc-title-wrapper">
+                      <span class="pmc-title">Search items by</span>
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <button class="v-btn-icon v-btn-small pmc-close" (click)="isAdvanceSearchOpen=false">
+                      <i class="flaticon-cancel"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="pmc-body">
+                  <div class="col-3">
+                    <ng-select [items]="paymentSourceList" bindLabel="sourceName" [hideSelected]="true"
+                      [closeOnSelect]="false" [multiple]="true" placeholder="Payment Source"
+                      formControlName="paymentSourceIDs" groupBy="companyID" [selectableGroup]="true"
+                      [selectableGroupAsModel]="false">
+                      <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                        <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                      </ng-template>
+                      <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                        <div class="ng-value" *ngFor="let item of items | slice:0:4">
+                          <span class="ng-value-label">
+                            {{item.sourceName}}</span>
+                          <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                        </div>
+                        <div class="ng-value" *ngIf="items.length > 2">
+                          <span class="ng-value-label">{{items.length - 2}} more...</span>
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                  </div>
+                  <div class="col-3">
+                    <input class="form-control " id="invoiceN" placeholder="Invoice No" formControlName="invoiceNo">
+                  </div>
+                  <div class="col-3">
+                    <ng-select [items]="invoiceStatusList" [multiple]="true" [hideSelected]="true"
+                      [closeOnSelect]="false" bindLabel="invoiceStatusDescription" placeholder="Status"
+                      formControlName="statusCriteria">
+                    </ng-select>
+                  </div>
+                  <div class="col-3">
+                    <input class="form-control" id="upcCode" placeholder="UPC Code" formControlName="upcCode">
+                  </div>
+                </div>
+                <div class="pmc-footer">
+                  <div class="col"></div>
+                  <div class="col-auto pmc-space-wrapper">
+                    <button class="btn btn-md btn-primary ml-3" (click)="clearAdvanceSearch()">Clear</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <div class="pmc-container by-none">
+              <div class="pmc-header">
+                <div class="col-2 p-0">
+                  <div class="custom-control custom-checkbox d-inline" *ngIf="showSelectAll">
+                    <mat-checkbox [(ngModel)]="selectAllInvoiceFlag" (change)="selectAllInvoice()">
+                      Select All
+                    </mat-checkbox>
+                  </div>
+                </div>
+                <div class="col-3" *ngIf="showAddInvoiceOptions">
+                  <ng-select [items]="invoiceStatusList" bindLabel="invoiceStatusDescription"
+                    bindValue="invoiceStatusID" placeholder="Status" [(ngModel)]="statusid"
+                    (change)="statusChange($event)"></ng-select>
+                </div>
+                <div class="col-4" *ngIf="showAddInvoiceOptions">
+                  <button type="button" class="btn btn-md btn-primary" (click)="UpdateStatus()">Update</button>
+                  <button type="button" class="ml-4 btn btn-md btn-primary" (click)="deleteInvoice()">Delete
+                    Invoice</button>
+                </div>
+                <div class="col-7" *ngIf="!showAddInvoiceOptions"></div>
+                <div class="col-3">
+                  <div class="inner-addon right-addon">
+                    <span>
+                      <i class="fa fa-search card-title" aria-hidden="true"></i>
+                    </span>
+                    <input type="text" class="form-control" aria-label="Default"
+                      aria-describedby="inputGroup-sizing-default" placeholder="Filter Search" name="filterText"
+                      #invoiceFilter>
+                  </div>
+                </div>
+              </div>
+              <div class="pmc-body pt-0">
+                <div class="col-12 p-0">
+                    <app-pagination-grid [paginationGridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+                    (edit)="edit($event)" (delete)="delete($event)" (print)="printCheck($event)"
+                    (view)="uploadInvoice($event)" (download)="downloadInvoice($event)"
+                    (rowSelected)="onRowSelected($event)">
+                  </app-pagination-grid>
+                  <!--  [getRowNodeId]="getRowNodeId"   -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section *ngIf="isAddNew">
+        <app-add-invoice [_invoiceActionID]='invoiceActionID' [_invoiceID]="invoiceId" [invoiceDetail]="invoiceDetail"
+          (backToList)="backToList($event)">
+        </app-add-invoice>
+      </section>
+    </div>
+</div>
+
+<ng-template #noteModalContent let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">{{'Add Invoice Notes' }}</h5>
+    <button type="button" class="close" id="noteClose" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="col-sm-12 row">
+      <label class="col-sm-3">
+        Notes:
+      </label>
+      <div class="col-sm-12">
+        <textarea type="text" name="invoiceNotes" [(ngModel)]="invoiceNoteForm.invoiceNotes" #notess="ngModel"
+          class="form-control" id="notes" placeholder="Notes" required maxlength="512"></textarea>
+      </div>
+    </div>
+    <div class="row mt-3">
+      &nbsp;&nbsp;
+      <button type="button" class="btn btn-md btn-primary" (click)="saveAndClose()">
+        {{'Save & Close'}} </button> &nbsp; &nbsp;
+      <button type="button" class="btn btn-md btn-primary" (click)="close()">
+        {{'Cancel'}} </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #confirmClone let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">{{'Confrim'}}</h5>
+    <button type="button" class="close" id="confirmCloneClose" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <span>{{'Are you sure you want to create clone ?'}}</span>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-sm-12 mt-2">
+        <button type="button" class="btn  ml-2 btn-primary" (click)="CloneYes()"> Yes </button>
+        &nbsp;
+        <button type="button" class="btn  btn-primary" (click)="CloneNo()"> No </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

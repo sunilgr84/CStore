@@ -1,0 +1,29 @@
+.ng-valid[required],
+.ng-valid.required {
+    border-left: 5px solid #42A948;
+    /* green */
+}
+
+.ng-invalid:not(form) {
+    border-left: 5px solid #a94442;
+    /* red */
+}
+.checkbox{
+    margin: 5px;
+}
+.btnsub {
+    margin-right:5px;
+}
+.brandImg {
+    width: 100%;
+    height: 100px;
+  }
+  @media (min-width: 40em) {
+    /* Probably some parent element that limits the img width */
+    main {
+      width: 80%;
+    }
+  }
+  .decodeImage{
+    height: 100px;
+  }

@@ -1,0 +1,148 @@
+<form #copyDataForm="ngForm">
+  <div class="card" style="min-height: 450px;">
+    <div class="card-body">
+      <h5 class="card-title col-sm-12">{{'Copy Data'}}</h5>
+      <div class="row mt-3">
+        <label class="form-group has-float-label col-sm-5">
+          <ng-select [items]="copyDataList" [selectOnTab]="true" bindLabel="name" bindValue="id" labelForId="id"
+            placeholder="Select Copy Data" [(ngModel)]="postData.copyOption" name="copyOption" #copyOption="ngModel"
+            (change)="changeCopyData()">
+          </ng-select>
+          <span> Copy Data </span>
+        </label>
+      </div>
+      <div class="row mt-3" *ngIf="postData.copyOption">
+        <div class="col-sm-5">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title col-sm-6">{{'Source'}}</h5>
+
+              <div class="row">
+                <label class="form-group has-float-label col-sm-8">
+                  <ng-select [items]="srCompanyList" [selectOnTab]="true" bindLabel="companyName" bindValue="companyID"
+                    labelForId="id" placeholder="Company" [(ngModel)]="postData.srCompany" name="srCompany"
+                    #srCompany="ngModel" (change)="selectCompanySr(postData.srCompany,true)">
+                  </ng-select>
+                  <span> Company </span>
+                </label>
+              </div>
+              <div class="row" *ngIf="this.postData.copyOption === 1">
+                <label class="form-group has-float-label col-sm-8">
+                  <ng-select [items]="srStoreList" [selectOnTab]="true" bindLabel="storeName"
+                    bindValue="storeLocationID" labelForId="storeLocationID" placeholder="Store"
+                    [(ngModel)]="postData.srStore" name="srStore" #srStore="ngModel">
+                  </ng-select>
+                  <span> Store </span>
+                </label>
+              </div>
+              <div class="row"
+                *ngIf="this.postData.copyOption === 1 || this.postData.copyOption === 5 || this.postData.copyOption === 2 || this.postData.copyOption === 3">
+                <label class="form-group has-float-label col-sm-8">
+                  <ng-select [items]="srDepartmentList" [selectOnTab]="true" bindLabel="departmentDescription"
+                    bindValue="departmentID" labelForId="departmentDescription" placeholder="Department"
+                    [(ngModel)]="postData.srDepartment" name="srDepartment" #srDepartment="ngModel">
+                  </ng-select>
+                  <span> Department </span>
+                </label>
+              </div>
+              <div class="row">
+                <label class="form-group has-float-label col-sm-8" *ngIf="this.postData.copyOption === 3">
+                  <ng-select [items]="srVendorList" [selectOnTab]="true" bindLabel="vendorName" bindValue="vendorID"
+                    labelForId="vendorID" placeholder="Vendor" [(ngModel)]="postData.srVendor" name="srVendor"
+                    #srVendor="ngModel">
+                  </ng-select>
+                  <span> Vendor </span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <br>
+        </div>
+
+
+        <div class="col-sm-5">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title col-sm-6">{{'Destination'}}</h5>
+
+              <div class="row">
+                <label class="form-group has-float-label col-sm-8">
+                  <ng-select [items]="desCompanyList" [selectOnTab]="true" bindLabel="companyName" bindValue="companyID"
+                    labelForId="id" placeholder="Company" [(ngModel)]="postData.dstCompany" name="dstCompany"
+                    #dstCompany="ngModel" (change)="selectCompanySr(postData.dstCompany,false)">
+                  </ng-select>
+                  <span> Company </span>
+                </label>
+              </div>
+              <div class="row">
+                <label class="form-group has-float-label col-sm-8" *ngIf="this.postData.copyOption === 1">
+                  <ng-select [items]="desStoreList" [selectOnTab]="true" bindLabel="name" bindLabel="storeName"
+                    bindValue="storeLocationID" labelForId="storeLocationID" placeholder="Store"
+                    [(ngModel)]="postData.dstStore" name="dstStore" #dstStore="ngModel">
+                  </ng-select>
+                  <span> Store </span>
+                </label>
+              </div>
+              <div class="row"
+                *ngIf="this.postData.copyOption === 1 || this.postData.copyOption === 5 || this.postData.copyOption === 2 || this.postData.copyOption === 3">
+                <label class="form-group has-float-label col-sm-8">
+                  <ng-select [items]="desDepartmentList" [selectOnTab]="true" bindLabel="departmentDescription"
+                    bindValue="departmentID" labelForId="departmentDescription" placeholder="Department"
+                    [(ngModel)]="postData.dstDepartment" name="dstDepartment" #dstDepartment="ngModel">
+                  </ng-select>
+                  <span> Department </span>
+                </label>
+              </div>
+              <div class="row" *ngIf="this.postData.copyOption === 3">
+                <label class="form-group has-float-label col-sm-8">
+                  <ng-select [items]="desVendorList" [selectOnTab]="true" bindLabel="vendorName" bindValue="vendorID"
+                    labelForId="vendorID" placeholder="Vendor" [(ngModel)]="postData.dstVendor" name="dstVendor"
+                    #dstVendor="ngModel">
+                  </ng-select>
+                  <span> Vendor </span>
+                </label>
+              </div>
+              <div class="row" *ngIf="this.postData.copyOption === 1">
+                <div class="col-sm-12">
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" [(ngModel)]="postData.isPrice" id="copyPrice"
+                      name="isPrice" #isPrice="ngModel" />
+                    <label class="custom-control-label " for="copyPrice">Copy Price</label>
+                  </div>
+                </div>
+                <div class="col-sm-12">
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" [(ngModel)]="postData.isPriceGroup"
+                      id="copyPriceGroup" name="isPriceGroup" #isPriceGroup="ngModel" />
+                    <label class="custom-control-label " for="copyPriceGroup">Copy Price Group </label>
+                  </div>
+                </div>
+                <div class="col-sm-12">
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" [(ngModel)]="postData.isCopyMultiplier"
+                      id="copyMultiplier" name="isCopyMultiplier" #isCopyMultiplier="ngModel" />
+                    <label class="custom-control-label " for="copyMultiplier">Copy Multiplier</label>
+                  </div>
+                </div>
+                <div class="col-sm-12">
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" [(ngModel)]="postData.isCopyMultiPacks"
+                      id="copyMultipacks" name="isCopyMultiPacks" #isCopyMultiPacks="ngModel" />
+                    <label class="custom-control-label " for="copyMultipacks">Copy Multipacks</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-sm-12">
+                  <button type="button" class="btn btn-md btn-primary"
+                    (click)="onCopyData()">{{'Copy Source Data To Destination'}}</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,57 @@
+<div class="container-fluid mt-3">
+  <div>
+    <div class="row" >
+      <div class="col-sm-12">
+          <!-- add the form component here -->
+        <app-store-fuel-form [storeLocationId]="storeLocationId"></app-store-fuel-form>
+        <app-store-fuel-grade-detail id="fuel-grade-detail" [storeLocationId]="storeLocationId" [ngbCollapse]="isCollapsed"
+            [storeFuelGrade]="selectedStoreFuelGrade" (closeForm)="addFuelGradeMapping(false)"></app-store-fuel-grade-detail>
+
+        <!-- </ng-template>
+          </ngb-tab>
+          <ngb-tab title="Store Fuel Grade Tax">
+            <ng-template ngbTabContent>
+              <app-store-fuel-grade-tax [fuelGradeList]=fuelGradeList></app-store-fuel-grade-tax>
+            </ng-template>
+          </ngb-tab>
+        </ngb-tabset> -->
+      </div>
+
+      <!-- <div class="col-sm-12">
+        <div style="margin-top:1rem;">
+          <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (edit)="edit($event)" (delete)="delete()"
+            (gridReady)="onGridReady($event)"></app-cstore-grid>
+        </div>
+      </div> -->
+
+    </div>
+  </div>
+  <div class="col-sm-12 form-group mt-3">
+    <div class="text-right">
+      <button type="button" class="btn btn-md btn-cstorebo btnsub mr-3" (click)="onNavigateStoreFees()">
+        Add Store Fees</button>
+      <button type="button" class="btn btn-md btn-cstorebo mr-3" (click)="backToMainList()">
+        &nbsp; Back to Store List </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- <div *ngIf="newFuelGradeMapping" class="pt-3">
+  <h5 class="col-md-3">Fuel Grade</h5>
+  <a class="pull-right badge badge-light" (click)="addFuelGradeMapping(false)">Show All Fuel Grade Departments</a>
+  <ngb-tabset [destroyOnHide]="false">
+    <ngb-tab title="Store Fuel Grade Detail">
+      <ng-template ngbTabContent>
+        <app-store-fuel-grade-detail [storeFuelGrade]="selectedStoreFuelGrade" [fuelGradeList]=fuelGradeList></app-store-fuel-grade-detail>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab title="Store Fuel Grade Tax" [disabled]="selectedStoreFuelGrade == null">
+      <ng-template ngbTabContent>
+        <app-store-fuel-grade-tax *ngIf="selectedStoreFuelGrade" [storeFuelGrade]="selectedStoreFuelGrade"
+          [fuelGradeList]="fuelGradeList"></app-store-fuel-grade-tax>
+      </ng-template>
+    </ngb-tab>
+
+  </ngb-tabset>
+</div> -->

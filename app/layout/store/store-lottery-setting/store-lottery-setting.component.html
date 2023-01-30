@@ -1,0 +1,64 @@
+<div class="row mt-3">
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <form [formGroup]="storeLotterySettingForm">
+          <div class="row">
+            <div class="col-sm-8">
+              <h5 class="card-title">{{'Lottery-Settings'}}</h5>
+            </div>
+            <div class="col-sm-4 text-right">
+              <mat-slide-toggle [checked]="lotteryStatus" (change)="enableLottery($event)">
+              </mat-slide-toggle>
+            </div>
+          </div>
+          <div class="row mt-1">
+            <!-- <label class="form-group has-float-label col-sm-12">
+              <input numbersOnly type="text" class="form-control" id="lotteryRetailerID" name="lotteryRetailerID"
+                formControlName="lotteryRetailerID" placeholder="Lottery Retailer ID" maxlength="520">
+              <span for="lotteryRetailerID">Lottery Retailer ID</span>
+            </label>
+            <label class="form-group has-float-label col-sm-12">
+              <input type="text" class="form-control" id="lotteryRetailerUserName" name="lotteryRetailerUserName"
+                formControlName="lotteryRetailerUserName" placeholder="Lottery User Name" maxlength="520">
+              <span for="lotteryRetailerUserName">Lottery User Name</span>
+            </label>
+            <label class="form-group has-float-label col-sm-12">
+              <input type="text" class="form-control" id="lotteryRetailerPassword" name="lotteryRetailerPassword"
+                formControlName="lotteryRetailerPassword" placeholder="Lottery Password" maxlength="520">
+              <span for="lotteryRetailerPassword">Lottery Password</span>
+            </label>
+            <label class="form-group has-float-label col-sm-12 mb-0">
+              <input numbersOnly type="text" class="form-control" id="noOfLotteryBins" name="noOfLotteryBins"
+                placeholder="Lottery Bins" formControlName="noOfLotteryBins" maxlength="520">
+              <span for="noOfLotteryBins">Lottery Bins</span>
+            </label> -->
+            <div class="col-sm-12 mb-0">
+              <label class="m-2">Does Ticket Number Starts with Zero?</label>
+              <mat-slide-toggle class="mb-0 ml-2 mr-2 mt-2" formControlName="isLotteryStartingFromZero">
+              </mat-slide-toggle>
+            </div>
+            <div class="col-sm-12 mb-3">
+              <label class="m-2">Do you sell the ticket in reverse order?</label>
+              <mat-slide-toggle class="mb-0 ml-2 mr-2 mt-2" formControlName="reverseOrder">
+              </mat-slide-toggle>
+            </div>
+            <label class="form-group has-float-label col-sm-12">
+              <ng-select id="lott-set-deptsel" [items]="departmentList" [selectOnTab]="true"
+                bindLabel="departmentDescription" bindValue="departmentID" labelForId="departmentID"
+                formControlName="departmentId" placeholder="Select Department">
+              </ng-select>
+              <span> Department </span>
+            </label>
+          </div>
+          <div class="row mt-3">
+            <div class="col-sm-12 text-right">
+              <button type="button" class="btn btn-md btn-primary" (click)="onSubmit()">Save</button>
+              <!-- <button type="button" class="btn btn-md btn-primary" (click)="onReset()">Reset</button> -->
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

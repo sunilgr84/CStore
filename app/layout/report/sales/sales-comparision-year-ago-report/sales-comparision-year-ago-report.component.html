@@ -1,0 +1,40 @@
+<div class="card mt-3" style="min-height: 450px">
+  <div class="card-body">
+    <form [formGroup]="salesComparisionYearSearchForm">
+      <div class="row">
+
+        <div class="col-sm-4">
+          <label class="col-sm-12 form-group has-float-label" *ngIf="storeLocationList && storeLocationList.length!==1">
+            <ng-select [items]="storeLocationList" [closeOnSelect]="true" bindLabel="storeName"
+              placeholder="Store Location" bindValue="storeLocationID" formControlName="storelocationID"></ng-select>
+            <span> Store Location</span>
+          </label>
+          <label class="col-sm-12 form-group has-float-label" *ngIf="storeLocationList && storeLocationList.length===1">
+            <input readonly type="text" class="form-control" [value]="storeLocationList[0].storeName">
+            <span>Store Location</span>
+          </label>
+        </div>
+
+        <div class="col-sm-4">
+          <label class="col-sm-12 form-group has-float-label">
+            <app-datepicker [isMaxDate]="true" [inputDate]="businessDate" name="dob" id="date"
+              (dateChange)="dateChange($event,'businessDate')"></app-datepicker>
+            <span> Business Date</span>
+          </label>
+        </div>
+
+        <div class="col-sm-4">
+          <button type="button" class="btn btn-md btn-primary mr-3" (click)="generatePDF()">Go</button>
+        </div>
+
+      </div>
+    </form>
+    <div class="row" *ngIf="this.rowData && this.rowData.length >0">
+      <div class="col-sm-12 mt-3">
+        <app-report-grid [rowData]="rowData" [expandableGridOptions]="gridOption" (gridReady)="onGridReady($event)"
+          (exportTo)="searchSalesCompReport($event)">
+        </app-report-grid>
+      </div>
+    </div>
+  </div>
+</div>

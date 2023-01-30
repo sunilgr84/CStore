@@ -1,0 +1,165 @@
+<div [@routerTransition]>
+    <div style="margin-top:1rem">
+        <h3>Editable grid demo</h3>
+        <app-editable-grid [rowData]="rowData" [editGridOptions]="editGridOptions" (edit)="editAction($event)"
+            [gridHeight]="'200px'"></app-editable-grid>
+    </div>
+    <div style="margin-top:1rem;">
+        <h3>CStore Bo Grid</h3>
+        <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions"></app-cstore-grid>
+    </div>
+    <div style="margin-top:1rem;">
+        <h3>Expandable Grid</h3>
+        <app-expandable-grid [expandableGridOptions]="expandableGridOptions" [rowData]="expandableGridRowData" (gridReady)="onGridReady($event)"></app-expandable-grid>
+    </div>
+    <div class="animated fadeIn" style="margin-top:1rem">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>Credit Card</strong>
+                        <small>Form</small>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="name">Name</label>
+                                    <input type="text" class="form-control" id="name" placeholder="Enter your name">
+                                </div>
+                            </div>
+                        </div>
+                        <!--/.row-->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="ccnumber">Credit Card Number</label>
+                                    <input type="text" class="form-control" id="ccnumber" placeholder="0000 0000 0000 0000">
+                                </div>
+                            </div>
+                        </div>
+                        <!--/.row-->
+                        <div class="row">
+                            <div class="form-group col-sm-4">
+                                <label for="ccmonth">Month</label>
+                                <select class="form-control" id="ccmonth">
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                    <option>6</option>
+                                    <option>7</option>
+                                    <option>8</option>
+                                    <option>9</option>
+                                    <option>10</option>
+                                    <option>11</option>
+                                    <option>12</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label for="ccyear">Year</label>
+                                <select class="form-control" id="ccyear">
+                                    <option>2014</option>
+                                    <option>2015</option>
+                                    <option>2016</option>
+                                    <option>2017</option>
+                                    <option>2018</option>
+                                    <option>2019</option>
+                                    <option>2020</option>
+                                    <option>2021</option>
+                                    <option>2022</option>
+                                    <option>2023</option>
+                                    <option>2024</option>
+                                    <option>2025</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="cvv">CVV/CVC</label>
+                                    <input type="text" class="form-control" id="cvv" placeholder="123">
+                                </div>
+                            </div>
+                        </div>
+                        <!--/.row-->
+                    </div>
+                </div>
+            </div>
+            <!--/.col-->
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>Company</strong>
+                        <small>Form</small>
+                    </div>
+                    <form (ngSubmit)="onSubmit(companyForm)" #companyForm="ngForm">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="company">Company</label>
+                                <input type="text" class="form-control" required [(ngModel)]="company.companyName" name="companyName"
+                                    placeholder="Enter your company name" minlength="5" maxlength="520" #companyName="ngModel">
+                                <div [hidden]="companyName.valid || companyName.pristine" class="alert alert-danger">
+                                    Company Name is required
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="vat">VAT</label>
+                                <input type="text" class="form-control" required [(ngModel)]="company.vat" placeholder="Enter VAT ex : PL1234567890"
+                                    name="vat" #vat="ngModel" minlength="10" maxlength="10">
+                                <div *ngIf="submitted && vat.errors?.required" class="alert alert-danger">
+                                    VAT is required
+                                </div>
+                                <div *ngIf="submitted && vat.errors?.minlength" class="alert alert-danger">
+                                    VAT must be at least 10 characters long.
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="street">Street</label>
+                                <input type="text" class="form-control" required [(ngModel)]="company.street" name="street"
+                                    placeholder="Enter street name" #street="ngModel">
+                                <div *ngIf="submitted && street.errors?.required" class="alert alert-danger">
+                                    Street is required
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-8">
+                                    <label for="city">City</label>
+                                    <input type="text" class="form-control" name="city" [(ngModel)]="company.city"
+                                        placeholder="Enter your city" #city="ngModel" required>
+                                    <div [hidden]="city.valid || city.pristine" class="alert alert-danger">
+                                        City is required
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-4">
+                                    <label for="postal-code">Postal Code</label>
+                                    <input type="text" class="form-control" name="postalCode" [(ngModel)]="company.postalCode"
+                                        placeholder="Postal Code" #postalCode="ngModel">
+                                    <div [hidden]="postalCode.valid || postalCode.pristine" class="alert alert-danger">
+                                        Postal code is required
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/.row-->
+                            <div class="form-group">
+                                <label for="country">Country</label>
+                                <input type="text" class="form-control" name="countryName" [(ngModel)]="company.countryName"
+                                    placeholder="Country name" #countryName="ngModel" required>
+                                <div [hidden]="countryName.valid || countryName.pristine" class="alert alert-danger">
+                                    Country name code is required
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-md btn-primary"><i class="fa fa-dot-circle-o"></i>
+                                Submit</button>
+                            <button type="reset" class="btn btn-md btn-danger" (click)="companyForm.reset()"><i class="fa fa-ban"></i>
+                                Reset</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--/.col-->
+        </div>
+        <!--/.row-->
+    </div>
+</div>

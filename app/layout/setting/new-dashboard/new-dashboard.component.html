@@ -1,0 +1,246 @@
+<div class="card">
+  <div class="justify-content-end float-right">
+    <i class="fa fa-refresh  float-right p-2" title="Refresh all widgets" (click)="onRefreshWidgets($event)"></i>
+  </div>
+  <div class="widgets-list">
+    <div class="row" id="dashbaoard-card" style="margin-top: -12px;">
+      <!-- Top Trending Items -->
+      <div class="col-sm-4 mt-2">
+        <div class="card card-div">
+          <div class="ref-edit-icon float-right">
+            <i class="fa fa-external-link float-right p-2" (click)="onWidgetdetails($event)" title="Details"></i>
+            <i class="fa fa-refresh float-right p-2" title="Refresh" (click)="GetTopSellingItems()"></i>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <h5>Top Trending Items</h5>
+            </div>
+            <!---->
+            <div *ngIf="topTrendingItems.length > 0 "   class="table-wrapper-scroll-y widget-scrollbar" >
+              <table class="table table-bordered table-striped mb-0 table-sm mt-2">
+                <thead>
+                  <tr>
+                    <th scope="col">UPC Code</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Qty</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of topTrendingItems">
+                    <td>{{item.upcCode}}</td>
+                    <td>{{item.description}}</td>
+                    <td>{{item.count}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h6 *ngIf="topTrendingItems.length === 0 " class="data-not-available">
+              Data not available
+            </h6>
+          </div>
+        </div>
+      </div>
+      <!-- Lottery -->
+      <div class="col-sm-4 mt-2">
+        <div class="card card-div">
+          <div class="ref-edit-icon float-right">
+            <i class="fa fa-external-link float-right p-2" (click)="onWidgetdetails($event)" title="Details"></i>
+            <i class="fa fa-refresh float-right p-2" title="Refresh"
+              (click)="getWidgetsDataForFuelandLottery($event)"></i>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <h5>Lottery</h5>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                Books Confirmed <span
+                  class="currency-format">{{fuelandLottery?.booksConfirmed ? fuelandLottery.booksConfirmed : 0 |currency}}</span>
+              </li>
+              <li class="list-group-item">
+                Books Activated <span
+                  class="currency-format">{{fuelandLottery?.booksActivated ? fuelandLottery.booksActivated : 0|currency}}</span>
+              </li>
+              <li class="list-group-item">
+                Lottery Tickets Sold <span
+                  class="currency-format">{{fuelandLottery?.lotteryTicketsSold ? fuelandLottery.lotteryTicketsSold : 0|currency}}</span>
+              </li>
+              <li class="list-group-item">
+                Lottery Tickets Cashed <span
+                  class="currency-format">{{fuelandLottery?.lotteryTicketsCashed ? fuelandLottery.lotteryTicketsCashed : 0|currency}}</span>
+              </li>
+              <li class="list-group-item">
+                Online Sales <span
+                  class="currency-format">{{fuelandLottery?.onlineSales ? fuelandLottery.onlineSales : 0|currency}}</span>
+              </li>
+              <li class="list-group-item">
+                Online Cashes <span
+                  class="currency-format">{{fuelandLottery?.onlineCashes ? fuelandLottery.onlineCashes : 0|currency}}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- Critical Statistics -->
+      <div class="col-sm-4 mt-2">
+        <div class="card card-div">
+          <div class="ref-edit-icon float-right">
+            <i class="fa fa-external-link float-right p-2" (click)="onWidgetdetails($event)" title="Details"></i>
+            <i class="fa fa-refresh float-right p-2" title="Refresh"
+              (click)="getCriticalStatByBusinessDate($event)"></i>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <h5>Critical Statistics</h5>
+            </div>
+            <div *ngIf="criticalStats.length > 0 " class="table-wrapper-scroll-y widget-scrollbar">
+              <table class="table table-bordered table-striped mb-0 mt-1 table-sm">
+                <thead>
+                  <tr>
+                    <th scope="col">Statistics Name</th>
+                    <th scope="col">Count</th>
+                    <th scope="col">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of criticalStats">
+                    <td>{{item.statName}}</td>
+                    <td>{{item.countValue}}</td>
+                    <td>{{item.amount | currency}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h6 *ngIf="criticalStats.length === 0 " class="data-not-available">
+              Data not available
+            </h6>
+          </div>
+        </div>
+      </div>
+      <!-- Fuel Sales -->
+      <div class="col-sm-4 mt-2">
+        <div class="card card-div">
+          <div class="ref-edit-icon float-right">
+            <i class="fa fa-external-link float-right p-2" (click)="onWidgetdetails($event)" title="Details"></i>
+            <i class="fa fa-refresh float-right p-2" title="Refresh" (click)="getFuelSalesByBusinessDate($event)"></i>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <h5>Fuel Sales </h5>
+            </div>
+            <canvas *ngIf="fuelSales &&  fuelSales.length > 0" baseChart [data]="fuelSales"
+              [labels]="fuelSalesPieChartLabels" chartType="pie" (chartHover)="chartHovered($event)"
+              (chartClick)="chartClicked($event)" [options]="pieChartOptions">
+            </canvas>
+
+            <h6 *ngIf="fuelSales.length === 0" class="data-not-available">
+              Data not available
+            </h6>
+          </div>
+        </div>
+      </div>
+      <!-- Department Type Sales -->
+      <div class="col-sm-4 mt-2">
+        <div class="card card-div">
+          <div class="ref-edit-icon float-right">
+            <i class="fa fa-external-link float-right p-2" (click)="onWidgetdetails($event)" title="Details"></i>
+            <i class="fa fa-refresh float-right p-2" title="Refresh" (click)="getWidgetDepartmentTypeSales($event)"></i>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <h5>Department Type Sales </h5>
+            </div>
+            <canvas *ngIf="departmentTypeSales && departmentTypeSales.length  > 0" baseChart
+              [data]="departmentTypeSales" [labels]="departmentTypeSalesPieChartLabels" chartType="pie"
+              (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)" [options]="pieChartOptions">
+            </canvas>
+            <h6 *ngIf="departmentTypeSales && departmentTypeSales.length === 0" class="data-not-available">
+              Data not available
+            </h6>
+          </div>
+        </div>
+      </div>
+      <!-- Scan Percentage -->
+      <div class="col-sm-4 mt-2">
+        <div class="card card-div">
+          <div class="ref-edit-icon float-right">
+            <i class="fa fa-external-link float-right p-2" (click)="onWidgetdetails($event)" title="Details"></i>
+            <i class="fa fa-refresh float-right p-2" title="Refresh" (click)="getWidgetScanPercentage($event)"></i>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <h5>Scan Percentage</h5>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                No.of Non UPC Sales Qty <span
+                  class="currency-format">{{scanPercentage?.OpenCount ? scanPercentage.OpenCount : 0 }}</span>
+              </li>
+              <li class="list-group-item">
+                No.of UPC Sales Qty <span
+                  class="currency-format">{{scanPercentage?.UPCSalesQty ? scanPercentage.UPCSalesQty : 0 }}</span>
+              </li>
+              <li class="list-group-item">
+                Total Item Sales Qty <span
+                  class="currency-format">{{scanPercentage?.RecentSales ? scanPercentage.RecentSales : 0 }}</span>
+              </li>
+              <li class="list-group-item">
+                Scan Percent <span
+                  class="currency-format">{{scanPercentage?.ScanPercent ? scanPercentage.ScanPercent : 0 }} %</span>
+              </li>
+              <li class="list-group-item">
+                Non Scan Percent <span
+                  class="currency-format">{{scanPercentage?.NonScanPercent ? scanPercentage.NonScanPercent : 0 }}
+                  %</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- Fuel Delivery -->
+      <div class="col-sm-4 mt-2">
+        <div class="card card-div">
+          <div class="ref-edit-icon float-right">
+            <i class="fa fa-external-link float-right p-2" (click)="onWidgetdetails($event)" title="Details"></i>
+            <i class="fa fa-refresh float-right p-2" title="Refresh" (click)="getWidgetFuelDelivery($event)"></i>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <h5>Fuel Delivery</h5>
+            </div>
+            <ul class="list-group list-group-flush" *ngIf="fuelDelivery">
+              <li class="list-group-item">
+                {{fuelDelivery |currency}}
+              </li>
+            </ul>
+            <h6 *ngIf="!fuelDelivery" class="data-not-available">
+              Data not available
+            </h6>
+          </div>
+        </div>
+      </div>
+      <!-- Purchases -->
+      <div class="col-sm-4 mt-2">
+        <div class="card card-div">
+          <div class="ref-edit-icon float-right">
+            <i class="fa fa-external-link float-right p-2" (click)="onWidgetdetails($event)" title="Details"></i>
+            <i class="fa fa-refresh float-right p-2" title="Refresh" (click)="getWidgetPurchase($event)"></i>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <h5>Purchases</h5>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                Total Item Cost <span class="currency-format">{{purchase?.TotalItemCost ? purchase.TotalItemCost : 0 |currency}}</span>
+              </li>
+              <li class="list-group-item">
+                Total Item Purchase <span class="currency-format">{{purchase?.TotalItemPurchase ? purchase.TotalItemPurchase : 0}}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

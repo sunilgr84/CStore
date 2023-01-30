@@ -1,0 +1,6 @@
+<div class="expansion-body no-gutters price-group">
+    <div *ngIf="isShow" class="col-12">
+        <app-adv-pagination-grid [agGridTheme]="'inline-edit'" (gridReady)="onPriceGroupGridReady($event)" [rowData]="priceGroupRowData" [paginationGridOptions]="priceGroupGridOptions"
+            (cancel)="onCancel($event)" (edit)="onEdit($event)" (delete)="deletepriceGroup($event)" (save)="editPriceGroupAction($event)"></app-adv-pagination-grid>
+    </div>
+</div>

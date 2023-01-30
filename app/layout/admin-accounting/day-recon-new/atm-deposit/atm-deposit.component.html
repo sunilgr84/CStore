@@ -1,0 +1,84 @@
+<app-dialog [isOpen]="isOpen" [ngClass]="{'dialog-open': isOpen}" [fullscreen]="true" class="dialog-aside-panel"
+  dialogLabel="ATM Deposit" (onClose)="onDialogClose($event)">
+  <app-dialog-header dialogTitle="ATM Deposit" (onClose)="onDialogClose($event)"></app-dialog-header>
+  <app-dialog-body>
+    <form [formGroup]="transactionForm" novalidate>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-3 pl-2 pr-2">
+            <label class="form-group has-float-label ">
+              <div class="input-icon">
+                <input type="text" money (input)="OnChange()" class="form-control" placeholder="Begin Amount"
+                  formControlName="BeginAmount" maxlength="250">
+                <i *ngIf="transactionF.BeginAmount.value">$</i>
+              </div>
+              <span class="left-25r"> Begin Amount</span>
+            </label>
+            <div *ngIf="atmSubmitted && transactionF.BeginAmount.errors?.required" class="alert alert-danger">
+              Begin Amount is Required
+            </div>
+          </div>
+
+          <div class="col-sm-2 pl-2 pr-2">
+            <label class="form-group has-float-label ">
+              <div class="input-icon">
+                <input type="text" money class="form-control" (input)="OnChange()" placeholder="Loaded Amount"
+                  formControlName="InputAmount" maxlength="250">
+                <i>$</i>
+              </div>
+              <span class="left-25r"> Loaded Amt</span>
+            </label>
+            <div *ngIf="atmSubmitted && transactionF.InputAmount.errors?.required" class="alert alert-danger">
+              Loaded Amount is Required
+            </div>
+          </div>
+
+          <div class="col-sm-2 pl-2 pr-2">
+            <label class="form-group has-float-label ">
+              <div class="input-icon">
+                <input type="text" money class="form-control" (input)="OnChange()" placeholder="End Amount"
+                  formControlName="DispensedAmount" maxlength="250">
+                <i>$</i>
+              </div>
+              <span class="left-25r"> End Amt</span>
+            </label>
+            <div *ngIf="atmSubmitted && transactionF.DispensedAmount.errors?.required" class="alert alert-danger">
+              End Amount is Required
+            </div>
+          </div>
+
+          <div class="col-sm-2 pl-2 pr-2">
+            <label class="form-group has-float-label ">
+              <div class="input-icon">
+                <input type="text" readonly money class="form-control" placeholder="Dispensed Amt"
+                  formControlName="EndAmount" maxlength="250">
+                <i>$</i>
+              </div>
+              <span class="left-25r"> Dispensed Amt</span>
+            </label>
+            <div *ngIf="atmSubmitted && transactionF.EndAmount.errors?.required" class="alert alert-danger">
+              Dispensed Amt is Required
+            </div>
+          </div>
+
+          <div class="col-sm-3 pl-2 pr-2">
+            <label class="form-group has-float-label ">
+              <input type="text" numbersOnly class="form-control" placeholder="# Tranx"
+                formControlName="NoOfTransactions" maxlength="250">
+              <span class="left-25r"> # Tranx</span>
+            </label>
+            <div *ngIf="atmSubmitted && transactionF.NoOfTransactions.errors?.required" class="alert alert-danger">
+              Transactions is Required
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 text-right">
+            <button type="button" class="btn btn-md btn-primary" (click)="atmCancel();">Cancel</button>
+            <button type="button" class="btn btn-md btn-primary ml-3" (click)="editOrSaveATM()">Save</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </app-dialog-body>
+</app-dialog>

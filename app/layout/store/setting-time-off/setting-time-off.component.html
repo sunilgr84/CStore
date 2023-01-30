@@ -1,0 +1,44 @@
+<!-- ========================  Setting-time-off    ============================= -->
+<div class="col-sm-12 form-group mt-3">
+  <div>
+    <button type="button" class="btn btn-md btn-cstorebo mr-3" (click)="backToMainList()">
+      &nbsp; Back to Store List </button>
+  </div>
+</div>
+<div class="card-body">
+    <form [formGroup]="settingTimeOffForm">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" formControlName="isEnabledMaximumPeopleForLeave" style="height: 15px;
+            width:  25px;">
+            <label class="padding-right-10" for="isEnabledMaximumPeopleForLeave">Limit time of
+              requests to no
+              more than</label>
+            <input type="text" style="height: 20px; width: 25px; border: 1px solid #ced4da;" formControlName="maximumPeopleForLeave">
+            <label class="padding-right-10" style="margin-left: 16px;" for="maximumPeopleForLeave">People per day.</label>
+          </div>
+        </div>
+        <div class="col-sm-12">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" formControlName="isEnableAdvanceDays" style="height: 15px;
+            width: 25px;">
+            <label class="padding-right-10" for="isEnableAdvanceDays">Do not allow time off
+              requests
+              less than</label>
+            <input type="text" style="height: 20px; width: 25px; border: 1px solid #ced4da;" formControlName="advanceDays">
+            <label class="padding-right-10" style="margin-left: 16px;" for="daysInAdvance">Days in advance.</label>
+          </div>
+        </div>
+        <br><br><br><br>
+        <div class="row">
+          <div class="col-sm-6">
+          </div>
+          <div class="col-sm-6">
+            <button type="button" style="background-color: #007bff;" class="btn btn-primary" (click)="saveTimeOffSetting()"> Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+</div>

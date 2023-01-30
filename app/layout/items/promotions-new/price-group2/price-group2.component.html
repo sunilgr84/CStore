@@ -1,0 +1,480 @@
+<div class="main-content-wrap d-flex flex-column">
+  <!-- ============ Body content start ============= -->
+  <div class="main-content">
+    <!-- <div class="page-header">
+      <h1>Item list management</h1>
+    </div> -->
+    <section>
+      <div class="row">
+        <div class="col-md-5 pr-0">
+          <div class="card m-1">
+            <div class="card-header">
+              <div class="col-md-3 p-0">
+                <label class="mt-1"><b>Promotion Groups</b></label>
+              </div>
+              <div class="col-md-9">
+                <div class="row col-md-12 float-right pr-0">
+                  <div class="input-group col-md-7 p-0">
+                    <input type="text" class="form-control" placeholder="Filter Search" aria-label="Search"
+                      [(ngModel)]="filterText" name="filterText" (input)="onFilterTextBoxChanged()">
+                    <div class="input-group-append">
+                      <span class="input-group-text"><i class="fa fa-search"></i></span>
+                    </div>
+                  </div>
+                  <div class="col-md-5 p-0">
+                    <button class="btn btn-action float-right" (click)="addItem()"><i class="fa fa-plus"></i> Add
+                      Group</button>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+            <div class="card-body p-0 promotion-groups">
+              <div class="col-md-12 p-0">
+                <app-pagination-grid [rowData]="rowData" [paginationGridOptions]="gridOptions"
+                  (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)"
+                  (save)="onBtStopEditing($event)" (delete)="Delete($event)" (cancel)="Cancel($event)"
+                  (edit)="editAction($event)">
+                </app-pagination-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-7 pl-0">
+          <div class="card m-1">
+            <div class="card-header">
+              <div class="col-md-5 p-0">
+                <label class="mt-1" *ngIf="itemsCount>=0">
+                  <i class="fa fa-folder action-color"></i>
+                  <span class="font-weight-bold ml-1">{{selectedItem?selectedItem.Description:''}}</span>
+                  <i class="fa fa-chevron-right ml-1"></i>
+                  <span class="ml-1">Items</span>
+                  <span class="ml-1 badge badge-secondary">{{itemsCount}}</span>
+                </label>
+
+                <br>
+                <div class="row">
+
+                  <span class="col-sm-8 mt-3" [hidden]="!(storeLocationList && storeLocationList.length !== 1)">
+                    <span class="form-group mb-0" *ngIf="itemsCount>=0 && showPricingChild">
+                      <ng-select [items]="storeLocationList" [hideSelected]="true" bindLabel="storeName"
+                        bindValue="storeLocationID" placeholder="Select Store Location"
+                        [(ngModel)]="childStoreLocationID" (change)="childStoreChange()">
+                        <ng-template ng-option-tmp let-item="item">
+                          <div container="body">
+                            {{item.storeName}}
+                          </div>
+                        </ng-template>
+                      </ng-select>
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-7 p-0">
+                <div class="row col-md-12 p-0">
+                  <div class="col-md-4 mt-1 p-0">
+                    <span class="col-sm-4"
+                      [hidden]="!(storeLocationList && storeLocationList.length !== 1 && itemsCount>=0)">
+                      <mat-checkbox [(ngModel)]="showPricingChild" (change)="showPriceChildChange($event)">Show Pricing
+                      </mat-checkbox>
+                    </span>
+                  </div>
+                  <div class="col-md-8 p-0">
+                    <div class="row col-md-12 p-0 float-right">
+                      <div class="col-md-7 p-0">
+                        <div class="input-group float-right">
+                          <input [disabled]="!(itemsCount>=0)" type="text" class="form-control"
+                            placeholder="Filter Search" aria-label="Search" [(ngModel)]="filterTextChild"
+                            name="filterTextChild" (input)="onChildFilterTextBoxChanged()">
+                          <div class="input-group-append">
+                            <span class="input-group-text"><i class="fa fa-search"></i></span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-5 p-0">
+                        <button [disabled]="!(itemsCount>=0)" (click)="openSideContainer()"
+                          class="btn btn-action float-right ml-1"><i class="fa fa-plus"></i>Add Item</button>
+                      </div>
+                    </div>
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+            <div class="card-body p-0 promotion-group-items ">
+              <div class="col-md-12 p-0" *ngIf="itemsCount>=0">
+                <app-pagination-grid #itemListChildGrid [paginationGridOptions]="childGrpExpGridOptions"
+                  (gridReady)="onExpGridReady($event)" [detailCellRenderers]="detailCellRenderer"
+                  (delete)="delAction($event)">
+                </app-pagination-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+<div id="overlay" (click)="closeSideContainer()"></div>
+<div id="addItemContainer" [ngClass]="sideContainer">
+  <!-- <div>
+    <button type="button" class="btn btn-primary float-right ml-2">Search</button>
+    float: left !important;
+    -ms-transform: rotate(270deg);
+    -webkit-transform: rotate(270deg);
+    transform: rotate(270deg);
+  </div> -->
+
+  <div class="card">
+    <div class="card-header pt-2 pb-2 bg-white">
+      <div class="col-md-12 p-0">
+        <label class="mt-1 mb-1">
+          <i class="fa fa-folder action-color"></i>
+          <span class="font-weight-bold ml-1">{{selectedItem?selectedItem.Description:''}}</span>
+          <i class="fa fa-chevron-right ml-2"></i>
+          <span class="ml-1">Add Items</span>
+        </label>
+        <a href="JavaScript:void(0);" class="closebtn" (click)="closeSideContainer()">&times;</a>
+      </div>
+    </div>
+    <div class="card-body p-0 d-flex">
+
+      <div class="col-md-3 bg-gray">
+        <div class="row">
+          <div class="col-md-12 mt-2">
+            <div class="input-group">
+              <label class="font-weight-bold">Add Items From</label>
+              <mat-radio-group [(ngModel)]="selectedRadio" (change)="radioChange($event)" aria-label="Select an option">
+                <mat-radio-button value="priceGroups">Price Groups</mat-radio-button>
+                <mat-radio-button value="itemsCatalog" class="ml-1">Price Book</mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+          <div class="col-md-12 minHeight">
+            <div class="col-md-12 mt-2 p-0">
+              <div class="input-group" *ngIf="selectedRadio == 'priceGroups'">
+                <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-barcode"></i></span>
+                </div>
+                <input type="text" class="form-control" value="" (keyup.enter)="onPrcGrpDescChanged()"
+                  placeholder="Filter Search" aria-describedby="basic-addon1" [(ngModel)]="prcGrpDesc">
+                <div class="input-group-append">
+                  <span class="input-group-text" (click)="onPrcGrpDescChanged()"><i class="fa fa-search"></i></span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 itemsCatalog mt-2 p-0" *ngIf="selectedRadio == 'priceGroups'">
+              <div class="form-group mb-2 priceGrp" *ngFor="let item of priceGroupsList ;let i=index;"
+                (click)="searchItems(item,i)" placement="top" ngbTooltip="{{item.CompanyPriceGroupName}}"
+                container="body">
+                <span class="plussign"> {{item.CompanyPriceGroupName}}</span>
+              </div>
+            </div>
+            <form [formGroup]="advancedSearchForm" novalidate>
+              <div class="input-group" *ngIf="selectedRadio == 'itemsCatalog'">
+                <input type="text" class="form-control" (keyup.enter)="getAdvanceSerach()" placeholder="UPC/Description"
+                  formControlName="posCodeOrDesc">
+                <div class="input-group-append">
+                  <span class="input-group-text" (click)="getAdvanceSerach()"><i class="fa fa-search"></i></span>
+                </div>
+              </div>
+              <div class="text-right mt-1 mb-1" *ngIf="selectedRadio == 'itemsCatalog'">
+                <a class="advance-search mt-1 cursor-pointer" (click)="isItemsCatalogCollapse = !isItemsCatalogCollapse"
+                  [attr.aria-expanded]="!isItemsCatalogCollapse" aria-controls="itemsCatalogCollapse">Advance Search
+                  <i *ngIf="isItemsCatalogCollapse" class="fa fa-chevron-down"></i>
+                  <i *ngIf="!isItemsCatalogCollapse" class="fa fa-chevron-up"></i>
+                </a>
+              </div>
+              <div *ngIf="selectedRadio == 'itemsCatalog'" id="itemsCatalogCollapse"
+                [ngbCollapse]="isItemsCatalogCollapse">
+                <div class="itemsCatalog">
+                  <div class="form-group mt-2 mb-0">
+                    <label class="mb-0">
+                      <span for="departmentDescription">Search By Department</span></label>
+                    <label>
+                      <ng-select [items]="departmentListByUser" [multiple]="true" [closeOnSelect]="false"
+                        [hideSelected]="true" bindLabel="departmentDescription" placeholder="Search By Department"
+                        formControlName="department" name="departmentDescription" groupBy="companyID"
+                        [selectableGroup]="true" [selectableGroupAsModel]="false">
+                        <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                          <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                        </ng-template>
+                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                          <div class="ng-value" *ngFor="let item of items | slice:0:4">
+                            <span class="ng-value-label">
+                              {{item.departmentDescription}}</span>
+                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                          </div>
+                          <div class="ng-value" *ngIf="items.length > 2">
+                            <span class="ng-value-label">{{items.length - 2}} more...</span>
+                          </div>
+                        </ng-template>
+                      </ng-select>
+                      <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+                      <!-- bindValue="departmentID" bindValue="vendorID" -->
+
+                    </label>
+                  </div>
+                  <div class="form-group mt-2 mb-0">
+                    <label class="mb-0"  *ngIf="storeLocationList && storeLocationList.length !== 1">
+                      <span for="storeName">Store Location</span>
+                    </label>
+                    <label *ngIf="storeLocationList && storeLocationList.length !== 1">
+                      <ng-select [items]="storeLocationList" [multiple]="true" [closeOnSelect]="false"
+                        [hideSelected]="true" bindLabel="storeName" placeholder="Location(s)" name="storeName"
+                        formControlName="locationCriteria" (change)="selectStore()" groupBy="companyID"
+                        [selectableGroup]="true" [selectableGroupAsModel]="false">
+                        <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                          <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                        </ng-template>
+                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                          <div class="ng-value" *ngFor="let item of items | slice:0:4">
+                            <span class="ng-value-label">
+                              {{item.storeName}}</span>
+                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                          </div>
+                          <div class="ng-value" *ngIf="items.length > 2">
+                            <span class="ng-value-label">{{items.length - 2}} more...</span>
+                          </div>
+                        </ng-template>
+                      </ng-select>
+                      <img src="assets/images/small-spinner.gif" *ngIf="isStoreLocationLoading">
+
+                    </label>
+                  </div>
+                  <div class="form-group mt-2 mb-0">
+                    <label class="mb-0">
+                      <span for="vendorName">Vendor</span>
+                    </label>
+                    <label>
+                      <ng-select [items]="vendorList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+                        name="vendorName" bindLabel="vendorName" placeholder="Vendor" formControlName="vendorCriteria"
+                        groupBy="companyID" [selectableGroup]="true" [selectableGroupAsModel]="false">
+                        <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                          <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                        </ng-template>
+                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                          <div class="ng-value" *ngFor="let item of items | slice:0:4">
+                            <span class="ng-value-label">
+                              {{item.vendorName}}</span>
+                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                          </div>
+                          <div class="ng-value" *ngIf="items.length > 2">
+                            <span class="ng-value-label">{{items.length - 2}} more...</span>
+                          </div>
+                        </ng-template>
+                      </ng-select>
+                      <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+
+                    </label>
+                  </div>
+                  <div class="form-group mt-2 mb-0">
+                    <label class="mb-0">
+                      <span for="itemIsActive">Item Is Active</span>
+                    </label>
+                    <label>
+                      <select class="form-control" id="itemIsActive" name="itemIsActive" formControlName="isActive">
+                        <option value="">All</option>
+                        <option *ngFor="let obj of activeUpdateList" [value]="obj.id">{{obj.name}}</option>
+                      </select>
+
+                    </label>
+                  </div>
+                  <div class="form-group mt-2 mb-0">
+                    <label class="mb-0">
+                      <span for="priceGroups">Search By Price Group</span>
+                    </label>
+                    <label>
+                      <ng-select [items]="priceGroupList" [selectOnTab]="true" bindLabel="CompanyPriceGroupName"
+                        bindValue="CompanyPriceGroupID" labelForId="CompanyPriceGroupID" name="priceGroups"
+                        placeholder="Search By Price Group" formControlName="priceGroup"></ng-select>
+                      <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+
+                    </label>
+                  </div>
+                  <div class="form-group mt-2 mb-0">
+                    <label class="mb-0">
+                      <span for="posSyncStatus">POS Sync Status</span>
+                    </label>
+                    <label>
+                      <select class="form-control" id="posSyncStatus" name="posSyncStatus"
+                        formControlName="posSyncStatus">
+                        <option value="">All</option>
+                        <option *ngFor="let pos of posSyncStatusList" [value]="pos.posSyncStatusID">
+                          {{pos.posSyncStatusCode}}</option>
+                      </select>
+                    </label>
+                  </div>
+                  <div class="form-group mt-2 mb-0">
+                    <label class="mb-0">
+                      <span for="searchBy">Search By</span>
+                    </label>
+                    <label>
+                      <select class="form-control" id="searchBy" name="searchBy" formControlName="searchBy">
+                        <option *ngFor="let item of searchByList" [value]="item.id">{{item.name}}</option>
+                      </select>
+                    </label>
+                  </div>
+                  <div class="form-group mt-2 mb-0">
+                    <label class="mb-0">
+                      <span for="sellingPrice">Selling Price</span>
+                    </label>
+                    <label>
+                      <select class="form-control" id="sellingPrice" name="sellingPrice" formControlName="sellingPrice"
+                        (change)="selectUnits('sellingPrice')">
+                        <option value="0">Select Selling Price</option>
+                        <option *ngFor="let item of unitsCasePriceCost" [value]="item.id">
+                          {{item.name}}</option>
+                      </select>
+                    </label>
+                  </div>
+                  <div class="form-group mt-2 mb-0">
+                    <div class="col-sm-12">
+                      <div class="row">
+                        <div class="col-sm-6 input-icon p-0"
+                          *ngIf="advancedSearch.sellingPrice == 1 || advancedSearch.sellingPrice == 3 || advancedSearch.sellingPrice == 4">
+                          <input class="form-control" type="text" name="sellingPriceStart"
+                            formControlName="sellingPriceStart" placeholder="0" floatOnly>
+                          <i>$</i>
+                        </div>
+                        <div class="col-sm-6 input-icon p-0"
+                          *ngIf="advancedSearch.sellingPrice == 4 || advancedSearch.sellingPrice == 2">
+                          <input class="form-control" type="text" name="sellingPriceEnd"
+                            formControlName="sellingPriceEnd" placeholder="00" floatOnly>
+                          <i>$</i>
+                        </div>
+                      </div>
+                    </div>
+                    <label class="mb-0">
+                      <span for="profitMargin">Profit Margin</span>
+                    </label>
+                    <label>
+                      <select class="form-control" id="inventoryValuePrice" name="profitMargin"
+                        formControlName="pmCriteria" (change)="selectUnits('pmCriteria')">
+                        <option value="0">Select Profit Margin</option>
+                        <option *ngFor="let item of unitsCasePriceCost" [value]="item.id">
+                          {{item.name}}</option>
+                      </select>
+                    </label>
+                  </div>
+                  <div class="form-group mt-2 mb-0">
+                    <div class="form-group col-sm-12">
+                      <div class="row ">
+                        <div class="col-sm-6 input-icon p-0"
+                          *ngIf="advancedSearch.pmCriteria == 1 || advancedSearch.pmCriteria == 3 || advancedSearch.pmCriteria == 4">
+                          <input class="form-control" type="text" formControlName="pMStartCriteria" placeholder="00"
+                            numbersOnly>
+                          <i>$</i>
+                        </div>
+                        <div class="col-sm-6 input-icon p-0"
+                          *ngIf="advancedSearch.pmCriteria == 4 || advancedSearch.pmCriteria == 2">
+                          <input class="form-control" type="text" numbersOnly formControlName="pmEndCriteria"
+                            placeholder="00">
+                          <i>$</i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 mb-3" *ngIf="selectedRadio == 'itemsCatalog'">
+                  <button type="button" (click)="getAdvanceSerach(true)"
+                    class="btn btn-primary float-right ml-2">Search</button>
+                  <button type="button" (click)="clearAdvanceSearch()"
+                    class="btn btn-outline-secondary float-right">Clear</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-9">
+        <div class="row bg-gray">
+          <div class="col-md-9 p-0">
+            <div class="row">
+              <div class="col-sm-4">
+                <h6 class="mb-1 mt-1">Search Results</h6>
+                <span class="form-text text-muted">Displaying {{recordsCount>0?10:0}} of
+                  {{recordsCount?recordsCount:0}} records
+                </span>
+              </div>
+              <div class="col-sm-8">
+                <div class="row">
+                  <span [hidden]="!(storeLocationList && storeLocationList.length !== 1)" class="mt-2 col-sm-5">
+                    <mat-checkbox *ngIf="selectedRadio == 'itemsCatalog'" [(ngModel)]="showPricing"
+                      (change)="showPriceChange($event)">Show Pricing</mat-checkbox>
+                    <mat-checkbox *ngIf="selectedRadio == 'priceGroups'" [(ngModel)]="showPricingPrcGrp"
+                      (change)="showPricePrcGrpChange($event)">Show Pricing
+                    </mat-checkbox>
+                  </span>
+                  <span class="mt-1 col-sm-7" [hidden]="!(storeLocationList && storeLocationList.length !== 1)">
+                    <ng-select *ngIf="showPricing && selectedRadio == 'itemsCatalog' " [items]="storeLocationList"
+                      [hideSelected]="true" bindLabel="storeName" bindValue="storeLocationID"
+                      placeholder="Select Store Location" [(ngModel)]="showPriceStoreLocationId"
+                      (change)="catalogStoreChange()">
+                      <ng-template ng-option-tmp let-item="item">
+                        <div container="body">
+                          {{item.storeName}}
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                    <ng-select *ngIf="showPricingPrcGrp && selectedRadio == 'priceGroups'" [items]="storeLocationList"
+                      [hideSelected]="true" bindLabel="storeName" bindValue="storeLocationID"
+                      placeholder="Select Store Location" [(ngModel)]="showPricePrcGrpStoreLocationId"
+                      (change)="groupStoreChange()">
+                      <ng-template ng-option-tmp let-item="item">
+                        <div container="body">
+                          {{item.storeName}}
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 pr-0">
+            <div class="input-group mt-1 mb-1">
+              <input type="text" class="form-control" placeholder="Filter Search" aria-label="Search"
+                [(ngModel)]="filterTextOverlay" name="filterTextOverlay" (input)="onFilterOverlayBoxChanged()">
+              <div class="input-group-append">
+                <span class="input-group-text"><i class="fa fa-search"></i></span>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="col-md-2 pl-0">
+            <button (click)="openSideContainer()" class="btn btn-action btn-font float-right pr-1 pl-1 mt-2"><i
+                class="fa fa-plus"></i> Add To Group</button>
+          </div> -->
+        </div>
+
+
+        <div class="card-body mt-2  p-0" *ngIf="selectedRadio == 'priceGroups'">
+          <div class="col-md-12 p-0">
+            <app-pagination-grid [detailCellRenderers]="detailCellRenderer" (gridReady)="onOverlayGridReady($event)"
+              [paginationGridOptions]="subContGridOptions">
+            </app-pagination-grid>
+          </div>
+        </div>
+        <div class="card-body mt-2  p-0" *ngIf="selectedRadio == 'itemsCatalog'">
+          <div class="col-md-12 p-0">
+            <app-pagination-grid *ngIf="selectedRadio == 'itemsCatalog'" (gridReady)="onItemCatalogGridReady($event)"
+              [paginationGridOptions]="itemCatalogGridOptions" (rowSelected)="itemCatalogRowSelected($event)">
+            </app-pagination-grid>
+          </div>
+        </div>
+        <div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="col-md-12 p-0">
+        <button type="button" *ngIf="selectedRadio == 'itemsCatalog'" (click)="addToGrps()"
+          class="btn btn-primary float-right ml-2">Save</button>
+        <button type="button" (click)="closeSideContainer()"
+          class="btn btn-outline-secondary float-right">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

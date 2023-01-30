@@ -1,0 +1,41 @@
+<div [@routerTransition]>
+  <app-page-header [heading]="'Excess Inventory'" [icon]="'fa-bar-chart-o'"></app-page-header>
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="form-group row">
+        <label class="col-sm-3 col-form-label" for="locationName">Location</label>
+        <div class="col-sm-9">
+          <ng-select [items]="storeLocationList" placeholder="Store Location"></ng-select>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-3 col-form-label" for="Vendor">Vendor </label>
+        <div class="col-sm-9">
+          <ng-select [items]="storeLocationList" placeholder="Vendor"></ng-select>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="form-group row">
+        <label class="col-sm-3 col-form-label" for="DeliveryDay">Delivery Day</label>
+        <div class="col-sm-9">
+          <ng-select [items]="storeLocationList" placeholder="Delivery Day"></ng-select>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-3 col-form-label" for="department">Department </label>
+        <div class="col-sm-9">
+          <ng-select [items]="storeLocationList" [multiple]="true" placeholder="department"></ng-select>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="row justify-content-center">
+        <button type="button" class="btn btn-md btn-primary"><i class="fa fa-search"></i> Search</button>
+      </div>
+    </div>
+    <div class="col-sm-12 mt-2">
+        <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOption" (gridReady)="onGridReady($event)"></app-cstore-grid>
+    </div>
+  </div>
+</div>

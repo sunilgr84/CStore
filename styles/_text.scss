@@ -1,0 +1,109 @@
+// Responsive alignment
+@each $breakpoint in map-keys($grid_breakpoints) {
+  @include mq($breakpoint) {
+    $infix: breakpoint_infix($breakpoint, $grid_breakpoints);
+
+    .text#{$infix}-left {
+      text-align: left !important;
+    }
+    .text#{$infix}-right {
+      text-align: right !important;
+    }
+    .text#{$infix}-center {
+      text-align: center !important;
+    }
+  }
+}
+
+// typography
+.caption {
+  font-size: 0.75rem;
+  color: #adadad;
+}
+
+// Transformation
+.text-lowercase {
+  text-transform: lowercase !important;
+}
+.text-uppercase {
+  text-transform: uppercase !important;
+}
+.text-capitalize {
+  text-transform: capitalize !important;
+}
+.text-truncate {
+  @include text_truncate;
+}
+
+// text chip layout
+.chip {
+  border-radius: 16px;
+  background-color: transparent;
+  color: black;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 12px;
+  @each $name, $color in $color_btn {
+    &.chip-#{$name} {
+      color: $color;
+    }
+  }
+
+  &.chip-contained {
+    background-color: #52576e;
+    color: white;
+    @each $name, $color in $color_btn {
+      &.chip-#{$name} {
+        color: white;
+        background-color: $color;
+      }
+    }
+  }
+}
+
+// reusable text variants
+.text-caption {
+  font-size: 0.75rem;
+  color: #a4a4a4;
+  font-weight: $fw_regular;
+}
+
+.text-label {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.875rem;
+  background-color: #52576e;
+  color: white;
+  min-height: 24px;
+  padding: 0px 12px;
+  border-radius: 4px;
+  &.text-label-small {
+    font-size: 0.75rem;
+    min-height: 20px;
+    padding: 0px 6px;
+  }
+  &.text-label-large {
+    font-size: 1rem;
+    min-height: 28px;
+  }
+  &.text-label-extra-large {
+    font-size: 1.125rem;
+    min-height: 36px;
+  }
+  @each $name, $color in $color_btn {
+    &.text-label-#{$name} {
+      background-color: $color;
+    }
+  }
+}
+
+// colors
+@each $name, $color in $color_text-bg {
+  .color-#{$name} {
+    color: $color;
+  }
+  .bg-#{$name} {
+    background-color: $color;
+  }
+}

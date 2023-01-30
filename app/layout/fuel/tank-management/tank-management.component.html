@@ -1,0 +1,130 @@
+<div class="card">
+  <app-page-header [heading]="'Tank Management'" [icon]="'fa-edit'"></app-page-header>
+  <div class="card-body tank-management">
+    <h5 class="card-title mb-3">{{'Tank Volume History'}}</h5>
+    <div class="row">
+      <div class="col-sm-10">
+        <div class="row m-0">
+          <div class="col-sm-4 p-0">
+            <label class="form-group has-float-label">
+              <div *ngIf="storeLocationList && storeLocationList.length!==1">
+                <ng-select [items]="storeLocationList" [selectOnTab]="true" bindLabel="storeName"
+                  bindValue="storeLocationID" labelForId="storeLocationID" placeholder="Store Location"
+                  [(ngModel)]="_storeLocationId" (change)="getTankDetails()">
+                </ng-select>
+              </div>
+              <input readonly type="text" *ngIf="storeLocationList && storeLocationList.length===1" class="form-control"
+                [value]="storeLocationList[0].storeName">
+              <span for="stores">Store Location</span>
+            </label>
+            <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+
+          </div>
+          <div class="col-sm-2 pt-2" *ngIf='_storeLocationId > 0'>
+            <img src="assets/images/filter.png" width="20" height="20" (click)="ChangeFilter()" />
+          </div>
+          <div class="col-sm-6">
+            <button *ngIf="isShowTank &&  isAvailableTankDetails && isHistoryLoaded"
+              class="btn btn-md btn-primary form-group float-right btn-margin" [ngClass]="{
+            'margin_30': isFilter
+         }" (click)="addTankDetail()"><i class="fa fa-plus"></i> Add Tank Volume
+            </button>
+          </div>
+          <div *ngIf="isFilter" class="pmc-container border-ciq">
+            <div class="pmc-header">
+              <div class="col">
+                <div class="pmc-title-wrapper">
+                  <span class="pmc-title">Search tank volume history by</span>
+                </div>
+              </div>
+              <div class="col-auto">
+                <button class="v-btn-icon v-small pmc-close" (click)="ChangeFilter()">
+                  X
+                </button>
+              </div>
+            </div>
+            <div class="pmc-body">
+              <div class="col-sm-3">
+                <label class="form-group has-float-label mb-0">
+                  <app-daterangepicker [selectedDateRange]="selectedDateRange"
+                    (dateRangeSelecetd)="dateRangeChange($event)">
+                  </app-daterangepicker>
+                  <span> Select Date Range</span>
+                </label>
+              </div>
+              <div class="col-sm-3">
+                <label class="form-group has-float-label mb-0">
+                  <ng-select [items]="tanks" [selectOnTab]="true" bindLabel="tankName" bindValue="tankId"
+                    labelForId="tankId" placeholder="Tank" [(ngModel)]="_tankId">
+                  </ng-select>
+                  <span> Select Tank</span>
+                </label>
+              </div>
+              <div class="col-sm-3">
+                <button class="btn btn-md btn-primary" (click)="searchTanks()">Search</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 p-0 pt-2" *ngIf="isShowTank && !isAvailableTankDetails">
+            <strong>
+              There is no Store Tank Detail. Add it on StoreLevel,
+              then store tank will be display.
+            </strong>
+          </div>
+          <div class="col-sm-12 p-0 pt-2" *ngIf="isShowTank &&  isAvailableTankDetails && isHistoryLoaded">
+            <div class="row">
+              <div class="col-md-12" id="table-date-time">
+                <app-expandable-grid class="ag-header-height" [fullRowEditabeRequired]='true'
+                  [rowData]="tankHistoryRowData" (gridReady)="onTankHistoryGridReady($event)"
+                  (rowEditingStarted)="onRowEditingStarted($event)" (rowEditingStopped)="onRowEditingStopped($event)"
+                  [expandableGridOptions]="tankHistoryGridOptions" (save)="save($event)" (delete)=delete($event)>
+                </app-expandable-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div>
+          <div *ngIf="isShowTank && isAvailableTankDetails">
+            <div class="tank-border">
+              <div *ngFor="let tank of tankDetails">
+                <ng-template #tankToolTip>
+                  <div>
+                    <div>
+                      Tank No : {{tank.storeTankNo}}
+                    </div>
+                    <div>
+                      Tank Name : {{tank.tankName}}
+                    </div>
+                    <div>
+                      Fuel Grade Name : {{tank.fuelGradeName}}
+                    </div>
+                    <div>
+                      Last Tank Reading Volume : {{tank.lastTankReadingVolume}}
+                    </div>
+                    <div>
+                      Product Code Description : {{tank.productCodeDescription}}
+                    </div>
+                    <div>
+                      Tank Ullage : {{tank.tankUllage}}
+                    </div>
+                    <div>
+                      Tank Volume : {{tank.tankVolume}}
+                    </div>
+
+                    <div>
+                      Reading Date Time : {{tank.readingAsOfDateTime}}
+                    </div>
+
+                  </div>
+                </ng-template>
+                <app-fuel-tank [tankData]="tank" [ngbTooltip]="tankToolTip"></app-fuel-tank>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,223 @@
+<form
+  class="container-fluid mt-2"
+  
+  [formGroup]="storeFuelForm"
+  novalidate>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-body">
+          <h6 class="card-title">
+            <div class="form-group">Fuel Setup</div>
+          </h6>
+          <div class="row">
+            <div class="col-sm-6 row">
+              <label class="form-group has-float-label col-6">
+                <div>
+                  <select
+                    class="col-3"
+                    placeholder="Select POS System SubCD"
+                    id="brand"
+                    class="form-control"
+                    formControlName="paymentSystemsProductCode"
+                    (click)="selectImage()"
+                    (change)="fuelBrandChange($event)"
+                    >
+                    <option value="">Select Brand</option>
+                    <option
+                      *ngFor="let obj of brandList"
+                      [value]="obj.paymentSystemProductCodeID"
+                    >
+                      {{obj.paymentSystemsProductName}}</option>
+                  </select>
+                  <img
+                    src="assets/images/small-spinner.gif"
+                    *ngIf="isBrandLoading">
+                </div>
+                <span for="brand">Brand</span>
+              </label>
+              <div class="decodeImage col-6">
+                <img
+                  [src]="decodeImage || decodedDefaultImage"
+                  *ngIf="decodeImage || decodedDefaultImage"
+                  class="brandImg"
+                  alt="brand"
+                  width="100%"
+                  height="45px"
+                />
+              </div>
+            </div>
+
+            <label class="form-group has-float-label col-sm-6">
+              <div style="padding-left: 2rem; padding-right: 0;">
+                <select
+                  placeholder="Select Tank Monitoring System"
+                  id="tankMonitoringSystem"
+                  class="form-control"
+                  (change)="tankMonitorChange($event)"
+                  formControlName="tankMonitoringSystemID">
+                  <option value="">Select Tank Monitoring System</option>
+                  <option
+                    *ngFor="let arr of tankMonitoringSystemList"
+                    [value]="arr.tankMonitoringSystemID">
+                    {{arr.tankMonitoringSystemName}}
+                  </option>
+                </select>
+              </div>
+              <span for="county" style="padding-left: 2rem;">Tank Monitor</span>
+            </label>
+
+          </div>
+
+          <div class="row">
+            <label class="form-group has-float-label col-sm-6">
+              <div>
+                <select
+                  class="form-control"
+                  id="storeTier"
+                  (change)="storeTierChange($event)"
+                  formControlName="storeTier">
+                  <option value="">Select Fuel MOPs</option>
+                  <option
+                    *ngFor="let storeTier of storeTierList"
+                    [value]="storeTier.fuelPriceTierID">
+                    {{storeTier.fuelPriceTierName}}</option>
+                </select>
+              </div>
+              <span for="storeTier">Fule MOPs</span>
+            </label>
+
+            <label class="form-group has-float-label col-sm-6">
+              <div>
+                <select
+                  class="form-control"
+                  id="serviceLevel"
+                  (change)="serviceLevelChange($event)"
+                  formControlName="serviceLevel">
+                  <option value="">Select Service Level</option>
+                  <option
+                    *ngFor="let serviceLevel of serviceLevelList"
+                    [value]="serviceLevel.fuelServiceLevelID">
+                    {{serviceLevel.fuelServiceLevelName}}</option>
+                </select>
+                <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+              </div>
+              <span for="serviceLevel">Service level</span>
+            </label>
+
+            
+          </div>
+
+          <div class="row">
+            <label class="form-group has-float-label col-sm-6">
+              <div>
+                <select
+                  class="form-control"
+                  formControlName="priceConfig"
+                  (change)="priceConfigChange($event)">
+                  <option value="">Select Price Config</option>
+                  <option
+                    *ngFor="let priceTier of priceTierList"
+                    id="priceTier"
+                    [value]="priceTier.mopTypeID">
+                    {{priceTier.mopTypeName}}
+                  </option>
+                </select>
+                <img src="assets/images/small-spinner.gif" *ngIf="isPriceTierLoading">
+              </div>
+              <span for="county">Price config</span>
+            </label>
+
+            <label class="form-group has-float-label" [ngClass]="[showPricePerGallon() ? 'col-md-3' : showProfitSplitRatio() ? 'col-md-2' : 'col-md-6']">
+              <div>
+                <select
+                  placeholder="Select an option"
+                  class="form-control"
+                  formControlName="fuelOption"
+                  required
+                  id="fuel-option"
+                  name="fuel-option"
+                  (change)="fuelOptionChange($event)">
+                  <option value="">Select an option</option>
+                  <option
+                    *ngFor="let fuelOption of fuelOptionList"
+                    [value]="fuelOption.fuelOptionID">
+                    {{fuelOption.description}}
+                  </option>
+                </select>
+              </div>
+              <span for="county">Fuel Option</span>
+            </label>
+            <label
+              class="form-group has-float-label col-md-3"
+              *ngIf="showPricePerGallon()">
+              <span>$
+              <input
+                type="number"
+                class="form-control"
+                id="profitPerGallon"
+                name="profitPerGallon"
+                formControlName="profitPerGallon"
+                placeholder="Profit per Gallon"
+                minlength="3"
+                maxlength="40"
+                (blur)="fuelOptionChange($event)"
+                required
+                appTwoDecimalInputValidator>
+              </span>
+              <span for="storeName">Profit Per Gallon</span>
+            </label>
+
+            <label
+              class="form-group has-float-label col-md-2"
+              *ngIf="showProfitSplitRatio()">
+              <input
+                type="number"
+                class="form-control"
+                id="ProfitSplitratio"
+                name="profitSplitratio"
+                formControlName="profitSplitratio"
+                placeholder="Jobber Value"
+                maxlength="3"
+                (blur)="fuelOptionChange($event)"
+                required>
+              <span for="ProfitSplitratio">Jobber Value</span>
+            </label>
+
+            <label
+              class="form-group has-float-label col-md-2"
+              *ngIf="showProfitSplitRatio()">
+              <input
+                value="{{100 - storeFuelForm.get('profitSplitratio').value}}"
+                type="number"
+                class="form-control"
+                minlength="3"
+                maxlength="40"
+                readonly
+                required>
+                <span>Store Owner</span>
+            </label>
+          </div>
+          <div class="row">
+            
+            <div class="col-sm-6 custom-control custom-checkbox checkboxOne" [ngStyle]="{'padding-left': '2.5rem'}">
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="fuel-price-change"
+                formControlName="enableFuelPrice"
+                (change)="checkChanged($event.target.checked)"
+                [checked]="isChecked || enablePriceChangeDef == 'true'" />
+              <label
+                class="custom-control-label padding-right-10"
+                for="fuel-price-change"
+                style="display: inline-block;">
+                Enable Fuel Price Change to POS
+              </label>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</form>

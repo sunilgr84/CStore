@@ -1,0 +1,63 @@
+<div [@routerTransition]>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title mb-4">Master Brand
+        <button type="button" *ngIf="!showForm" class="btn btn-md btn-cstorebo btnsub float-right mb-1"
+          (click)="addNew()">
+          <i class="fa fa-plus" aria-hidden="true"></i> Add New</button>
+      </h5>
+      <form novalidate [formGroup]="brandForm" (ngSubmit)="saveOrUpdateBrand()">
+        <div class="row" *ngIf="showForm">
+          <div class="col-sm-3 pl-2 pr-2">
+            <label class="form-group has-float-label">
+              <select class="form-control" required formControlName="manufacturerID" id="manufacturerID"
+                (change)="onManufacturerChange()">
+                <option value="">Select Manufacturer</option>
+                <option *ngFor="let obj of manufacturerList" [value]="obj.manufacturerID">{{obj.manufacturerName}}
+                </option>
+              </select>
+              <span for="manufacturerID">Manufacturer</span>
+              <div *ngIf="submitted && brandFormControls.manufacturerID.errors?.required" class="alert alert-danger">
+                Manufacturer is required
+              </div>
+            </label>
+          </div>
+          <div class="col-sm-3 pl-2 pr-2">
+            <div class="input-icon">
+              <label class="form-group has-float-label mb-1">
+                <input type="text" class="form-control" formControlName="brandName" name="brandName"
+                  placeholder="Brand Name">
+                <span> Brand Name</span>
+              </label>
+              <div *ngIf="submitted && brandFormControls.brandName.errors?.required" class="alert alert-danger">
+                Brand Name is required
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4 pl-2 pr-2">
+            <button type="submit" ng-disabled="!brandForm.valid" class="btn btn-md btn-primary ml-3">
+              {{isEdit?'Update':'Save'}} </button>
+              <button type="button" (click)="onClearAddBrand()" class="btn btn-md btn-primary ml-3">
+                Cancel </button>
+          </div>
+        </div>
+      </form>
+      <div class="row">
+        <div class="justify-content-end col-sm-12">
+          <div class="inner-addon right-addon" style="width: 230px; float: right;">
+            <span>
+              <i class="fa fa-search card-title" aria-hidden="true"></i>
+            </span>
+            <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+              placeholder="Filter Search" [(ngModel)]="filterText" name="filterText" (input)="onSearchTextBoxChanged()">
+          </div>
+        </div>
+        <div class="mt-2 col-sm-12">
+          <app-pagination-grid [paginationGridOptions]="gridOptions" (delete)="delete($event)"
+            (edit)="updateBrand($event)" (gridReady)="onGridReady($event)">
+          </app-pagination-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

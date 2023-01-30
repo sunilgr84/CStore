@@ -1,0 +1,798 @@
+<div [@routerTransition]>
+  <!-- <app-page-header [heading]="'Items'" [icon]="'fa-edit'"></app-page-header> -->
+  <div *ngIf="!isAddItem" class="min_height">
+    <div class="col-sm-12">
+      <div class="row">
+        <div class=" col-sm-12">
+          <form [formGroup]="advancedSearchForm" novalidate>
+            <div class="row mb-2">
+              <div class="col-md-3">
+                <div class="inner-addon right-addon">
+                  <span (click)="getAdvancedSearch()">
+                    <i class="fa fa-search card-title" aria-hidden="true"></i>
+                  </span>
+                  <input type="text" class="form-control" (keyup.enter)="getAdvancedSearch('upc/description')"
+                    name="posCodeOrDesc" formControlName="posCodeOrDesc" placeholder="UPC / Description" />
+                </div>
+              </div>
+              <div class="col-md-4 p-0">
+                <button type="button" class="btn btn-md btn-primary mr-2" (click)="openAdvanceSearch()">
+                  Advance Search</button>
+                <div class="d-inline m-2">
+                  <mat-checkbox formControlName="showPricing" [(ngModel)]="gridProperties.showPricing"
+                    (change)="setGridHideCol('showPricing')">
+                    Show Pricing
+                  </mat-checkbox>
+                </div>
+                <div class="custom-control custom-checkbox d-inline" *ngIf="false">
+                  <input type="checkbox" class="custom-control-input" name="showDetails" id="showDetails"
+                    [(ngModel)]="gridProperties.showDetails" (change)="setGridHideCol('showDetails')" />
+                  <label class="custom-control-label " for="showDetails">Show Details</label>
+                </div>
+                <div class="d-inline m-2">
+                  <mat-checkbox formControlName="showMultipackPricing" [(ngModel)]="gridProperties.showMultipackPricing"
+                    (change)="setGridHideCol('showMultipackPricing')">
+                    Show Multipack Pricing
+                  </mat-checkbox>
+                </div>
+              </div>
+              <div class="col-md-5 text-right">
+                <div class="badge warning-badge tooltip tooltip-scroll">
+                  <h3>{{itemStatus.new}}</h3>
+                  New In Price Book
+                  <div class="wrapper">
+                    <ul class="list-group tooltip-text list-group-flush displayPopUp"
+                      style="list-style-type:none;padding: 0;" *ngFor="let itemStatus of itemStatus.newStatusCounts">
+                      <li class="list-group-item" style="color: black;">{{itemStatus}}</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="badge info-badge tooltip tooltip-scroll">
+                  <h3>{{itemStatus.current}}</h3>
+                  Items In POS
+                  <div class="wrapper">
+                    <ul class="list-group tooltip-text list-group-flush displayPopUp"
+                      style="list-style-type:none;padding: 0;" *ngFor="let itemStatus of itemStatus.currentStatusCounts">
+                        <li class="list-group-item" style="color: black;">{{itemStatus}}</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="badge active-badge tooltip tooltip-scroll">
+                  <h3>{{itemStatus.inProgress}}</h3>
+                  Push To POS
+                  <div class="wrapper">
+                    <ul class="list-group tooltip-text list-group-flush displayPopUp"
+                      style="list-style-type:none;padding: 0;" *ngFor="let itemStatus of itemStatus.inProgressStatusCounts">
+                      <li class="list-group-item" style="color: black;">{{itemStatus}}</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="badge danger-badge tooltip tooltip-scroll">
+                  <h3>{{itemStatus.error}}</h3>
+                  Items In Error
+                  <div class="wrapper">
+                    <ul class="list-group tooltip-text list-group-flush displayPopUp"
+                      style="list-style-type:none;padding: 0;" *ngFor="let itemStatus of itemStatus.errorStatusCounts">
+                      <li class="list-group-item" style="color: black;">{{itemStatus}}</li>
+                    </ul>
+                  </div>
+                </div>
+
+            </div>
+            </div>
+            <div *ngIf="isAdvanceSearch" class="col-sm-12 mb-3 p-0 ">
+              <div class="card">
+                <div class="card-body card-min-height">
+                  <div class="row">
+                    <div class="col-sm-11">
+                      <h5 class="card-title">{{'Advance Search'}}</h5>
+                    </div>
+                    <div class="col-sm-1">
+                      <span class="pull-right" (click)="openAdvanceSearch()">X</span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="row">
+                        <div class="col-sm-12 mb-3">
+                          <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" [checked]="searchByDepatPrice==='byPriceGroup'" id="customRadioInline2"
+                              (click)="selectSearchBy('byPriceGroup')" name="customRadioInline1" value="byPriceGroup"
+                              class="custom-control-input">
+                            <label class="custom-control-label" for="customRadioInline2">Search By Price Group</label>
+                          </div>
+                          <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="customRadioInline1" [checked]="searchByDepatPrice==='byDepartment'"
+                              (click)="selectSearchBy('byDepartment')" name="customRadioInline1" value="byDepartment"
+                              class="custom-control-input">
+                            <label class="custom-control-label" for="customRadioInline1">Search By Department</label>
+                          </div>
+
+                        </div>
+                        <!-- <div class="form-group col-sm-12" *ngIf="searchByDepatPrice==='byDepartment'"> -->
+                        <label class="form-group has-float-label col-sm-4" *ngIf="searchByDepatPrice==='byDepartment'">
+                          <ng-select [items]="departmentListByUser" [multiple]="true" [closeOnSelect]="false"
+                            [hideSelected]="true" bindLabel="departmentDescription" placeholder="Department(s)"
+                            formControlName="department" name="departmentDescription" groupBy="companyID"
+                            [selectableGroup]="true" [selectableGroupAsModel]="false">
+                            <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                              <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                            </ng-template>
+                            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                              <div class="ng-value" *ngFor="let item of items | slice:0:4">
+                                <span class="ng-value-label">
+                                  {{item.departmentDescription}}</span>
+                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                              </div>
+                              <div class="ng-value" *ngIf="items.length > 2">
+                                <span class="ng-value-label">{{items.length - 2}} more...</span>
+                              </div>
+                            </ng-template>
+                          </ng-select>
+                          <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+                          <!-- bindValue="departmentID" bindValue="vendorID" -->
+                          <span for="departmentDescription" class="z_index">Search By Department</span>
+                        </label>
+                        <label class="form-group has-float-label col-sm-4" *ngIf="searchByDepatPrice==='byPriceGroup'">
+                          <ng-select [items]="priceGroupList" [selectOnTab]="true" bindLabel="CompanyPriceGroupName"
+                            bindValue="CompanyPriceGroupID" labelForId="CompanyPriceGroupID" name="priceGroups"
+                            placeholder="priceGroup(s)" formControlName="priceGroup"></ng-select>
+                          <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+                          <span for="priceGroups" class="z_index">Search By Price Group</span>
+                        </label>
+
+                        <label
+                          *ngIf="storeLocationList && storeLocationList.length !== 1 && (searchByDepatPrice==='byDepartment' || searchByDepatPrice==='byPriceGroup')"
+                          class="form-group has-float-label col-sm-4">
+                          <!-- <label for="storeLocation">Location</label> -->
+                          <ng-select [items]="storeLocationList" [multiple]="true" [closeOnSelect]="false"
+                            [hideSelected]="true" bindLabel="storeName" placeholder="Location(s)" name="storeName"
+                            formControlName="locationCriteria" (change)="selectStore()" groupBy="companyID"
+                            [selectableGroup]="true" [selectableGroupAsModel]="false">
+                            <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                              <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                            </ng-template>
+                            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                              <div class="ng-value" *ngFor="let item of items | slice:0:4">
+                                <span class="ng-value-label">
+                                  {{item.storeName}}</span>
+                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                              </div>
+                              <div class="ng-value" *ngIf="items.length > 2">
+                                <span class="ng-value-label">{{items.length - 2}} more...</span>
+                              </div>
+                            </ng-template>
+                          </ng-select>
+                          <img src="assets/images/small-spinner.gif" *ngIf="isStoreLocationLoading">
+                          <span for="storeName" class="z_index">Store Location</span>
+                        </label>
+                        <label
+                          *ngIf="storeLocationList && storeLocationList.length === 1 && (searchByDepatPrice==='byDepartment' || searchByDepatPrice==='byPriceGroup')"
+                          class="form-group has-float-label col-sm-4">
+                          <input readonly type="text" class="form-control" [value]="storeLocationList[0].storeName">
+                          <span for="storeName">Store Location</span>
+                        </label>
+
+                        <label class="form-group has-float-label col-sm-4" *ngIf="searchByDepatPrice==='byDepartment'">
+                          <ng-select [items]="vendorList" [multiple]="true" [closeOnSelect]="false"
+                            [hideSelected]="true" name="vendorName" bindLabel="vendorName" placeholder="Vendor(s)"
+                            formControlName="vendorCriteria" groupBy="companyID" [selectableGroup]="true"
+                            [selectableGroupAsModel]="false">
+                            <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                              <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                            </ng-template>
+                            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                              <div class="ng-value" *ngFor="let item of items | slice:0:4">
+                                <span class="ng-value-label">
+                                  {{item.vendorName}}</span>
+                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                              </div>
+                              <div class="ng-value" *ngIf="items.length > 2">
+                                <span class="ng-value-label">{{items.length - 2}} more...</span>
+                              </div>
+                            </ng-template>
+                          </ng-select>
+                          <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+                          <span for="vendorName" class="z_index">Vendor</span>
+                        </label>
+                        <label class="form-group has-float-label col-sm-4" *ngIf="searchByDepatPrice==='byDepartment'">
+                          <ng-select [clearable]="false" [items]="activeUpdateList" [selectOnTab]="true"
+                            bindLabel="name" bindValue="id" labelForId="companySelect" placeholder="Is Active"
+                            formControlName="isActive">
+                          </ng-select>
+                          <span for="itemIsActive" class="z_index">Item Is Active</span>
+                        </label>
+                        <!-- <div class="form-group col-sm-6">
+                          <label for="multipack">Track Item</label>
+                          <select class="form-control" id="multipack" name="multipack" formControlName="isOnWatchList">
+                            <option value="">Track Item</option>
+                            <option *ngFor="let obj of activeUpdateList" [value]="obj.id">{{obj.name}}</option>
+                          </select>
+                        </div> -->
+
+                        <label class="form-group has-float-label col-sm-4" *ngIf="searchByDepatPrice==='byDepartment'">
+                          <ng-select [clearable]="false" [items]="posSyncStatusList" [selectOnTab]="true"
+                            bindLabel="posSyncStatusCode" bindValue="posSyncStatusID" labelForId="companySelect"
+                            placeholder="Select POS Sync Status" formControlName="posSyncStatus">
+                          </ng-select>
+                          <span for="posSyncStatus" class="z_index">POS Sync Status</span>
+                        </label>
+                        <label class="form-group has-float-label col-sm-4" *ngIf="searchByDepatPrice==='byDepartment'">
+                          <ng-select [clearable]="false" [items]="searchByList" [selectOnTab]="true" bindLabel="name"
+                            bindValue="id" labelForId="searchBy" formControlName="searchBy">
+                          </ng-select>
+                          <span for="searchBy" class="z_index">Search By</span>
+                        </label>
+                        <!-- <div class="form-group col-sm-3">
+                          <label for="sellingUnits">Selling Units</label>
+                          <select class="form-control" id="sellingUnits" name="sellingUnits"
+                            formControlName="sellingUnits" (change)="selectUnits('sellingUnits')">
+                            <option value="">Select Selling Units</option>
+                            <option *ngFor="let item of unitsCasePriceCost" [value]="item.id">
+                              {{item.name}}</option>
+                          </select>
+                        </div>
+                        <div class="form-group col-sm-3">
+                          <div class="row ">
+                            <div class="col-sm-6"
+                              *ngIf="advancedSearch.sellingUnits == 1 || advancedSearch.sellingUnits == 3 || advancedSearch.sellingUnits == 4">
+                              <input class="form-control" type="number" min="0" name="sellingUnitStart"
+                                formControlName="sellingUnitStart" placeholder="00">
+                            </div>
+                            <div class="col-sm-6"
+                              *ngIf="advancedSearch.sellingUnits == 4 || advancedSearch.sellingUnits == 2">
+                              <input class="form-control" type="number" min="0" name="sellingUnitEnd"
+                                formControlName="sellingUnitEnd" placeholder="000">
+                            </div>
+                          </div>
+                        </div> -->
+                        <!-- <div class="form-group  col-sm-3">
+                          <label for="unitinCase">Unit in Case</label>
+                          <select class="form-control" id="unitinCase" name="unitinCase" formControlName="unitinCase"
+                            (change)="selectUnits('unitinCase')">
+                            <option value="0"> Select unit in case </option>
+                            <option *ngFor="let item of unitsCasePriceCost" [value]="item.id">
+                              {{item.name}}</option>
+                          </select>
+                        </div>
+                        <div class="form-group  col-sm-3">
+                                                 <div class="row ">
+                            <div class="col-sm-6"
+                              *ngIf="advancedSearch.unitinCase == 1 || advancedSearch.unitinCase == 3 || advancedSearch.unitinCase == 4">
+                              <input class="form-control" type="number" name="unitsInCaseStart"
+                                formControlName="unitsInCaseStart" placeholder="00">
+                            </div>
+                            <div class="col-sm-6"
+                              *ngIf="advancedSearch.unitinCase == 4 || advancedSearch.unitinCase == 2">
+                              <input class="form-control" type="number" name="unitsInCaseEnd"
+                                formControlName="unitsInCaseEnd" placeholder="00">
+                            </div>
+                          </div>
+                        </div> -->
+                        <label class="form-group has-float-label col-sm-4" *ngIf="searchByDepatPrice==='byDepartment'">
+                          <ng-select [clearable]="false" [items]="unitsCasePriceCost" [selectOnTab]="true"
+                            bindLabel="name" bindValue="id" labelForId="sellingPrice" placeholder="Select Selling Price"
+                            formControlName="sellingPrice" (change)="selectUnits('sellingPrice')">
+                          </ng-select>
+                          <span for="searchBy" class="z_index">Selling Price</span>
+                        </label>
+                        <div class="row col-sm-4">
+                          <div class="col-sm-6 pr-0"
+                            *ngIf="searchByDepatPrice==='byDepartment' && (advancedSearch.sellingPrice == 1 || advancedSearch.sellingPrice == 3 || advancedSearch.sellingPrice == 4)">
+                            <div class="col-sm-12 row input-icon topPadding">
+                              <input class="form-control" type="text" name="sellingPriceStart" numberTwoDecimalOnly
+                                formControlName="sellingPriceStart" placeholder="" floatOnly>
+                              <i>$</i>
+                            </div>
+                          </div>
+                          <div class="col-sm-6 pr-0"
+                            *ngIf="searchByDepatPrice==='byDepartment' && (advancedSearch.sellingPrice == 4 || advancedSearch.sellingPrice == 2)">
+                            <div class="col-sm-12 row input-icon topPadding">
+                              <input class="form-control" type="text" name="sellingPriceEnd"
+                                formControlName="sellingPriceEnd" placeholder="" numberTwoDecimalOnly>
+                              <i>$</i>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row col-sm-4"></div>
+                        <!-- <div class="form-group  col-sm-3">
+                          <label for="inventoryValuePrice">Buying Cost</label>
+                          <select class="form-control" id="inventoryValuePrice" name="inventoryValuePrice"
+                            formControlName="inventoryValuePrice" (change)="selectUnits('inventoryValuePrice')">
+                            <option value="0">Select Buying Cost</option>
+                            <option *ngFor="let item of unitsCasePriceCost" [value]="item.id">
+                              {{item.name}}</option>
+                          </select>
+                        </div>
+                        <div class="form-group  col-sm-3">                      
+                          <div class="row ">
+                            <div class="col-sm-6"
+                              *ngIf="advancedSearch.inventoryValuePrice == 1 || advancedSearch.inventoryValuePrice == 3 || advancedSearch.inventoryValuePrice == 4">
+                              <input class="form-control" type="number" name="inventoryValuePriceStart"
+                                formControlName="inventoryValuePriceStart" placeholder="00">
+                            </div>
+                            <div class="col-sm-6"
+                              *ngIf="advancedSearch.inventoryValuePrice == 4 || advancedSearch.inventoryValuePrice == 2">
+                              <input class="form-control" type="number" name="inventoryValuePriceEnd"
+                                formControlName="inventoryValuePriceEnd" placeholder="00">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group  col-sm-3">
+                          <label for="inventoryValuePrice">Current Inventory</label>
+                          <select class="form-control" id="inventoryValuePrice" name="inventoryValuePrice"
+                            formControlName="currentInventory" (change)="selectUnits('currentInventory')">
+                            <option value="0">Select Current Inventory</option>
+                            <option *ngFor="let item of unitsCasePriceCost" [value]="item.id">
+                              {{item.name}}</option>
+                          </select>
+                        </div>
+                        <div class="form-group  col-sm-3">                   
+                          <div class="row ">
+                            <div class="col-sm-6"
+                              *ngIf="advancedSearch.currentInventory == 1 || advancedSearch.currentInventory == 3 || advancedSearch.currentInventory == 4">
+                              <input class="form-control" type="number" name="inventoryValuePriceStart"
+                                formControlName="currentInventoryStart" placeholder="00">
+                            </div>
+                            <div class="col-sm-6"
+                              *ngIf="advancedSearch.currentInventory == 4 || advancedSearch.currentInventory == 2">
+                              <input class="form-control" type="number" name="inventoryValuePriceEnd"
+                                formControlName="currentInventoryEnd" placeholder="00">
+                            </div>
+                          </div>
+                        </div> -->
+
+                        <label class="form-group has-float-label col-sm-4" *ngIf="searchByDepatPrice==='byDepartment'">
+                          <ng-select [clearable]="false" [items]="unitsCasePriceCost" [selectOnTab]="true"
+                            bindLabel="name" bindValue="id" labelForId="pmCriteria" placeholder="Select Selling Price"
+                            formControlName="pmCriteria" (change)="selectUnits('pmCriteria')">
+                          </ng-select>
+                          <span for="pmCriteria" class="z_index">Profit Margin</span>
+                        </label>
+                        <div class="row col-sm-4" *ngIf="searchByDepatPrice==='byDepartment'">
+                          <div class="col-sm-6 pr-0"
+                            *ngIf="advancedSearch.pmCriteria == 1 || advancedSearch.pmCriteria == 3 || advancedSearch.pmCriteria == 4">
+                            <div class="col-sm-12 row input-icon topPadding">
+                              <input class="form-control" type="text" formControlName="pMStartCriteria" numbersOnly>
+                              <i>$</i>
+                            </div>
+                          </div>
+                          <div class="col-sm-6 pr-0"
+                            *ngIf="advancedSearch.pmCriteria == 4 || advancedSearch.pmCriteria == 2">
+                            <div class="col-sm-12 row input-icon topPadding">
+                              <input class="form-control" type="text" numbersOnly formControlName="pmEndCriteria">
+                              <i>$</i>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-12 mt-2"
+                          *ngIf="searchByDepatPrice==='byPriceGroup' || searchByDepatPrice==='byDepartment'">
+                          <button type="button" class="btn btn-md btn-primary mr-3 float-right" (click)="openSearch()">
+                            Search</button>
+                          <button type="button" class="btn btn-md btn btn-primary mr-3 float-right"
+                            (click)="clearAdvanceSearch()">
+                            Reset</button>
+                          <button type="button" class="btn btn-md btn-primary mr-3 pull-right"
+                            (click)="openAdvanceSearch()">Cancel
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          <!-- {{advancedSearchForm.value| json}} -->
+        </div>
+        <div *ngIf="isBulkUpdate" class="col-sm-12 p-o mb-3 relative-container">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-11">
+                  <h5 class="card-title">Bulk Update</h5>
+                </div>
+                <div class="col-sm-1">
+                  <span class="pull-right close-button" (click)="openBulkUpdate()">X</span>
+                </div>
+              </div>
+              <!-- <span class="text-danger">Select the rows to update</span> -->
+              <div class="row pt-2">
+
+
+                <!-- <div *ngIf="storeLocationList && storeLocationList.length === 1" class="col-sm-12 mb-3">
+                  <input readonly type="text" *ngIf="storeLocationList && storeLocationList.length===1"
+                    class="form-control" [value]="storeLocationList[0].storeName">
+                </div> -->
+              </div>
+
+              <div class="row">
+                <label class="form-group has-float-label col-sm-4">
+                  <div *ngIf="storeLocationList && storeLocationList.length !== 1">
+                    <ng-select [items]="storeLocationList" [multiple]="true" [(ngModel)]="storeLocationID"
+                      [closeOnSelect]="false" [hideSelected]="true" bindLabel="storeName"
+                      placeholder="Select Store Location(s)" groupBy="companyID" [selectableGroup]="true"
+                      [selectableGroupAsModel]="false">
+                      <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                        <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                      </ng-template>
+                      <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                        <div class="ng-value" *ngFor="let item of items | slice:0:4">
+                          <span class="ng-value-label">
+                            {{item.storeName}}</span>
+                          <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                        </div>
+                        <div class="ng-value" *ngIf="items.length > 2">
+                          <span class="ng-value-label">{{items.length - 2}} more...</span>
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                  </div>
+                  <input readonly type="text" *ngIf="storeLocationList && storeLocationList.length===1"
+                    class="form-control" [value]="storeLocationList[0].storeName">
+                  <span class="z_index">Store Location(s)</span>
+                  <img src="assets/images/small-spinner.gif" *ngIf="isStoreLocationLoading">
+                </label>
+
+                <label class="form-group has-float-label col-sm-4">
+                  <ng-select [items]="updateData" [selectOnTab]="true" bindLabel="name" bindValue="id" labelForId="id"
+                    placeholder="Update Data For" [(ngModel)]="columnName" (change)="changeUpdateData($event)">
+                  </ng-select>
+                  <span class="z_index">Update Data For</span>
+                </label>
+
+                <div [hidden]="isHideCurretnInventory" class="col-sm-4">
+                  <input class="form-control" [(ngModel)]="value" type="text" decimalOnly placeholder="Enter number">
+                </div>
+                <div [hidden]="isHidePositiveValue" class="col-sm-4">
+                  <input class="form-control" [(ngModel)]="value" type="text" min="0" decimalOnly
+                    [ngModelOptions]="{standalone: true}" placeholder="Enter number">
+                </div>
+                <div [hidden]="isHideOnlyNumber" class="col-sm-4">
+                  <input class="form-control" [(ngModel)]="value" tclass="col-sm-6" ype="text" min="0" numbersOnly
+                    [ngModelOptions]="{standalone: true}" placeholder="Enter number">
+                </div>
+                <div class="col-sm-3 row input-icon" [hidden]="isHideDollerNumber">
+                  <input class="form-control" [(ngModel)]="value" type="text" min="0" decimalOnly
+                    [ngModelOptions]="{standalone: true}">
+                  <i>$</i>
+                </div>
+                <div class="col-sm-3 row input-icon" *ngIf="priceByFixedAmount">
+                  <input class="form-control" [(ngModel)]="value" type="text" min="0" nagetiveFloatOnly
+                    [ngModelOptions]="{standalone: true}">
+                  <i>$</i>
+                </div>
+                <div [hidden]="isHideMultipack" class="col-sm-2 row">
+
+                  <!-- <div class="col-sm-6"> -->
+                  <label class="form-group has-float-label col-sm-12">
+                    <input class="form-control" [(ngModel)]="value" type="text" min="0" numbersOnly
+                      id="multipackQuantity" placeholder="Quantity">
+                    <span for="multipackQuantity"> Quantity</span>
+                  </label>
+                  <!-- </div> -->
+                  <!-- <div class="col-sm-6"> -->
+
+                  <!-- </div> -->
+
+                </div>
+                <div [hidden]="isHideMultipack" class="input-icon col-sm-2 row">
+                  <label class="form-group has-float-label currency">
+                    <input class="form-control" [(ngModel)]="price" id="multipackPrice" type="text" min="0" decimalOnly
+                      placeholder="Price">
+                    <span for="multipackPrice"> Price</span>
+                  </label>
+                  <i *ngIf="price != '' || price != null ">$</i>
+                </div>
+
+
+                <label [hidden]="isHideActive" class="form-group has-float-label col-sm-4">
+                  <ng-select [items]="activeUpdateList" [selectOnTab]="true" bindLabel="name" bindValue="id"
+                    labelForId="id" [(ngModel)]="isBWatchList"
+                    placeholder="{{columnName === 'IsOnWatchList' ? 'Select Track Item State' : 'Select Active State'}}">
+                  </ng-select>
+                  <span class="z_index">{{columnName === 'IsOnWatchList' ? 'Track Item Status' : 'Status'}}</span>
+                </label>
+
+
+                <label [hidden]="isHideDepartment" class="form-group has-float-label col-sm-4">
+                  <ng-select [items]="departmentListByUser" [(ngModel)]="Id" [selectOnTab]="true"
+                    bindLabel="departmentDescription" bindValue="departmentID" labelForId="departmentID"
+                    placeholder="Select Department">
+                  </ng-select>
+                  <!-- <span> Select Department</span> -->
+                </label>
+
+
+                <label [hidden]="isHidePriceGroup" class="form-group has-float-label col-sm-4">
+                  <ng-select [items]="priceGroupList" [(ngModel)]="Id" [selectOnTab]="true"
+                    bindLabel="CompanyPriceGroupName" bindValue="CompanyPriceGroupID" labelForId="CompanyPriceGroupID"
+                    placeholder="Price Group">
+                  </ng-select>
+                  <!-- <span> Price Group</span> -->
+                </label>
+
+
+                <label [hidden]="isHideUOM" class="form-group has-float-label col-sm-4">
+                  <ng-select [items]="uomList" [(ngModel)]="Id" [selectOnTab]="true" bindLabel="uomDescription"
+                    bindValue="uomid" labelForId="uomid" placeholder="Select UOM">
+                  </ng-select>
+                  <!-- <span> UOM</span> -->
+                </label>
+
+
+                <label [hidden]="isHidePOSSyncStatus" class="form-group has-float-label col-sm-4">
+                  <ng-select [items]="posSyncStatusList" [(ngModel)]="Id" [selectOnTab]="true"
+                    bindLabel="posSyncStatusCode" bindValue="posSyncStatusID" labelForId="posSyncStatusID"
+                    placeholder="Select POS Sync Status">
+                  </ng-select>
+                  <!-- <span> POS Sync Status</span> -->
+                </label>
+
+              </div>
+              <div class="form-group row">
+                <div class="col-md-8">
+                  <span class="text-black-50 col-md-8" *ngIf="selectedItems > 0; else notSelected">Total selected
+                    Item(s)
+                    {{selectedItems}}</span>
+                  <ng-template #notSelected>
+                    <span class="text-black-50 col-md-8">No items selected!</span>
+                  </ng-template>
+                  <!-- </div>
+              <div class="form-group row"> -->
+                </div>
+                <div class="col-md-4">
+
+
+                  <button type="button" class="btn btn-md btn-primary ml-3 pull-right" (click)="bulkUpdate()">Bulk
+                    Update
+                    Selected</button>
+                  <button type="button" class="btn btn-md btn-primary ml-3 pull-right" (click)="openBulkUpdate()">Cancel
+                  </button>
+                  <div [hidden]="true">
+                    <button type="button" class="btn btn-md btn-danger" (click)="selectAllRows()"><i
+                        class="fa fa-check-square"></i>
+                      Select </button>
+                    &nbsp;
+                    <button type="button" class="btn btn-md btn-danger" (click)="deSelectAllRows()"> <i
+                        class="fa fa-square"></i>
+                      Unselect All</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 mt-0">
+      <div class="row justify-content-between mb-3" *ngIf="showGrid">
+        <div class="col-md-2 pl-0">
+          <mat-checkbox class="custom-padding" *ngIf="rowData && rowData.length > 0" [(ngModel)]=" headerSelected"
+            (change)="headerChange()">
+            Select All
+          </mat-checkbox>
+        </div>
+        <div class="col-md-2 p-0">
+          <div class="p-2" *ngIf="selectedItems > 0;">Total selected
+            Item(s)
+            {{selectedItems}}</div>
+          <ng-template #notSelected>
+            <div class="p-2">No items selected!</div>
+          </ng-template>
+        </div>
+        <div class="col-md-6 p-0">
+          <button type="button" *ngIf="showDelSelItems" class="mr-1 btn btn-md btn-primary float-right"
+            (click)="deleteSelectedItems()">Delete
+            Selected</button>
+          <button type="button" *ngIf="showDelSelItems" class="mr-1 btn btn-md btn-primary float-right"
+            (click)="suspendSelectedItems()">Suspend
+            Selected</button>
+          <button type="button" *ngIf="showDelSelItems" class="mr-1 btn btn-md btn-primary float-right"
+            (click)="recoverSelectedItems()">Recover
+            Selected</button>
+          <button type="button" *ngIf="showDelSelItems" class="mr-1 btn btn-md btn-primary float-right"
+            (click)="openBulkUpdate()">
+            Bulk Update</button>
+        </div>
+        <div class="col-sm-2 pr-0">
+          <div class="inner-addon right-addon" style="float: right;">
+            <span>
+              <i class="fa fa-search card-title" aria-hidden="true"></i>
+            </span>
+            <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+              placeholder="Filter Search" [(ngModel)]="filterText" (keyup.enter)="getAdvancedSearch('filtertext')"
+              name="filterText">
+            <!-- </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pb-5">
+      <app-pagination-grid #itemMasterGrid *ngIf="showGrid" [isPageSizeShow]="true" [rowData]="rowData"
+        [paginationGridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+        (columnResized)="onColumnResized($event)" (edit)="editAction($event)" (delete)="delAction($event)"
+        (rowSelected)="onRowSelected($event)" (suspend)="suspendAction($event)" (recover)="recoverAction($event)"
+        (history)="historyAction($event)" (activity)="activityAction($event)" >
+      </app-pagination-grid>
+    </div>
+    <div class="row" *ngIf="showUPCGrid&&showUPCForm">
+      <div class="col-md-12">
+        <form [formGroup]="frmShowUPCGrid" novalidate>
+          <div class="col-md-12 row">
+            <div class="col-sm-4">
+              <label class="form-group has-float-label ">
+                <div *ngIf="storeLocationList && storeLocationList.length !== 1">
+                  <ng-select [items]="storeLocationList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+                    bindLabel="storeName" placeholder="Select Store Location(s)" groupBy="companyID"
+                    [selectableGroup]="true" [selectableGroupAsModel]="false" [(ngModel)]="UPCStoreLocationID"
+                    formControlName="UPCStoreLocationID">
+                    <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                      <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                    </ng-template>
+                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                      <div class="ng-value" *ngFor="let item of items | slice:0:4">
+                        <span class="ng-value-label">
+                          {{item.storeName}}</span>
+                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                      </div>
+                      <div class="ng-value" *ngIf="items.length > 2">
+                        <span class="ng-value-label">{{items.length - 2}} more...</span>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                </div>
+                <input readonly type="text" *ngIf="storeLocationList && storeLocationList.length===1"
+                  class="form-control" [value]="storeLocationList[0].storeName">
+                <span class="z_index">Store Location(s)</span>
+              </label>
+            </div>
+            <div class="col-sm-4">
+              <label class="form-group has-float-label">
+                <ng-select [items]="departmentListByUser" [closeOnSelect]="true" bindLabel="departmentDescription"
+                  placeholder="Department(s)" name="departmentDescription" groupBy="companyID" [selectableGroup]="true"
+                  [selectableGroupAsModel]="false" formControlName="UPCDepartmentID">
+                  <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                    <div class="ng-value" *ngFor="let item of items | slice:0:4">
+                      <span class="ng-value-label">
+                        {{item.departmentDescription}}</span>
+                      <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                    </div>
+                    <div class="ng-value" *ngIf="items.length > 2">
+                      <span class="ng-value-label">{{items.length - 2}} more...</span>
+                    </div>
+                  </ng-template>
+                </ng-select>
+                <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+                <!-- bindValue="departmentID" bindValue="vendorID" -->
+                <span for="departmentDescription" class="z_index">Search By Department</span>
+              </label>
+            </div>
+            <div class="input-icon col-sm-2">
+              <label class="form-group has-float-label currency">
+                <input class="form-control" type="text" min="0" decimalOnly placeholder="Price"
+                  formControlName="UPCSPrice">
+                <span for="multipackPrice"> Price</span>
+              </label>
+              <i>$</i>
+            </div>
+            <div class="input-icon col-sm-2">
+              <label class="form-group has-float-label currency">
+                <button type="button" class="btn btn-primary" (click)="clickAddUPCCOde()">Add Item</button>
+              </label>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="pb-5">
+      <app-pagination-grid *ngIf="showUPCGrid" (gridReady)="onUPCGridReady($event)" [rowData]="upcGridData"
+        [paginationGridOptions]="upcGridOptions" (rowSelected)="onUPCRowSelected($event)">
+      </app-pagination-grid>
+    </div>
+
+
+    <ng-template #sellingPriceModal let-modal let-close="close">
+      <div class="modal-header d-inline text-center">
+        <h4 class="modal-title font-weight-bold">Price Validation
+          <button type="button" class="close" (click)="close()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </h4>
+      </div>
+      <div class="modal-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col" style="background-color: #19b5fe;">Store Name</th>
+              <!-- <th scope="col">ItemID</th> -->
+              <th scope="col" style="background-color: #19b5fe;">POSCode</th>
+              <th scope="col" style="background-color: #19b5fe;">Description</th>
+              <th scope="col" style="background-color: #19b5fe;">Max Suggested Retail Selling Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of sellingPriceValidations">
+              <td>{{data.StoreFullName}}</td>
+              <!-- <td>{{data.ItemID}}</td> -->
+              <td>{{data.POSCode}}</td>
+              <td>{{data.Description}}</td>
+              <td style="text-align: center;"> $ {{data.MaxSuggestedRetailSellingPrice}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="executeBulkUpdate()">Force Update</button>
+        <button type="button" class="btn btn-secondary" (click)="proceedBulkUpdate()">Proceed</button>
+      </div>
+    </ng-template>
+
+    <ng-template #validateAddUPCModal let-modal let-close="close">
+      <div class="modal-header d-inline text-center">
+        <h4 class="modal-title font-weight-bold">Add UPC Code Validation
+          <button type="button" class="close" (click)="close()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </h4>
+      </div>
+      <div class="modal-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col" style="background-color: #19b5fe;">Store Name</th>
+              <!-- <th scope="col">ItemID</th> -->
+              <th scope="col" style="background-color: #19b5fe;">UPC Code</th>
+              <th scope="col" style="background-color: #19b5fe;">Description</th>
+              <th scope="col" style="background-color: #19b5fe;">Max Suggested Retail Selling Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of addUPCCodeValidations">
+              <td>{{data.StoreFullName}}</td>
+              <!-- <td>{{data.ItemID}}</td> -->
+              <td>{{data.UPC}}</td>
+              <td>{{data.Desc}}</td>
+              <td style="text-align: center;"> $ {{data.MaxSuggestedRetailSellingPrice}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="executeAddUPCCode()">Force Add</button>
+        <button type="button" class="btn btn-secondary" (click)="proceedAddUPCCode()">Proceed</button>
+      </div>
+    </ng-template>
+
+
+    <ng-template #setUOMModal let-modal let-close="close">
+      <div class="modal-header d-inline text-center">
+        <h4 class="modal-title font-weight-bold">Search By
+          <button type="button" class="close" (click)="close()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </h4>
+      </div>
+      <div class="modal-body" style="min-height: 100px;text-align: center;">
+        <div style="margin: 20px 10px;">
+          Choose an option to fetch list of products with specific UOM
+        </div>
+        <div>
+          <button type="button" style="width: 100px;margin: 0px 10px;background-color: #ffffff;color: black;"
+            class="btn btn-info" (click)="setUOM(0)">All</button>
+          <button type="button" style="width: 135px;margin: 0px 10px;background-color: #5288bd;" class="btn btn-info"
+            (click)="setUOM(3)">Promotional Pack</button>
+          <button type="button" style="width: 145px;margin: 0px 10px;background-color: #fdcb52;" class="btn btn-success"
+            (click)="setUOM(4)">Promotional Carton</button>
+            <button type="button" style="width: 100px;margin: 0px 10px;background-color: #ff8282;" class="btn btn-success"
+            (click)="setUOM(2)">Carton</button>
+          <button type="button" style="width: 100px;margin: 0px 10px;background-color: #34d382;" class="btn btn-info"
+            (click)="setUOM(1)">Pack</button>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>

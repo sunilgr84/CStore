@@ -1,0 +1,19 @@
+<div class="modal-header">
+    <h6 class="modal-title"> Change Company</h6>
+    <button type="button" class="close" aria-label="Close" (click)="dismiss()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body" *ngIf="!isLoading">
+    <ng-select [items]="companyList" bindLabel="companyName" autofocus bindValue="companyID"
+        [(ngModel)]="selectedCompanyId" (change)="companyChange($event)">
+    </ng-select>
+    <!-- <img src="assets/images/small-spinner.gif" *ngIf="isLoading"> -->
+</div>
+<div class="modal-body" *ngIf="isLoading">
+    <img src="assets/images/small-spinner.gif">
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-md btn-primary mr-3" (click)="dismiss()" ngbAutofocus> Close </button>
+    <button type="button" class="btn btn-md btn-primary" (click)="changeCompany()"> Change </button>
+</div>

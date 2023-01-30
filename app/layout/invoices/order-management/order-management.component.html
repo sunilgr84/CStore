@@ -1,0 +1,87 @@
+<div>
+  <app-page-header [heading]="'order-management'" [icon]="'fa-bar-chart-o'"></app-page-header>
+  <div *ngIf="!isHideOrderManagement">
+    <div class=" border border-primary rounded margin-bottom-5 mt-3 ">
+      <div class="card-header bulk-update-header" (click)="isAdvanceSearchCollapsed = !isAdvanceSearchCollapsed"
+        [attr.aria-expanded]="!isAdvanceSearchCollapsed" aria-controls="bulkUpdateBody">
+        <i class="fa fa-chevron-down"></i> Advance Search
+      </div>
+      <form>
+        <div class="card-body" id="bulkUpdateBody" [ngbCollapse]="isAdvanceSearchCollapsed">
+          <div class="row">
+            <div class="col-sm-6 form-group">
+              <label for="storeLocation">Location</label>
+              <ng-select class="col-sm-12" [items]="locationList" [multiple]="true" [closeOnSelect]="false"
+                [hideSelected]="true" bindLabel="storeName" placeholder="Location">
+              </ng-select>
+            </div>
+            <div class="col-sm-4 form-group">
+              <label for="storeLocation">Vendor</label>
+              <ng-select class="col-sm-12" [items]="locationList" [multiple]="true" [closeOnSelect]="false"
+                [hideSelected]="true" bindLabel="storeName" placeholder="Vendor">
+              </ng-select>
+            </div>
+
+          </div>
+          <div class="row ml-2">
+            <button type="button" class="btn btn-md btn-danger"><i class="fa fa-ban" aria-hidden="true"></i> Clear</button> &nbsp;
+            <button type="button" class="btn btn-md btn-primary"> <i class="fa fa-search" aria-hidden="true"></i> Search</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div>
+      <button type="button" class="btn-md btn btn-primary" (click)="addOrderManagement()"> <i class="fa fa-plus" aria-hidden="true"></i>
+        Add</button>
+    </div>
+    <div>
+      <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (gridReady)="onGridReady($event)">
+      </app-cstore-grid>
+    </div>
+  </div>
+  <div *ngIf="isHideOrderManagement">
+    <div class="card">
+      <div class="card-header bulk-update-header">Add new fule invoice </div>
+      <div class="card-body">
+        <div class="row form-group">
+          <div class="row col-sm-6 form-group">
+            <label class="col-sm-3" for="store">Store</label>
+            <ng-select class="col-sm-8" [items]="storeList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+              bindLabel="storeName" placeholder="store">
+            </ng-select>
+          </div>
+          <div class="row col-sm-6 form-group">
+            <label class="col-sm-3" for="storeLocation">Vendor</label>
+            <ng-select class="col-sm-6" [items]="storeList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+              bindLabel="storeName" placeholder="Vendor">
+            </ng-select>
+          </div>
+          <div class="row col-sm-6 form-group">
+            <label class="col-sm-3" for="department">Department</label>
+            <ng-select class="col-sm-8" [items]="storeList" id="department" [multiple]="true" [closeOnSelect]="false"
+              [hideSelected]="true" bindLabel="storeName" placeholder="Department">
+            </ng-select>
+          </div>
+          <div class="col-sm-6 row">
+            <label class="col-sm-3" for="orderDate">Order Date</label>
+            <app-datepicker class="col-sm-6" [inputDate]="inputDOB" name="dob" id="orderDate"></app-datepicker>
+          </div>
+          <div class="row col-sm-6 form-group">
+            <label class="col-sm-3" for="department">Calculation Method</label>
+            <ng-select class="col-sm-8" [items]="storeList" id="department" [multiple]="true" [closeOnSelect]="false"
+              [hideSelected]="true" bindLabel="storeName" placeholder="Calculation Method">
+            </ng-select>
+          </div>
+        </div>
+        <div class="ml-2 row">
+          <button type="button" class="btn btn-md btn-primary"> Create Order </button>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="row justify-content-end">
+          <button type="button" class="btn-md btn btn-primary" (click)="backToList()">Back To List</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,31 @@
+export class DepartmentLocation {
+  departmentLocationID: number;
+  storeLocationID: number;
+  departmentID: number;
+  departmentDescription: string;
+  posDepartmentCode: string;
+  posSyncStatusID: number;
+  storeLocationTaxID: number;
+  storeLocationSalesRestrictionID: number;
+  posDepartmentDescription: string;
+  currentAsOfDateTime: string;
+  updateDescInEDIInvoiceFlag: boolean;
+  updateSellingPriceInEDIInvoiceFlag: boolean;
+  isBlueLaw1Enabled: boolean;
+  isBlueLaw2Enabled: boolean;
+  profitPercent: number;
+  deptProductCode: number;
+  isUpdateTaxandRestrication: boolean;
+  salesRestrictionDescription: string;
+  salesRestrictFlag: boolean;
+  prohibitDiscountFlag: boolean;
+  taxStrategyDescription: string;
+  countyTax: number;
+  stateTax: number;
+  cityTax: number;
+  storeName: string;
+  posSystemCD: string;
+  posSyncStatusCode: string;
+  userName: string;
+  updateDescInEDIInv: boolean;
+}

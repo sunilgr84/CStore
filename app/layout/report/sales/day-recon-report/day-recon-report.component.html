@@ -1,0 +1,131 @@
+<div class="card" style="min-height: 500px;">
+  <div class="card-body">
+    <div class="row ">
+      <div class="col-sm-2 ml-4 custom-control custom-radio">
+        <input type="radio" class="custom-control-input" id="dayRecon" value="dayRecon" name="defaultExampleRadios"
+          [(ngModel)]="dayReconReport" (change)="selectRadio('d')">
+        <label class="custom-control-label" for="dayRecon" (change)="selectRadio('d')">Day Recon</label>
+      </div>
+      <div class="col-sm-2  custom-control custom-radio">
+        <input type="radio" class="custom-control-input" id="multiDayRecon" value="multiDayRecon"
+          name="defaultExampleRadios" [(ngModel)]="dayReconReport" (change)="selectRadio('m')">
+        <label class="custom-control-label" for="multiDayRecon" (change)="selectRadio('m')">Multi-Day Recon</label>
+      </div>
+      <div class="col-sm-2  custom-control custom-radio">
+        <input type="radio" class="custom-control-input" id="zDayRecon" value="zDayRecon" name="defaultExampleRadios"
+          [(ngModel)]="dayReconReport" (change)="selectRadio('z')">
+        <label class="custom-control-label" for="zDayRecon" (change)="selectRadio('z')">Z Report</label>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-sm-3">
+        <label class="form-group has-float-label" *ngIf="storeLocationList && storeLocationList.length!==1">
+          <ng-select [items]="storeLocationList" bindLabel="storeName" [selectOnTab]="true" bindValue="storeLocationID"
+            labelForId="storeLocationID" [(ngModel)]="storeLocationId" placeholder="Select Store Location">
+          </ng-select>
+          <span> Store Location </span>
+        </label>
+        <label class="form-group has-float-label" *ngIf="storeLocationList && storeLocationList.length===1">
+          <input readonly type="text" class="form-control" [value]="storeLocationList[0].storeName">
+          <span> Store Location </span>
+        </label>
+      </div>
+      <div class="col-sm-3">
+        <label class="form-group has-float-label">
+          <ng-select [items]="shiftList" bindLabel="name" [selectOnTab]="true" bindValue="value"
+            labelForId="shiftWiseValue" placeholder="Select Shift Level" [(ngModel)]="shiftWiseValue">
+          </ng-select>
+          <span> Shift Level </span>
+        </label>
+      </div>
+      <div class="col-sm-3">
+        <label class="form-group has-float-label">
+          <!-- <app-datepicker [isMaxDate]="true" [inputDate]="currentDate" name="currentDate" id="currentDate"
+            (dateChange)="ondateChange($event,'startDate')"></app-datepicker>
+          <span> Start Date</span> -->
+          <app-daterangepicker [selectedDateRange]="selectedDateRange" (dateRangeSelecetd)="dateRangeChange($event)"
+            [placement]="placement">
+          </app-daterangepicker>
+          <span> Select Date Range</span>
+        </label>
+      </div>
+      <div class="col-sm-3 p-0">
+        <button type="button" class="btn btn-md btn-primary" (click)="getDayReconRepot('pdf')">Go</button>
+        <button type="button" class="btn-md btn btn-primary ml-1" [hidden]="isMultiDay"
+          (click)="getDayReconRepot('excel')">Excel
+          Export</button>
+      </div>
+    </div>
+    <div [hidden]="isResponse">
+      <div class="row">
+        <div class="col-sm-6">
+          <app-cstore-grid [rowData]="repMOPDetailsRowData" [cStoreGridOptions]="repMOPDetailsgridOptions"
+            (gridReady)="onGridReadyMOP($event)"></app-cstore-grid>
+        </div>
+        <div class="col-sm-6">
+          <app-cstore-grid [rowData]="repDepartmentTypeSalesRowData"
+            [cStoreGridOptions]="repDepartmentTypeSalesgridOptions" (gridReady)="onGridReadySales($event)">
+          </app-cstore-grid>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-sm-6">
+          <app-cstore-grid [rowData]="repGasGradeDatasRowData" [cStoreGridOptions]="repGasGradeDatasgridOptions"
+            (gridReady)="onGridReadyGas($event)"></app-cstore-grid>
+        </div>
+        <div class="col-sm-6">
+          <app-cstore-grid [rowData]="repCashCheckAmounRowData" [cStoreGridOptions]="repCashCheckAmoungridOptions"
+            (gridReady)="onGridReadyCashCheck($event)"></app-cstore-grid>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12" [hidden]="isMultiDay">
+      <div id="iframeContainer"></div>
+    </div>
+    <div class="row" *ngIf="this.rowData && this.rowData.length >0">
+      <div class="col-sm-12 mt-3">
+        <app-report-grid [rowData]="rowData" [expandableGridOptions]="gridOption" (gridReady)="onGridReady($event)"
+          (exportTo)="searchSalesReport($event)">
+        </app-report-grid>
+      </div>
+    </div>
+    <div class="row" *ngIf="this.rowData && this.rowData.length ===0">
+      <div class="col-sm-12 mt-3">
+        <strong>No Record Available</strong>
+      </div>
+    </div>
+    <div class="row" *ngIf="showZReport">
+      <ng-container *ngIf="zReportData.length>0; else noRecords">
+        <div class="col-sm-12 text-right mb-2">
+          <button type="button" class="btn btn-md btn-primary mr-3" (click)="zReportExport('pdf')">PDF Export</button>
+          <button type="button" class="btn-md btn btn-primary" (click)="zReportExport('excel')">Excel Export</button>
+        </div>
+        <div class="col-sm-12 mb-2">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <table class="table table-responsive">
+                <thead >
+                  <tr>
+                    <th *ngFor="let header of zReportHeaders" scope="col">{{header}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of zReportBody">
+                    <td *ngFor="let column of row">
+                      {{column}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #noRecords>
+        <div class="col-sm-12 mt-3">
+          <strong>No Record Available</strong>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

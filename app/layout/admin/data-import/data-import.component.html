@@ -1,0 +1,440 @@
+<app-page-header [heading]="'Admin / Data Import'" [icon]="'fa-bar-chart-o'"></app-page-header>
+<div class="row">
+  <div class="container-fluid">
+    <form [formGroup]="dataImportForm">
+
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card custom">
+            <div class="card-body">
+              <h5 class="card-title mb-3">{{'Data Import'}}</h5>
+              <div class="col-sm-12 mb-4">
+                <div class="form-inline">
+                  <div class="custom-control custom-radio mr-3">
+                    <input type="radio" class="custom-control-input" id="ruby" formControlName="fileFormat" value="ruby"
+                      (click)="viewChange()" />
+                    <label class="custom-control-label padding-right-10" for="ruby">Ruby Config File</label>
+                  </div>
+                  <div class="custom-control custom-radio mr-3">
+                    <input type="radio" class="custom-control-input" id="passport" formControlName="fileFormat"
+                      value="vcdFile" (click)="passportVCDEvent()" />
+                    <label class="custom-control-label padding-right-10" for="passport">Passport VCD File</label>
+                  </div>
+                  <div class="custom-control custom-radio mr-3">
+                    <input type="radio" class="custom-control-input" id="pfile" formControlName="fileFormat"
+                      value="passportHtml" (click)="passportVCDEvent()" />
+                    <label class="custom-control-label padding-right-10" for="pfile">Passport HTML File</label>
+                  </div>
+                  <div class="custom-control custom-radio mr-3">
+                    <input type="radio" class="custom-control-input" id="pdmaintain" formControlName="fileFormat"
+                      value="passportData" (click)="passportDataEvent()" />
+                    <label class="custom-control-label padding-right-10" for="pdmaintain">Passport Data
+                      Maintenance</label>
+                  </div>
+                  <div class="custom-control custom-radio mr-3">
+                    <input type="radio" class="custom-control-input" id="sapphire" formControlName="fileFormat"
+                      value="sapphire" (click)="sapphirEvent()" />
+                    <label class="custom-control-label padding-right-10" for="sapphire">Sapphire XML File</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-5">
+                  <label class="form-group has-float-label">
+                    <ng-select [items]="companyList" [hideSelected]="true" bindLabel="companyName" bindValue="companyID"
+                      placeholder="Company" formControlName="company" (change)="getStoreLocationList()">
+                    </ng-select>
+                    <span>Company</span>
+                  </label>
+                  <span *ngIf="companyList && companyList.length===1">&nbsp;&nbsp;
+                    <strong> {{companyList && companyList[0].companyName}} </strong>
+                  </span>
+                </div>
+                <div class="col-sm-5">
+                  <label class="form-group has-float-label" *ngIf="storeLocationList && storeLocationList.length!==1">
+                    <ng-select [items]="storeLocationList" [hideSelected]="true" bindLabel="storeName"
+                      bindValue="storeLocationID" placeholder="Store" formControlName="store">
+                    </ng-select>
+                    <span>Store</span>
+                  </label>
+                  <span *ngIf="storeLocationList && storeLocationList.length===1">
+                    <strong>
+                      {{storeLocationList && storeLocationList[0].storeName}}
+                    </strong></span>
+                </div>
+                <div class="col-sm-5" *ngIf="isFileTypeRequired">
+                  <label class="form-group has-float-label">
+                    <ng-select [items]="fileTypes" [hideSelected]="true" bindLabel="name" bindValue="value"
+                      placeholder="File Type" formControlName="fileType">
+                    </ng-select>
+                    <span>File Type</span>
+                  </label>
+                </div>
+                <div class="col-sm-5">
+                  <div class="col-sm-12 custom-file">
+                    <input type="file" class="custom-file-input" id="fileUpload" name="fileUpload"
+                      (change)="uploadFile(file.files)" #file>
+                    <label class="custom-file-label" for="customFile">{{chooseFileName}}</label>
+                    <label>Upload Percent: {{percentDone}}% </label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <button type="button" class="btn  btn-md btn-primary  mr-3" (click)="basicUpload(fileUpload)">Next
+                  </button>
+                  <button type="button" *ngIf="isProcessData" class="btn  btn-md  btn-primary"
+                    (click)="processData()">Process
+                  </button>
+                </div>
+              </div>
+
+              <div class="clerifix">&nbsp;</div>
+              <div class="row" *ngIf="isRubyDataShow">
+                <div class="col-sm-12" *ngIf="isCustIDRowDataShow">
+                  <app-cstore-grid [gridHeight]="'500px'" [rowData]="custIDRowData"
+                    [cStoreGridOptions]="custIDGridOption">
+                  </app-cstore-grid>
+                </div>
+                <div class="col-sm-12" *ngIf="isRubyDepartmentShow">
+                  <app-cstore-grid [gridHeight]="'500px'" [rowData]="rubyDepartmentRowData"
+                    [cStoreGridOptions]="rubyDepartmentGridOption">
+                  </app-cstore-grid>
+                </div>
+                <div class="col-sm-12" *ngIf="isRubyItemShow">
+                  <app-cstore-grid [gridHeight]="'500px'" [rowData]="rubyItemRowData"
+                    [cStoreGridOptions]="rubyItemGridOption">
+                  </app-cstore-grid>
+                </div>
+                <div class="col-sm-12" *ngIf="isItemFromCSVRowShow">
+                  <app-cstore-grid [gridHeight]="'500px'" [rowData]="itemFromCSVRowData"
+                    [cStoreGridOptions]="itemFromCSVGridOption">
+                  </app-cstore-grid>
+                </div>
+                <div class="col-sm-12" *ngIf="isrubyMOPShow">
+                  <app-cstore-grid [gridHeight]="'500px'" [rowData]="rubyMOPRowData"
+                    [cStoreGridOptions]="rubyMOPGridOption">
+                  </app-cstore-grid>
+                </div>
+                <div class="col-sm-12" *ngIf="isrubyRGISShow">
+                  <app-cstore-grid [gridHeight]="'500px'" [rowData]="rubyRGISRowData"
+                    [cStoreGridOptions]="rubyRGISGridOption">
+                  </app-cstore-grid>
+                </div>
+                <div class="col-sm-12" *ngIf="isrubyTaxShow">
+                  <app-cstore-grid [gridHeight]="'500px'" [rowData]="rubyTaxRowData"
+                    [cStoreGridOptions]="rubyTaxGridOption">
+                  </app-cstore-grid>
+                </div>
+                <div class="col-sm-12" *ngIf="isRubySubashShow">
+                  <app-cstore-grid [gridHeight]="'500px'" [rowData]="rubySubashRowData"
+                    [cStoreGridOptions]="rubySubashGridOption">
+                  </app-cstore-grid>
+                </div>
+              </div>
+              <div class="row" *ngIf="isPassportData">
+                <div class="col-sm-12">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <app-cstore-grid [gridHeight]="'500px'" [rowData]="passportItemRowData"
+                        [cStoreGridOptions]="passportItemGridOption" (gridReady)="passportItemGridReady($event)">
+                      </app-cstore-grid>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row" *ngIf="isPassportVCDEvent">
+                <div class="col-sm-12">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <app-cstore-grid [gridHeight]="'200px'" [rowData]="taxStrategyRowData"
+                        [cStoreGridOptions]="taxStrategyGridOption" (gridReady)="taxStrategyGridReady($event)">
+                      </app-cstore-grid>
+                    </div>
+                    <div class="col-sm-6">
+                      <app-cstore-grid [gridHeight]="'200px'" [rowData]="salesRestrictCodeRowData"
+                        [cStoreGridOptions]="salesRestrictCodeGridOption"
+                        (gridReady)="salesRestrictCodeGridReady($event)">
+                      </app-cstore-grid>
+                    </div>
+                  </div>
+                  <div class="clerifix">&nbsp;</div>
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <app-cstore-grid [gridHeight]="'400px'" [rowData]="tenderCodeRowData"
+                        [cStoreGridOptions]="tenderCodeGridOption" (gridReady)="tenderCodeGridReady($event)">
+                      </app-cstore-grid>
+                    </div>
+                    <div class="col-sm-6">
+                      <app-cstore-grid [gridHeight]="'400px'" [rowData]="mdseCodeRowData"
+                        [cStoreGridOptions]="mdseCodeGridOption" (gridReady)="mdseCodeGridReady($event)">
+                      </app-cstore-grid>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row" *ngIf="isSapphireDataShow">
+                <div class="col-sm-12">
+                  <div class="row">
+                    <div class="col-sm-12" *ngIf="isSapphireDepartment">
+                      <app-cstore-grid [gridHeight]="'200px'" [rowData]="sapphireDepartmentRowData"
+                        [cStoreGridOptions]="sapphireDepartmentGridOption">
+                      </app-cstore-grid>
+                    </div>
+                    <div class="col-sm-12" *ngIf="isSapphireItem">
+                      <app-cstore-grid [gridHeight]="'200px'" [rowData]="sapphireItemRowData"
+                        [cStoreGridOptions]="sapphireItemGridOption">
+                      </app-cstore-grid>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-6" *ngIf="isSapphireCustID">
+                      <app-cstore-grid [gridHeight]="'200px'" [rowData]="sapphireCustIDRowData"
+                        [cStoreGridOptions]="sapphireCustIDGridOption">
+                      </app-cstore-grid>
+                    </div>
+                    <div class="col-sm-6" *ngIf="isSapphireMOP">
+                      <app-cstore-grid [gridHeight]="'200px'" [rowData]="sapphireMOPRowData"
+                        [cStoreGridOptions]="sapphireMOPGridOption">
+                      </app-cstore-grid>
+                    </div>
+                    <div class="col-sm-6" *ngIf="isSapphireTax">
+                      <app-cstore-grid [gridHeight]="'200px'" [rowData]="sapphireTaxRowData"
+                        [cStoreGridOptions]="sapphireTaxGridOption"></app-cstore-grid>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row" *ngIf="isPassportHtml">
+                <div class="col-sm-12">
+                  <app-cstore-grid [gridHeight]="'500px'" [rowData]="passportHtmlRowDate"
+                    [cStoreGridOptions]="passportHtmlGridOption" (gridReady)="passportHtmlGridReady($event)">
+                  </app-cstore-grid>
+
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="card" *ngIf="isFilterColRequired">
+            <div formGroupName="inventoryOptions" class="card-body">
+              <div class="form-group form-inline">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="upcCheckBox"
+                    formControlName="upcWithCheckDigit" value="App.rbInventoryImport">
+                  <label class="custom-control-label padding-right-10" for="upcCheckBox">UPC with Check Digit</label>
+                </div>
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="inlineRadio2"
+                    formControlName="calculateInventory" value="App.rbConfigFile" />
+                  <label class="custom-control-label padding-right-10" for="inlineRadio2">Calculate Inventory</label>
+                </div>
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="inlineRadio3"
+                    formControlName="priceDivisibleBy100" value="App.rbVCDFile" />
+                  <label class="custom-control-label" for="inlineRadio3">Price divisible by 100</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="hireDate">Inventory Date</label>
+                <app-datepicker formControlName="inventoryDate"></app-datepicker>
+              </div>
+              <div class="form-group">
+                <label for="vendorName">Vendor Name</label>
+                <input type="text" class="form-control" required formControlName="vendorName"
+                  placeholder="Enter vendor name">
+                <!-- <div [hidden]="companyName.valid || companyName.pristine" class="alert alert-danger">
+                                  Company Name is required
+                              </div> -->
+              </div>
+              <div class="form-group">
+                <label for="linesIgnore">No. Of Line Ignore From File</label>
+                <input type="number" class="form-control" required formControlName="linesIgnore"
+                  placeholder="Enter # of lines">
+                <!-- <div [hidden]="companyName.valid || companyName.pristine" class="alert alert-danger">
+                                  Company Name is required
+                              </div> -->
+              </div>
+
+              <div class="form-group">
+                <label for="columnsIgnore">Columns Ignore</label>
+                <input type="text" class="form-control" required formControlName="columnsIgnore" placeholder=""
+                  [ngbTypeahead]="roleSearch" [resultFormatter]="formatter" />
+                <!-- <div [hidden]="companyName.valid || companyName.pristine" class="alert alert-danger">
+                                Company Name is required
+                            </div> -->
+              </div>
+              <p class="text-danger">
+                Note-: 0 is 1st Column and 1 is 2nd Coloum
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="clerifix">&nbsp;</div>
+      <div class="row" *ngIf="isRubyDataShow">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-12" *ngIf="isCustIDRowDataShow">
+                  <app-cstore-grid [gridHeight]="'500px'" [rowData]="custIDRowData"
+                    [cStoreGridOptions]="custIDGridOption">
+                  </app-cstore-grid>
+                </div>
+                <div class="col-sm-12" *ngIf="isRubyDepartmentShow">
+                  <app-cstore-grid [gridHeight]="'500px'" [rowData]="rubyDepartmentRowData"
+                    [cStoreGridOptions]="rubyDepartmentGridOption">
+                  </app-cstore-grid>
+                </div>
+                <div class="col-sm-12" *ngIf="isRubyItemShow">
+                  <app-cstore-grid [gridHeight]="'500px'" [rowData]="rubyItemRowData"
+                    [cStoreGridOptions]="rubyItemGridOption">
+                  </app-cstore-grid>
+                </div>
+                <div class="col-sm-12" *ngIf="isItemFromCSVRowShow">
+                  <app-cstore-grid [gridHeight]="'500px'" [rowData]="itemFromCSVRowData"
+                    [cStoreGridOptions]="itemFromCSVGridOption">
+                  </app-cstore-grid>
+                </div>
+                <div class="col-sm-12" *ngIf="isrubyMOPShow">
+                  <app-cstore-grid [gridHeight]="'500px'" [rowData]="rubyMOPRowData"
+                    [cStoreGridOptions]="rubyMOPGridOption">
+                  </app-cstore-grid>
+                </div>
+                <div class="col-sm-12" *ngIf="isrubyRGISShow">
+                  <app-cstore-grid [gridHeight]="'500px'" [rowData]="rubyRGISRowData"
+                    [cStoreGridOptions]="rubyRGISGridOption">
+                  </app-cstore-grid>
+                </div>
+                <div class="col-sm-12" *ngIf="isrubyTaxShow">
+                  <app-cstore-grid [gridHeight]="'500px'" [rowData]="rubyTaxRowData"
+                    [cStoreGridOptions]="rubyTaxGridOption">
+                  </app-cstore-grid>
+                </div>
+                <div class="col-sm-12" *ngIf="isRubySubashShow">
+                  <app-cstore-grid [gridHeight]="'500px'" [rowData]="rubySubashRowData"
+                    [cStoreGridOptions]="rubySubashGridOption">
+                  </app-cstore-grid>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="isPassportData">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-12">
+                  <app-cstore-grid [gridHeight]="'500px'" [rowData]="passportItemRowData"
+                    [cStoreGridOptions]="passportItemGridOption" (gridReady)="passportItemGridReady($event)">
+                  </app-cstore-grid>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="isPassportVCDEvent">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-6">
+                  <app-cstore-grid [gridHeight]="'200px'" [rowData]="taxStrategyRowData"
+                    [cStoreGridOptions]="taxStrategyGridOption" (gridReady)="taxStrategyGridReady($event)">
+                  </app-cstore-grid>
+                </div>
+                <div class="col-sm-6">
+                  <app-cstore-grid [gridHeight]="'200px'" [rowData]="salesRestrictCodeRowData"
+                    [cStoreGridOptions]="salesRestrictCodeGridOption" (gridReady)="salesRestrictCodeGridReady($event)">
+                  </app-cstore-grid>
+                </div>
+              </div>
+              <div class="clerifix">&nbsp;</div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <app-cstore-grid [gridHeight]="'400px'" [rowData]="tenderCodeRowData"
+                    [cStoreGridOptions]="tenderCodeGridOption" (gridReady)="tenderCodeGridReady($event)">
+                  </app-cstore-grid>
+                </div>
+                <div class="col-sm-6">
+                  <app-cstore-grid [gridHeight]="'400px'" [rowData]="mdseCodeRowData"
+                    [cStoreGridOptions]="mdseCodeGridOption" (gridReady)="mdseCodeGridReady($event)"></app-cstore-grid>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="isSapphireDataShow">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-12" *ngIf="isSapphireDepartment">
+                  <app-cstore-grid [gridHeight]="'200px'" [rowData]="sapphireDepartmentRowData"
+                    [cStoreGridOptions]="sapphireDepartmentGridOption">
+                  </app-cstore-grid>
+                </div>
+                <div class="col-sm-12" *ngIf="isSapphireItem">
+                  <app-cstore-grid [gridHeight]="'200px'" [rowData]="sapphireItemRowData"
+                    [cStoreGridOptions]="sapphireItemGridOption">
+                  </app-cstore-grid>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6" *ngIf="isSapphireCustID">
+                  <app-cstore-grid [gridHeight]="'200px'" [rowData]="sapphireCustIDRowData"
+                    [cStoreGridOptions]="sapphireCustIDGridOption">
+                  </app-cstore-grid>
+                </div>
+                <div class="col-sm-6" *ngIf="isSapphireMOP">
+                  <app-cstore-grid [gridHeight]="'200px'" [rowData]="sapphireMOPRowData"
+                    [cStoreGridOptions]="sapphireMOPGridOption">
+                  </app-cstore-grid>
+                </div>
+                <div class="col-sm-6" *ngIf="isSapphireTax">
+                  <app-cstore-grid [gridHeight]="'200px'" [rowData]="sapphireTaxRowData"
+                    [cStoreGridOptions]="sapphireTaxGridOption"></app-cstore-grid>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="isPassportHtml">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-12">
+                  <app-cstore-grid [gridHeight]="'500px'" [rowData]="passportHtmlRowDate"
+                    [cStoreGridOptions]="passportHtmlGridOption" (gridReady)="passportHtmlGridReady($event)">
+                  </app-cstore-grid>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
+
+      <!-- <div class="row">
+        <div class="col-sm-12">
+          <div class="card" *ngIf="isFilterColRequired">
+            <div class="card-body">
+              <app-dual-list-box formControlName="columnOrderInFile" [data]="columnOrderItems"
+                [availableText]="'Available Column'" [selectedText]="'Column Order In File'">
+              </app-dual-list-box>
+            </div>
+          </div>
+        </div>
+      </div> -->
+    </form>
+  </div>
+</div>

@@ -1,0 +1,146 @@
+<div [@routerTransition]>
+  <form class="add-bank row" [formGroup]="paymentSourceForm" novalidate>
+    <div class="col-md-7">
+      <div class="row mt-4" *ngIf="isShowHide" [@fadeInOut]>
+        <div class=" row col-sm-12">
+
+          <label class="form-group has-float-label col-sm-6">
+            <input numbersOnly type="text" [attr.disabled]="isRouteNumEdit? true : null" class="form-control"
+              id="routingNumber" name="routingNumber" placeholder="Routing Number" minlength="9" maxlength="9"
+              formControlName="routingNumber" (focusout)="onRouteNumChange($event)">
+            <!-- (keyup)="changeRouteNum($event)" -->
+            <span for="city">Routing Number</span>
+            <!-- <div *ngIf="submitted && ps.routingNumber.errors" class="invalid-feedback"> -->
+            <div *ngIf="ps.routingNumber.errors?.invalid">Enter valid Routing number</div>
+            <!--  </div> -->
+
+          </label>
+          <label class="form-group has-float-label col-sm-6">
+            <input type="text" class="form-control" [attr.disabled]="(!isEdit)?true:null" id="bankName" name="bankName"
+              placeholder="Bank Name" minlength="3" maxlength="50" formControlName="sourceName">
+            <span for="city">Bank Name</span>
+          </label>
+        </div>
+
+        <div class=" row col-sm-12">
+          <label class="form-group has-float-label col-sm-6">
+            <input type="text" [attr.disabled]="!isEdit?true:null" class="form-control" id="address" name="address"
+              placeholder="Address" minlength="3" maxlength="100" formControlName="addressLine1">
+            <span for="city">Address</span>
+          </label>
+          <label class="form-group has-float-label col-sm-6">
+            <input type="text" [attr.disabled]="!isEdit?true:null" class="form-control" id="city" name="city"
+              placeholder="City" minlength="3" maxlength="50" formControlName="city">
+            <span for="city">City</span>
+          </label>
+        </div>
+        <div class=" row col-sm-12">
+          <label class="form-group has-float-label col-sm-6">
+            <input type="text" [attr.disabled]="(!isEdit)?true:null" class="form-control" id="State" name="State"
+              placeholder="State" minlength="2" maxlength="100" formControlName="stateCode">
+            <!-- [(ngModel)]="company.city" -->
+            <span for="state">State</span>
+          </label>
+          <!--   <label class="form-group has-float-label col-sm-6">
+            <input type="text" [attr.disabled]="( !isEdit)?true:null" class="form-control" id="zipCode" name="zipCode"
+              placeholder="Zip Code" minlength="3" maxlength="30" formControlName="zipCode">
+            <span for="zip">Zip Code</span>
+          </label> -->
+          <label class="form-group has-float-label col-sm-6">
+            <input type="text" class="form-control" id="notes" name="notes" placeholder="Notes" formControlName="notes">
+            <span for="city">Notes</span>
+          </label>
+        </div>
+        <div class=" row col-sm-12">
+          <div class="col-sm-6">
+            <label class="form-group has-float-label">
+              <select class="form-control" formControlName="chartOfAccountCategoryID">
+                <option value="">Select Account Category</option>
+                <option *ngFor="let category of categoriesList" [value]="category.chartOfAccountCategoryID">
+                  {{category.chartOfAccountCategoryName}}</option>
+              </select>
+
+              <img src="assets/images/small-spinner.gif" *ngIf="isCategoriesLoading">
+              <span for="role">Account Category</span>
+            </label>
+          </div>
+          <div class="col-sm-6 buttons">
+            <button type="button" class="btn btn-md btn-primary" style="float:right" (click)="editOrSave($event)">
+              {{ isEdit? 'Update' : 'Save' }}</button>
+            <button type="button" (click)="reset()" class="btn btn-md btn-primary btn-red mr-2" style="float:right">
+              Reset</button>
+            <button type="button" (click)="addBank()" class="btn btn-md btn-primary mr-2" style="float:right">
+              Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-5">
+      <div class="row mt-4" *ngIf="isShowHide" [@fadeInOut]>
+        <div class="col-md-6">
+          <div class="mb-1 row">
+            <label style="font-size:15px;" class="col-md-6">Signature</label>
+            <span class="col-md-4" *ngIf="!signURL">
+              <label class="btn1 btn-xs">
+                <span style="display: inline-block ml-4">
+                  <i class="fa fa-upload" style="font-size: 22px;"></i>
+                  <input type="file" accept="image/jpeg, image/png,image/jpg" class="custom-file-input" name="signature"
+                    (change)="upload($event)" (click)="deleteImage('sign')" #file>
+                </span>
+              </label>
+            </span>
+          </div>
+          <div class="row image-card mt-1 form-group" *ngIf="signURL">
+            <img [src]="signURL" class="image" *ngIf="signURL">
+            <i class="fa fa-close delete" (click)="deleteImage('sign')"></i>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="mb-1 row">
+            <label style="font-size:15px;" class="col-md-6">Bank Logo</label>
+            <span class="col-md-4" *ngIf="!bankLogoURL">
+              <label class="btn1 btn-xs">
+                <span style="display: inline-block">
+                  <i class="fa fa-upload" style="font-size: 22px;"></i>
+                  <input type="file" accept="image/jpeg, image/png,image/jpg" class="custom-file-input" name="bankLogo"
+                    (change)="uploadLogo($event)" (click)="deleteImage('bankLogo')" #file1>
+                </span>
+              </label>
+            </span>
+          </div>
+          <span class="row image-card mt-1" *ngIf="bankLogoURL">
+            <img [src]="bankLogoURL" class="image" *ngIf="bankLogoURL">
+            <i class="fa fa-close delete" (click)="deleteImage('bankLogo')"></i></span>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="row justify-content-between mt-2">
+        <div class="col-sm-2">
+          <button type="button" *ngIf="!isShowHide" class="btn btn-md btn-primary" (click)="addBank()">
+            Add Bank</button>
+        </div>
+        <div class="col-sm-3">
+          <div class="inner-addon right-addon">
+            <span>
+              <i class="fa fa-search card-title" aria-hidden="true"></i>
+            </span>
+            <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+              placeholder="Filter Search" [(ngModel)]="filterText" name="filterText" (input)="onFilterTextBoxChanged()">
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="col-sm-12" style="margin-top:1rem;">
+      <app-expandable-grid [rowData]="rowData" [expandableGridOptions]="gridOptions"
+        [detailCellRenderers]="detailCellRenderer" (gridReady)="onGridReady($event)" (edit)="editAction($event)"
+        (delete)="deleteAction($event)"></app-expandable-grid>
+    </div>
+  </div>
+
+</div>

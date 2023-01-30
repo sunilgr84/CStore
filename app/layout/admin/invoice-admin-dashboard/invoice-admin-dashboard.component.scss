@@ -1,0 +1,108 @@
+// .rounded-circle {
+//     border-radius: 50% !important;
+//     height: 150px;
+// }
+
+::ng-deep .ag-theme-material .ag-cell {
+    line-height: 30px;
+}
+
+::ng-deep .ag-theme-material .ag-header-cell,
+.ag-theme-material .ag-header-group-cell {
+    line-height: 40px;
+}
+
+// .sales-badge {
+//     padding: 3rem 2rem !important;
+//     font-weight: 600;
+//     font-size: 100%;
+//     color: #ffffff;
+//     width: 100%;
+// }
+
+// .sales-badge-font {
+//     font-size: 1.5rem;
+//     margin-top: 0.5rem !important;
+//     margin-bottom: 0 !important;
+// }
+
+.sales-bg-green {
+    background-color: #4fa03d;
+}
+
+.sales-bg-blue {
+    background-color: #add8e6;
+}
+
+.sales-dark-blue {
+    background-color: #5288bd;
+}
+
+.sales-bg-orange {
+    background-color: #f19242;
+}
+.sales-bg-red {
+    background-color: #e0532a;
+}
+
+.active-badge {
+    padding: 0.5rem 1rem;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    background-color: #34d382;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.info-badge {
+    padding: 0.5rem 1rem;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    background-color: #add8e6;
+    font-weight: 600;
+    color: #ffffff;
+}
+.warning-badge {
+    padding: 0.5rem 1rem;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    background-color: #f19242;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.danger-badge {
+    padding: 0.5rem 1rem;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    background-color: #e0532a;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.warning-badge h3,
+.danger-badge h3,
+.active-badge h3,
+.info-badge h3 {
+    margin-bottom: 0px;
+    line-height: 1;
+    font-weight: 400;
+}
+
+::ng-deep .invoice-daterange > .input-group > .btn-date-selector {
+    background-color: white !important;
+    border: 1px solid #e2e5ec !important;
+    border-radius: 0.25rem !important;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+    border: 1px solid transparent !important;
+    border-radius: 0.25rem !important;
+}

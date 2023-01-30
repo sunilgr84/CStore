@@ -1,0 +1,9 @@
+<div class="tank-block">
+  <div #progDiv class="prog"  [ngClass]="tankColor">
+    <div #fillerDiv class="filler">
+      <img id="image" class="image" src="assets/images/fuel-tank2.png" />
+      <div class="text">{{filledPercentage}}</div>
+    </div>
+  </div>
+  <div class="text-center font-weight-bold width-100">{{tankDetails}}</div>
+</div>

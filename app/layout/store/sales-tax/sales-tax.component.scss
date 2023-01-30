@@ -1,0 +1,54 @@
+.salesTax {
+  margin-top: 1%;
+}
+
+.btnsub {
+  margin-right: 5px;
+}
+.ng-valid[required],
+.ng-valid.required {
+    border-left: 5px solid #42A948;
+    /* green */
+}
+
+.ng-invalid:not(form) {
+    border-left: 5px solid #a94442;
+    /* red */
+}
+.alert-text{
+  border-radius: 5px;
+  color: #721c24;
+  background: #f8d7da;
+  margin-left: 0.2em; 
+  padding: 3px; 
+}
+
+::ng-deep .ag-theme-material .ag-cell {
+  line-height: 30px;
+}
+::ng-deep .ag-theme-material .ag-cell-inline-editing {
+  height: 60px;
+  padding: 12px;
+}
+
+::ng-deep .ag-theme-material .ag-header-cell,
+.ag-theme-material .ag-header-group-cell {
+  line-height: 40px;
+}
+
+::ng-deep .ag-theme-material .ag-header-cell-menu-button .ag-icon-menu {
+  height: 40px;
+}
+
+::ng-deep .ag-theme-material .ag-selection-checkbox span {
+  border: 1px solid #e4e4e4;
+  width: 16px;
+  opacity: 0.7;
+  height: 16px;
+  background-size: 16px 16px;
+}
+
+::ng-deep .ag-theme-material .ag-cell-inline-editing {
+  height: 30px !important;
+  padding: 0px !important;
+}

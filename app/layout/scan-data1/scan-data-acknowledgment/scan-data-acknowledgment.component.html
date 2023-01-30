@@ -1,0 +1,79 @@
+<div class="main-content-wrap d-flex flex-column">
+  <div class="main-content">
+    <div class="page-header">
+      <h1>Scan Data Acknowledgment</h1>
+    </div>
+    <section>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card m-1">
+            <div class="card-header">
+              <div class="col-sm-3">
+                <ng-select [items]="companyList" bindLabel="companyDetailName" bindValue="companyID" required
+                placeholder="Select Company" [(ngModel)]="selectedCompanyId" (change)="companyChange($event)" appendTo="body">
+                  <ng-template ng-option-tmp let-item="item">
+                    <div placement="left" ngbTooltip="{{item.companyDetailName}}" container="body"
+                      tooltipClass="tooltip-custom-bggreen">
+                      {{item.companyDetailName}}</div>
+                  </ng-template>
+                </ng-select>
+              </div>
+              <div class="col-sm-3">
+                <ng-select [items]="storeList" [hideSelected]="true" bindLabel="storeName" bindValue="storeLocationID"
+                  placeholder="Select Store Location" [(ngModel)]="storeLocationID" required appendTo="body">
+                </ng-select>
+              </div>
+              <div class="col-sm-3 scan-date-picker">
+                <app-datepicker [inputDate]="weekendDate" required name="weekendDate" id="weekendDate"
+                  (dateChange)="dateChange($event)"></app-datepicker>
+              </div>
+              <div class="col-md-1 p-0">
+                <button class="btn btn-action" (click)="searchScanDataAck()"><i class="fa fa-search"></i>
+                  Search</button>
+              </div>
+              <div class="col-sm-2">
+                <div class="input-group" *ngIf="showFilter">
+                  <input type="text" class="form-control" placeholder="Search" aria-label="Search"
+                    [(ngModel)]="filterText" name="filterText" (input)="onFilterTextBoxChanged()">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-search"></i></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body p-0">
+              <div class="col-md-12 p-0">
+                <app-pagination-grid [paginationGridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+                  (download)="openDownloadShowModal($event)">
+                </app-pagination-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<ng-template #modalContent let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">{{popupData.subject}}</h5>
+    <button type="button" class="close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-sm-12 break-word">{{popupData.body}}</div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="row">
+      <div class="col-sm-12">
+        <button type="button" class="btn btn-cstorebo ml-2" (click)="downloadScanDataFile(popupData.rejected_file)">
+          Download
+          File </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

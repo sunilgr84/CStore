@@ -1,0 +1,26 @@
+<div>
+  <app-page-header [heading]="'Items / Inventory Buy Tag'" [icon]="'fa-edit'"></app-page-header>
+  <div class="card">
+    <div class="card-body">
+      <div class="row form-group">
+        <div class="col-sm-4 row">
+          <label for="upcDescription" class="col-sm-6">UPC/Description</label>
+          <input type="text" maxlength="250" class="form-control col-sm-6" id="upcDescription" placeholder="UPC/Description">
+        </div>
+        <div class="col-sm-4 row">
+          <label for="store" class="col-sm-3"> Store</label>
+          <select class="form-control col-sm-7" id="store">
+            <option value="">--Select Store</option>
+          </select>
+        </div>
+        <div>
+          <button class="btn btn-md btn-primary"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
+        </div>
+      </div>
+      <div class="col-sm-8">
+        <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (edit)="edit($event)" (delete)="delete($event)"
+          (gridReady)="onGridReady($event)"></app-cstore-grid>
+      </div>
+    </div>
+  </div>
+</div>

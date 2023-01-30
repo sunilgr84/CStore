@@ -1,0 +1,188 @@
+<div class="fluid-container">
+  <form [formGroup]="deptDetailForm">
+    <div class="row mt-2 card-body">
+      <div class="col-md-6">
+        <div class="">
+          <label class="form-group has-float-label col-sm-12">
+            <ng-select [items]="departmentType" [selectOnTab]="true" bindLabel="departmentTypeName"
+              bindValue="departmentTypeID" labelForId="departmentTypeID" placeholder="Select Department Type"
+              formControlName="departmentTypeID" (change)="departmentTypeChange($event)" required>
+            </ng-select>
+            <span>Department Type</span>
+            <img src="assets/images/small-spinner.gif" *ngIf="isDepartmentTypeLoading">
+            <div *ngIf="submited && deptDetailFormValid.departmentTypeID.errors?.required" class="alert alert-danger">
+              Department type is required
+            </div>
+          </label>
+        </div>
+        <div class="">
+          <label class="form-group has-float-label col-sm-12">
+            <input type="text" class="form-control" required formControlName="departmentDescription"
+              placeholder="Enter description" maxlength="250" id="description" name="description">
+            <span for="description">Description</span>
+            <div *ngIf="submited && deptDetailFormValid.departmentDescription.errors?.required"
+              class="alert alert-danger">
+              Description is required
+            </div>
+          </label>
+        </div>
+        <div class="col-sm-12">
+          <div class="input-icon">
+            <label class="form-group has-float-label currency">
+              <!-- <div class="input-icon"> -->
+              <input type="text" decimalOnly class="form-control" pattern="^[0-9]\d*(\.\d+)?$" min="0" id="profitMargin"
+                name="profitMargin" formControlName="departmentProfitMargin" placeholder="Enter profit margin ($)">
+              <span for="profitMargin"> Profit Margin </span>
+              <!-- <i>$&nbsp;</i> -->
+              <!-- </div> -->
+              <div *ngIf="submited && deptDetailFormValid.departmentProfitMargin.errors?.required"
+                class="alert alert-danger">
+                Profit margin is required
+              </div>
+              <div *ngIf="deptDetailFormValid.departmentProfitMargin.errors?.pattern" class="alert alert-danger">
+                Profit margin must not be negative
+              </div>
+              <div *ngIf="deptDetailFormValid.departmentProfitMargin?.invalid" class="alert alert-danger">
+                Profit margin must not be greater than 100
+              </div>
+            </label>
+            <i style="top: 18px;" *ngIf="deptDetailForm.get('departmentProfitMargin').value"> $</i>
+          </div>
+        </div>
+        <div class="">
+          <label class="form-group has-float-label col-sm-12">
+            <!-- <div class="input-icon"> -->
+            <input type="text" decimalOnly min="0" pattern="^[0-9]\d*(\.\d+)?$" class="form-control"
+              formControlName="profitPercent" placeholder="Enter profit percent" id="profitPercent"
+              name="profitPercent">
+            <span for="profitMargin"> Profit Percent (%) </span>
+            <!-- <i>%&nbsp;</i>
+            </div> -->
+            <div *ngIf="submited && deptDetailFormValid.profitPercent.errors?.required" class="alert alert-danger">
+              Profit percent is required
+            </div>
+            <div *ngIf="deptDetailFormValid.profitPercent.errors?.pattern" class="alert alert-danger">
+              Profit percent must not be negative
+            </div>
+            <div *ngIf="deptDetailFormValid.profitPercent?.invalid" class="alert alert-danger">
+              Profit percent must not be greater than 100
+            </div>
+          </label>
+        </div>
+        <div class="input-icon col-sm-12">
+          <label class="form-group has-float-label currency">
+            <input type="text" decimalOnly #minmunNumber min="0" maxlength="999" class="form-control" value="0.00"
+              id="minSaleAmt" name="minSaleAmt" formControlName="minimumOpenSaleAmount"
+              placeholder="Enter minimum open sale amount ($)" (change)="setMinSaleAmount($event)">
+            <span for="minSaleAmt"> Minimum Open Sale Amount </span>
+            <div *ngIf="submited && deptDetailFormValid.minimumOpenSaleAmount.errors?.pattern"
+              class="alert alert-danger">
+              Minimum open sale amount must not be negative
+            </div>
+          </label>
+          <i *ngIf="deptDetailForm.get('minimumOpenSaleAmount').value"> $</i>
+        </div>
+        <div class="input-icon col-sm-12">
+          <label class="form-group has-float-label currency">
+            <input type="text" decimalOnly #maximunNumber min="0" maxlength="999" class="form-control" value="0.00"
+              id="maxSaleAmt" name="maxSaleAmt" formControlName="maximumOpenSaleAmount"
+              placeholder="Enter maximum open sale amount" (change)="setMaxSaleAmount($event)">
+            <span for="maxSaleAmt"> Maximum Open Sale Amount ($) </span>
+            <div *ngIf="submited && deptDetailFormValid.maximumOpenSaleAmount.errors?.pattern"
+              class="alert alert-danger">
+              Maximum open sale amount must not be negative
+            </div>
+          </label>
+          <i *ngIf="deptDetailForm.get('maximumOpenSaleAmount').value"> $</i>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{'Other Flags'}}</h5>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" formControlName="activeFlag" id="activeFlag">
+              <label class="custom-control-label" for="activeFlag">
+                Active Department
+              </label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" formControlName="isDepartmentOpen"
+                id="isDepartmentOpen">
+              <label class="custom-control-label" for="isDepartmentOpen">
+                Allow Open Sales In Department
+              </label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" formControlName="isFractionalQtyAllowedFlag"
+                id="isFractionalQtyAllowedFlag">
+              <label class="custom-control-label" for="isFractionalQtyAllowedFlag">
+                Allow Partial Quantity Sales
+              </label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" formControlName="isLoyaltyRedeemEligibleFlag"
+                id="isLoyaltyRedeemEligibleFlag">
+              <label class="custom-control-label" for="isLoyaltyRedeemEligibleFlag">
+                Allow Royalty Redeem Sales
+              </label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" formControlName="isItemReturnableFlag"
+                id="isItemReturnableFlag">
+              <label class="custom-control-label" for="isItemReturnableFlag">
+                Allow Item Returns
+              </label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" formControlName="allowFoodStampsFlag"
+                id="allowFoodStampsFlag">
+              <label class="custom-control-label" for="allowFoodStampsFlag">
+                Allow Food Stamp Sales
+              </label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" formControlName="areSpecialDiscountsAllowedFlag"
+                id="areSpecialDiscountsAllowedFlag">
+              <label class="custom-control-label" for="areSpecialDiscountsAllowedFlag">
+                Allow Special Discounts
+              </label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" formControlName="isFractionalQtyAllowedFlag"
+                id="priceRequiredFlag">
+              <label class="custom-control-label" for="priceRequiredFlag">
+                Flexible Pricing for Items
+              </label>
+            </div>
+            <div class="custom-control custom-checkbox" style="pointer-events: none; color: grey;">
+              <input class="custom-control-input" type="checkbox" formControlName="isDepartmentNegative"
+                id="isDepartmentNegative">
+              <label class="custom-control-label" for="isDepartmentNegative">
+                Department Negative
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-3 ">
+        <div class="col-md-12">
+          <button type="button" hidden="true" class="btn btn-md btn-success ml-2"> Move
+            Department</button>
+          <button type="button" *ngIf="saveOrUpdate()==='Save'" class="btn btn-md btn-cstorebo mr-3" (click)="reset()">
+            Reset</button>
+          <button type="button" class="btn btn-md btn-primary mr-3" (click)="save()">
+            {{saveOrUpdate()}}</button>
+          <button type="button" class="btn btn-md btn-primary mr-3" (click)="save(true)">
+            {{saveOrUpdate()}} &amp; Close</button>
+          <button type="button" class="btn btn-md btn-cstorebo mr-3" (click)="onNavigateLocation()">
+            Department Location</button>
+          <button type="button" class="btn btn-md btn-cstorebo pull-right" (click)="backToList()">
+            Back To Department List </button>
+        </div>
+
+      </div>
+    </div>
+  </form>
+</div>

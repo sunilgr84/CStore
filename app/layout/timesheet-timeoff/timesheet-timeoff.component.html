@@ -1,0 +1,91 @@
+<div class="col-sm-12 form-group mt-3">
+  <div>
+    <button type="button" class="btn btn-md btn-cstorebo mr-3" (click)="backToMainList()">
+      &nbsp; Back to Store List </button>
+  </div>
+</div>
+<div class="card-body">
+  <form [formGroup]="timesheetTimeoffForm">
+    <div class="row">
+      <div class="col-sm-12" *ngIf="false">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" formControlName="IsAskForShiftFeedback" style="height: 15px;
+                width:  25px;">
+          <label class="padding-right-10" for="IsAskForShiftFeedback ">Ask employees for shift feedback at
+            the end of their shift</label>
+        </div>
+      </div>
+      <!-- <div class="col-sm-12">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" formControlName="IsEnableDayOverTime" style="height: 15px;
+                width:  25px;">
+          <label class="padding-right-10" for="IsEnableDayOverTime">After</label>
+          <input type="text" style="height: 20px; width: 25px; border: 1px solid #ced4da;"
+            formControlName="DayOverTimeHours">
+          <label class="padding-right-10" style="margin-left: 16px;" for="DayOverTimeHours">hours per day, the
+            base pay is</label>
+          <input type="text" style="height: 20px; width: 25px; border: 1px solid #ced4da;"
+            formControlName="DayOverTimePay">
+          <label class="padding-right-10" style="margin-left: 16px;" for="DayOverTimePay"> × hourly</label>
+        </div>
+      </div> -->
+      <div class="col-sm-12">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" formControlName="IsEnableWeekOverTime" style="height: 15px;
+              width:  25px;">
+          <label class="padding-right-10" for="IsEnableWeekOverTime">After</label>
+          <input type="text" style="height: 20px; width: 25px; border: 1px solid #ced4da;"
+            formControlName="WeekOverTimeHours">
+          <label class="padding-right-10" style="margin-left: 16px;" for="WeekOverTimeHours">hours per week, the
+            base pay is</label>
+          <input type="text" style="height: 20px; width: 25px; border: 1px solid #ced4da;"
+            formControlName="WeekOverTimePay">
+          <label class="padding-right-10" style="margin-left: 16px;" for="WeekOverTimePay"> × hourly</label>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" formControlName="IsBreakCheckbox" style="height: 15px;
+                width:  25px;">
+          <label class="padding-right-10" for="IsBreakCheckbox">Employees get a</label>
+          <input type="text" style="height: 20px; width: 25px; border: 1px solid #ced4da;" formControlName="BreakMin">
+          <label class="padding-right-10" style="margin-left: 16px;" for="BreakMin">min.
+          </label>
+          <select id="IsBreakPaid" name="IsBreakPaid" formControlName="IsBreakPaid" style="font-weight: 400;min-height: 36px;
+              border: 1px solid #ced4da;
+              border-radius: 0.75rem !important;">
+            <option value="1">Paid</option>
+            <option value="0">UnPaid</option>
+          </select>
+          <label class="padding-right-10" style="margin-left: 16px;" for="IsBreakPaid">break every
+          </label>
+          <input type="text" style="height: 20px; width: 25px; border: 1px solid #ced4da;" formControlName="BreakHours">
+          <label class="padding-right-10" style="margin-left: 16px;" for="BreakHours">
+            hours and it is </label>
+          <select id="IsBreakMandatory" name="IsBreakMandatory" style="font-weight: 400;min-height: 36px;
+              border: 1px solid #ced4da;
+              border-radius: 0.75rem !important;" formControlName="IsBreakMandatory">
+            <option value="1">Mandatory</option>
+            <option value="0">Optional</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" formControlName="IsSubstractUnpaidBreak" style="height: 15px;
+                width:  25px;">
+          <label class="padding-right-10" for="IsSubstractUnpaidBreak">Subtract unpaid breaks from scheduled hours
+            and wage forecast</label>
+        </div>
+      </div>
+    </div>
+    <br><br>
+    <div class="row">
+      <div class="col-sm-6">
+        <button type="button" style="background-color: #007bff;margin-left: 42px;" class="btn btn-primary"
+          (click)="saveTimesheetTimeOffSetting()"> Save
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

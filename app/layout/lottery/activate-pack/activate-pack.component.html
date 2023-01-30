@@ -1,0 +1,283 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title ml-3"><strong>Activate Pack</strong> </h4>
+    <form [formGroup]="activatePackForm" novalidate>
+      <div class="row mt-3">
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+              <div class="row mt-3">
+                <label class=" has-float-label col-sm-12">
+                  <select class="form-control" *ngIf="storeLocationList.length!==1" id="storeLocationID"
+                    name="storeLocationID" formControlName="storeLocationID" (change)="getLotteryGameByDrop()" required>
+                    <option value="">--Select Store Location--</option>
+                    <option *ngFor="let store of storeLocationList" [value]="store.storeLocationID">
+                      {{store.storeName}}</option>
+                  </select>
+                  <input readonly type="text" *ngIf="storeLocationList && storeLocationList.length===1"
+                    class="form-control" [value]="storeLocationList[0].storeName">
+
+                  <div *ngIf="submitted && activate.storeLocationID.errors?.required" class="alert alert-danger">
+                    Store Location in required
+                  </div>
+                  <span>Store Location</span>
+                </label>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <!-- <div class="custom-control custom-checkbox checkboxOne">
+                    <input type="checkbox" class="custom-control-input" id="isActivaeteScan" name="isActivaeteScan"
+                      (change)="onFilterChange($event)" [checked]="isChecked">
+                    <label class="custom-control-label" for="isActivaeteScan">Scan / Manual</label>
+                  </div> -->
+                  <label class="m-2" for="basic-switch">Manual</label>
+                  <mat-slide-toggle class="m-2" formControlName="isActivateScan" (change)="onScanTypeChange($event)">
+                  </mat-slide-toggle>
+                  <label class="m-2" for="basic-switch">Batch Scan</label>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <label class="has-float-label" [ngClass]="batchScanFlag?'col-sm-12':'col-sm-6'">
+                  <app-datepicker name="activateDate" id="activateDate" (dateChange)="dateChange($event)"
+                    [inputDate]="inputActivateDate"></app-datepicker>
+                  <!-- formControlName="AOrCdate" -->
+                  <span> Activate Date</span>
+                </label>
+                <label class="has-float-label col-sm-6" *ngIf="!batchScanFlag">
+                  <input numbersOnly type="text" min="0" class="form-control" placeholder="Bin Number" name="binNo"
+                    maxlength="50" formControlName="binNo">
+                  <div *ngIf="submitted && activate.binNo.errors?.required" class="alert alert-danger">
+                    Bin Number in required
+                  </div>
+                  <span> Bin Number </span>
+                </label>
+              </div>
+              <div class="row" *ngIf="!batchScanFlag">
+                <label class="has-float-label col-sm-6">
+                  <ng-select #lotteryGameNo [items]="lotteryGameList" [selectOnTab]="true" bindLabel="gameLabel"
+                    bindValue="gameNo" labelForId="lotteryGameNo" placeholder="Select Game Number"
+                    formControlName="lotteryGameNo" required>
+                  </ng-select>
+                  <img src="assets/images/small-spinner.gif" *ngIf="isGameNumberLoading">
+                  <div *ngIf="submitted && activate.lotteryGameNo.errors?.required" class="alert alert-danger">
+                    Game Number in required
+                  </div>
+                  <span>Game number</span>
+                </label>
+                <label class="has-float-label col-sm-6">
+                  <input numbersOnly type="text" [minLength]="packNoLength" [maxLength]="packNoMaxLength"
+                    class="form-control" placeholder="Pack Number" name="packNo" formControlName="packNo" required>
+                  <div *ngIf="submitted && activate.packNo.errors?.required" class="alert alert-danger">
+                    Pack Number in required
+                  </div>
+                  <div *ngIf="submitted && activate.packNo.errors?.minlength" class="alert alert-danger">
+                    Pack number must be {{packNoLength}} digit.
+                  </div>
+                  <div *ngIf="submitted && activate.packNo.errors?.maxlength" class="alert alert-danger">
+                    Pack number must be {{packNoMaxLength}} digit.
+                  </div>
+                  <span>Pack number</span>
+                </label>
+              </div>
+              <div class="row mt-3" *ngIf="!batchScanFlag">
+                <div class="col-sm-12 text-right">
+                  <button type="button" class="btn btn-md btn-primary mr-3" (click)="reset(true)"> Reset</button>
+                  <button type="button" class="btn btn-md btn-primary" (click)="onSubmit()">
+                    Active Pack</button>
+                  <!-- <button type="button" [hidden]="true" class="btn btn-md btn-primary mr-3" (click)="addGameNoToList()">
+                    Add More</button> -->
+                  <!-- <button type="button" [hidden]="true" class="btn btn-md btn-primary" (click)="batchScanMode(content)">
+                    Batch Scan</button> -->
+                </div>
+              </div>
+              <div class="row" *ngIf="batchScanFlag">
+                <label class="has-float-label col-sm-12">
+                  <!-- <input numbersOnly type="text" class="form-control" placeholder="Scan Barcode"
+                    name="scanBarcode" formControlName="scanBarcode" #barcodeScan
+                    (keyup)="getGamePackNoByScanBarcode()"> -->
+                  <input numbersOnly type="text" min="0" maxlength="24" class="form-control" placeholder="Scan Barcode"
+                    name="barcodeScanBatch" formControlName="barcodeScanBatch" #barcodeScan
+                    (keyup.enter)="onScanBatch()">
+                  <div *ngIf="submitted && activate.scanBarcode.errors?.required" class="alert alert-danger">
+                    Scan Barcode is required
+                  </div>
+                  <span> Scan Barcode </span>
+                </label>
+              </div>
+              <div class="row mt-3" *ngIf="batchScanFlag">
+                <div class="col-sm-12">
+                  <app-editable-grid [rowData]="batchRowData" [editGridOptions]="batchGridOptions"
+                    [gridHeight]="'200px'" [textFilter]="filterText" (gridReady)="onBatchReady($event)">
+                  </app-editable-grid>
+                </div>
+              </div>
+              <div class="row mt-3 justify-content-end" *ngIf="batchScanFlag">
+                <div class="col-sm-12 text-right">
+                  <button type="button" class="btn btn-md btn-primary" (click)="onBulkUpdate()">Bulk Update </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="spinnerDiv">
+              <ngx-spinner name="sp1" [fullScreen]="false" type="ball-spin-clockwise" size="medium">
+              </ngx-spinner>
+            </div>
+            <div class="card-body" style="padding-bottom: initial; padding-top: initial;">
+             
+              <h5 class="card-title text-center mt-2">Inventory Detail</h5>
+              <div class="row justify-content-center mt-2 mb-3">
+                <div class="col-sm-6 ">
+                  <div class="btn btn-primary currentlyActivation">
+                    <h5>Currently Active</h5>
+                    <h6 class="text-left">Active Books : {{inventoryDetail.currentlyActivatedLotteryPacks}} Qty
+                    </h6>
+                    <h6 class="text-left">Active Books :
+                      {{inventoryDetail.currentlyActivatedLotteryPackValue | currency}}</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="row justify-content-center mb-3  mt-3">
+                <div class="col-sm-6">
+                  <div class="btn btn-primary confirmation">
+                    <h5>Year</h5>
+                    <h6 class="text-left">Activated Books : {{inventoryDetail.activatedLotteryPacksForyear}} Qty
+                    </h6>
+                    <h6 class="text-left">Activated Books :
+                      {{inventoryDetail.activatedForyearLotteryPackValue | currency}}</h6>
+                    <h6 class="text-left">Sold : {{inventoryDetail.soldOutLotteryPacksForYear}} Qty</h6>
+                    <h6 class="text-left">Value : {{inventoryDetail.soldOutForYearLotteryPackValue | currency}}
+                    </h6>
+                  </div>
+                </div>
+                <div class="col-sm-6 ">
+                  <div class="btn btn-primary booksActive">
+                    <h5> Month</h5>
+                    <h6 class="text-left">Activated Books : {{inventoryDetail.activatedLotteryPacksForMonth}} Qty
+                    </h6>
+                    <h6 class="text-left">Activated Books :
+                      {{inventoryDetail.activatedForMonthLotteryPackValue | currency}}</h6>
+                    <h6 class="text-left">Sold : {{inventoryDetail.soldOutLotteryPacksForMonth}} Qty</h6>
+                    <h6 class="text-left">Value : {{inventoryDetail.soldOutForMonthLotteryPackValue | currency}}
+                    </h6>
+                  </div>
+                </div>
+              </div>
+              <div class="row justify-content-center mb-2  mt-3">
+                <div class="col-sm-6 ">
+                  <div class="btn btn-primary booksSettled">
+                    <h5>Week</h5>
+                    <h6 class="text-left">Activated Books : {{inventoryDetail.activatedLotteryPacksForWeek}} Qty
+                    </h6>
+                    <h6 class="text-left">Activated Books :
+                      {{inventoryDetail.activatedForWeekLotteryPackValue | currency}}</h6>
+                    <h6 class="text-left">Sold : {{inventoryDetail.soldOutLotteryPacksForWeek}} Qty</h6>
+                    <h6 class="text-left">Value : {{inventoryDetail.soldOutForWeekLotteryPackValue | currency}}
+                    </h6>
+                  </div>
+                </div>
+                <div class="col-sm-6 ">
+                  <div class="btn btn-primary todayActivation">
+                    <h5>Today</h5>
+                    <h6 class="text-left">Activated Books : {{inventoryDetail.activatedLotteryPacksForDay}} Qty
+                    </h6>
+                    <h6 class="text-left">Activated Books :
+                      {{inventoryDetail.activatedForDayLotteryPackValue | currency}}</h6>
+                    <h6 class="text-left">Sold : {{inventoryDetail.soldOutLotteryPacksForDay}} Qty</h6>
+                    <h6 class="text-left">Value : {{inventoryDetail.soldOutForDayLotteryPackValue | currency}}
+                    </h6>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="row justify-content-end mt-3" *ngIf="showGrid">
+      <div class="col-sm-3">
+        <div class="inner-addon right-addon">
+          <span>
+            <i class="fa fa-search card-title" aria-hidden="true"></i>
+          </span>
+          <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+            placeholder="Filter Search" [(ngModel)]="filterText" name="filterText">
+        </div>
+      </div>
+      <div class="col-sm-12 mt-3">
+        <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" [gridHeight]="'200px'"
+          [textFilter]="filterText" (gridReady)="onReady($event)"></app-cstore-grid>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title card-title" id="modal-basic-title"> {{'Bulk Update'}} </h4>
+    <button type="button" class="close" aria-label="Close" id="bulkUpdateClose" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!-- <form [formGroup]="addAccoutingForm"> -->
+    <div class="col-sm-12">
+      <div class="row">
+        <label class="has-float-label col-sm-6">
+          <app-datepicker name="bulkUpdateConfirmDate" id="bulkUpdateConfirmDate" (dateChange)="dateChange($event)"
+            [inputDate]="inputActivateDate">
+          </app-datepicker>
+          <span>Activation date</span>
+        </label>
+      </div>
+      <div>
+        <app-cstore-grid [rowData]="batchRowData" [cStoreGridOptions]="batchGridOptions" [gridHeight]="'200px'"
+          [textFilter]="filterText" (gridReady)="onBatchReady($event)">
+        </app-cstore-grid>
+      </div>
+      <div class="row mt-3 justify-content-end">
+        <button class="btn btn-md btn-primary mr-3" (click)="bulkUpdate()">Bulk Update </button>
+      </div>
+    </div>
+    <!-- </form> -->
+  </div>
+</ng-template>
+
+<ng-template #activeLotterys let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title card-title" id="modal-basic-title"> {{'Confirm'}} </h4>
+    <button type="button" class="close" id="confirmBatchScanMode" aria-label="Close"
+      (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="col-sm-12">
+      <div class="row">
+        <label class="has-float-label col-sm-6">
+          <input type="text" readonly class="form-control" placeholder="Game Number" [(ngModel)]="gameNumber"
+            name="gameNumber" maxlength="250">
+          <span>Game Number</span>
+        </label>
+
+        <label class="has-float-label col-sm-6">
+          <input type="text" readonly class="form-control" placeholder="Pack Number" [(ngModel)]="packNumber"
+            name="packNumber" maxlength="250">
+          <span>Pack Number</span>
+        </label>
+        <label class="has-float-label col-sm-6">
+          <input type="text" class="form-control" placeholder="Bin Number" [(ngModel)]="binNumber" name="binNumber"
+            maxlength="250">
+          <span>Bin Number</span>
+        </label>
+      </div>
+      <div class="row justify-content-end mt-3">
+        <button class="btn btn-md btn-primary mr-3" (click)="confirmScanMode()">Ok </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

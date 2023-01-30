@@ -1,0 +1,185 @@
+<div class="cg-scroller">
+  <div class="cg-table">
+    <ng-container *ngTemplateOutlet="defaultHeader"></ng-container>
+
+    <div class="cg-body" *ngIf="getParsedDataLength() >= 1 && !isGroupingEnabled()">
+      <ng-container *ngTemplateOutlet="defaultRow; context: { rowsData: parsedRowData, rowType: 'body_row' }">
+      </ng-container>
+    </div>
+
+    <ng-container *ngIf="getParsedDataLength() >= 1 && isGroupingEnabled()">
+      <div class="cg-body" *ngFor="let groupRowsData of parsedRowData | keyvalue">
+        <!-- render group header row -->
+        <ng-container
+          *ngTemplateOutlet="groupHeaderRow; context: { groupHeaderValue: groupRowsData.value, groupHeaderKey: groupRowsData.key}">
+        </ng-container>
+
+        <!-- render group body rows -->
+        <ng-container
+          *ngIf="visibleGroupIds.includes(groupRowsData.key) || ['undefined', 'null'].includes(groupRowsData.key)">
+          <ng-container
+            *ngTemplateOutlet="defaultRow; context: { rowsData: groupRowsData.value, rowType: 'group_body_row', groupRowKey: groupRowsData.key }">
+          </ng-container>
+        </ng-container>
+      </div>
+    </ng-container>
+
+    <ng-container *ngTemplateOutlet="defaultEmptyRow"></ng-container>
+
+    <ng-container *ngTemplateOutlet="defaultPagination"></ng-container>
+  </div>
+</div>
+
+<!-- default header template -->
+<ng-template #defaultHeader>
+  <div class="cg-header">
+    <div class="cg-row">
+      <div class="cg-cell" *ngIf="mGridOptions.enableCheckbox">
+        <div class="cg-label-container">
+          <input type="checkbox" [indeterminate]="checkboxStatus('indeterminate','header_row')"
+            [checked]="checkboxStatus('checked','header_row')" (change)="handleCheckboxChange($event, 'header_row')" />
+        </div>
+      </div>
+      <div class="cg-cell" *ngFor="let colD of colData">
+        <div class="cg-label-container">
+          <span class="cg-text">{{colD.headerName}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- default empty row template -->
+<ng-template #defaultEmptyRow>
+  <div class="cg-row--empty" *ngIf="getParsedDataLength() < 1">
+    <div class="cg-label-container justify-content-center">
+      <div class="cg-text">No rows to display</div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- default row template -->
+<ng-template let-rowsData="rowsData" let-rowType="rowType" let-grKey="groupRowKey" #defaultRow>
+  <div [ngClass]="{'cg-row__checked': checkboxStatus('checked',rowType, rowD, grKey)}" class="cg-row"
+    *ngFor="let rowD of rowsData; let index = index">
+    <!-- render checkbox cell only if it is enabled -->
+    <div class="cg-cell" *ngIf="mGridOptions.enableCheckbox">
+      <div class="cg-label-container">
+        <input type="checkbox" [checked]="checkboxStatus('checked',rowType, rowD, grKey)"
+          (change)="handleCheckboxChange($event, rowType, rowD, grKey)" />
+      </div>
+    </div>
+
+    <ng-container *ngFor="let colD of colData">
+      <!-- index cell -->
+      <div *ngIf="['indexCell'].includes(colD.cellType)" class="cg-cell">
+        <div class="cg-label-container">
+          <span class="cg-text">{{getCellIndex(rowD, index)}}</span>
+        </div>
+      </div>
+
+      <!-- action cell -->
+      <div *ngIf="['actionCell'].includes(colD.cellType)" class="cg-cell w-170">
+        <!-- <div class="cg-label-container"> -->
+        <div class="">
+          <button data-toggle="tooltip" container="body" data-placement="bottom" ngbTooltip="Edit"
+            class="v-btn-icon v-small v-btn-edit v-btn-primary" (click)="handleRowAction('edit', rowD, colD)">
+            <img src="assets/images/icons/edit_new.png" style="width: 15px; height : 14px;" />
+          </button>
+          <button data-toggle="tooltip" container="body" data-placement="bottom" ngbTooltip="Item History"
+            class="v-btn-icon v-btn-small" (click)="handleRowAction('itemHistory', rowD, colD)">
+            <i class="fa fa-history"></i>
+          </button>
+          <button data-toggle="tooltip" container="body" data-placement="bottom" ngbTooltip="Sales Activity"
+            class="v-btn-icon v-btn-small" (click)="handleRowAction('salesActivity', rowD, colD)">
+            <i class="fa fa-align-justify"></i>
+          </button>
+          <button data-toggle="tooltip" container="body" data-placement="bottom" ngbTooltip="Suspend"
+            class="v-btn-icon v-small v-btn-disabled" (click)="handleRowAction('suspend', rowD, colD)">
+            <img src="assets/images/icons/suspend_new.png" style="width: 18px; height : 18px;" />
+          </button>
+          <button data-toggle="tooltip" container="body" data-placement="bottom" ngbTooltip="Delete"
+            class="v-btn-icon v-small v-btn-delete v-btn-danger" (click)="handleRowAction('delete', rowD, colD)">
+            <img src="assets/images/icons/delete_new.png" style="width: 15px; height : 18px;" />
+          </button>
+        </div>
+        <!-- </div> -->
+      </div>
+
+      <!-- custom cell -->
+      <div *ngIf="['customUPCCell'].includes(colD.cellType)" class="cg-cell">
+        <div class="cg-label-container">
+          <span class="cg-text" [innerHTML]="getCellText(rowD, colD)"></span>
+        </div>
+      </div>
+
+      <!-- pricing cell -->
+      <div *ngIf="['pricingCell'].includes(colD.cellType)" class="cg-cell cg-cell-number">
+        <div class="cg-label-container-text-end">
+          <span class="cg-text">{{getCellText(rowD, colD)}}</span>
+        </div>
+      </div>
+
+      <!-- default data cell -->
+      <div *ngIf="!['indexCell', 'actionCell','customUPCCell','pricingCell'].includes(colD.cellType)" class="cg-cell">
+        <div class="cg-label-container">
+          <span class="cg-text">{{getCellText(rowD, colD)}}</span>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>
+
+<!-- group header row template -->
+<ng-template let-ghValue="groupHeaderValue" let-ghKey="groupHeaderKey" #groupHeaderRow>
+  <div *ngIf="!['undefined', 'null'].includes(ghKey)"
+    [ngClass]="{'cg-row__checked': checkboxStatus('checked','group_header_row', ghKey), 'cg-row__indeterminate': checkboxStatus('indeterminate', 'group_header_row', ghKey)}"
+    class="cg-row cg-row--group-header">
+    <!-- render checkbox cell only if it is enabled -->
+    <div class="cg-cell" *ngIf="mGridOptions.enableCheckbox">
+      <div class="cg-label-container">
+        <input type="checkbox" [indeterminate]="checkboxStatus('indeterminate', 'group_header_row', ghKey)"
+          [checked]="checkboxStatus('checked','group_header_row', ghKey)"
+          (change)="handleCheckboxChange($event, 'group_header_row', ghKey)" />
+      </div>
+    </div>
+
+    <div class="cg-cell" *ngFor="let colD of colData; index as ghI; first as ghFirst"
+      (click)="handleGroupRowToggle(ghKey)">
+      <div *ngIf="ghFirst" class="cg-label-container">
+        <i
+          [ngClass]="{'flaticon-arrow-chevron-right': !visibleGroupIds.includes(ghKey), 'flaticon-arrow-chevron-down': visibleGroupIds.includes(ghKey)}"></i>
+        <span class="cg-text">{{getGroupHeaderCellText(ghKey)}}</span>
+      </div>
+
+      <div *ngIf="!ghFirst" class="cg-label-container">
+        <span class="cg-text"></span>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- default pagination row template -->
+<ng-template #defaultPagination>
+  <div class="cg-row--pagination" *ngIf="getParsedDataLength() > 1 && isPaginationEnabled()">
+    <div class="pagination-wrapper">
+      <div class="pagination-info">
+        {{firstRowOfPage}} to {{lastRowOfPage}} of {{totalRecords}}
+      </div>
+
+      <button class="v-btn-icon v-small cg-icon--first" title="first" (click)="handlePageChange('first')">
+      </button>
+      <button class="v-btn-icon v-small cg-icon--previous" title="previous" (click)="handlePageChange('prev')">
+      </button>
+
+      <div class="cg-pagination-description">
+        Page {{currentPage}} of {{lastPage}}
+      </div>
+
+      <button class="v-btn-icon v-small cg-icon--next" title="next" (click)="handlePageChange('next')">
+      </button>
+      <button class="v-btn-icon v-small cg-icon--last" title="last" (click)="handlePageChange('last')">
+      </button>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,20 @@
+<app-page-header [heading]="'My Account'" [icon]="'fa-user'"></app-page-header>
+<div>
+  <ngb-tabset type="pills" [destroyOnHide]="false">
+    <!-- <ngb-tab title="My Profile">
+      <ng-template ngbTabContent>
+        <app-profile></app-profile>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab title="Add Users">
+      <ng-template ngbTabContent>
+        <app-add-user></app-add-user>
+      </ng-template>
+    </ngb-tab> -->
+    <ngb-tab title="Change Password">
+      <ng-template ngbTabContent>
+        <app-change-password></app-change-password>
+      </ng-template>
+    </ngb-tab>
+  </ngb-tabset>
+</div>

@@ -1,0 +1,196 @@
+<div class="card">
+  <app-page-header [heading]="'Network Summary'" [icon]="'fa-edit'"></app-page-header>
+  <div class="card-body" *ngIf="!isShowAddNetworkSummary">
+    <div class="card-title mb-3 col-sm-12">
+      <h5>Network Summary</h5>
+    </div>
+    <form [formGroup]="searchNetworkForm">
+      <div class="row">
+        <div class="col-sm-4">
+          <label class="col-sm-12 form-group has-float-label">
+            <div *ngIf="storeLocationList && storeLocationList.length!==1">
+              <ng-select [items]="storeLocationList" [selectOnTab]="true" bindLabel="storeName"
+                bindValue="storeLocationID" labelForId="storeLocationID" placeholder="Store Location"
+                formControlName="storeLocationID">
+              </ng-select>
+            </div>
+            <input readonly type="text" *ngIf="storeLocationList && storeLocationList.length===1" class="form-control"
+              [value]="storeLocationList[0].storeName">
+            <span>Store Location</span>
+            <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+          </label>
+        </div>
+        <div class="col-sm-4">
+            <label class="form-group has-float-label">
+                <app-daterangepicker [selectedDateRange]="selectedDateRange" (dateRangeSelecetd)="dateRangeChange($event)">
+                </app-daterangepicker>
+                <span> Select Date Range</span>
+              </label>
+        </div>
+        <div class="col-sm-12">
+          <div class="row col-sm-12">
+            <!-- <div class="row col-sm-1"></div> -->
+            <div class="col-sm-3">
+              <!-- <label class="mr-3" for="unSettledBatches">UnSettled Batches</label> -->
+              <div class="custom-control custom-radio">
+                <input type="radio" id="unSettledBatches" formControlName="Batches" value="1" name="Batches"
+                  class="custom-control-input">
+                <label class="custom-control-label" for="unSettledBatches"> UnSettled Batches</label>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <!-- <label class="mr-3" for="settledBatches">Settled Batches</label> -->
+              <div class="custom-control custom-radio">
+                <input type="radio" id="settledBatches" name="Batches" formControlName="Batches" value="2"
+                  class="custom-control-input">
+                <label class="custom-control-label" for="settledBatches">Settled Batches</label>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <!-- <label class="mr-3" for="bothCase">Both</label> -->
+              <div class="custom-control custom-radio">
+                <input type="radio" id="bothCase" name="Batches" checked formControlName="Batches" value="0"
+                  class="custom-control-input">
+                <label class="custom-control-label" for="bothCase"> Both</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 mt-3">
+          <div class="col-sm-12">
+            <button class="btn btn-md btn-primary" (click)="searchNetworkSummary()"> Search </button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div class="mt-3 row">
+      <div class="col-sm-4">
+        <div class="col-sm-12">
+          <button class="btn btn-md btn-primary" (click)="addNewNetworkSummary()"> Add New</button></div>
+      </div>
+      <div class="row justify-content-end margin-bottom-5 col-sm-8">
+        <div class="inner-addon right-addon">
+          <span> <i class="fa fa-search card-title" aria-hidden="true"></i> </span>
+          <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+            placeholder="Filter Search" [(ngModel)]="filterText" name="filterText">
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12">
+      <app-cstore-grid [rowData]="rowData" (gridReady)="gridReady($event)" [cStoreGridOptions]="gridOptions"
+        (edit)="edit($event)" [textFilter]="filterText" (delete)="delete($event)">
+      </app-cstore-grid>
+    </div>
+  </div>
+
+  <!-- Add Network Summary -->
+  <div class="card" *ngIf="isShowAddNetworkSummary" style="min-height: 350px">
+
+    <form [formGroup]="addNetworkForm">
+      <div class="card-body">
+        <div class="card-title">
+          <h5> {{isEdit?'Update':'Add' }} Network Summary</h5>
+        </div>
+        <div class="row">
+          <div class="col-sm-4">
+            <label class="col-sm-12 form-group has-float-label">
+              <div class="" style="padding: initial;" *ngIf="storeLocationList && storeLocationList.length!==1">
+                <ng-select [items]="storeLocationList" [selectOnTab]="true" required bindLabel="storeName"
+                  formControlName="storeLocationID" bindValue="storeLocationID" labelForId="storeLocationID"
+                  placeholder="Store Location">
+                </ng-select>
+              </div>
+              <input readonly type="text" *ngIf="storeLocationList && storeLocationList.length===1" class="form-control"
+                [value]="storeLocationList[0].storeName">
+              <span> Store Location</span>
+              <div *ngIf="submitted && networkSummary.storeLocationID.errors?.required" class="alert alert-danger">
+                Store location is required
+              </div>
+              <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+            </label>
+          </div>
+          <div class="col-sm-4 ">
+            <label class="col-sm-12 form-group has-float-label">
+              <app-datepicker name="beginDate" id="beginDate" [inputDate]="_date"
+                (dateChange)="dateChange($event, 'businessDate')"></app-datepicker>
+              <span> Business Date</span>
+            </label>
+          </div>
+          <div class="col-sm-4 ">
+            <label class="col-sm-12 form-group has-float-label">
+              <input type="text" class="form-control " formControlName="batchNumber" required
+                placeholder="Batch Number">
+              <span> Batch Number</span>
+              <div *ngIf="submitted && networkSummary.batchNumber.errors?.required" class="alert alert-danger">
+                Batch number is required
+              </div>
+            </label>
+          </div>
+          <div class="col-sm-4">
+            <div class="col-sm-12">
+              <div class="input-icon">
+                <label class="currency form-group has-float-label">
+                  <input type="text" numbersOnly class="form-control" formControlName="grossAmount"
+                    placeholder="Gross Amount">
+                  <span> Gross Amount </span>
+                </label>
+                <i *ngIf="addNetworkForm.get('grossAmount').value">$</i>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4 ">
+            <div class="col-sm-12">
+              <div class="input-icon">
+                <label class="currency form-group has-float-label">
+                  <input type="text" numbersOnly class="form-control" formControlName="processingFeeAmount"
+                    placeholder="Processing Fee">
+                  <span> Processing Fee </span>
+                </label>
+                <i *ngIf="addNetworkForm.get('processingFeeAmount').value">$</i>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="col-sm-4 ">
+            <label class="">Net Amount</label>
+            <input type="number" class="form-control col-sm-8" [readonly]="true" placeholder="Net Amount">
+          </div> -->
+          <div class="col-sm-4">
+            <label class="col-sm-12 form-group has-float-label">
+              <div class="" style="padding: initial;">
+                <ng-select [items]="isBatchSetteledList" [selectOnTab]="true" bindLabel="name"
+                  formControlName="isBatchSetteled" bindValue="id" labelForId="name" placeholder="Is Batch Setteled"
+                  (change)="checkSettlementDate($event)">
+                </ng-select>
+              </div>
+              <span> Is Batch Setteled</span>
+            </label>
+          </div>
+          <div class="col-sm-4" *ngIf="isShowSettlementDate">
+            <label class="col-sm-12 form-group has-float-label">
+              <app-datepicker name="beginDate" id="beginDate" [inputDate]="_settlementDate"
+                (dateChange)="dateChange($event,'settlementDate')"></app-datepicker>
+              <span> Settlement Date</span>
+            </label>
+          </div>
+        </div>
+        <div>
+          <button class="btn btn-md btn-primary mr-3" (click)="resetNetworkSummary()">
+            Reset</button>
+          <button class="btn btn-md btn-primary mr-3" (click)="save()"> {{isEdit? 'Update'
+            :'Save'}} </button>
+          <button class="btn btn-md btn-primary mr-3" (click)="saveAndClose()"> {{isEdit?
+            'Update':'Save' }} & Close</button>
+          <button class="btn btn-md btn-primary mr-3" (click)="backToList()">Back To List</button>
+        </div>
+
+      </div>
+    </form>
+    <!-- <div class="card-footer">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-md btn-primary" (click)="backToList()">Back To List</button>
+      </div>
+    </div> -->
+  </div>
+
+</div>

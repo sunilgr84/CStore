@@ -1,0 +1,223 @@
+<div class="row print-btn-row">
+	<div class="col-md-1">
+		<button type="button" class="btn btn-primary" (click)="printCheck()">Print</button>
+	</div>
+</div>
+<div id="check-print" class="check-page" *ngIf="showCheckPage">
+	<div id="frontLeaf">
+		<div class="row pt-3">
+			<div class="col-md-2" *ngIf="checkData.companyLogo">
+				<img class="logoimg" src="{{checkData.companyLogo}}">
+				<!-- src="https://is4-ssl.mzstatic.com/image/thumb/Purple118/v4/b3/87/57/b3875786-5f54-8382-70d5-214c00615c55/source/200x200.png"> -->
+			</div>
+			<div class="col-md-3" *ngIf="checkData.companyLogo">
+				<div class="font-weight-bold storeName">{{checkData.storeFullName}}</div>
+				<div class="font-weight-bold limit-words">{{checkData.storeAddress}}&nbsp;</div>
+				<!-- <div class="font-weight-bold">{{checkData.storeCity}}&nbsp;</div> -->
+				<div class="font-weight-bold"> {{checkData.storeCity}},&nbsp;{{checkData.storeState}}
+					{{checkData.storeState!==null&&checkData.storeZipCode!==null?'-':''}}
+					{{checkData.storeZipCode}}&nbsp;</div>
+			</div>
+			<div class="col-md-5" *ngIf="!checkData.companyLogo">
+				<div class="font-weight-bold">{{checkData.storeFullName}}</div>
+				<div class="font-weight-bold limit-words">{{checkData.storeAddress}}&nbsp;</div>
+				<div class="font-weight-bold">{{checkData.storeCity}}&nbsp;</div>
+				<div class="font-weight-bold">{{checkData.storeState}}
+					{{checkData.storeState!==null&&checkData.storeZipCode!==null?'-':''}}
+					{{checkData.storeZipCode}}&nbsp;</div>
+			</div>
+			<div class="col-md-1"></div>
+			<div class="col-md-1" *ngIf="checkData.bankLogo">
+				<img class="logoimg" src="{{checkData.bankLogo}}">
+			</div>
+			<div class="col-md-3" *ngIf="checkData.bankLogo">
+				<div class="font-weight-bold storeName">{{checkData.bankName}}</div>
+				<div class="font-weight-bold limit-words">{{checkData.bankAddress}}</div>
+				<div class="font-weight-bold">{{checkData.bankCity}}
+					{{checkData.bankCity!==null&&checkData.bankStateCode!==null?'-':''}} {{checkData.bankStateCode}}
+				</div>
+			</div>
+			<div class="col-md-4" *ngIf="!checkData.bankLogo">
+				<div class="font-weight-bold storeName">{{checkData.bankName}}</div>
+				<div class="font-weight-bold limit-words">{{checkData.bankAddress}}</div>
+				<div class="font-weight-bold">{{checkData.bankCity}}
+					{{checkData.bankCity!==null&&checkData.bankStateCode!==null?'-':''}} {{checkData.bankStateCode}}
+				</div>
+			</div>
+			<div class="col-md-2">
+				<div class="text-right d-block font-weight-bold">Check No.&nbsp;&nbsp;<span
+						class="font-weight-bold">{{checkData.checkNumber}}</span></div>
+				<div class="datedata font-weight-bold">Date&nbsp;:&nbsp;<span
+						class="font-weight-bold">{{checkData.invoiceDate}}</span>
+				</div>
+			</div>
+		</div>
+		<!-- <div class="row">
+			<div class="col-md-8">
+				<div class="bold">Supreme Beverage Company</div>
+			</div>
+			<div class="col-md-4 text-right">
+				<span class="d-inline amount-symbol">$&nbsp;</span>
+				<div class="amount-box d-inline">7.01</div>
+			</div>
+		</div> -->
+		<div class="row mt-5">
+			<div class="col-md-2 pr-0 payText">
+				Pay To The Order Of&nbsp;
+			</div>
+			<div class="col-md-8 row-bordered text-capitalize vendorName font-weight-bold">
+				{{checkData.vendorName}}
+				<!-- <div class="text-capitalize">{{checkData.vendorName}}</div> -->
+			</div>
+			<div class="col-md-2 vendorName">
+				<!-- <div class="d-inline"></div> -->
+				<div class="row-bordered font-weight-bold d-inline">${{checkData.invoiceAmountPaid}}</div>
+			</div>
+		</div>
+		<div class="row mt-4">
+			<div class="col-md-2 pr-0 payText"></div>
+			<div class="col-md-8 row-bordered vendorName text-capitalize">
+				<div class="font-weight-bold text-capitalize">{{checkData.amountInWords}}</div>
+			</div>
+			<div class="col-md-1 text-right p-0">
+				<span class="font-weight-bold row-bordered">Dollars only</span>
+			</div>
+		</div>
+		<!-- <div class="row">
+			<div class="col-md-2"></div>
+			<div class="col-md-7"> -->
+		<!-- <div>Ala Bev/ Birmingham Beverage</div> -->
+		<!-- <div>200 Tanner Drive</div> -->
+		<!-- <div>Oxford, MS, 38655</div> -->
+		<!-- </div>
+			<div class="col-md-3"></div>
+		</div> -->
+		<div class="row mt-3">
+			<div class="col-md-6 pr-0">
+				<div class="">
+					<span class="font-weight-bold storeName"><u>{{checkData.vendorName}}</u></span>
+					<div class="limit-words font-weight-bold"><span class="underLine">{{checkData.vendorAddress}}</span>&nbsp;</div>
+					<div class="font-weight-bold"><span class="underLine">
+					{{checkData.vendorCity}},{{checkData.vendorState}}-{{checkData.vendorZipCode}}</span></div>
+					<!-- <div>{{checkData.vendorCountry}}&nbsp;</div> -->
+				</div>
+				<div class="mt-2">
+					<!-- <div class="d-inline font-weight-bold">Memo:</div> -->
+					<div>
+						<!--  class="d-inline" -->
+						<div class="row-bordered2 font-weight-bold d-inline1">Memo:{{checkData.memo}}</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3"></div>
+			<div class="col-md-3">
+				<div class="sig-div mt-5">
+					<img class="signatureimg d" *ngIf="checkData.signature" src="{{checkData.signature}}">
+				</div>
+				<div class="auth-sig">AUTHORIZED SIGNATURE</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 micr-div">
+				<div class="check-number text-center">
+					C{{checkData.routingNumber}}C A{{checkData.accountNumber}}A C{{checkData.checkNumber}}C</div>
+			</div>
+		</div>
+	</div>
+	<div id="middleLeaf">
+		<div class="row pt-4">
+			<div class="col-md-1"></div>
+			<div class="col-md-9">
+				{{checkData.storeFullName}}, {{checkData.storeAddress}}
+			</div>
+			<div class="col-md-2 text-right">
+				<div class="d-block font-weight-bold">Check No.&nbsp;&nbsp;<span
+						class="font-weight-bold">{{checkData.checkNumber}}</span></div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 text-right">
+				<div class="datedata font-weight-bold">Date&nbsp;:&nbsp;<span
+						class="font-weight-bold">{{checkData.invoiceDate}}</span>
+				</div>
+			</div>
+		</div>
+		<div class="row mt-4">
+			<div class="col-md-2"></div>
+			<div class="col-md-8">
+				<div class="fs-1-2 font-weight-bold">{{checkData.vendorCode}}/ {{checkData.vendorName}}</div>
+				<div class="text-capitalize">{{checkData.amountInWords}}</div>
+			</div>
+			<div class="col-md-2 text-right">
+				$ {{checkData.invoiceAmountPaid}}
+			</div>
+		</div>
+		<div class="row mt-4">
+			<div class="col-md-2"></div>
+			<div class="col-md-8 font-weight-bold">
+				<div>{{checkData.vendorCode}}/ {{checkData.vendorName}}</div>
+				<div>{{checkData.vendorAddress}}</div>
+				<div>{{checkData.vendorCity}}, {{checkData.vendorState}}, {{checkData.vendorZipCode}}</div>
+				<!-- <div>{{checkData.vendorCountry}}</div> -->
+			</div>
+			<div class="col-md-2 text-right"></div>
+		</div>
+		<div class="row mt-140">
+			<div class="col-md-6 text-left">
+				<div class="d-inline">Memo:</div>
+				<div class="row-bordered2 d-inline">
+					<div class="d-inline pl-3">{{checkData.memo}}</div>
+				</div>
+			</div>
+			<div class="col-md-6"></div>
+		</div>
+	</div>
+	<div id="endLeaf">
+		<div class="row pt-4">
+			<div class="col-md-1"></div>
+			<div class="col-md-9">
+				{{checkData.storeFullName}}, {{checkData.storeAddress}}
+			</div>
+			<div class="col-md-2 text-right">
+				<div class="d-block font-weight-bold">Check No.&nbsp;&nbsp;<span
+						class="font-weight-bold">{{checkData.checkNumber}}</span></div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 text-right">
+				<div class="datedata font-weight-bold">Date&nbsp;:&nbsp;<span
+						class="font-weight-bold">{{checkData.invoiceDate}}</span>
+				</div>
+			</div>
+		</div>
+		<div class="row mt-4">
+			<div class="col-md-2"></div>
+			<div class="col-md-8">
+				<div class="fs-1-2 font-weight-bold">{{checkData.vendorCode}}/ {{checkData.vendorName}}</div>
+				<div class="text-capitalize">{{checkData.amountInWords}}</div>
+			</div>
+			<div class="col-md-2 text-right">
+				$ {{checkData.invoiceAmountPaid}}
+			</div>
+		</div>
+		<div class="row mt-4">
+			<div class="col-md-2"></div>
+			<div class="col-md-8 font-weight-bold">
+				<div>{{checkData.vendorCode}}/ {{checkData.vendorName}}</div>
+				<div>{{checkData.vendorAddress}}</div>
+				<div>{{checkData.vendorCity}}, {{checkData.vendorState}}, {{checkData.vendorZipCode}}</div>
+				<!-- <div>{{checkData.vendorCountry}}</div> -->
+			</div>
+			<div class="col-md-2 text-right"></div>
+		</div>
+		<div class="row mt-140">
+			<div class="col-md-6 text-left">
+				<div class="d-inline">Memo:</div>
+				<div class="row-bordered2 d-inline">
+					<div class="d-inline pl-3">{{checkData.memo}}</div>
+				</div>
+			</div>
+			<div class="col-md-6"></div>
+		</div>
+	</div>
+</div>

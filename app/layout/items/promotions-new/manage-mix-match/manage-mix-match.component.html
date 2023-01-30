@@ -1,0 +1,151 @@
+<div class="main-content-wrap d-flex flex-column">
+  <!-- ============ Body content start ============= -->
+  <div class="main-content">
+    <!-- <div class="page-header pb-0">
+      <h1>Manage Mix Match Deal</h1>
+    </div> -->
+    <section>
+      <div class="row mt-3 ml-3 mr-3 mb-2">
+        <div class="col-md-3 p-0">
+          <div class="form-group mb-2" *ngIf="allStoreLocationList.length>1;else singleStore">
+            <label>Select Store</label>
+            <ng-select class="mix-match-custom-select" [items]="allStoreLocationList" [hideSelected]="true"
+              bindLabel="storeName" bindValue="storeLocationID" placeholder="Select Store Location"
+              [(ngModel)]="storeLocationId" (change)="storeLocationChange()">
+            </ng-select>
+          </div>
+          <ng-template #singleStore>
+            <div class="form-group mb-2">
+              <label>Store</label>
+              <div class="single-company">
+                <span> {{allStoreLocationList && allStoreLocationList[0] &&  allStoreLocationList[0].storeName}}</span>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+        <div class="col-md-4"></div>
+        <div class="col-md-5 text-right pr-0">
+            <div class="badge mix-match-badge-active mt-3">
+                <h3>{{activeCount}}</h3>
+                Mix Match Active
+              </div>
+          <div class="badge mix-match-badge mt-3">
+            <h3>{{expiredCount}}</h3>
+            Mix Match Expired
+          </div>
+          <div class="badge expiring-badge">
+            <h3>{{goingToExpireCount}}</h3>
+            Expiring In 10 Days
+          </div>
+        </div>
+      </div>
+      <div class="card ml-3 mr-3 mb-3 mt-2">
+        <div class="card-header">
+          <div class="col-md-7 p-0">
+            <label class="mt-1">
+              <span class="fw-600 ml-1"  *ngIf="!storeLocationId">Display Mix Match of all the stores</span>
+              <span class="fw-600 ml-1"  *ngIf="storeLocationId">Display Mix Match of {{storeLocationName}} store</span>
+            </label>
+          </div>
+          <div class="col-md-5">
+            <div class="row">
+              <div class="col-md-8 p-0">
+                <div class="input-group">
+                  <input type="text" #mixMatchSearch class="form-control" placeholder="Filter Search"
+                    aria-label="Search">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-search"></i></span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 p-0">
+                <button class="btn btn-action float-right" (click)="onNewMixMatch(mixMatchModel)"><i
+                    class="fa fa-plus"></i> New Mix
+                  Match</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body p-0">
+          <div class="col-md-12 p-2 mix-match-accordian" *ngIf="mixMatchDeals && mixMatchDeals.length > 0">
+            <ngb-accordion [closeOthers]="true" (panelChange)="toggleAccordian($event)" activeIds="{{activePanelIds}}">
+              <ngb-panel *ngFor="let mixMatchDeal of mixMatchDeals;" id="{{mixMatchDeal.MixMatchID}}">
+                <ng-template ngbPanelHeader>
+                  <div class="d-block">
+                    <label class="mt-1 mb-1" (click)="toggleAccordian($event)">
+                      <i class="fa fa-folder blue-folder-color"></i>
+                      <span class="font-weight-bold ml-1">{{mixMatchDeal.MixMatchName}}</span>
+                      <i class="fa fa-file gray-file-color ml-1"></i>
+                      <span class="ml-1 font-weight-bold">Item list:</span>
+                      <span class="ml-1">{{mixMatchDeal.ItemListName}}</span>
+                      <span class="ml-1 badge badge-secondary">{{mixMatchDeal.NoOfItems}}</span>
+                      <span class="ml-1">Items</span>
+                    </label>
+                    <div class="float-right">
+                      <!-- <button class="btn light-blue-color pl-1 pr-1"><i class="fa fa-plus"></i> Add Store</button> -->
+                      <button class="btn light-blue-color pl-1 pr-1"
+                        (click)="onEditMixMatchDeal(mixMatchModel,mixMatchDeal)"><i class="fa fa-edit"></i></button>
+                      <button class="btn color-red pl-1 pr-1" (click)="deleteMixMatchDeal(mixMatchDeal.MixMatchID)"><i
+                          class="fa fa-trash"></i></button>
+                      <button ngbPanelToggle class="btn btn-link p-0 ml-3"><i
+                          class='fa {{ opened ? "fa-chevron-up" : "fa-chevron-down" }}'></i></button>
+                    </div>
+                  </div>
+                </ng-template>
+                <ng-template ngbPanelContent class="p-0">
+                  <app-pagination-grid class="mixMatchDetail" [rowData]="childRowData"
+                    [paginationGridOptions]="childGridOptions" (gridReady)="onChildGridReady($event)"
+                    (save)="onBtStopEditing($event)" (delete)="deleteAction($event)" (cancel)="cancelAction($event)"
+                    (edit)="editAction($event)" (cellValueChanged)="onCellValueChanged($event)">
+                  </app-pagination-grid>
+                </ng-template>
+              </ngb-panel>
+            </ngb-accordion>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+<ng-template #mixMatchModel let-modal>
+  <div class="mix-match modal-header">
+    <h4 class="modal-title">{{mixMatchForm.value.mixMatchId===0?'New':'Update'}} Mix Match</h4>
+    <button type="button" class="mix-match close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <form [formGroup]="mixMatchForm" (ngSubmit)="saveMixMatch(mixMatchForm)">
+    <div class="modal-body">
+      <div class="form-group mb-2">
+        <label>Mix Match Name<span style="color: red">*</span></label>
+        <input type="text" class="form-control" id="mixMatchName" (keypress)="onMixMatchKeyPress($event)" maxlength = "100" autofocus aria-describedby="MixMatchName"
+          placeholder="Give a name of a mix match" formControlName="mixMatchName">
+        <div *ngIf="mixMatchName.invalid && (mixMatchName.dirty || mixMatchName.touched)" class="alert alert-danger">
+          <div *ngIf="mixMatchName.errors.required">
+            Mix Match Name is required.
+          </div>
+          <div *ngIf="mixMatchName.errors.minlength">
+            Name must be at least 4 characters long.
+          </div>
+        </div>
+      </div>
+      <div class="form-group mb-2">
+        <label>Select Item List<span style="color: red">*</span></label>
+        <ng-select class="mix-match-custom-select" [items]="promotionItemList" [hideSelected]="true"
+          bindLabel="Description" bindValue="ItemListID" placeholder="Select Item List Name"
+          formControlName="itemListId">
+        </ng-select>
+        <div *ngIf="itemListId.invalid && (itemListId.dirty || itemListId.touched)" class="alert alert-danger">
+          <div *ngIf="itemListId.errors.required">
+            Item List Selection is required.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mix-match modal-footer">
+      <button type="button" class="btn btn-light" (click)="clear()">Clear</button>
+      <button type="submit" class="btn btn-primary"
+        [disabled]="!mixMatchForm.valid">{{mixMatchForm.value.mixMatchId===0?'Create':'Update'}}</button>
+    </div>
+  </form>
+</ng-template>

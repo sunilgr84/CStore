@@ -1,0 +1,130 @@
+<div class="col-sm-12 mt-3">
+  <div>
+    <button type="button" class="btn btn-md btn-cstorebo mr-3" (click)="backToMainList()">
+      &nbsp; Back to Store List </button>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="custom-control custom-checkbox">
+        <input type="checkbox" [(ngModel)]="IsMarkLateEmployee" style="height: 15px;
+              width:  25px;">
+        <label class="padding-right-10" for="IsMarkLateEmployee">Mark employee as late </label>
+        <input type="text" style="height: 20px; width: 25px; border: 1px solid #ced4da;"
+          [(ngModel)]="LateEmployeeMinute">
+        <label class="padding-right-10" style="margin-left: 16px;" for="LateEmployeeMinute"> min after their shift is
+          scheduled to start</label>
+      </div>
+    </div>
+    <div class="col-sm-12">
+      <div class="custom-control custom-checkbox">
+        <input type="checkbox" [(ngModel)]="IsPunchInBeforeAllowed" style="height: 15px;
+              width:  25px;">
+        <label class="padding-right-10">Prevent early clock in </label>
+        <input type="text" style="height: 20px; width: 25px; border: 1px solid #ced4da;"
+          [(ngModel)]="PunchInBeforeMinute">
+        <label class="padding-right-10" style="margin-left: 16px;" for="PunchInBeforeMinute"> minutes before the shift
+          is scheduled to start</label>
+      </div>
+    </div>
+    <div class="col-sm-2">
+      <label style="margin-left: 30px;">Schedule Start Day</label>
+    </div>
+    <div class="col-sm-2">
+      <select placeholder="Schedule Start Day" id="scheduleStartDay" [(ngModel)]="scheduleStartDay"
+        name="Schedule Start Day" class="form-control" #scheduleStart="ngModel">
+        <option value="1"> Monday </option>
+        <option value="2"> Tuesday </option>
+        <option value="3"> Wednesday </option>
+        <option value="4"> Thursday </option>
+        <option value="5"> Friday </option>
+        <option value="6"> Saturday </option>
+        <option value="7"> Sunday </option>
+      </select>
+    </div>
+  </div>
+
+  <br>
+</div>
+<div class="card-body">
+  <table>
+    <tr>
+      <th>
+        Days
+      </th>
+      <th>
+        First Shift
+      </th>
+      <th>
+        Second Shift
+      </th>
+      <th>
+        Third Shift
+      </th>
+    </tr>
+    <tr *ngFor="let item of toDos;let index = index;trackBy:trackByIndex;">
+      <td>
+        {{toDos[index].day}}
+      </td>
+      <td>
+        <input type="checkbox" style="height: 15px;
+        width:  25px;" (click)="firstShiftChange($event , index)" [checked]="toDos[index].firstShiftChecked">
+        <!-- <input class="padding-right-10" type="text" placeholder="Start Time" style=" height: 30px;
+  width: 94px; margin-right: 10px;" [(ngModel)]="toDos[index].firstShiftStartTime"
+          pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$" (keypress)="numberKeyValidation($event)"
+          [disabled]="toDos[index].firstShiftDisabled">
+        <input class="padding-right-20" type="text" placeholder="End Time" [(ngModel)]="toDos[index].firstShiftEndTime"
+          style=" height: 30px;  width: 175px;" (keypress)="numberKeyValidation($event)"
+          [disabled]="toDos[index].firstShiftDisabled" pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$"> -->
+        <input class="padding-right-10" type="time"  placeholder="Start Time" style=" height: 28px;
+          width: 134px; margin-right: 10px;" [(ngModel)]="toDos[index].firstShiftStartTime"
+          [disabled]="toDos[index].firstShiftDisabled">
+        <input class="padding-right-20" type="time"  placeholder="End Time"
+          [(ngModel)]="toDos[index].firstShiftEndTime" style=" height: 28px;  width: 134px;"
+          [disabled]="toDos[index].firstShiftDisabled">
+      </td>
+      <td>
+        <input type="checkbox" style="height: 15px;
+        width:  25px;" (click)="secondShiftChange($event ,  index)" [checked]="toDos[index].secondShiftChecked">
+        <!-- <input class="padding-right-10" type="text" placeholder="Start Time" style=" height: 30px;
+  width: 94px; margin-right: 10px;" [(ngModel)]="toDos[index].secondShiftStartTime"
+          (keypress)="numberKeyValidation($event)" [disabled]="toDos[index].secondShiftDisabled"
+          pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$">
+        <input class="padding-right-20" type="text" placeholder="End Time" [(ngModel)]="toDos[index].secondShiftEndTime"
+          style=" height: 30px;  width: 175px;" (keypress)="numberKeyValidation($event)"
+          [disabled]="toDos[index].secondShiftDisabled" pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$"> -->
+        <input class="padding-right-10" type="time"  placeholder="Start Time"
+          [(ngModel)]="toDos[index].secondShiftStartTime" style=" height: 28px;  width: 134px; margin-right: 10px;"
+          [disabled]="toDos[index].secondShiftDisabled">
+        <input class="padding-right-20" type="time"  placeholder="End Time"
+          [(ngModel)]="toDos[index].secondShiftEndTime" style=" height: 28px;  width: 134px;"
+          [disabled]="toDos[index].secondShiftDisabled">
+      </td>
+      <td>
+        <input type="checkbox" style="height: 15px;
+        width:  25px;" (click)="thirdShiftChange($event , index)" [checked]="toDos[index].thirdShiftChecked">
+        <!--   <input class="padding-right-10" type="text" placeholder="Start Time" style=" height: 30px;
+  width: 94px; margin-right: 10px;" [(ngModel)]="toDos[index].thirdShiftStartTime"
+          (keypress)="numberKeyValidation($event)" [disabled]="toDos[index].thirdShiftDisabled"
+          pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$">
+        <input class="padding-right-20" type="text" placeholder="End Time" [(ngModel)]="toDos[index].thirdShiftEndTime"
+          style=" height: 30px;  width: 175px;" (keypress)="numberKeyValidation($event)"
+          [disabled]="toDos[index].thirdShiftDisabled" pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$"> -->
+        <input class="padding-right-10" type="time"  placeholder="Start Time"
+          [(ngModel)]="toDos[index].thirdShiftStartTime" style=" height: 28px;  width: 134px;; margin-right: 10px;"
+          [disabled]="toDos[index].thirdShiftDisabled">
+        <input class="padding-right-20" type="time"  placeholder="End Time"
+          [(ngModel)]="toDos[index].thirdShiftEndTime" style=" height: 28px;  width: 134px;"
+          [disabled]="toDos[index].thirdShiftDisabled">
+      </td>
+    </tr>
+  </table>
+  <br><br><br><br>
+  <div class="row">
+    <div class="col-sm-12" style="text-align: center;">
+      <button type="button" style="background-color: #007bff; align-items: center;" class="btn btn-primary"
+        (click)="saveSchedulingSetting()"> Save
+      </button>
+    </div>
+  </div>
+</div>

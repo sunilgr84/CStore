@@ -1,0 +1,176 @@
+<form [formGroup]="purchaseReportForm">
+  <div class="card mt-3">
+    <div class="card-body" style="min-height: 400px">
+      <div class="col-sm-12">
+        <div class="col-sm-12">
+          <div class="row mb-2">
+            <div class="col-sm-3 custom-control custom-radio">
+              <input type="radio" class="custom-control-input" (click)="purchaseReportByItemClick()"
+                id="purchaseReportByItem" name="purchaseReport" formControlName="purchaseReport"
+                value="purchaseReportByItem">
+              <label class="custom-control-label" for="purchaseReportByItem">Purchase Report By Item</label>
+            </div>
+
+            <div class="col-sm-3 custom-control custom-radio">
+              <input type="radio" class="custom-control-input" (click)="purchaseReportByItemDetailClick()"
+                id="purchaseReportByItemDetail" name="purchaseReport" formControlName="purchaseReport"
+                value="purchaseReportByItemDetail">
+              <label class="custom-control-label" for="purchaseReportByItemDetail">Purchase Report By Item
+                Detail</label>
+            </div>
+
+            <div class="col-sm-3 custom-control custom-radio">
+              <input type="radio" class="custom-control-input" (click)="purchaseReport()" id="purchaseReport"
+                name="purchaseReport" formControlName="purchaseReport" value="purchaseReport">
+              <label class="custom-control-label" for="purchaseReport">Purchase Report</label>
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-sm-3 custom-control custom-radio">
+              <input type="radio" class="custom-control-input" (click)="purchaseReportByItemClick()"
+                id="purchaseReportByVendor" name="purchaseReport" formControlName="purchaseReport"
+                value="purchaseReportByVendor">
+              <label class="custom-control-label" for="purchaseReportByVendor">Purchase Report By Vendor</label>
+            </div>
+
+            <div class="col-sm-3 custom-control custom-radio">
+              <input type="radio" class="custom-control-input" (click)="purchaseReportByDepartmentClick()"
+                id="purchaseReportByDepartment" name="purchaseReport" formControlName="purchaseReport"
+                value="purchaseReportByDepartment">
+              <label class="custom-control-label" for="purchaseReportByDepartment">Purchase Report By Department</label>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="row col-sm-4">
+            <label class="col-sm-12 form-group has-float-label">
+              <app-daterangepicker [selectedDateRange]="selectedDateRange" (dateRangeSelecetd)="dateRangeChange($event)">
+              </app-daterangepicker>
+              <span> Select Date Range</span>
+            </label>
+           <!--  <label class="col-sm-12 form-group has-float-label">
+              <app-datepicker [inputDate]="_startDate" name="startDate" id="startDate" [isMaxDate]="true"
+                (dateChange)="dateChange($event,'startDate')"></app-datepicker>
+              <span>Start Date</span>
+            </label> -->
+          </div>
+          <div class="col-sm-4 row ">
+            <label class="col-sm-12 form-group has-float-label" *ngIf="!isSingalStore">
+              <ng-select [items]="storeLocationList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+                bindLabel="storeName" placeholder="Store Location" formControlName="storeLocation" groupBy="companyID"
+                [selectableGroup]="true" [selectableGroupAsModel]="false">
+                <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                  <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                </ng-template>
+                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                  <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                    <span class="ng-value-label">
+                      {{item.storeName}}</span>
+                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                  </div>
+                  <div class="ng-value" *ngIf="items.length > 2">
+                    <span class="ng-value-label">{{items.length - 2}} more...</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <span> Store Location</span>
+            </label>
+            <label class="col-sm-12 form-group has-float-label" *ngIf="isSingalStore">
+              <input type="text" readonly class="form-control" name="store" [value]="storeLocationList[0].storeName">
+              <span> Store Location</span>
+            </label>
+          </div>
+          <div *ngIf="isShowDepartment" class="row col-sm-4">
+            <label class="col-sm-12 form-group has-float-label">
+              <ng-select [items]="departmentList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+                bindLabel="departmentDescription" placeholder="Department" formControlName="departmentIDs"
+                groupBy="companyID" [selectableGroup]="true" [selectableGroupAsModel]="false">
+                <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                  <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                </ng-template>
+                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                  <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                    <span class="ng-value-label">
+                      {{item.departmentDescription}}</span>
+                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                  </div>
+                  <div class="ng-value" *ngIf="items.length > 2">
+                    <span class="ng-value-label">{{items.length - 2}} more...</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <span> Department</span>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <!-- <div class="row col-sm-4 ">
+            <label class="col-sm-12 form-group has-float-label">
+              <app-datepicker [isMaxDate]="true" [inputDate]="_endDate" name="endDate" id="endDate"
+                (dateChange)="dateChange($event,'endDate')">
+              </app-datepicker>
+              <span> End Date</span>
+            </label>
+          </div> -->
+          <div *ngIf="isShowVendor" class="row col-sm-4 ">
+            <label class="col-sm-12 form-group has-float-label" for="vendor">
+              <ng-select [items]="vendorList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+                bindLabel="vendorName" placeholder="Vendor" formControlName="vendorIDs" groupBy="companyID"
+                [selectableGroup]="true" [selectableGroupAsModel]="false">
+                <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                  <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                </ng-template>
+                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                  <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                    <span class="ng-value-label">
+                      {{item.vendorName}}</span>
+                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                  </div>
+                  <div class="ng-value" *ngIf="items.length > 2">
+                    <span class="ng-value-label">{{items.length - 2}} more...</span>
+                  </div>
+                </ng-template>
+
+              </ng-select>
+              <span> Vendor</span>
+            </label>
+          </div>
+          <div *ngIf="isShowPaymentType" class="row col-sm-4">
+            <label class="col-sm-12 form-group has-float-label">
+              <ng-select [items]="paymentTypeList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+                bindLabel="sourceName" placeholder="Payment Type" formControlName="paymentSourceID" groupBy="companyID"
+                [selectableGroup]="true" [selectableGroupAsModel]="false">
+                <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                  <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                </ng-template>
+                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                  <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                    <span class="ng-value-label">
+                      {{item.sourceName}}</span>
+                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                  </div>
+                  <div class="ng-value" *ngIf="items.length > 2">
+                    <span class="ng-value-label">{{items.length - 2}} more...</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <span> Payment Type</span>
+            </label>
+          </div>
+          <div class="col-sm-4">
+            <button type="button" class="btn btn-md btn-primary mr-3" (click)="searchPurchaseReport()"> Go</button>
+          </div>
+        </div>
+
+      </div>
+      <div class="row" *ngIf="this.rowData && this.rowData.length >0">
+        <div class="col-sm-12 mt-3">
+          <app-report-grid [rowData]="rowData" [expandableGridOptions]="gridOption" (gridReady)="onGridReady($event)"
+            (exportTo)="searchSalesReport($event)">
+          </app-report-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

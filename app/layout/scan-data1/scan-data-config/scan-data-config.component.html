@@ -1,0 +1,78 @@
+<div class="main-content-wrap d-flex flex-column">
+  <div class="main-content">
+    <div class="page-header">
+      <h1>Scan Data Submission</h1>
+    </div>
+    <section>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card m-1">
+            <div class="card-header">
+              <div class="col-sm-3">
+                <ng-select [(ngModel)]="manufactureId" [items]="manufacturers" [hideSelected]="true" bindLabel="name"
+                  placeholder="Select Manufacturers" bindValue="id" (change)="onMnfcChange($event)" appendTo="body">
+                </ng-select>
+              </div>
+              <div class="col-sm-4 scandata-daterange">
+                <ng-select *ngIf="!showDateRange" [(ngModel)]="dateRange" [items]="dateSpanList" [hideSelected]="true"
+                  bindLabel="range" bindValue="end" placeholder="Select Date Range" (change)="onDateRangeChange($event)"
+                  appendTo="body">
+                </ng-select>
+                <app-daterangepicker *ngIf="showDateRange" [selectedDateRange]="selectedDateRange"
+                  (dateRangeSelecetd)="dateTimeRangeChange($event)"></app-daterangepicker>
+              </div>
+              <div class="col-md-1 width-1p">
+                <i class="fa fa-calendar float-right pt-2 pr-2" title="Date Range Picker" (click)="onDateEditor()"></i>
+              </div>
+              <div class="col-md-2 p-0">
+                <button class="btn btn-action" (click)="searchScanDataConfig()"><i class="fa fa-search"></i>
+                  Search</button>
+              </div>
+              <div class="col-sm-2">
+                <div class="input-group" *ngIf="showFilter">
+                  <input type="text" class="form-control" placeholder="Search" aria-label="Search"
+                    [(ngModel)]="filterText" name="filterText" (input)="onFilterTextBoxChanged()">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-search"></i></span>
+                  </div>
+                </div>
+                <!-- <div class="inner-addon right-addon">
+                  <span>
+                    <i class="fa fa-search card-title" aria-hidden="true"></i>
+                  </span>
+                  <input type="text" class="form-control" aria-label="Default"
+                    aria-describedby="inputGroup-sizing-default" placeholder="Filter Search" [(ngModel)]="filterText"
+                    (keyup.enter)="onFilterTextBoxChanged()" name="filterText">
+                </div> -->
+              </div>
+            </div>
+            <div class="card-body p-0">
+              <div class="col-md-12 p-0">
+                <app-pagination-grid [paginationGridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+                  (submit)="onSubmit($event)" (review)="onReview($event)" (download)="onDownload($event)"
+                  (refresh)="onRefresh($event)">
+                </app-pagination-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<ng-template #modalContent let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">Do you wish to mark as submitted?</h5>
+    <button type="button" class="close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="col-sm-12 row">
+      <button type="button" class="btn btn-cstorebo ml-2" (click)="affectChangesYes()"> Yes </button>
+      <div class="col-sm-1"></div>
+      <button type="button" class="btn  btn-cstorebo" (click)="affectChangesNo()"> No </button>
+    </div>
+  </div>
+</ng-template>

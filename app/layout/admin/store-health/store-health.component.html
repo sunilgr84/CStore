@@ -1,0 +1,107 @@
+<div class="widgets-list">
+  <div class="row" id="dashbaoard-card" style="margin-top: -12px;">
+
+    <div class="col-sm-12 mt-3">
+      <div class="pull-right">
+        <label class="m-2" for="basic-switch">All</label>
+        <mat-slide-toggle class="m-2" [checked]="status" (change)="onStatusChange($event)">
+        </mat-slide-toggle>
+        <label class="m-2" for="basic-switch">Error</label>
+      </div>
+    </div>
+
+    
+    <div class="col-sm-6 mt-2">
+      <div class="card card-div">
+        <div class="ref-edit-icon float-right">
+          <i class="fa fa-external-link float-right p-2"  title="Details"></i>
+          <i class="fa fa-refresh float-right p-2" title="Refresh" (click)="getStoreServiceHealth()"></i>
+        </div>
+        <div class="card-body">
+          <div class="mb-4">
+            <h5>Stores Service Health</h5>
+          </div>
+          <!---->
+          <div *ngIf="serviceHealthList.length > 0 ">
+              <app-cstore-grid [rowData]="serviceHealthList" [cStoreGridOptions]="serviceHealthGridOptions" (gridReady)="onServiceHealthGridReady($event)">
+                </app-cstore-grid>
+          </div>
+          <h6 *ngIf="serviceHealthList.length === 0 " class="data-not-available">
+            Data not available
+          </h6>
+        </div>
+      </div>
+    </div>
+
+
+      
+    <div class="col-sm-6 mt-2">
+      <div class="card card-div">
+        <div class="ref-edit-icon float-right">
+          <i class="fa fa-external-link float-right p-2"  title="Details"></i>
+          <i class="fa fa-refresh float-right p-2" title="Refresh" (click)="getPosServiceHealth()"></i>
+        </div>
+        <div class="card-body">
+          <div class="mb-4">
+            <h5>Stores POS Health</h5>
+          </div>
+          <!---->
+          <div *ngIf="posHealthList.length > 0 ">
+              <app-cstore-grid [rowData]="posHealthList" [cStoreGridOptions]="healthGridOptions" (gridReady)="onHealthGridReady($event)">
+                </app-cstore-grid>
+            <!-- <table class="table table-bordered table-striped mb-0 table-sm">
+              <thead>
+                <tr>
+                  <th scope="col">Store</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Remark</th>
+                  <th scope="col">Last Date (UTC)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of posHealthList">
+                  <td>{{getStoreLocationName(item)}}</td>
+                  <td>{{item.pos ? 'Running': 'Stopped'}}</td>
+                  <td>{{item.Comments}}</td>
+                  <td>{{item.LastUTCDateTime}}</td>
+                </tr>
+              </tbody>
+            </table> -->
+          </div>
+          <h6 *ngIf="posHealthList.length === 0 " class="data-not-available">
+            Data not available
+          </h6>
+        </div>
+      </div>
+    </div>
+
+
+    
+      
+    <div class="col-sm-12 mt-2">
+      <div class="card card-div">
+        <div class="ref-edit-icon float-right">
+          <i class="fa fa-external-link float-right p-2"  title="Details"></i>
+          <i class="fa fa-refresh float-right p-2" title="Refresh" (click)="getPjrStatus()"></i>
+        </div>
+        <div class="card-body">
+          <div class="mb-4">
+            <h5>Stores PJR Status</h5>
+          </div>
+          <!---->
+          <div *ngIf="pjrStatusList.length > 0 ">
+              <app-cstore-grid [rowData]="pjrStatusList" [cStoreGridOptions]="pjrGridOptions" (gridReady)="onpjrGridReady($event)">
+                </app-cstore-grid>
+          </div>
+          <h6 *ngIf="pjrStatusList.length === 0" class="data-not-available">
+            Data not available
+          </h6>
+        </div>
+      </div>
+    </div>
+
+
+
+
+  </div>
+</div>

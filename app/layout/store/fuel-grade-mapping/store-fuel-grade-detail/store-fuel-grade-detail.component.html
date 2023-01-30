@@ -1,0 +1,352 @@
+<div id="overlay" (click)="closeSideContainer()"></div>
+<div id="mySidecontainer" [ngClass]="sideContainer">
+    <a href="JavaScript:void(0);" class="closebtn" (click)="closeSideContainer()">&times;</a>
+  <!-- <a href="JavaScript:void(0);" class="closebtn" (click)="closeSideContainer()">&times;</a> -->
+  <div class="row mt-4 ml-4 mb-6">
+      <div class="col-sm-11 mb-2">
+        <form [formGroup]="storeFuelGradeDetailForm">
+          <div class="row  card">
+            <!-- <div class="card-header" (click)="isStoreFuelGradeDetailCollapsed = !isStoreFuelGradeDetailCollapsed"
+              [attr.aria-expanded]="isStoreFuelGradeDetailCollapsed" aria-controls="storeFuelGradeDetailBody">
+              <i [hidden]='!isStoreFuelGradeDetailCollapsed' class="fa fa-chevron-down"></i>
+              <i [hidden]='isStoreFuelGradeDetailCollapsed' class="fa fa-chevron-right"></i>
+       
+            </div> -->
+  
+            <div class="col-md-12 card-body" id="storeFuelGradeDetailBody">
+              <div class=" card-title">
+                <h5 class="form-group"> {{isEditGradeInfo?'Edit':'Add'}} Fuel Grade </h5>
+              </div>
+              <div class="">
+                <label class="form-group has-float-label col-sm-12">
+                  <div class="col-sm-10" style="padding: 0;">
+                    <ng-select #fuelGradeSelects [items]="fuelGradeList" [selectOnTab]="true" bindValue="naxProductCodeID"
+                      bindLabel="productCodeDescription" labelForId="fuelGradeSelect" placeholder="Select Fuel Grade"
+                      formControlName="naxProductCodeID" (change)="onFuelChange($event)" required id="fuelGrade" name="fuelGrade">
+                    </ng-select>
+                    <img src="assets/images/small-spinner.gif" *ngIf="isFuelGradeLoading">
+                  </div>
+                  <span for="fuelGrade">Select Fuel Grade</span>
+                </label>
+                <div class="col-sm-2">
+                  <!-- <button type="button" class="btn btn-md btn-info" (click)="addFuelGrade()"><i class="fa fa-plus"></i>
+                Add</button> -->
+                </div>
+                <div class="col-sm-12 mb-2">
+                  <div *ngIf="selectedGrade && selectedGrade.colour" class="col-sm-10 mb-2 btn btn-md"
+                    [style.background-color]="'#'+selectedGrade.colour">
+                    <label class="col-form-label col-sm-10">Display Fuel Grade Color</label>
+                  </div>
+                </div>
+              </div>
+              <div class="">
+                <label class="form-group has-float-label col-sm-12">
+                  <select class="form-control col-sm-10" id="fuelDept" formControlName="departmentID" required>
+                    <option value="">Store Fuel Department</option>
+                    <option *ngFor="let obj of departmentList" [value]="obj.departmentID"> {{obj.departmentDescription}}
+                    </option>
+                  </select>
+                  <img src="assets/images/small-spinner.gif" *ngIf="isStoreFuelDeptLoading">
+                  <span for="fuelDept">Store Fuel Department</span>
+                </label>
+              </div>
+              <div class="">
+                <label class="form-group has-float-label col-sm-12">
+                  <div class="col-sm-10" style="padding: 0;">
+                    <ng-select [items]="fuelTaxList" [multiple]="true" [selectOnTab]="true" [hideSelected]="true"
+                      bindLabel="description" placeholder="Select Fuel Tax" formControlName="storeFuelGradeTaxIDs"
+                      required>
+                    </ng-select>
+                    <img src="assets/images/small-spinner.gif" *ngIf="isFuelTaxLoading">
+                  </div>
+                  <span>Select Fuel Tax</span>
+                </label>
+              </div>
+              <div class="">
+                <label class="form-group has-float-label col-sm-12">
+                  <input type="text" numbersOnly min="0" onKeyPress="if(this.value.length==15  ) return false;return event.charCode >= 48 && event.charCode <= 57"
+                    class="form-control col-sm-10" id="storeFuelGradeId" required formControlName="storeFuelGradeNo"
+                    placeholder="Store Fuel Grade ID" name="storeFuelGradeId">
+                  <span for="storeFuelGradeId">Store Fuel Grade ID</span>
+                </label>
+                <!-- <div [hidden]="companyName.valid || companyName.pristine" class="alert alert-danger">
+                              Company Name is required
+                          </div> -->
+              </div>
+  
+              <div class="">
+                <label class="form-group has-float-label col-sm-12">
+                  <input type="text" class="form-control col-sm-10" id="storeFuelGradeDisplay" formControlName="storeFuelGradeName"
+                    placeholder="Fuel Grade Display Name" maxlength="250" name="storeFuelGradeDisplay">
+                  <span for="storeFuelGradeDisplay">Fuel Grade Display Name</span>
+                </label>
+              </div>
+              <!-- <div class="form-group row">
+            <label for="fuelTaxDescription" class="col-sm-3">Fuel Tax Description</label>
+            <input type="text" id="fuelTaxDescription" class="form-control col-sm-4" formControlName="fuelTaxDescription"
+              required placeholder="Enter Fuel Tax Description">
+          </div>
+          <div class="form-group row">
+            <label for="fuelTaxRate" class="col-sm-3">Fuel Tax Rate</label>
+            <input type="number" id="fuelTaxRate" min="0" class="form-control col-sm-4" formControlName="fuelTaxRate"
+              required placeholder="Enter Fuel Tax Rate"> bindValue="fuelTax"
+          </div> -->
+  
+              <div class="mb-3 ml-3">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" formControlName="isApplyPrice" id="applyToAllFuelGrades">
+                  <label class="custom-control-label" for="applyToAllFuelGrades"> Apply to all Fuel Grades</label>
+                </div>
+              </div>
+              <div class="text-right">
+                <button class="btn btn-md btn-cstorebo ml-2" (click)="isEditGradeInfo=false;resetFuelGrade()">
+                  {{isEditGradeInfo?'Add More':'Reset'}} </button>
+                <button class="btn btn-md btn-primary ml-2" [disabled]="!storeFuelGradeDetailForm.valid" *ngIf="!isEditGradeInfo"
+                  (click)="saveFuelGrade()"> Save</button>
+                <button class="btn btn-md btn-primary ml-2" [disabled]="!storeFuelGradeDetailForm.valid" *ngIf="isEditGradeInfo"
+                  (click)="updateFuelGrade()"> Update</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+  
+      <div class="col-sm-11 p-0">
+        <div class="card">
+          <!-- <div class="card-header" (click)="isBlendDetailCollapsed = !isBlendDetailCollapsed" [attr.aria-expanded]="!isBlendDetailCollapsed"
+            aria-controls="blendDetailsBody">
+            <i [hidden]='!isBlendDetailCollapsed' class="fa fa-chevron-down"></i>
+            <i [hidden]='isBlendDetailCollapsed' class="fa fa-chevron-right"></i>
+            
+          </div> -->
+          <div class="col-md-12">
+            <div class="col-md-12 card-body" id="blendDetailsBody">
+              <div class="card-title">
+                <h5 class="form-group"> Add Blend Details </h5>
+              </div>
+              <form [formGroup]="addBlendForm">
+  
+                <div class=" row ">
+                  <div class="col-sm-7" style="padding: 0;">
+                    <label class="form-group has-float-label col-sm-12">
+                      <ng-select #blendSelect [items]="blendedDropdwonList" [selectOnTab]="true" bindValue="storeFuelGradeID"
+                        bindLabel="storeFuelGradeName" labelForId="blendSelect" placeholder="Select Fuel Grade"
+                        formControlName="primaryFuelGradeBlendID" required>
+                      </ng-select>
+                      <span>Select Fuel Grade</span>
+                    </label>
+                  </div>
+                  <div class="col-sm-5 input-group">
+                    <label class="form-group has-float-label col-sm-12">
+                      <input type="text" decimalOnly id="primaryFuelBlendPercentage" class="form-control" formControlName="primaryFuelBlendPercentage"
+                        required placeholder="%" maxlength="250" (blur)="calculatePercentage('primaryFuelBlendPercentage')"
+                        aria-describedby="fuel-grade1" aria-label="Default" name="primaryFuelBlendPercentage">
+                      <span for="primaryFuelBlendPercentage">(%)</span>
+                    </label>
+                    <!-- <div class="input-group-append">
+                      <span class="input-group-text" id="fuel-grade1" (click)="onFilterTextBoxChanged()">%</span>
+                    </div> -->
+                  </div>
+                </div>
+                <div class=" row">
+                  <div class="col-sm-7" style="padding: 0;">
+                    <label class="form-group has-float-label col-sm-12">
+                      <ng-select #blendSelect2 [items]="blendedDropdwonList" [selectOnTab]="true" bindValue="storeFuelGradeID"
+                        bindLabel="storeFuelGradeName" labelForId="blendSelect2" placeholder="Select Fuel Grade"
+                        formControlName="secondaryFuelGradeBlendID" required>
+                      </ng-select>
+                      <span>Select Fuel Grade</span>
+                    </label>
+                  </div>
+                  <div class="col-sm-5 input-group">
+                    <label class="form-group has-float-label col-sm-12">
+                      <input type="text" decimalOnly id="secondaryFuelBlendPercentage" class="form-control"
+                        formControlName="secondaryFuelBlendPercentage" required placeholder="%" maxlength="250" (blur)="calculatePercentage('secondaryFuelBlendPercentage')"
+                        aria-describedby="fuel-grade2" aria-label="Default" name="secondaryFuelBlendPercentage">
+                      <span for="secondaryFuelBlendPercentage">(%)</span>
+                    </label>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <button class="btn btn-md btn-primary ml-2" [disabled]="!addBlendForm.valid" (click)="saveBlend()">
+                    Save</button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <!-- <app-expandable-grid [expandableGridOptions]="blendGridOptions" [rowData]="blendRowData"
+            [gridHeight]="'310px'" (gridReady)="onBlendGridReady($event)"></app-expandable-grid> -->
+        </div>
+      </div>
+    </div>
+</div>
+<div class="container-fluid mt-3">
+  <div class="form-group">
+    <div class="row">
+      <div class="margin-bottom-3 col-sm-4">
+        <button type="button" class="btn btn-md btn-cstorebo btn-custom" (click)="onAddFuelGrade()">
+          <i class="fa fa-plus"></i> </button>
+        <span class="ml-2 card-title" (click)="onAddFuelGrade()"> Add New Fuel Grade</span>
+        <!-- (click)="AddNewFuelGrade()" -->
+      </div>
+      <div class=" justify-content-end col-sm-8">
+        <div class="inner-addon right-addon" style="width: 230px; float: right;">
+          <span> <i class="fa fa-search card-title" aria-hidden="true"></i> </span>
+          <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+            placeholder="Filter Search" [(ngModel)]="filterText" name="filterText" (input)="onFilterTextBoxChanged()">
+        </div>
+      </div>
+    </div>
+    <!-- <div class="row"> -->
+    <div style="margin-top:1rem; box-sizing: border-box;">
+      <app-expandable-grid [rowData]="storeFuelRowData" [expandableGridOptions]="storeFuelGridOptions"
+        [detailCellRenderers]="detailCellRenderer" (gridReady)="onGridReady($event)" (edit)="editAction($event)"
+        (delete)="deleteAction($event)" [gridHeight]="'310px'"></app-expandable-grid>
+    </div>
+    <!-- </div> -->
+  </div>
+
+  
+
+
+  <div class="row mt-3 card">
+    <!-- <div class="card-header" (click)="isTankDetailCollapsed = !isTankDetailCollapsed" [attr.aria-expanded]="!isTankDetailCollapsed"
+      aria-controls="tankDetailsBody">
+      <i [hidden]='!isTankDetailCollapsed' class="fa fa-chevron-down"></i>
+      <i [hidden]='isTankDetailCollapsed' class="fa fa-chevron-right"></i>
+      Tank Details
+    </div> -->
+
+    <div class="col-md-12 card-body" id="tankDetailsBody">
+      <div class="card-title">
+        <h5 class="form-group"> Tank Details </h5>
+      </div>
+      <div class="">
+        <div class="row">
+          <div class="form-group col-sm-4">
+            <button type="button" class="btn btn-md btn-cstorebo btn-custom" (click)="addTankDetails(contentTankDetails)">
+              <i class="fa fa-plus"></i> </button>
+            <span class="ml-2 card-title" (click)="addTankDetails(contentTankDetails)"> Add Tank Detail</span>
+          </div>
+          <div class="justify-content-end col-sm-8">
+            <div class="inner-addon right-addon" style="width: 230px; float: right;">
+              <span> <i class="fa fa-search card-title" aria-hidden="true"></i> </span>
+              <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+                placeholder="Filter Search" [(ngModel)]="filterTextTankDetail" name="filterTextTankDetail" (input)="onFilterTextBoxChangedTankDetail()">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:1rem;">
+        <app-expandable-grid [expandableGridOptions]="tankDetailsGridOptions" [rowData]="tankDetailsRowData"
+          (gridReady)="onTankDetailsGridReady($event)" (cellValueChanged)="onCellChanged($event)" [detailCellRenderers]="tankDetailCellRenderer"
+          [gridHeight]="'210px'" (edit)="editTankDetailsAction($event,contentTankDetails)" (delete)="deleteTankDetailsAction($event)"></app-expandable-grid>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- Add Tank Details -->
+
+<ng-template #contentTankDetails let-modal>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="modal-header mb-3">
+        <h5 class="card-title">Store Tank Detail</h5>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form [formGroup]="tankDetailForm">
+        <div class="row">
+          <div class="col-sm-6">
+            <label class="form-group has-float-label col-sm-12">
+              <input type="text" decimalOnly class="form-control " min="0" required formControlName="storeTankNo"
+                placeholder="Enter tank number" id="tankNumber" name="tankNumber">
+              <span for="tankNumber">Tank Number</span>
+            </label>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-group has-float-label col-sm-12">
+              <input type="text" class="form-control " required formControlName="tankName" placeholder="Enter tank description"
+                maxlength="250" id="tankDescription" name="tankDescription">
+              <span for="tankDescription">Tank Description</span>
+            </label>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-group has-float-label col-sm-12">
+              <select id="tankType" class="form-control " required formControlName="storeFuelGradeID" id="fuelGrade"
+                name="fuelGrade">
+                <option value="">--Select fuel grade-- </option>
+                <option *ngFor="let obj of storeFuelGradeList " [value]="obj.storeFuelGradeID">
+                  {{obj.storeFuelGradeName}}
+                </option>
+              </select>
+              <img src="assets/images/small-spinner.gif" *ngIf="isTankFuelGradeLoading">
+              <span for="fuelGrade">Fuel Grade</span>
+            </label>
+          </div>
+
+          <div class="col-sm-6">
+            <label class="form-group has-float-label col-sm-12">
+              <input type="text" decimalOnly class="form-control " min="0" required formControlName="tankVolume"
+                placeholder="Enter tank capacity" id="tankCapacity" name="tankCapacity">
+              <!-- <div class="col-md-3 col-sm-3">Gallons</div> -->
+              <span for="tankCapacity">Tank Capacity (Gallons)</span>
+            </label>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-group has-float-label col-sm-12">
+              <input type="text" decimalOnly class="form-control " min="0" id="tankReorderLevel" name="tankReorderLevel"
+                required formControlName="tankReOrderVolume" placeholder="Enter tank reorder level">
+              <!-- <div class="col-md-3 col-sm-3">%</div> -->
+              <span for="tankReorderLevel">Tank Reorder Level (%)</span>
+            </label>
+          </div>
+          <div class="col-sm-6 ">
+            <label class="form-group has-float-label col-sm-12">
+              <input type="text" decimalOnly class="form-control" min="0" required formControlName="currentTankVolume"
+                placeholder="Enter current tank volume" id="currentTankVolume" name="currentTankVolume">
+              <span for="currentTankVolume">Current Tank Volume</span>
+            </label>
+          </div>
+          <div class="col-sm-6 ">
+            <label class="form-group has-float-label col-sm-12">
+              <input type="text" decimalOnly class="form-control" min="0" required formControlName="tankUllage"
+                placeholder="Enter tank ullage" id="tankUllage" name="tankUllage">
+              <span for="tankUllage">Tank Ullage</span>
+            </label>
+          </div>
+          <div class="col-sm-6 ">
+            <label class="form-group has-float-label col-sm-12">
+              <input type="text" class="form-control" id="tankNotes" name="tankNotes" formControlName="tankNotes"
+                placeholder="Enter tank notes" maxlength="250">
+              <span for="tankNotes">Tank Notes</span>
+            </label>
+          </div>
+          <div class="col-sm-6 ">
+            <label class="form-group has-float-label col-sm-12">
+              <select id="tankType" class="form-control" name="tankTypeId" required formControlName="tankTypeId">
+                <option value="">--Select tank type-- </option>
+                <option *ngFor="let obj of tankTypeList " [value]="obj.tankTypeId"> {{obj.tankTypeName}} </option>
+              </select>
+              <img src="assets/images/small-spinner.gif" *ngIf="isTankTypeLoading">
+              <span for="tankType">Select Tank Type</span>
+            </label>
+          </div>
+          <div class="col-sm-6">
+            <button type="button" class="btn btn-md btn-primary mr-3" (click)="resetFuelTankDetails()"> Reset</button>
+            <button type="button" class="btn btn-md btn-primary mr-3" [disabled]="!tankDetailForm.valid" (click)="saveFuelTank()">
+             {{editStoreTank?'Update':'Save'}}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</ng-template>

@@ -1,0 +1,47 @@
+.confirmation {
+  height: 125px;
+  width: 100%;
+  background-color: #8a95f8;
+  color: white;
+}
+.booksActive {
+  height: 125px;
+  width: 100%;
+  background-color: #f8ed8a;
+  color: black;
+}
+.booksSettled {
+  height: 125px;
+  width: 100%;
+  background-color: #ff9653;
+  color: white;
+}
+.todayActivation {
+  height: 125px;
+  width: 100%;
+  background-color: #53bcff;
+  color: white;
+}
+.currentlyActivation {
+  height: 80px;
+  width: 100%;
+  background-color: #b687c4;
+  color: white;
+}
+::ng-deep .cdk-overlay-container {
+  z-index: 1200 !important;
+}
+::ng-deep .mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
+  background-color: #1db6fe !important;
+}
+::ng-deep .mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
+  background-color: #0450a3 !important;
+}
+.spinnerDiv{
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  z-index: 999;
+  border-radius: 6px;
+  border: 1px solid white;
+}

@@ -1,0 +1,71 @@
+<div class="card mt-3" style="min-height: 350px">
+  <div class="card-body">
+    <form [formGroup]="taxableItemReportForm">
+      <div class="row">
+        <div class="col-sm-3">
+          <label class="col-sm-12 form-group has-float-label">
+            <app-datepicker [isMaxDate]="true" [inputDate]="date" name="dob" id="date"
+              (dateChange)="dateChange($event,'date')"></app-datepicker>
+            <span> Date</span>
+          </label>
+        </div>
+
+        <div class="col-sm-4">
+          <label class="col-sm-12 form-group has-float-label" *ngIf="storeLocationList && storeLocationList.length!==1">
+            <ng-select [items]="storeLocationList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+              bindLabel="storeName" formControlName="storeLocation" placeholder="Store Location" groupBy="companyID"
+              [selectableGroup]="true" [selectableGroupAsModel]="false">
+              <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+              </ng-template>
+              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                  <span class="ng-value-label">
+                    {{item.storeName}}</span>
+                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 2">
+                  <span class="ng-value-label">{{items.length - 2}} more...</span>
+                </div>
+              </ng-template>
+            </ng-select>
+            <span> Store Location</span>
+          </label>
+          <label class="col-sm-12 form-group has-float-label" *ngIf="storeLocationList && storeLocationList.length===1">
+            <input readonly type="text" class="form-control" [value]="storeLocationList[0].storeName">
+            <span>Store Location</span>
+          </label>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-sm-3">
+          <label class="col-sm-12 form-group has-float-label">
+            <ng-select [items]="groupbyList" [closeOnSelect]="false" bindValue="id" bindLabel="name"
+              formControlName="taxStrategyDescription" placeholder="Group By">
+            </ng-select>
+            <span> Group By</span>
+          </label>
+        </div>
+        <div class="col-sm-4">
+          <button type="button" [disabled]="taxableItemReportForm.invalid" class="btn btn-md btn-primary ml-3"
+            (click)="generatePDF()">Go</button>
+        </div>
+
+      </div>
+    </form>
+    <div class="row" *ngIf="this.rowData && this.rowData.length >0">
+      <div class="col-sm-12 mt-3">
+        <app-report-grid [rowData]="rowData" [expandableGridOptions]="gridOption" (gridReady)="onGridReady($event)"
+          (exportTo)="searchTaxableItemReport($event)">
+        </app-report-grid>
+      </div>
+    </div>
+    <div class="row" *ngIf="this.rowData && this.rowData.length ===0">
+      <div class="col-sm-12 mt-3">
+        <strong>No Record Available</strong>
+      </div>
+    </div>
+  </div>
+</div>

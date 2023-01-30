@@ -1,0 +1,152 @@
+<div class="card mb-1">
+  <div class="card-body search-card">
+    <form [formGroup]="salesTotalMgmtForm">
+      <div class="row mt-1">
+        <div class="col-md-1"> 
+          <button type="button" class="btn btn-md btn-cstorebo ml-2" (click)="openDayRecon()"><i class="fa fa-chevron-left"></i></button>
+        </div>
+        <label class="form-group has-float-label col-sm-3"
+          *ngIf="((storeLocationList && storeLocationList.length>1) || isLoading);else singleStore">
+          <ng-select [items]="storeLocationList" [selectOnTab]="true" bindLabel="storeName" bindValue="storeLocationID"
+            labelForId="storeLocationID" formControlName="storeLocationId" placeholder="Store Location"
+            (change)="onStoreSelection($event)">
+          </ng-select>
+          <span>Store Location</span>
+        </label>
+        <ng-template #singleStore>
+          <label class="form-group has-float-label col-sm-3" *ngIf="storeLocationList && storeLocationList.length===1">
+            <input type="text" class="form-control" id="storeName" [value]="storeLocationList[0].storeName"
+              name="storeName" placeholder="Store Name" readonly>
+            <span> Store Location </span>
+          </label>
+        </ng-template>
+        <label class="form-group has-float-label col-sm-3 mb-0 date-picker-stotal">
+          <app-datepicker [inputDate]="inputDate" name="date" id="date" (dateChange)="dateChange($event,'date')">
+          </app-datepicker>
+          <span>Date</span>
+        </label>
+        <div class="col-md-2">
+          <button type="button" class="btn btn-md btn-primary " (click)="searchSalesReport()"><i class="fa fa-search"
+              aria-hidden="true"></i>
+            Search </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="row mt-2">
+  <div class="col-sm-6 offset-6">
+    <div class="row justify-content-end">
+      <div class="inner-addon right-addon" style="margin-right: 17px;">
+        <span> <i class="fa fa-search card-title" aria-hidden="true"></i> </span>
+        <input type="text" class="form-control" aria-label="Default" name="filterText"
+          aria-describedby="inputGroup-sizing-default" placeholder="Filter Search" [(ngModel)]="filterText">
+      </div>
+    </div>
+  </div>
+</div>
+<div class="col-sm-12 mt-2 mb-3 p-0">
+  <app-cstore-grid [rowData]="rowData" [fullRowEditabeRequired]="true" [cStoreGridOptions]="gridOptions"
+    (gridReady)="onGridReady($event)" [textFilter]="filterText" (BtStopEditing)="onBtnStopEditing($event)"
+    (change)="onChange($event)" (clone)="cloneAction($event)" (edit)="editAction($event)"></app-cstore-grid>
+</div>
+
+<ng-template #modalInvUpdtCft let-close="close" style="width:500px;">
+  <div class="modal-header">
+    <h5 class="modal-title">Merge</h5>
+    <button type="button" class="close" (click)="cancelUpdtInv()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="font">
+      <div class="row">
+        <span class="col-md-3">
+
+          <label>Period:</label>
+          <span class="period"> {{mergeRow.period}}</span>
+
+        </span>
+        <span class="col-md-4 p-0">
+
+          <label for="Student0"> Begin date:</label>
+          {{mergeRow.beginDate}}
+
+        </span>
+        <span class="col-md-4 p-0">
+
+          <label for="Student1">End date:</label>
+          {{mergeRow.endDate}}
+
+        </span>
+      </div>
+      <div class="row mt-3">
+        <span class="col-md-10"> <label>Period:</label>
+          <select class="custom-select selct" (change)="changePeriod($event)">
+            <option value="" disabled>Select</option>
+            <option *ngFor="let item of mergeList" [value]="item.movementHeaderID">{{item.display}}</option>
+          </select></span>
+
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="mergeConfirm()">
+      Merge
+    </button>
+    <!-- <button type="button" class="btn btn-outline-secondary" (click)="noUpdtInv()">
+      No
+    </button> -->
+    <button type="button" class="btn btn-outline-secondary" (click)="cancelUpdtInv()">
+      Cancel
+    </button>
+  </div>
+</ng-template>
+
+
+<ng-template #modalEdit let-close="close" style="width:500px;">
+  <div class="modal-header">
+    <h5 class="modal-title">Edit</h5>
+    <button type="button" class="close" (click)="cancelUpdtInv()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="font">
+      <div class="row">
+        <span class="col-md-5">
+          <label for="Student0"> Begin date:</label>
+          {{editedRow.beginDate}}
+        </span>
+        <span class="col-md-5">
+          <label for="Student1">End date:</label>
+          {{editedRow.endDate}}
+        </span>
+      </div>
+      <div class="row mt-3">
+        <span class="col-md-10"> <label>Period:</label>
+          <select class="custom-select selct1" (change)="changeEditPeriod($event)">
+            <option value="" disabled>Select</option>
+            <option *ngFor="let item of editList" [value]="item.text">{{item.text}}</option>
+          </select></span>
+
+      </div>
+
+
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" [disabled]="!editPeriodChange" (click)="editConfirm()">
+      Edit
+    </button>
+    <!-- <button type="button" class="btn btn-outline-secondary" (click)="noUpdtInv()">
+      No
+    </button> -->
+    <button type="button" class="btn btn-outline-secondary" (click)="cancelUpdtInv()">
+      Cancel
+    </button>
+  </div>
+</ng-template>

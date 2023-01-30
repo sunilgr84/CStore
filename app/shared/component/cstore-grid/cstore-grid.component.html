@@ -1,0 +1,26 @@
+<!-- <div class="export-buttons"><button class="btn btn-md btn-secondary" (click)="exportToCSV()">Export to CSV</button></div> -->
+<!-- isSearchTextBoxRequired -->
+
+<ag-grid-angular #grid [ngStyle]="{ height: gridHeight }" style="width: 100%;" class="ag-theme-balham"
+  [enableSorting]="true" [rowData]="rowData" [defaultColDef]="defaultColDef" [columnDefs]="columnDefs"
+  [getRowNodeId]="getRowNodeId" [gridOptions]="gridOptions" [autoGroupColumnDef]="autoGroupColumnDef" [animateRows]="true" [sideBar]="sideBar"
+  [enableColResize]="true" [frameworkComponents]="frameworkComponents" (gridReady)="onGridReady($event)"
+  [paginationPageSize]="paginationPageSize"  [editType]="editType"  [suppressContextMenu]="suppressContextMenu"
+  (rowSelected)="onRowSelected($event)" (cellClicked)="onCellClicked($event)" (columnResized)="onColumnResized($event)" (modelUpdated)="onModelUpdated($event)">
+</ag-grid-angular>
+<div *ngIf="cStoreGridOptions.pagination">
+  <ngb-pagination class="d-flex" [ngClass]="{'justify-content-center': paginationCenter === true}" [collectionSize]="totalPageCount" [maxSize]="3" [ellipses]="ellipses" [rotate]="true"
+    [pageSize]="paginationPageSize" [(page)]="currentPage" (pageChange)="pageSizeChanged($event)"
+    [boundaryLinks]="true">
+  </ngb-pagination>
+  <!-- <span class="center page-count">Page Count: ({{currentPageSize}} / {{totalPageCount}})</span> -->
+  <span *ngIf="isPageSizeShow" class="page-size">
+    <select  [(ngModel)]="selectedPageSize" (change)="setPageRowCount(selectedPageSize)" id="page-size">
+      <option *ngFor="let page of pageSizeList" [value]="page.value">{{page.key}}</option>
+    </select>
+  </span>
+  <!-- 
+  <ng-select [items]="pageSizeList" [closeOnSelect]="true" [hideSelected]="true" bindLabel="value"
+    placeholder="--Select--" (change)="setPageRowCount($event)">
+  </ng-select> -->
+</div>

@@ -1,0 +1,176 @@
+<div class="card">
+  <div class="card-body">
+    <!--  <h4 class="card-title ml-3"><strong>Add Game</strong> </h4> -->
+    <div class="row">
+      <div class="col-sm-12">
+        <!-- <div class="card-body"> -->
+        <form [formGroup]="addGameForm" *ngIf="isShowHide">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="card" style="border-radius: .3rem;">
+                <div style="padding: .5rem .8rem;">
+                  <table>
+                    <tr class="row">
+                      <th class="col-sm-2">Lottery State</th>
+                      <th class="col-sm-1">Game Number</th>
+                      <th class="col-sm-3">Game Name</th>
+                      <th class="col-sm-2">Link Barcode</th>
+                      <th class="col-sm-2">Tickets Qty*</th>
+                      <th class="col-sm-1">Tickets Value $*</th>
+                      <th class="col-sm-1">Book Value $*</th>
+                      <!-- <th class="col-sm-1">Start Ticket Number</th> -->
+                      <!-- <th class="col-sm-1">End Ticket Number</th> -->
+                    </tr>
+                    <tr class="row" id="addGameform">
+                      <td class="col-sm-2">
+                        <!--  <label class="has-float-label col-sm-12"> -->
+                        <select *ngIf="lotteryStateList.length!==1" class="form-control has-float-label col-sm-12"
+                          id="lotteryStateCode" (change)="SelectState()" name="lotteryStateCode"
+                          formControlName="lotteryStateCode" #lotteryStateCode required>
+                          <option value="">--Select State--</option>
+                          <option *ngFor="let stateList of lotteryStateList" [value]="stateList.stateCode">
+                            {{stateList.stateCode}}</option>
+                        </select>
+                        <input readonly type="text"
+                          *ngIf="lotteryStateList && lotteryStateList[0] && lotteryStateList.length===1"
+                          class="form-control has-float-label col-sm-12" [value]="lotteryStateList[0].stateCode">
+                        <div *ngIf="submitted && addgame.lotteryStateCode.errors?.required" class="alert alert-danger">
+                          Lottery State is required
+                        </div>
+                        <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+
+                        <!--  </label> -->
+                      </td>
+                      <td class="col-sm-1">
+                        <!--  <label class="form-group has-float-label col-sm-12"> -->
+                        <input numbersOnly type="text" class="form-control has-float-label col-sm-12"
+                          [readonly]="isStateLocation" formControlName="gameNo" name="gameNo" placeholder="" #gameNo
+                          (keyup)="changeGameNo($event)" (blur)="validateGameNo('gameNo')" required>
+                        <!-- (blur)="validateGameNo('gameNo')" (keydown.Tab)="validateGameNo('gameNo')" (keyup.enter)="validateGameNo('gameNo')" -->
+                        <!--  <div *ngIf="submitted && addgame.gameNo.errors?.required" class="alert alert-danger">
+                              Game Number is required
+                            </div>
+                            <div *ngIf="submitted && addgame.gameNo.errors?.minlength" class="alert alert-danger">
+                              Game number must be {{maxGameNolength}} digit.
+                            </div>
+                            <div *ngIf="submitted && addgame.gameNo.errors?.maxlength" class="alert alert-danger">
+                              Game number must be {{maxGameNolength}} digit.
+                            </div> -->
+
+                        <img src="assets/images/small-spinner.gif" *ngIf="isGameApiCall">
+                        <!--  </label> -->
+                      </td>
+                      <td class="col-sm-3">
+                        <!--  <label class="form-group has-float-label col-sm-12"> -->
+                        <!-- (blur)="validateGameNo('gameName')" -->
+                        <input type="text" class="form-control has-float-label col-sm-12" id="gameName"
+                          formControlName="gameName" name="gameName" [readonly]="isStateLocation" placeholder=""
+                          #gameName maxlength="150" required>
+                        <!--  <div *ngIf="submitted && addgame.gameName.errors?.required" class="alert alert-danger">
+                              Game Name is required
+                            </div> -->
+
+                        <!--  </label> -->
+                      </td>
+                      <td class="col-sm-2">
+                        <!-- <label class="form-group has-float-label col-sm-12"> -->
+                        <input numbersOnly class="form-control has-float-label col-sm-12" maxlength="13"
+                          formControlName="lotteryPOSCode" id="lotteryPOSCode" name="lotteryPOSCode" type="text"
+                          #lotteryPOSCode placeholder="">
+
+                        <!--  </label> -->
+                      </td>
+                      <td class="col-sm-2">
+                        <!-- <label class="form-group has-float-label col-sm-12"> -->
+                        <input numbersOnly class="form-control has-float-label col-sm-12" formControlName="noOfTickets"
+                          id="noOfTickets" placeholder="" (input)="findNoOfTickets()" maxlength="25" name="noOfTickets"
+                          type="text" #noOfTickets required>
+                        <!-- <div *ngIf="submitted && addgame.noOfTickets.errors?.required" class="alert alert-danger">
+                              Tickets Qty is required
+                            </div> -->
+
+                        <!--  </label> -->
+                      </td>
+                      <td class="col-sm-1">
+                        <div class="input-icon">
+                          <!--  <label class="form-group has-float-label currency"> -->
+                          <input decimalOnly type="text" class="form-control has-float-label currency" min="0"
+                            id="ticketValue" formControlName="ticketSellingPrice" name="ticketSellingPrice"
+                            (input)="findNoOfTickets()" #ticketSellingPrice placeholder="" required>
+                          <!-- <div *ngIf="submitted && addgame.ticketSellingPrice.errors?.required"
+                                class="alert alert-danger">
+                                Tickets Value $ is required
+                              </div> -->
+                          <!--  </label> -->
+                          <i *ngIf="addGameForm.get('ticketSellingPrice').value">$</i>
+                        </div>
+                      </td>
+                      <td class="col-sm-1">
+                        <div class="input-icon">
+                          <!--  <label class="form-group has-float-label currency"> -->
+                          <input decimalOnly type="text" class="form-control has-float-label currency" min="0"
+                            type="text" id="lotteryPackValue" formControlName="lotteryPackValue" name="lotteryPackValue"
+                            readonly #lotteryPackValue placeholder="" required>
+
+                          <!--  </label> -->
+                          <i *ngIf="addGameForm.get('lotteryPackValue').value">$</i>
+                        </div>
+                      </td>
+                      <!-- <td class="col-sm-1"> -->
+                      <!--  <label class="form-group has-float-label col-sm-12"> -->
+                      <!-- <input class="form-control has-float-label col-sm-12" id="startTickets" name="StartTickets"
+                            placeholder="" maxlength="25" type="text"> -->
+
+                      <!--  </label> -->
+                      <!-- </td> -->
+                      <!-- <td class="col-sm-1"> -->
+                      <!-- <label class="form-group has-float-label col-sm-12"> -->
+                      <!-- <input class="form-control has-float-label col-sm-12" id="endTickets" name="endTickets"
+                            placeholder="" type="text"> -->
+
+                      <!--  </label> -->
+                      <!-- </td> -->
+                    </tr>
+                  </table>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="form-group col-sm-12 text-right">
+              <button type="button" class="btn btn-md btn-primary mr-3" (click)="reset()"> Reset</button>
+              <button type="button" class="btn btn-md btn-primary" (click)="onSubmit(addGameForm)">
+                Save</button>
+              <!-- onSubmit(addGameForm) -->
+            </div>
+          </div>
+        </form>
+        <div class="row justify-content-start">
+          <div class="col-sm-9">
+            <button type="button" class="btn btn-md btn-primary mr-3" (click)="addGame()">Add Game</button>
+            <!-- <button type="button" class="btn btn-md btn-primary mr-3" (click)="deleteSelected()">Delete Selected</button> -->
+            <!-- <button type="button" class="btn btn-md btn-primary" (click)="deActivateSelected()"> De-Activate</button> -->
+          </div>
+          <div class="col-sm-3">
+            <div class="inner-addon right-addon">
+              <span>
+                <i class="fa fa-search card-title" aria-hidden="true"></i>
+              </span>
+              <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+                placeholder="Filter Search" [(ngModel)]="filterText" name="filterText">
+            </div>
+          </div>
+          <div class="col-sm-12 mt-3">
+            <app-editable-grid [rowData]="rowData" [fullRowEditabeRequired]="true" [editGridOptions]="gridOptions"
+              (gridReady)="onGridReady($event)" (cellValueChanged)="onCellValueChanged($event)" [textFilter]="filterText" (delete)="deleteAction($event)"
+              (save)="updateAction($event)" >
+              <!-- (rowDoubleClick)="rowDoubleClick($event)" -->
+            </app-editable-grid>
+          </div>
+        </div>
+        <!-- </div> -->
+      </div>
+    </div>
+  </div>
+</div>

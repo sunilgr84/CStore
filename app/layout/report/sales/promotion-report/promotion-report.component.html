@@ -1,0 +1,82 @@
+<form [formGroup]="promotionReportForm">
+  <div class="card">
+    <div class="card-body" style="min-height: 300px;">
+      <div class="row">
+        <div class="col-sm-3">
+          <label class="form-group has-float-label">
+            <app-daterangepicker [selectedDateRange]="selectedDateRange" (dateRangeSelecetd)="dateRangeChange($event)">
+            </app-daterangepicker>
+            <span> Select Date Range</span>
+          </label>
+        </div>
+        <div class="col-sm-2">
+          <label class="form-group has-float-label" *ngIf="storeLocationList && storeLocationList.length!==1">
+            <ng-select [items]="storeLocationList" [closeOnSelect]="true" bindLabel="storeName"
+              bindValue="storeLocationID" placeholder="Store Location" formControlName="storeLocation">
+            </ng-select>
+            <span> Store Location</span>
+          </label>
+          <label class="col-sm-12 form-group has-float-label" *ngIf="storeLocationList && storeLocationList.length===1">
+            <input readonly type="text" class="form-control" [value]="storeLocationList[0].storeName">
+            <span>Store Location</span>
+          </label>
+        </div>
+        <div class="col-sm-2">
+          <label class="form-group has-float-label">
+            <ng-select [items]="departmentList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+              bindLabel="departmentDescription" placeholder="Department" formControlName="departmentIds"
+              groupBy="companyID" [selectableGroup]="true" [selectableGroupAsModel]="false">
+              <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+              </ng-template>
+              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                <div class="ng-value" *ngFor="let item of items | slice:0:9">
+                  <span class="ng-value-label">
+                    {{item.departmentDescription}}</span>
+                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 9">
+                  <span class="ng-value-label">{{items.length - 9}} more...</span>
+                </div>
+              </ng-template>
+            </ng-select>
+            <span for="department">Department</span>
+          </label>
+        </div>
+        <div class=" col-sm-3">
+          <label class="form-group has-float-label">
+            <ng-select [items]="priceGroupList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+              bindLabel="CompanyPriceGroupName" placeholder="Price Group" formControlName="priceGroupIds"
+              groupBy="CompanyID" [selectableGroup]="true" [selectableGroupAsModel]="false">
+              <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+              </ng-template>
+              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                <div class="ng-value" *ngFor="let item of items | slice:0:9">
+                  <span class="ng-value-label">
+                    {{item.CompanyPriceGroupName}}</span>
+                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 9">
+                  <span class="ng-value-label">{{items.length - 9}} more...</span>
+                </div>
+              </ng-template>
+            </ng-select>
+            <span> Price Group</span>
+          </label>
+        </div>
+        <div class="col-sm-2">
+          <button type="button" class="btn btn-md btn-primary mr-3" (click)="searchPromotionsReport()">
+            Search</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <app-expandable-grid [rowData]="promotionsRowData" [expandableGridOptions]="promotionsGridOptions"
+            (gridReady)="onPromotionsGridReady($event)">
+          </app-expandable-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

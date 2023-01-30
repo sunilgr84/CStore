@@ -1,0 +1,365 @@
+<form novalidate [formGroup]="fuelInvoiveForm">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card m-1">
+        <div class="card-header">
+          <div class="col-sm-12 p-0">
+            <button type="button" class="btn btn-md btnsub btn-custom" (click)="backToInvocieList()">
+              <i class="fa fa-chevron-left"></i></button>
+            {{title}}
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-2 pl-2 pr-2" *ngIf="locationList && locationList.length > 1">
+              <label class="form-group has-float-label ">
+                <ng-select  appendTo="body" [items]="locationList" bindLabel="storeName" formControlName="storeLocationID"
+                  bindValue="storeLocationID" placeholder="Store Location" (change)="findBOLNo()"></ng-select>
+                <div class="danger" *ngIf="submited && fuelInvoive.storeLocationID.errors?.required">
+                  Store location is required.
+                </div>
+                <span> Store Location</span>
+              </label>
+              <label class="form-group has-float-label" *ngIf="storeLocationList && storeLocationList.length === 1">
+                <input readonly type="text" *ngIf="locationList && locationList.length === 1" class="form-control"
+                  [value]="locationList[0].storeName">
+                <span>Store Location</span>
+              </label>
+              <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+            </div>
+            <div class="col-sm-2 pl-2 pr-2">
+              <label class="form-group has-float-label ">
+                <ng-select  appendTo="body" [items]="vendorList" [hideSelected]="true" bindLabel="vendorName" placeholder="Vendor"
+                  bindValue="vendorID" formControlName="vendorID" (change)="findBOLNo()"> </ng-select>
+                <div class="danger" *ngIf="submited && fuelInvoive.vendorID.errors?.required">
+                  Vendor is required.
+                </div>
+                <span>Vendor</span>
+              </label>
+            </div>
+            <div class="col-sm-2 pl-2 pr-2 inv-date-picker">
+              <label class="form-group has-float-label ">
+                <app-datepicker [inputDate]="inputDate" name="inputDate" id="inputDate"
+                  (dateChange)="dateChange($event)">
+                </app-datepicker>
+                <span>Invoice Date</span>
+              </label>
+            </div>
+            <div class="w-custom pl-2 pr-2">
+              <label class="form-group has-float-label">
+                <input type="text" class="form-control" id="invoiceNo" placeholder="Invoice No"
+                  formControlName="invoiceNo">
+                <span>Invoice No</span>
+                <div class="danger" *ngIf="submited && fuelInvoive.invoiceNo.errors?.required">
+                  Invoice No is required.
+                </div>
+              </label>
+            </div>
+            <div class="w-custom pl-2 pr-2">
+              <label class="form-group has-float-label">
+                <input decimalOnly type="text" class="form-control" id="invocieAmount" placeholder="Amount"
+                  formControlName="invocieAmount" (change)="invoiceAmountChange()">
+                <span>Amount </span>
+                <div class="danger" *ngIf="submited && fuelInvoive.invocieAmount.errors?.required">
+                  Amount is required.
+                </div>
+              </label>
+            </div>
+            <div class="col-sm-2 pl-2 pr-2">
+              <label class="has-float-label" *ngIf="!isBOLIDdisabled">
+                <ng-select  appendTo="body" [items]="boLNumberList" bindLabel="bolNumber" placeholder="BOL No" bindValue="bolid"
+                  formControlName="bolid" (change)="onBolChange($event ? $event?.bolid : undefined)"> </ng-select>
+                <img src="assets/images/small-spinner.gif" *ngIf="isBolNumberList">
+                <span for="bolid"> BOL No</span>
+              </label>
+              <span *ngIf="isBOLIDdisabled">BOL No. : {{ boLNumberListMap?.get(fuelInvoiveForm?.get('bolid')?.value)   }}</span>
+            </div>
+            <!-- <div class="col-sm-2 pl-2 pr-2 inv-date-picker">
+              <label class="has-float-label">
+                <app-datepicker [inputDate]="BOLDate" name="BOLDate" id="BOLDate" (dateChange)="dateChangeBOL($event)">
+                </app-datepicker>
+                <span>BOL Date</span>
+              </label>
+            </div> -->
+          </div>
+          <div class=" row">
+            <div class="col-sm-12 text-right pl-2 pr-2">
+              <span>
+                <input hidden type="file" multiple #uploader (change)="uploadNewInvoiceFiles($event)"  accept="application/pdf,image/jpeg"/>
+                <i *ngIf="!showDownloadInvoice" class="fa fa-upload cursor-pointer ml-3 fa12" title="Upload Invoice"
+                  (click)="uploader.click()"></i>
+                <i *ngIf="showDownloadInvoice" class="fa fa-download cursor-pointer ml-3 fa12" title="Download Invoice"
+                  (click)="downloadInvoice()"></i>
+              </span>
+              <button type="button" [hidden]="isEdit" class="btn btn-md btn-primary ml-3" (click)="resetForm()">
+                {{'Reset'}}
+              </button>
+              <button type="button" class="btn btn-md btn-primary ml-3" (click)="editOrSave($event)">
+                {{isEdit?'Update':'Save'}}
+              </button>
+
+              <button type="button" class="btn btn-md btn-primary ml-3" (click)="editOrSaveClose($event)">
+                {{isEdit?'Update & Close':'Save & Close'}}
+              </button>
+              <button type="button" class="btn btn-md  btn-primary ml-3" (click)="backToInvocieList()">Back To List</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<!-- <div class="card-body">
+  <h5 class="card-title">{{ isEdit? 'Update Invoice' : 'Add New Invoice'}}</h5>
+  <form novalidate [formGroup]="fuelInvoiveForm">
+
+    <div class="row">
+      <div class="col-sm-4">
+        <label class="form-group has-float-label">
+          <div *ngIf="locationList && locationList.length !== 1">
+            <ng-select [items]="locationList" bindLabel="storeName" formControlName="storeLocationID"
+              bindValue="storeLocationID" placeholder="Store Location" (change)="findBOLNo()"></ng-select>
+            <div class="danger" *ngIf="submited && fuelInvoive.storeLocationID.errors?.required">
+              Store location is required.
+            </div>
+          </div>
+          <input readonly type="text" *ngIf="locationList && locationList.length === 1" class="form-control"
+            [value]="locationList[0].storeName">
+          <span>Store Location</span>
+        </label>
+        <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+      </div>
+      <div class="col-sm-4">
+        <label class="form-group has-float-label">
+          <ng-select [items]="vendorList" [hideSelected]="true" bindLabel="vendorName" placeholder="Vendor"
+            bindValue="vendorID" formControlName="vendorID"> </ng-select>
+          <span> Vendor</span>
+          <div class="danger" *ngIf="submited && fuelInvoive.vendorID.errors?.required">
+            Vendor is required.
+          </div>
+        </label>
+      </div>
+      <div class="col-sm-4">
+        <label class="form-group has-float-label">
+          <input type="text" class="form-control" id="invoiceNo" placeholder="Invoice No" formControlName="invoiceNo">
+          <span> Invoice No</span>
+          <div class="danger" *ngIf="submited && fuelInvoive.invoiceNo.errors?.required">
+            Invoice No is required.
+          </div>
+        </label>
+      </div>
+      <div class="col-sm-4">
+        <div class="input-icon">
+          <label class="form-group has-float-label currency">
+            <input decimalOnly type="text" class="form-control" id="invocieAmount" placeholder="Invoice Amount"
+              formControlName="invocieAmount" (change)="invoiceAmountChange()">
+            <span> Invoice Amount </span>
+            <div class="danger" *ngIf="submited && fuelInvoive.invocieAmount.errors?.required">
+              Invoice Amount is required.
+            </div>
+          </label>
+          <i *ngIf="fuelInvoiveForm.get('invocieAmount').value">$</i>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <label class="form-group has-float-label">
+          <app-datepicker [inputDate]="inputDate" name="inputDate" id="inputDate" (dateChange)="dateChange($event)">
+          </app-datepicker>
+          <span>Invoice Date</span>
+        </label>
+      </div>
+      <div class="col-sm-4">
+        <label class="has-float-label">
+          <ng-select [items]="boLNumberList" bindLabel="boLNumber" placeholder="BOL No" bindValue="boLID"
+            formControlName="bolid"> </ng-select>
+          <img src="assets/images/small-spinner.gif" *ngIf="isBolNumberList">
+          <span for="bolid"> BOL No</span>
+        </label>
+      </div>
+      <div class="col-sm-4">
+        <label class="has-float-label">
+          <app-datepicker [inputDate]="BOLDate" name="BOLDate" id="BOLDate" (dateChange)="dateChangeBOL($event)">
+          </app-datepicker>
+          <span>BOL Date</span>
+        </label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <button type="button" [hidden]="isEdit" class="btn btn-md btn-primary mr-3" (click)="resetForm()">
+          {{'Reset'}}
+        </button>
+        <button type="button" class="btn btn-md btn-primary mr-3" (click)="editOrSave($event)">
+          {{isEdit?'Update':'Save'}}
+        </button>
+
+        <button type="button" class="btn btn-md btn-primary mr-3" (click)="editOrSaveClose($event)">
+          {{isEdit?'Update & Close':'Save & Close'}}
+        </button>
+        <button type="button" class="btn btn-md  btn-primary" (click)="backToInvocieList()">Back To List</button>
+      </div>
+    </div>
+
+
+  </form>
+</div> -->
+<div class="" *ngIf="isEdit">
+  <div class="card-body">
+    <h5 class="card-title mb-3">{{title}}</h5>
+    <div class="row ">
+      <div class="col-sm-4 mb-3">
+
+
+        <button type="button" id="open_model" class="btn btn-md btn-cstorebo btnsub btn-custom" (click)="open(content)">
+          <i class="fa fa-plus" aria-hidden="true"></i>
+        </button>
+        <span class="ml-2 mt-2 card-title" (click)="open(content)"> Add New</span>
+      </div>
+      <div class="col-sm-12"> 
+        <app-expandable-grid  [expandableGridOptions]="fuelGridOptions" [rowData]="fuelInvoiceRowData"
+        [detailCellRenderers]="fuelInvoiceCellRenderer"
+          (gridReady)="onfuelGridReady($event)" (edit)="editAction($event)" (delete)="deleteAction($event)">
+        </app-expandable-grid>
+        
+      </div>
+
+    </div>
+    <div class="row mt-3">
+      <div class="col-sm-4">
+        <button type="button" class="btn btn-md btn-cstorebo btnsub btn-custom" (click)="addMoreRow()">
+          <i class="fa fa-plus"></i> </button>
+        <span class="ml-2 mt-2 card-title" (click)="addMoreRow()">Add Other Charges</span>
+
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div class="col-sm-6">
+        <app-editable-grid [rowData]="fuelInvoiceOtherRowData" [editGridOptions]="fuelOtherGridOptions"
+          (gridReady)="onfuelOtherGridReady($event)" (delete)="deleteOtherAction($event)" (save)="SaveChanges($event)">
+        </app-editable-grid>
+        <div class="offset-6 col-sm-4">
+          <span> <strong> Total: ${{totalOtherChargesAmount|number:'1.4-4' }} </strong> </span>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <app-cstore-grid [rowData]="fuelInvoiceTotalRowData" [cStoreGridOptions]="fuelTotalGridOptions"
+          (gridReady)="onFuelTotalGridReady($event)"></app-cstore-grid>
+        <div class="offset-8 col-sm-4">
+          <span> <strong> Total: ${{fuelTotalChargesAmount |number:'1.4-4' }} </strong> </span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<ng-template #content let-modal>
+  <form novalidate [formGroup]="fuelInvoiceDetailForm">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">
+        {{isfuelEdit? 'Editing Fuel Invoice Detail'
+        :'Add Fuel Invoice Detail' }} </h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row ">
+        <div class="col-sm-8" *ngIf="!isfuelEdit">
+          <label class="form-group has-float-label col-sm-12">
+            <ng-select [items]="fuelGradeList" bindLabel="storeFuelGradeName" bindValue="storeFuelGradeID"
+              labelForId="storeFuelGradeID" formControlName="storeFuelGradeID" placeholder="Fuel Grade"></ng-select>
+            <span>Fuel Grade</span>
+            <div class="danger" *ngIf="submited && fuelInvoiceDetail.storeFuelGradeID.errors?.required">
+              Store Fuel Grade is required.
+            </div>
+          </label>
+        </div>
+        <div class="col-sm-8 form-group" *ngIf="isfuelEdit">
+          <!-- <label>Fuel Grade</label> &nbsp; -->
+          <div class="col-sm-12">
+            <strong> {{fuelInvoiceDetailValue && fuelInvoiceDetailValue.storeFuelGradeName}} </strong>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-8">
+          <div class="col-sm-12">
+            <div class="input-icon">
+              <label class="form-group has-float-label">
+                <input type="text" numeric [decimals]="4" name="Quantity" id=Quantity class="form-control"
+                  formControlName="quantityReceived" (focusout)="calculateAmount()" placeholder="Quantity">
+                <span for="Quantity"> Quantity</span>
+                <div class="danger" *ngIf="submited && fuelInvoiceDetail.quantityReceived.errors?.required">
+                  Quantity is required.
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-8">
+          <div class="col-sm-12">
+            <div class="input-icon">
+              <label class="form-group has-float-label currency">
+                <input type="text" numeric [decimals]="7" name="unitCostPrice" id=unitCostPrice class="form-control"
+                  formControlName="unitCostPrice" (focusout)="calculateAmount()" placeholder="Unit Cost Price">
+                <span for="unitCostPrice"> Unit Cost Price </span>
+                <div class="danger" *ngIf="submited && fuelInvoiceDetail.unitCostPrice.errors?.required">
+                  Unit Cost Price is required.
+                </div>
+              </label>
+              <i *ngIf="fuelInvoiceDetailForm.get('unitCostPrice').value">$</i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-8">
+          <div class="col-sm-12">
+            <div class="input-icon">
+              <label class="form-group has-float-label currency">
+                <input type="number" readonly name="totalAmount" id=totalAmount class="form-control"
+                  placeholder="Amount" formControlName="totalAmount">
+                <span for="totalAmount"> Amount</span>
+              </label>
+              <i *ngIf="fuelInvoiceDetailForm.get('totalAmount').value">$</i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col-sm-12">
+          <button type="button" class="btn btn-md btn-primary pull-right" (click)="fuelInvEditOrSaveClose($event)">
+            {{isfuelEdit?'Update & Close':'Save & Close'}}
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </form>
+</ng-template>
+
+<ng-template #billOfLandings let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title-bol">
+      Bill of Landings</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="col-sm-12">
+      <app-editable-grid #agGridbol style="width: 100%;" [rowData]="billOfLadings" [editGridOptions]="colDefsBols" (gridReady)="onBolsGridReady($event)">
+      </app-editable-grid>
+    </div>
+
+    <div class="col-sm-12 mt-2">
+      <button class="btn btn-md btn-primary pull-right" type="button" (click)="updateBols()"> Update </button>
+      <button class="btn btn-md btn-primary pull-right mr-4" type="button"  (click)="modal.dismiss('Cross click')"> Cancel</button>
+    </div>
+
+  </div>
+</ng-template>

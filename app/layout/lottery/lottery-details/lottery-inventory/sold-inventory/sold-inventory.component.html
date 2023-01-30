@@ -1,0 +1,29 @@
+<form>
+  <div class="card">
+    <div class="card-header">
+      <strong>Edit</strong>
+    </div>
+    <div class="card-body">
+      <div class="form-group row">
+        <label class="control-label col-sm-4">Business Date</label>
+        <app-datepicker name="businessDate" class="col-sm-8" id="businessDate"></app-datepicker>
+      </div>
+      <div class="form-group row">
+        <label class="control-label col-sm-4">Inventory Type</label>
+        <div class="col-sm-8">
+          <select class="form-control">
+            <!-- <option> Day Close </option>
+            <option> Shift 1 </option>
+            <option> Shift 2 </option> -->
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="float-right">
+        <button type="button" class="btn btn-primary" (click)="editAndSaveClose()">Mark as sold</button>
+        <button type="button" class="btn btn-dark" (click)="activeModal.close('Close click')">Close</button>
+      </div>
+    </div>
+  </div>
+</form>

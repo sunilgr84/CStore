@@ -1,0 +1,167 @@
+<div class="main-content-wrap d-flex flex-column">
+  <div class="main-content">
+    <section *ngIf="!isAddNew">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card m-1">
+            <form novalidate [formGroup]="searchForm">
+              <div class="card-header">
+                <div class="col-sm-3" *ngIf="storeList && storeList.length!==1">
+                  <ng-select [items]="storeList" [hideSelected]="true" formControlName="storeLocationID"
+                    bindLabel="storeName" bindValue="storeLocationID" placeholder="Store Location">
+                  </ng-select>
+                </div>
+                <div class="col-sm-3">
+                  <ng-select [items]="vendorList" [hideSelected]="true" bindLabel="vendorName"
+                    placeholder="Select Vendor" bindValue="vendorID" formControlName="VendorID">
+                  </ng-select>
+                </div>
+                <div class="col-sm-3 inv-date-picker">
+                  <!-- <app-datepicker [inputDate]="inputDate" name="formDate" id="fromDate"
+                    (dateChange)="dateChange($event,'searchDate')"></app-datepicker> -->
+                  <div class="date-range-border">
+                    <app-daterangepicker [selectedDateRange]="selectedDateRange"
+                      (dateRangeSelecetd)="dateRangeChange($event)">
+                    </app-daterangepicker>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <button class="btn btn-md btn-primary" (click)="searchBOL()"> Search</button>
+                  <button class="btn btn-md btn-primary ml-2" (click)="addNewBOL()"> Add New</button>
+                </div>
+              </div>
+            </form>
+            <div class="pmc-container by-none">
+              <div class="pmc-header">
+                <div class="col-9 p-0">
+                </div>
+                <div class="col-3">
+                  <div class="inner-addon right-addon">
+                    <span>
+                      <i class="fa fa-search card-title" aria-hidden="true"></i>
+                    </span>
+                    <input type="text" class="form-control" aria-label="Default"
+                      aria-describedby="inputGroup-sizing-default" placeholder="Filter Search" [(ngModel)]="filterText"
+                      name="filterText" (input)="onFilterTextBoxChanged()">
+                  </div>
+                </div>
+              </div>
+              <div class="pmc-body pt-0">
+                <div class="col-12 p-0 fuel-mgmt">
+                  <app-adv-pagination-grid [paginationGridOptions]="paginationGridOptions" (gridReady)="onGridReady($event)"
+                    (edit)="editBillOfLading($event)" (delete)="deleteBillOfLading($event)"
+                    (download)="downloadBillOfLading($event)">
+                  </app-adv-pagination-grid>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section *ngIf="isAddNew">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card m-1">
+            <form [formGroup]="billOfLaddingForm">
+              <div class="card-header">
+                <h5 class="mb-0">
+                  <button type="button" class="btn btn-md btn-custom" (click)="backToList()"><i
+                      class="fa fa-chevron-left"></i></button>
+                  {{isEdit?'Edit':'Add'}} Bill Of Lading
+                </h5>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-3 mb-3">
+                    <ng-select [items]="storeList" [hideSelected]="true" bindLabel="storeName"
+                      bindValue="storeLocationID" placeholder="Store Location" formControlName="storeLocationID"
+                      required (change)="getNewBOLData($event)">
+                    </ng-select>
+                    <div *ngIf="submitted && bolControl.storeLocationID.errors?.required" class="alert alert-danger">
+                      Store location is required
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <ng-select [items]="vendorList" [hideSelected]="true" bindLabel="vendorName"
+                      placeholder="Select Vendor" bindValue="vendorID" formControlName="VendorID"> </ng-select>
+                    <div *ngIf="submited && bolControl.VendorID.errors?.required" class="alert alert-danger">
+                      Vendor is required.
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <input type="text" class="form-control" #bolNo id="billofLadingNo" formControlName="boLNumber"
+                      placeholder="Bill of Lading No" required (blur)="checkBolExists()">
+                    <div *ngIf="submitted && bolControl.boLNumber.errors?.required" class="alert alert-danger">
+                      BOL no is required
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <input type="text" class="form-control" id="bolLoadName" formControlName="bolLoadName"
+                      placeholder="Load">
+                    <div *ngIf="submitted && bolControl.bolLoadID.errors?.required" class="alert alert-danger">
+                      Load is required
+                    </div>
+                  </div>
+                  <div class="col-sm-3 mb-3 inv-date-picker">
+                    <app-datepicker [inputDate]="bolDate" required name="formDate" id="fromDate"
+                      (dateChange)="dateChange($event,'bolDate')"></app-datepicker>
+                    <div *ngIf="submitted && bolControl.businessDate.errors?.required" class="alert alert-danger">
+                      BOL date is required
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <input class="form-control" formControlName="time" required type="time">
+                    <div *ngIf="submitted && bolControl.time.errors?.required" class="alert alert-danger">
+                      Time is required
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="custom-control custom-radio ml-3 p-2">
+                      <input type="radio" id="customRadio1" formControlName="volume" value="isNetVolume" name="volume"
+                        class="custom-control-input">
+                      <label class="custom-control-label" for="customRadio1">Link Net Volume</label>
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="custom-control custom-radio ml-3 p-2">
+                      <input type="radio" id="customRadio2" formControlName="volume" name="volume" value="isGrossVolume"
+                        class="custom-control-input">
+                      <label class="custom-control-label" for="customRadio2">Link Gross Volume</label>
+                    </div>
+                  </div>
+                  <div *ngIf="!showResponseGrid" class="col-sm-12">
+                    <app-editable-grid [rowData]="editBOLRowData" [editGridOptions]="editBOLGridOptions"
+                      (gridReady)="onEditableBOLGridReady($event)"></app-editable-grid>
+                  </div>
+                  <div *ngIf="showResponseGrid" class="col-sm-12">
+                    <app-editable-grid [rowData]="editBOLResponseRowData" [editGridOptions]="editBOLGridResponseOptions"
+                      (gridReady)="onEditableBOLGridReady($event)" (edit)="editBOLDetail($event)"
+                      (delete)="deleteBOL($event)">
+                    </app-editable-grid>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer">
+                <div class="row w-100">
+                  <div class="col-md-8"></div>
+                  <div class="col-md-4 p-0 text-right">
+                    <input hidden type="file" multiple #uploader (change)="uploadNewInvoiceFiles($event)" />
+                    <i *ngIf="!this.editBOLData.bolFileName" class="fa fa-upload cursor-pointer ml-3 fs-12 m-2" title="Upload Invoice"
+                      (click)="uploader.click()"></i>
+                    <i *ngIf="this.editBOLData.bolFileName" class="fa fa-download cursor-pointer ml-3 fs-12 m-2"
+                      title="Download Invoice" (click)="downloadInvoice()"></i>
+                    <button class="btn btn-md btn-primary mr-3" (click)="resetBillofLadingForm()"> Reset</button>
+                    <button *ngIf="!isEdit" class="btn btn-md btn-primary" (click)="saveBillofLading()"> Save</button>
+                    <button *ngIf="isEdit" class="btn btn-md btn-primary" (click)="updateBillofLading()">
+                      Update</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

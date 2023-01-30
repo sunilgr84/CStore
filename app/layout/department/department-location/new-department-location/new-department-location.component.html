@@ -1,0 +1,167 @@
+<div class="fluid-container">
+  <form [formGroup]="newDeptLocationForm">
+    <div class="row mt-2">
+      <div class="col-md-6">
+        <div class="form-group" *ngIf="isStatusShow">
+          <label>Push Changes to POS Status:</label>
+          <span class="text-black-50">&nbsp;Current</span>
+        </div>
+        <div class="">
+          <label class="form-group has-float-label col-sm-12">
+            <select *ngIf="storeLocationList && storeLocationList.length!==1" class="form-control"
+              formControlName="storeLocationID" required (change)="storeLocationTypeChange()" id="storeLocationID">
+              <option value="">--Select Store Location--</option>
+              <option *ngFor="let location of storeLocationList" [ngValue]="location.storeLocationID">
+                {{location.storeName}}</option>
+            </select>
+            <input readonly type="text" *ngIf="storeLocationList && storeLocationList.length === 1" class="form-control"
+              [value]="storeLocationList[0].storeName">
+            <span for="storeLocationID">Store Location</span>
+            <img src="assets/images/small-spinner.gif" *ngIf="isStoreLocationLoading">
+            <div *ngIf="submited && deptLocationFormValid.storeLocationID.errors?.required" class="alert alert-danger">
+              Store location is required
+            </div>
+          </label>
+
+        </div>
+        <div class="">
+          <label class="form-group has-float-label col-sm-12">
+            <select class="form-control" formControlName="storeLocationTaxID" id="storeLocationTax">
+              <option value="">--Select Store Location Tax--</option>
+              <option *ngFor="let obj of storeLocationTaxList" [value]="obj.storeLocationTaxID">
+                {{obj.taxStrategyDescription}}</option>
+            </select>
+            <span for="storeLocationTax">Store Location Tax</span>
+            <img src="assets/images/small-spinner.gif" *ngIf="isLocationTaxLoading">
+            <div *ngIf="submited && deptLocationFormValid.storeLocationTaxID.errors?.required"
+              class="alert alert-danger">
+              Store location tax is required
+            </div>
+          </label>
+        </div>
+        <div class="">
+          <label class="form-group has-float-label col-sm-12">
+            <select class="form-control" formControlName="storeLocationSalesRestrictionID" id="salesRestriction">
+              <option value="">--Select Sales Restriction--</option>
+              <option *ngFor="let obj of storeLocationSalesRestriction" [value]="obj.storeLocationSalesRestrictionID">
+                {{obj.salesRestrictionDescription}}</option>
+            </select>
+            <span for="salesRestriction"> Sales Restriction </span>
+            <img src="assets/images/small-spinner.gif" *ngIf="isStoreLocationSalesRestLoading">
+            <div *ngIf="submited && deptLocationFormValid.storeLocationSalesRestrictionID.errors?.required"
+              class="alert alert-danger">
+              Store loaction sales restriction is required
+            </div>
+          </label>
+        </div>
+        <div class="">
+          <label class="form-group has-float-label col-sm-12">
+            <input type="text" class="form-control" required formControlName="posDepartmentCode" min="0" maxlength="4"
+              placeholder="Enter POS department code" id="posDeptCode">
+            <span for="posDeptCode"> POS Department Code </span>
+            <div *ngIf="submited && deptLocationFormValid.posDepartmentCode.errors?.required"
+              class="alert alert-danger">
+              POS department code is required
+            </div>
+          </label>
+          <!-- <div *ngIf="submited && deptLocationFormValid.posDepartmentCode?.invalid" class="alert alert-danger">
+            POS department code must not be greater than 9999
+          </div> -->
+        </div>
+        <div class="">
+          <label class="form-group has-float-label col-sm-12">
+            <input type="number" class="form-control" formControlName="profitPercent" pattern="^[0-9]\d*(\.\d+)?$"
+              min="0" placeholder="Enter profit percent" id="profitPercent">
+            <span for="profitPercent"> Profit Percent (%) </span>
+            <div *ngIf="submited && deptLocationFormValid.profitPercent.errors?.required" class="alert alert-danger">
+              Profit percent is required
+            </div>
+            <div *ngIf="deptLocationFormValid.profitPercent.errors?.pattern" class="alert alert-danger">
+              Profit percent must not be negative
+            </div>
+            <div *ngIf="deptLocationFormValid.profitPercent.errors?.valid" class="alert alert-danger">
+              enter valid number
+            </div>
+            <div *ngIf="submited && deptLocationFormValid.profitPercent?.invalid" class="alert alert-danger">
+              Profit percent must not be greater than 100
+            </div>
+          </label>
+        </div>
+        <div class="">
+          <label class="form-group has-float-label col-sm-12">
+            <input type="text" numbersOnly class="form-control" min="0"
+              onKeyPress="if(this.value.length==4 ) return false;" formControlName="deptProductCode"
+              placeholder="Enter product code" id="productCode">
+            <span for="productCode"> Product Code </span>
+
+            <div *ngIf="submited && deptLocationFormValid.deptProductCode.errors?.required" class="alert alert-danger">
+              Department product code is required
+            </div>
+            <div *ngIf="submited && deptLocationFormValid.deptProductCode?.invalid" class="alert alert-danger">
+              Product code must not be greater than 9999
+            </div>
+          </label>
+        </div>
+        <div class="">
+          <label class="form-group has-float-label col-sm-12">
+            <textarea class="form-control" id="locationDeptDescription" rows="3" maxlength="512"
+              formControlName="posDepartmentDescription"
+              placeholder="Provide location department description"></textarea>
+            <span for="locationDeptDescription"> Location Department Description </span>
+            <div *ngIf="submited && deptLocationFormValid.posDepartmentDescription.errors?.required"
+              class="alert alert-danger">
+              Location department description is required
+            </div>
+          </label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{'Other Flags'}}</h5>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" value=""
+                formControlName="updateSellingPriceInEDIInvoiceFlag" id="updateItemSellingPrice">
+              <label class="custom-control-label" for="updateItemSellingPrice">
+                Update Item Selling Price from EDI and Vendor Invoice
+              </label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" value="" formControlName="updateDescInEDIInvoiceFlag"
+                id="UpdateItemDesc">
+              <label class="custom-control-label" for="UpdateItemDesc">
+                Update Item Desc from EDI and Vendor Invoice
+              </label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" value="" formControlName="isBlueLaw1Enabled"
+                id="blueLaw1">
+              <label class="custom-control-label" for="blueLaw1">
+                BlueLaw1 Enable
+              </label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" value="" formControlName="isBlueLaw2Enabled"
+                id="blueLaw2">
+              <label class="custom-control-label" for="blueLaw2">
+                BlueLaw2 Enable
+              </label>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 mt-3">
+      <button type="button" class="btn btn-md btn-cstorebo mr-3" [hidden]="saveOrUpdate()=='Update'"
+        (click)="resetForm()">
+        Reset</button>
+      <button type="button" class="btn btn-md btn-primary mr-3" (click)="save()">
+        {{saveOrUpdate()}}</button>
+      <button type="button" class="btn btn-md btn-primary mr-3" (click)="save(true)">
+        {{saveOrUpdate()}} &amp; Close</button>
+      <button type="button" class="btn btn-md btn-cstorebo mr-3" (click)="backToList()">
+        Back To Department Location List</button>
+    </div>
+  </form>
+</div>

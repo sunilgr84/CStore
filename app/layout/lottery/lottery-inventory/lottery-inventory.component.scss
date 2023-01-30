@@ -1,0 +1,46 @@
+.confirmation {
+  height: 120px;
+  background-color: #8a95f8;
+  color: white;
+}
+.booksActive {
+  height: 120px;
+  background-color: #f8ed8a;
+  color: black;
+}
+.shiftclose {
+  color: red;
+  text-decoration: underline;
+}
+.shiftclose:hover {
+  color: blue;
+}
+
+.shiftclose .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.shiftclose:hover .tooltiptext {
+  visibility: visible;
+  background: #19b5fe !important;
+}
+
+.all-sold {
+  color: transparent;
+  background-color: #7cd67c;
+}
+
+.startZero {
+  color: transparent;
+  background-color: #f1f18c;
+}

@@ -1,0 +1,9 @@
+::ng-deep .mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
+    background-color: #1db6fe !important;
+}
+::ng-deep .mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
+    background-color: #0450a3 !important;
+}
+::ng-deep #lott-set-deptsel > .ng-dropdown-panel .ng-dropdown-panel-items {
+    max-height: 100px;
+}

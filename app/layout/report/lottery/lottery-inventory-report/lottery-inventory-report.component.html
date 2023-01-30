@@ -1,0 +1,51 @@
+<form [formGroup]="lotteryInvReportForm">
+  <div class="card mt-3" style="min-height: 450px">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-sm-4">
+          <label class="form-group has-float-label" *ngIf="storeLocationList && storeLocationList.length!==1">
+            <ng-select [items]="storeLocationList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+              bindLabel="storeName" placeholder="Store Location" formControlName="storeLocation" groupBy="companyID"
+              [selectableGroup]="true" [selectableGroupAsModel]="false">
+              <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+              </ng-template>
+              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                <div class="ng-value" *ngFor="let item of items | slice:0:9">
+                  <span class="ng-value-label">
+                    {{item.storeName}}</span>
+                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 9">
+                  <span class="ng-value-label">{{items.length - 9}} more...</span>
+                </div>
+              </ng-template>
+            </ng-select>
+            <span> Store Location</span>
+            <img src="assets/images/small-spinner.gif" *ngIf="isStoreLoading">
+          </label>
+          <label class="col-sm-12 form-group has-float-label" *ngIf="storeLocationList && storeLocationList.length===1">
+            <input readonly type="text" class="form-control" [value]="storeLocationList[0].storeName">
+            <span>Store Location</span>
+          </label>
+        </div>
+        <div class="col-sm-2">
+          <button type="button" class="btn btn-md btn-primary btn-go" (click)="inventoryReport()">Go</button>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="this.reportRowData && this.reportRowData.length >0">
+        <div class="col-sm-12 mt-3">
+          <app-report-grid [rowData]="reportRowData" [expandableGridOptions]="gridOption"
+            (gridReady)="onGridReady($event)" (exportTo)="searchInventoryReport($event)">
+          </app-report-grid>
+        </div>
+      </div>
+      <div class="row" *ngIf="this.reportRowData && this.reportRowData.length ===0">
+        <div class="col-sm-12 mt-3">
+          <strong>No Record Available</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

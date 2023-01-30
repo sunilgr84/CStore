@@ -1,0 +1,33 @@
+<div class="input-group">
+  <ng-template #popContent>
+    <div class="container datetime-container">
+      <div class="row">
+        <div class="col-md-6 date-time-label">Start Date Time:</div>
+        <div class="col-md-6 date-time-label">End Date Time:</div>
+        <div class="col-md-6 time-container">
+          <ngb-datepicker #fromDP [(ngModel)]="fromDate" [displayMonths]="1" [dayTemplate]="t" outsideDays="hidden">
+          </ngb-datepicker>
+          <ngx-mat-timepicker #fromTP  [(ngModel)]="fromTime"></ngx-mat-timepicker>
+        </div>
+        <div class="col-md-6 time-container">
+          <ngb-datepicker #toDP [(ngModel)]="toDate" [displayMonths]="1" [dayTemplate]="t" outsideDays="hidden">
+          </ngb-datepicker>
+          <ngx-mat-timepicker #toTP  [(ngModel)]="toTime"></ngx-mat-timepicker>
+        </div>
+        <div class="col-md-12 actions">
+          <button mat-button (click)="cancel()" mat-icon-button>
+            <mat-icon>close</mat-icon>
+          </button>
+          <button mat-button (click)="ok()" mat-icon-button color="primary" cdkFocusInitial>
+            <mat-icon>done</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <button type="button" class="btn btn-date-selector" placement="bottom-left" [ngbPopover]="popContent"
+    [autoClose]="'outside'" data-container="body" #popOver="ngbPopover">
+    {{fromDate?.month}}/{{fromDate?.day}}/{{fromDate?.year}} {{("0" + this.fromTime.getHours()).slice(-2)}}:{{("0" + fromTime.getMinutes()).slice(-2)}}:{{("0" + fromTime.getSeconds()).slice(-2)}} -
+    {{toDate?.month}}/{{toDate?.day}}/{{toDate?.year}} {{("0" + toTime.getHours()).slice(-2)}}:{{("0" + toTime.getMinutes()).slice(-2)}}:{{("0" + toTime.getSeconds()).slice(-2)}}
+  </button>
+</div>

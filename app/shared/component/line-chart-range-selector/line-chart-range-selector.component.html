@@ -1,0 +1,6 @@
+<div style="width: 100%;" *ngIf="showChart" class="mb-3">
+  <canvas id="overlay" style="position:absolute;pointer-events:none;"></canvas>
+  <canvas *ngIf="lineChartItemLabels.length > 0" id="chartJSContainer" baseChart width="600" height="110"
+    [datasets]="lineChartItemData" [labels]="lineChartItemLabels" [options]="lineChartOptions"
+    [colors]="lineChartItemColors" [legend]="lineChartLegend" [chartType]="lineChartType"></canvas>
+</div>

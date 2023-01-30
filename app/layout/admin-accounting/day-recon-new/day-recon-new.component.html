@@ -1,0 +1,122 @@
+<div class="v-card-page-outlined">
+  <div class="v-card-header bb-none">
+    <!-- <app-page-header pageTitle="Day Recouncilation"></app-page-header> -->
+  </div>
+  <div class="v-card-content">
+    <div class="row mb-3 gutters-between-small align-items-end">
+      <div class="col-md-3 col-lg-2">
+        <div class="field-group">
+          <label class="field-label">Select Store</label>
+          <div class="field-wrapper p-0" *ngIf="storeLocationList && storeLocationList.length>1;else singleStore">
+            <ng-select appendTo="body" [items]="storeLocationList" bindLabel="storeName" [selectOnTab]="true"
+              bindValue="storeLocationID" labelForId="storeLocationID" [(ngModel)]="storeLocationId"
+              placeholder="Select Store Location" (change)="selectStoreForDayRecon()"></ng-select>
+          </div>
+          <ng-template #singleStore>
+            <div class="field-wrapper p-0" *ngIf="storeLocationList && storeLocationList.length===1">
+              <input type="text" class="form-control" id="storeName" [(ngModel)]="storeLocationList[0].storeName"
+                name="storeName" placeholder="Store Name" readonly>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-lg-2" *ngIf="showShift">
+        <div class="field-group">
+          <label class="field-label">Select Shift</label>
+          <div class="field-wrapper p-0">
+            <ng-select appendTo="body" [items]="shiftList" bindLabel="name" [selectOnTab]="true" labelForId="value"
+              placeholder="Select Period" [(ngModel)]="shiftWiseValue" (change)="getDayReconDataByShift()"></ng-select>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-auto">
+        <button class="v-btn-icon v-outlined" (click)="deductDay()">
+          <i class="flaticon-arrow-chevron-left"></i>
+        </button>
+      </div>
+
+      <div class="col-auto p-0">
+        <mat-datepicker [dateClass]="dateClass()" #picker>
+        </mat-datepicker>
+        <input [matDatepicker]="picker" class="input-hidden" [(ngModel)]="selectedDate"
+          (dateChange)="dateChangeEvent($event)" />
+        <button class="v-btn-text v-btn-primary" (click)="picker.open();addBreadCrumb();">{{selectedDate}}</button>
+      </div>
+
+      <div class="col-auto">
+        <button class="v-btn-icon v-outlined" (click)="nextDay()">
+          <i class="flaticon-arrow-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="pmc-container" *ngFor="let dayReconObj of dayReconData;let i = index" style="border-radius: 4px;">
+
+      <div class="pmc-header pmc-container-primary gutters-between-small" style="border-radius: 4px 4px 0 0;">
+        <div class="col-auto">
+          <img style="width: 25px;" src="https://cdn.worldvectorlogo.com/logos/chevron-4.svg" />
+        </div>
+
+        <div class="col-9">
+          <div class="pmc-title-wrapper">
+            <span class="pmc-title font-weight-bolder">{{selectedStoreDetails.storeName}}</span>
+            <div class="pmc-subtitle pmc-space-wrapper">
+              <div class="color-caption"><strong>{{selectedStoreDetails.storeAddressLine1}},
+                  {{selectedStoreDetails.city}},
+                  {{selectedStoreDetails.stateCode}}-{{selectedStoreDetails.zipCode}}</strong></div>
+              <div class="color-caption">
+                <strong>Opening Time: </strong>
+                {{dayReconObj.movementHeaderData.openingTime | timeFormat}}
+              </div>
+              <div class="color-caption">
+                <strong>Closing Time: </strong>
+                {{dayReconObj.movementHeaderData.closingTime | timeFormat}}
+              </div>
+              <div class="color-caption">
+                <strong>Batch No: </strong>
+                {{dayReconObj.movementHeaderData.batchNo}}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-2 btn-wrapper">
+          <button class="v-btn-contained v-btn-secondary" (click)="openQrModal()">
+            <i class="flaticon-add v-btn-start-icon"></i>Create QR code</button>
+          <button class="v-btn-icon v-small v-btn-edit v-btn-primary" (click)="uploader.click()" container="body"
+            data-placement="bottom" data-toggle="tooltip" ngbtooltip="Add Attachment">
+            <i class="fa fa-paperclip"></i>
+          </button>
+          <input hidden type="file" multiple #uploader
+            (change)="uploadFile($event,dayReconObj.movementHeaderData.movementHeaderID)" />
+        </div>
+      </div>
+      <app-day-recon-details [storeLocationID]="storeLocationId" [shiftWiseValue]="shiftWiseValue"
+        [movementHeaderID]="dayReconObj.movementHeaderData.movementHeaderID" [dayReconData]="dayReconObj">
+      </app-day-recon-details>
+    </div>
+  </div>
+</div>
+
+<ng-template #qrModal let-close="close" class="qr-code-modal">
+  <div class="modal-header">
+    <h3>Scan the QR code to upload files</h3>
+  </div>
+  <div class="modal-body">
+    <qr-code value="{{ uploadFileUrl }}" size="350" errorCorrectionLevel="H"></qr-code>
+  </div>
+  <!-- <div class="modal-footer">
+    <button type="button" class="btn btn-primary">
+      <a href="{{ uploadFileUrl }}" target="_blank" class="attachment-link">
+        <i class="fa fa-paperclip" style="font-size:22px;"></i>
+        ADD ATTACHMENT
+      </a>
+    </button>
+  </div> -->
+</ng-template>
+
+<!-- sales by department -->
+<!-- <day-recon--sales-by-department [isOpen]="currentOpenDialog=='salesByDepartment'" (onClose)="onDialogClose($event)">
+</day-recon--sales-by-department> -->

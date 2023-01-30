@@ -1,0 +1,83 @@
+<form [formGroup]="accountingReportForm">
+  <div class="card mt-3" style="min-height: 450px">
+    <div class="card-body">
+      <div class="col-sm-12">
+        <div class="row mb-4">
+          <div class="col-sm-3 custom-control custom-radio">
+            <input type="radio" class="custom-control-input" (click)="bankDepositReportClick()"
+              formControlName="accountingReport" id="bankDepositReport" name="accountingReport"
+              value="bankDepositReport">
+            <label class="custom-control-label" for="bankDepositReport">Bank Deposit Report</label>
+          </div>
+
+         <!--  <div class="col-sm-3 custom-control custom-radio">
+            <input type="radio" class="custom-control-input" (click)="bankDepositSummaryReportClick()"
+              formControlName="accountingReport" id="bankDepositSummaryReport" name="accountingReport"
+              value="bankDepositSummaryReport">
+            <label class="custom-control-label" for="bankDepositSummaryReport">Bank Deposit Summary Report</label>
+          </div> -->
+          <!--
+          <div class="col-sm-3 custom-control custom-radio">
+            <input type="radio" class="custom-control-input" (click)="itemSalesReportClick()"
+              formControlName="salesReport" id="itemSalesReport" name="accountingReport" value="itemSalesReport">
+            <label class="custom-control-label" for="itemSalesReport">Split Bank Deposit Report<</label>
+          </div> -->
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-3">
+          <label class="form-group has-float-label">
+
+            <app-daterangepicker [selectedDateRange]="selectedDateRange" (dateRangeSelecetd)="dateRangeChange($event)">
+            </app-daterangepicker>
+            <span> Select Date Range</span>
+          </label>
+        </div>
+        <div class="col-sm-4">
+          <label class="form-group has-float-label" *ngIf="storeLocationList && storeLocationList.length!==1">
+            <ng-select [items]="storeLocationList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+              bindLabel="storeName" placeholder="Store Location" formControlName="storeLocation" groupBy="companyID"
+              [selectableGroup]="true" [selectableGroupAsModel]="false">
+              <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+              </ng-template>
+              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                <div class="ng-value" *ngFor="let item of items | slice:0:9">
+                  <span class="ng-value-label">
+                    {{item.storeName}}</span>
+                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 9">
+                  <span class="ng-value-label">{{items.length - 9}} more...</span>
+                </div>
+              </ng-template>
+            </ng-select>
+            <span> Store Location</span>
+            <img src="assets/images/small-spinner.gif" *ngIf="isStoreLoading">
+          </label>
+          <label class="col-sm-12 form-group has-float-label" *ngIf="storeLocationList && storeLocationList.length===1">
+            <input readonly type="text" class="form-control" [value]="storeLocationList[0].storeName">
+            <span>Store Location</span>
+          </label>
+        </div>
+        <div class="col-sm-1">
+          <button type="button" class="btn btn-md btn-primary btn-go" (click)="accountingReport()">Go</button>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="this.reportRowData && this.reportRowData.length >0">
+        <div class="col-sm-12 mt-3">
+          <app-report-grid [rowData]="reportRowData" [enableSort]="false" [expandableGridOptions]="gridOption"
+            (gridReady)="onGridReady($event)" (exportTo)="searchSalesReport($event)">
+          </app-report-grid>
+        </div>
+      </div>
+      <div class="row" *ngIf="this.reportRowData && this.reportRowData.length ===0">
+        <div class="col-sm-12 mt-3">
+          <strong>No Record Available</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,437 @@
+<div id="itemPanel" class="container-fluid gutter-bottom" style="
+    border-radius: 4px;
+    border: 1px solid #e1e1e1;
+    background-color: white;
+  ">
+  <div class="row">
+    <div class="col-md-5" style="border-right: 1px solid #e1e1e1;">
+      <div class="row fullheight">
+        <div class="col-12" style="
+            padding-top: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e1e1e1;
+          ">
+          <form [formGroup]="itemDetailsForm" novalidate>
+            <div class="row gutters-between-only-small">
+              <div class="col-4">
+                <div class="field-group gutter-bottom">
+                  <label for="upcCode" class="field-label">UPC Code*</label>
+                  <div class="field-wrapper">
+                    <input type="text" tabindex="1" [readOnly]="itemID" numbersOnly (blur)="checkUPCCode($event)"
+                      (input)="checkLength($event.target.value)" maxlength="25" id="upcCodes" min="0"
+                      placeholder="Scan/Enter UPC Code" formControlName="posCodeWithCheckDigit" required
+                      class="field-input" #poscode />
+                    <div class="field-end-icon ml-1">
+                      <i class="icon-barcode color-info"></i>
+                    </div>
+                  </div>
+                  <div *ngIf="
+                      (submittedItem ||
+                        _item.posCodeWithCheckDigit.touched ||
+                        _item.posCodeWithCheckDigit.dirty) &&
+                      _item.posCodeWithCheckDigit.errors?.required
+                    " class="invalid">
+                    UPC Code is required.
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-4">
+                <div class="field-group gutter-bottom">
+                  <label for="itemDescription" class="field-label">Item Description*</label>
+                  <div class="field-wrapper w-100">
+                    <input type="text" tabindex="2" (blur)="checkDesc($event)" (keypress)="checkChar($event)"
+                      class="field-input" formControlName="description" placeholder="Item Description" required
+                      maxlength="40" id="descriptions" #desc />
+                  </div>
+                  <div *ngIf="
+                      (submittedItem ||
+                        _item.description.touched ||
+                        _item.description.dirty) &&
+                      _item.description.errors?.required
+                    " class="invalid">
+                    Item Description is required.
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-4">
+                <div class="field-group gutter-bottom">
+                  <label for="department" class="field-label">Department*</label>
+                  <div class="field-wrapper p-none">
+                    <ng-select tabindex="3" #dept (keydown)="checkDeptKey($event)" [searchable]="true"
+                      [items]="departmentList" class="field-select" bindLabel="departmentDescription"
+                      bindValue="departmentID" id="Departments" labelForId="departmentID" placeholder="Department"
+                      formControlName="departmentID" required title="{{ _itemValue.departmentDescription }}"
+                      (change)="onDepartmentChange($event)" (blur)="_item.departmentID.markAsTouched()"
+                      (click)="departmentClick($event)">
+                    </ng-select>
+                  </div>
+
+                  <div *ngIf="
+                      (submittedItem ||
+                        _item.departmentID.touched ||
+                        _item.departmentID.dirty) &&
+                      _item.departmentID.errors?.required
+                    " class="invalid">
+                    Department is required.
+                  </div>
+                </div>
+              </div>
+              <div class="col-2 gutters-between-small" [hidden]="true">
+                <div class="field-group gutter-bottom">
+                  <label for="baseUnits" class="field-label">Base Units</label>
+                  <div class="field-wrapper">
+                    <input numbersOnly type="text" class="field-input" min="0" id="baseUnitsInCase"
+                      placeholder="Base Units" formControlName="noOfBaseUnitsInCase" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-4 col-lg-3 col-xl-3 col-xl-3-custom">
+                <div class="field-group gutter-bottom">
+                  <label for="unitsInCase" class="field-label">Unit(s) in Case*</label>
+                  <div class="field-wrapper">
+                    <input tabindex="4" type="text" numbersOnly class="field-input" min="0" id="unitInCase"
+                      placeholder="Unit(s) in Case" formControlName="unitsInCase" required maxlength="25"
+                      #unitsInCase />
+                  </div>
+                  <div *ngIf="
+                      (submittedItem ||
+                        _item.unitsInCase.touched ||
+                        _item.unitsInCase.dirty) &&
+                      _item.unitsInCase.errors?.required
+                    " class="invalid">
+                    Unit(s) In Case is required.
+                  </div>
+                  <div *ngIf="
+                      (submittedItem ||
+                        _item.unitsInCase.touched ||
+                        _item.unitsInCase.dirty) &&
+                      _item.unitsInCase.errors?.min
+                    " class="invalid">
+                    1 is the minimum value for Unit(s) In Case.
+                  </div>
+                  <div *ngIf="
+                      (submittedItem ||
+                        _item.unitsInCase.touched ||
+                        _item.unitsInCase.dirty) &&
+                      _item.unitsInCase.errors?.max
+                    " class="invalid">
+                    9999 is the maximum value for Unit(s) In Case.
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-auto col-lg-3 col-xl-auto">
+                <div class="field-group gutter-bottom">
+                  <label for="isItemMultipack" class="field-label">Is Item a Multipack?</label>
+                  <label class="field-switch-wrapper" tabindex="5" (keypress)="onMultipackPress($event)">
+                    <input type="checkbox" class="field-switch-input" id="isMultipackFlag"
+                      formControlName="isMultipackFlag" />
+                    <span class="field-switch-label" data-on="Yes" data-off="No"></span>
+                    <span class="field-switch-handle"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="col-4 col-lg-3 col-xl-3 col-xl-3-custom">
+                <div class="field-group gutter-bottom">
+                  <label for="sellingUnits" class="field-label">Selling Unit(s)*</label>
+                  <div class="field-wrapper">
+                    <input tabindex="6" numbersOnly type="text" class="field-input" id="sellingUnits" min="0"
+                      placeholder="Selling Unit(s)" formControlName="sellingUnits" required maxlength="25"
+                      #sellingUnits />
+                  </div>
+                  <div *ngIf="
+                      (submittedItem ||
+                        _item.sellingUnits.touched ||
+                        _item.sellingUnits.pristine ||
+                        _item.sellingUnits.dirty) &&
+                      _item.sellingUnits.errors?.required
+                    " class="invalid">
+                    Selling Unit(s) is required.
+                  </div>
+                  <div *ngIf="
+                      (submittedItem ||
+                        _item.sellingUnits.touched ||
+                        _item.sellingUnits.pristine ||
+                        _item.sellingUnits.dirty) &&
+                      _item.sellingUnits.errors?.min
+                    " class="invalid">
+                    1 is the minimum value for Selling Unit(s).
+                  </div>
+                  <div *ngIf="
+                      (submittedItem ||
+                        _item.sellingUnits.touched ||
+                        _item.sellingUnits.pristine ||
+                        _item.sellingUnits.dirty) &&
+                      _item.sellingUnits.errors?.max
+                    " class="invalid">
+                    99 is the maximum value for Selling Unit(s).
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-auto col-lg-4 col-xl-4 col-xl-4-custom">
+                <div class="field-group gutter-bottom">
+                  <label for="uomid" class="field-label">Unit(s) of Measurement</label>
+                  <div class="field-wrapper p-none">
+                    <ng-select #uom tabindex="7" [items]="uomList" bindLabel="uomDescription" bindValue="uomid"
+                      id="uomid" labelForId="uomid" placeholder="Unit(s) of Measurement" formControlName="uomid"
+                      (change)="uomChange()" (click)="uomClick($event)" (keydown)="checkUOMKey($event)">
+                    </ng-select>
+                  </div>
+                  <!--  <div *ngIf="submittedItem && _item.uomid.errors?.required" class="invalid">
+                    Unit(s) of Measurement is required.
+                  </div> -->
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-5 gutters-between-small">
+                <div *ngIf="!invalid">
+                  <!-- <ngx-barcode6
+                    *ngFor="let bcValue of values"
+                    [bc-element-type]="elementType"
+                    [bc-value]="bcValue"
+                    [bc-format]="format"
+                    [bc-line-color]="lineColor"
+                    [bc-width]="width"
+                    [bc-height]="height"
+                    [bc-display-value]="displayValue"
+                    [bc-font-options]="fontOptions"
+                    [bc-font]="font"
+                    [bc-text-align]="textAlign"
+                    [bc-text-position]="textPosition"
+                    [bc-text-margin]="textMargin"
+                    [bc-font-size]="fontSize"
+                    [bc-background]="background"
+                    [bc-margin]="margin"
+                  >
+                  </ngx-barcode6> -->
+                </div>
+              </div>
+              <div class="col-7 gutters-between-small">
+                <!-- <div class="pmc-space-wrapper" *ngIf="!isEditModeRedOnly"> -->
+                <div class="pmc-space-wrapper float-right pt-3">
+                  <span *ngIf="itemID > 0" #reset class="tabFocus" tabindex="8">
+                    <button class="v-btn-outlined mt-4 mr-2" *ngIf="itemID > 0" (click)="cancel()">
+                      Reset
+                    </button>
+                  </span>
+                  <span class="tabFocus" #save tabindex="9">
+                    <button class="v-btn-contained v-btn-info pull-right mt-4" (click)="addNewItem()">
+                      {{ itemID > 0 ? "Update" : "Save" }}
+                    </button>
+                  </span>
+                </div>
+                <!-- <div class="pmc-space-wrapper" *ngIf="isEditModeRedOnly">
+                  <button class="v-btn-contained v-btn-info pull-right" style="margin-top:20px"
+                    (click)="editItem()">Edit</button>
+                </div> -->
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!--   <div class="col-8" style="padding-top: 12px; padding-bottom: 12px;">
+         <div class="row">
+            <div class="col-auto">
+              <img src="assets/images/product.png" style="margin: 0 auto;display: flex; max-width: 100%;" />
+            </div>
+            <div class="col">
+              <p class="text-caption color-caption">About this item</p>
+              <p class="text-caption">
+                Bud Light is brewed using a blend of premium aroma hop varieties, both American-grown and imported, and a combination of
+                barley malts and rice. Its superior drinkability and refreshing flavor makes it the world's favorite light
+                beer.
+              </p>
+            </div>
+          </div>
+        </div>-->
+      </div>
+    </div>
+    <div class="col-md-7" [ngClass]="{ divreadonly: !itemID }">
+      <!-- multipliers grid -->
+      <div id="multiplier-grid" class="expansion-grid">
+        <div class="expansion-header no-gutters" (click)="handleGridExpansion('multiplier')">
+          <div class="col">
+            <div class="expansion-title-wrapper">
+              <span class="expansion-title space-wrapper w-27">
+                <span>Multipliers</span>
+                <span class="text-label text-label-small float-right">{{
+                  rowCount.multiplier
+                  }}</span>
+              </span>
+            </div>
+          </div>
+          <div class="col-auto v-btn-action-wrapper">
+            <button class="v-btn-text v-btn-small v-btn-primary" (click)="handleGridAdd($event, 'multiplier')">
+              <i class="v-btn-start-icon flaticon-add"></i>
+              Add
+            </button>
+
+            <button class="v-btn-icon v-small">
+              <i [ngClass]="{
+                  'flaticon-arrow-chevron-up': expandedGridIds.includes(
+                    'multiplier'
+                  ),
+                  'flaticon-arrow-chevron-down': !expandedGridIds.includes(
+                    'multiplier'
+                  )
+                }"></i>
+            </button>
+          </div>
+        </div>
+        <app-multipliers [itemID]="itemID" [masterUPCCode]="_upcCode" [show]="expandedGridIds.includes('multiplier')"
+          (rowCount)="updateRowCount($event)"></app-multipliers>
+      </div>
+      <!-- vendors grid -->
+      <div id="vendors-grid" class="expansion-grid">
+        <div class="expansion-header no-gutters" (click)="handleGridExpansion('vendor')">
+          <div class="col">
+            <div class="expansion-title-wrapper">
+              <span class="expansion-title space-wrapper w-27">
+                <span>Vendors</span>
+                <span class="text-label text-label-small float-right">{{
+                  rowCount.vendor
+                  }}</span>
+              </span>
+            </div>
+          </div>
+          <div class="col-auto v-btn-action-wrapper">
+            <button class="v-btn-text v-btn-small v-btn-primary" (click)="handleGridAdd($event, 'vendor')">
+              <i class="v-btn-start-icon flaticon-add"></i>
+              Add
+            </button>
+
+            <button class="v-btn-icon v-small">
+              <i [ngClass]="{
+                  'flaticon-arrow-chevron-up': expandedGridIds.includes(
+                    'vendor'
+                  ),
+                  'flaticon-arrow-chevron-down': !expandedGridIds.includes(
+                    'vendor'
+                  )
+                }"></i>
+            </button>
+          </div>
+        </div>
+
+        <app-vendors-mitems (rowCount)="updateRowCount($event)" [show]="expandedGridIds.includes('vendor')"
+          [itemID]="itemID">
+        </app-vendors-mitems>
+      </div>
+
+      <!-- price groups grid -->
+      <div id="pricegroups-grid" class="expansion-grid">
+        <div class="expansion-header no-gutters" (click)="handleGridExpansion('priceGroup')">
+          <div class="col">
+            <div class="expansion-title-wrapper">
+              <span class="expansion-title space-wrapper w-27">
+                <span>Price Groups</span>
+                <span class="text-label text-label-small float-right">{{
+                  rowCount.priceGroup
+                  }}</span>
+              </span>
+            </div>
+          </div>
+          <div class="col-auto v-btn-action-wrapper">
+            <button class="v-btn-text v-btn-small v-btn-primary" (click)="handleGridAdd($event, 'priceGroup')">
+              <i class="v-btn-start-icon flaticon-add"></i>
+              Add
+            </button>
+
+            <button class="v-btn-icon v-small">
+              <i [ngClass]="{
+                  'flaticon-arrow-chevron-up': expandedGridIds.includes(
+                    'priceGroup'
+                  ),
+                  'flaticon-arrow-chevron-down': !expandedGridIds.includes(
+                    'priceGroup'
+                  )
+                }"></i>
+            </button>
+          </div>
+        </div>
+        <app-price-group [itemID]="itemID" [show]="expandedGridIds.includes('priceGroup')"
+          (rowCount)="updateRowCount($event)"></app-price-group>
+      </div>
+
+      <!-- Linked Items grid -->
+      <div id="linkeditems-grid" class="expansion-grid">
+        <div class="expansion-header no-gutters" (click)="handleGridExpansion('linkedItems')">
+          <div class="col">
+            <div class="expansion-title-wrapper">
+              <span class="expansion-title space-wrapper w-27">
+                <span>Linked Items</span>
+                <span class="text-label text-label-small float-right">{{
+                  rowCount.linkedItems
+                  }}</span>
+              </span>
+            </div>
+          </div>
+          <div class="col-auto v-btn-action-wrapper">
+            <button class="v-btn-text v-btn-small v-btn-primary" (click)="handleGridAdd($event, 'linkedItems')">
+              <i class="v-btn-start-icon flaticon-add"></i>
+              Add
+            </button>
+            <button class="v-btn-icon v-small">
+              <i [ngClass]="{
+                  'flaticon-arrow-chevron-up': expandedGridIds.includes(
+                    'linkedItems'
+                  ),
+                  'flaticon-arrow-chevron-down': !expandedGridIds.includes(
+                    'linkedItems'
+                  )
+                }"></i>
+            </button>
+          </div>
+        </div>
+        <app-linked-items [itemID]="itemID" [masterUPCCode]="_upcCode" [show]="expandedGridIds.includes('linkedItems')"
+          (rowCount)="updateRowCount($event)"></app-linked-items>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="itemID" class="pmc-container" style="border-radius: 8px;">
+  <app-pricing [itemID]="itemID" [isAddMultipacks]="isAddMultipacks" [unitsInCase]="_noOfBaseUnitsInCase"
+    (onSave)="onChangePricing($event)"></app-pricing>
+</div>
+
+<div id="stock" *ngIf="itemID" class="pmc-container mt-2" style="border-radius: 8px;">
+  <div class="pmc-header pmc-container-primary" style="border-radius: 8px 8px 0 0;">
+    <div class="col pmc-space-wrapper">
+      <div class="pmc-title-wrapper">
+        <span class="pmc-title pmc-space-wrapper">
+          <span>History</span>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="pmc-body">
+    <div class="col-md-12 p-0">
+      <app-manage-stock-transactions [itemId]="itemID"></app-manage-stock-transactions>
+    </div>
+  </div>
+</div>
+
+<div id="purchase" *ngIf="itemID" class="pmc-container mt-2" style="border-radius: 8px;">
+  <div class="pmc-header pmc-container-primary" style="border-radius: 8px 8px 0 0;">
+    <div class="col pmc-space-wrapper">
+      <div class="pmc-title-wrapper">
+        <span class="pmc-title pmc-space-wrapper">
+          <span>Activity</span>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="pmc-body">
+    <div class="col-md-12 p-0">
+      <app-purchase-history [itemId]="itemID"></app-purchase-history>
+    </div>
+  </div>
+</div>

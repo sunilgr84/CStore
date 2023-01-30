@@ -1,0 +1,28 @@
+<!-- <div class="card-header">{{displayFormTitle()}}
+</div> -->
+<div class="margin-bottom-5 mt-3">
+  <div class="pull-right" *ngIf="!isAddMode()">
+    <button type="button" class="btn btn-md btn-secondary ml-3" [class.active]="!isActive" (click)="previous(false)">
+      <i class="fa fa-chevron-left"></i>
+    </button> <span class="ml-3">{{currentRowIndex + 1}} / {{gridRowNode?gridRowNode.length:''}}</span>
+    <button type="button" class="btn btn-md btn-secondary ml-3" [class.active]="isActive" (click)="next(true)">
+      <i class="fa fa-chevron-right"></i>
+    </button>
+  </div>
+</div>
+<ngb-tabset #tabs="ngbTabset" type="pills" [destroyOnHide]="false" (tabChange)="tabChange($event)">
+  <ngb-tab title="Department Details" id="department-detail">
+    <ng-template ngbTabContent>
+      <app-department-detail [formMode]="formMode" [selectedDepartment]="selectedDepartment"
+        [showAllDepartment]="showAllDepartment" (changeTabs)=selectTab($event) (enableTabs)="enableTabs($event)">
+      </app-department-detail>
+    </ng-template>
+  </ngb-tab>
+  <ngb-tab title="Department Location" id="department-location" [disabled]="isAddMode()">
+    <ng-template ngbTabContent *ngIf="!isAddMode()">
+      <app-department-location [selectedDepartment]="selectedDepartment" [showAllDepartment]="showAllDepartment">
+      </app-department-location>
+    </ng-template>
+  </ngb-tab>
+
+</ngb-tabset>

@@ -1,0 +1,221 @@
+.sales-badge {
+    padding: 1rem;
+    font-weight: 600;
+    font-size: 100%;
+    color: #ffffff;
+    width: 47.5%;
+    text-align: right;
+}
+
+.sales-badge-font {
+    font-size: 1.5rem;
+    margin-top: 0.5rem !important;
+    margin-bottom: 0 !important;
+}
+
+.sales-bg-green {
+    background-color: #4fa03d;
+}
+
+.sales-bg-blue {
+    background-color: #add8e6;
+}
+
+.sales-dark-blue {
+    background-color: #5288bd;
+}
+
+.sales-bg-orange {
+    background-color: #f19242;
+}
+.sales-bg-red {
+    background-color: #e0532a;
+}
+
+.sales-bg-yellow {
+    background-color: #fbcd58;
+}
+
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
+    background-color: #19b5fe !important;
+}
+
+::ng-deep .dash-mat-sel {
+    .mat-form-field-appearance-fill .mat-form-field-infix {
+        padding: 0.25em 0 0.1em 0 !important;
+        font-size: 0.9rem;
+    }
+
+    .mat-form-field-underline {
+        display: none;
+    }
+
+    .mat-form-field-wrapper {
+        padding-bottom: 0 !important;
+    }
+}
+
+.line {
+    border-bottom: groove;
+    /* border-color: black; */
+    border-width: thin;
+}
+
+.custom-control {
+    min-height: 1rem !important;
+}
+
+.custom-control-label {
+    font-size: 15px !important;
+}
+
+.custom-control-label::before {
+    width: 1rem !important;
+    height: 1rem !important;
+}
+
+.custom-control-label::after {
+    width: 1rem !important;
+    height: 1rem !important;
+}
+
+.max-width-14 {
+    max-width: 14%;
+}
+
+.store-panel {
+    height: 300px;
+    overflow-y: auto;
+}
+
+.store-panel-card {
+    border-radius: 0.25rem !important;
+}
+
+.card-sales-title {
+    font-size: 1.2rem;
+    background-color: #19b5fe !important;
+    text-align: center;
+}
+.card-sales {
+    border-radius: 0.25rem !important;
+}
+::ng-deep .sales-dash {
+    .input-group > .btn-date-selector {
+        background-color: #19b5fe !important;
+        border: 1px solid #e2e5ec !important;
+        border-radius: 0.25rem !important;
+        padding: 0.6rem 2.75rem;
+    }
+}
+
+.widget-scrollbar {
+    position: relative;
+    overflow: auto;
+}
+
+.table-wrapper-scroll-y {
+    display: block;
+}
+
+.card-height {
+    height: 270px;
+    overflow-y: auto;
+}
+
+.card-height-line {
+    height: 184px;
+}
+
+.text-div-center {
+    text-align: center;
+    vertical-align: middle;
+    line-height: 18;
+}
+
+.text-div-center-line {
+    text-align: center;
+    vertical-align: middle;
+    line-height: 14;
+}
+
+.overflow-auto {
+    overflow-y: auto;
+}
+
+.panel-label {
+    font-size: 18px;
+    line-height: 14px;
+    font-weight: 300;
+    letter-spacing: 0;
+    color: #4a4a4a;
+    margin-bottom: 10px;
+}
+
+.buy-down-label {
+    font-size: 14px;
+    float: right;
+}
+
+::ng-deep .sales-dash-tabs {
+    ngb-tabset .nav-tabs li {
+        .nav-link:hover {
+            margin-top: 3px;
+            padding: 0.6rem 0.5rem;
+        }
+        .nav-link.active {
+            color: #495057;
+            background-color: #fff;
+            border-color: #dee2e6 #dee2e6 #fff;
+            margin-top: 0px;
+            padding: 0.6rem 0.5rem;
+            font-size: 13px;
+        }
+        .nav-link {
+            border: 1px solid transparent;
+            border-top-left-radius: 0rem;
+            border-top-right-radius: 0rem;
+            display: block;
+            padding: 0.5rem;
+            color: black;
+            background-color: #ddf1fb;
+            margin-top: 6px;
+            font-size: 13px;
+        }
+    }
+    ngb-tabset .nav-tabs li:nth-child(1) a {
+        border-top-left-radius: 8px;
+    }
+    ngb-tabset .nav-tabs li:nth-child(2) a {
+        background-color: #a9e4ff;
+    }
+    ngb-tabset .nav-tabs li:nth-child(3) a {
+        background-color: #a9e4ff;
+        border-top-right-radius: 8px;
+    }
+}
+
+.br-0 {
+    border-radius: 0px;
+}
+
+.downs-label {
+    font-size: 14px;
+    margin: 8px;
+}
+
+::ng-deep .buydown-ddown {
+    height: 26px !important;
+    min-height: 26px !important;
+    .ng-select.ng-select-single .ng-select-container {
+        height: 24px !important;
+        min-height: 24px !important;
+    }
+}
+
+.pmc-header {
+    background-color: #0450a3;
+}
+.pmc-title {
+    color: white !important;
+}

@@ -1,0 +1,91 @@
+<div class="card">
+  <div class="card-body">
+    <div class="modal-header mb-3">
+      <h5 class="card-title" *ngIf="schedulingId === 0">Add Scheduling </h5>
+      <h5 class="card-title" *ngIf="schedulingId !== 0">Edit Scheduling</h5>
+      <button type="button" class="close" aria-label="Close" (click)="closeModal()"></button>
+      <span aria-hidden="true" style="margin-top: -9px;
+      margin-left: -3px;">&times;</span>
+    </div>
+    <form [formGroup]="addEditScheduling">
+      <div class="row">
+        <div class="col-sm-6">
+          <label class="form-group has-float-label col-sm-12">
+            <select id="shift" class="form-control" name="shift" formControlName="shiftNumber"
+              (change)="onSchedulingChange()">
+              <option value="">--Select Shift-- </option>
+              <option value="1">First Shift</option>
+              <option value="2">Second Shift</option>
+              <option value="3">Third Shift</option>
+            </select>
+            <span for="status">Select Shift</span>
+          </label>
+        </div>
+        <div class="col-sm-6" *ngIf="employeeIdValue == 0">
+          <label class="form-group has-float-label">
+            <select class="form-control" formControlName="addEmployeeId">
+              <option value="">Select Employee</option>
+              <option *ngFor="let empName of empNameList" [value]="empName.employeeId">
+                {{empName.firstName}}</option>
+            </select>
+            <span for="employee">Employee</span>
+          </label>
+        </div>
+        <!-- <div class="col-sm-6">
+          <label class="form-group has-float-label col-sm-12">
+            <input type="text" class="form-control " required formControlName="note" placeholder="Enter Note" id="note"
+              name="note">
+            <span for="note">Note</span>
+          </label>
+        </div> -->
+        <div class="col-sm-6">
+          <label class="form-group has-float-label" style="margin-left: 12px;">
+            <app-datepicker [inputDate]="startDate" name="startDate" id="startDate"
+              (dateChange)="dateChangeStartDate($event)">
+            </app-datepicker>
+            <div *ngIf="submitted && addEditScheduling.get('startDate').invalid" class="alert alert-danger">
+              StartDate is required
+            </div>
+            <span> Start Date</span>
+          </label>
+        </div>
+        <div class="col-sm-6">
+          <label class="form-group has-float-label col-sm-12">
+            <!-- <input type="text" pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$" class="form-control " required
+              formControlName="startTime" placeholder="Enter Start Time" id="startTime" name="startTime"> -->
+            <input type="time" class="form-control"  required placeholder="Enter Start Time" 
+              formControlName="startTime" id="startTime" name="startTime">
+            <span for="startTime">Start Time</span>
+          </label>
+        </div>
+        <div class="col-sm-6">
+          <label class="form-group has-float-label" style="margin-left: 12px;">
+            <app-datepicker [inputDate]="endDate" name="endDate" id="endDate" (dateChange)="dateChangeEndDate($event)">
+            </app-datepicker>
+            <div *ngIf="submitted && addEditScheduling.get('endDate').invalid" class="alert alert-danger">
+              EndDate is required
+            </div>
+            <span> End Date</span>
+          </label>
+        </div>
+        <div class="col-sm-6">
+          <label class="form-group has-float-label col-sm-12">
+            <!-- <input type="text" pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$" class="form-control " required
+              formControlName="endTime" placeholder="Enter End Time" id="endTime" name="endTime"> -->
+              <input type="time" class="form-control" required placeholder="Enter End Time" 
+              formControlName="endTime" id="endTime" name="endTime">
+            <span for="endTime">End Time</span>
+          </label>
+        </div>
+        <div class="col-sm-6">
+          <button type="button" class="btn btn-md btn-primary mr-3" (click)="resetAddEditScheduling()">
+            Reset</button>
+          <button type="button" class="btn btn-md btn-primary mr-3" [disabled]="!addEditScheduling.valid"
+            (click)="saveScheduling()">
+            Save</button>
+
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

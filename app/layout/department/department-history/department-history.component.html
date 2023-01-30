@@ -1,0 +1,44 @@
+<div class="card">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-md-4">
+        <button type="button" class="btn btn-light" (click)="changeChartType('bar')"><i class="fa fa-columns"></i>
+          Column</button>
+        <button type="button" class="btn btn-light" (click)="changeChartType('bar')"><i class="fa fa-bar-chart"></i>
+          Bar</button>
+        <button type="button" class="btn btn-light" (click)="changeChartType('radar')"><i class="fa fa-clipboard"></i>
+          Stack</button>
+        <button type="button" class="btn btn-light" (click)="changeChartType('line')"><i class="fa fa-line-chart"></i>
+          Line</button>
+        <button type="button" class="btn btn-light" (click)="changeChartType('pie')"><i class="fa fa-pie-chart"></i>
+          Pie</button>
+      </div>
+      <div class="col-md-8">
+        <div class="row">
+          <div class="form-group col-md-5">
+            <label>Start</label>
+            <app-datepicker></app-datepicker>
+          </div>
+          <div class="form-group col-md-5">
+            <label>End</label>
+            <app-datepicker></app-datepicker>
+          </div>
+          <button type="button" class="btn btn-light col-md-1"><i class="fa fa-refresh"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6">
+        <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (gridReady)="onGridReady($event)"></app-cstore-grid>
+      </div>
+      <div class="col-md-6">
+        <canvas baseChart width="400" height="400" [datasets]="chartData" [labels]="chartLabels" [options]="chartOptions"
+          [colors]="chartColors" [legend]="chartLegend" [chartType]="chartType"></canvas>
+        <!-- (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"             ></canvas> -->
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,142 @@
+<div class="card mt-3">
+  <div class="card-body">
+    <div class="col-sm-12 row">
+      <div class="col-sm-4">
+        <button type="button" class="btn btn-md btn-cstorebo btn-custom" (click)="AddMore()"> <i class="fa fa-plus"></i>
+        </button>
+        <!-- <span class="ml-2 card-title" (click)="AddMore()"> {{title?'Update Item List':'Add Item List'}}</span> -->
+        <span class="ml-2 card-title" (click)="AddMore()"> {{'Add Item List'}}</span>
+      </div>
+    </div>
+    <form [formGroup]="itemListForm">
+      <!-- <div class="card-body"> -->
+      <div class="col-sm-12 mt-3">
+        <div class="row">
+          <label class="form-group has-float-label col-sm-3">
+            <input class="form-control" id="itemListName" formControlName="itemListName" type="text" maxlength="250"
+              placeholder="Item List Name" #itemListName>
+            <span for="itemListName">Item List Name</span>
+            <div *ngIf="submited && itemListForm.controls.itemListName.errors?.required" class="alert alert-danger">
+              Item list name is required
+            </div>
+          </label>
+          <label class="form-group has-float-label col-sm-3">
+            <select class="form-control" name="itemType" id="itemType" formControlName="itemListTypeID">
+              <option value="">Select Type</option>
+              <option *ngFor="let arr of ItemListTypes" [value]="arr.itemListTypeID">{{arr.itemListTypename}}</option>
+            </select>
+            <span> Type</span>
+            <img src="assets/images/small-spinner.gif" *ngIf="isTypeLoading">
+            <div *ngIf="submited && itemListForm.controls.itemListTypeID.errors?.required" class="alert alert-danger">
+              Type is required
+            </div>
+          </label>
+          <div class="col-sm-1">
+
+            <button type="button" *ngIf="!isEdit" class="btn btn-md btn-cstorebo btn-custom" style="cursor: pointer;"
+              (click)="onAddItemList()"> <i class="fa fa-plus" aria-hidden="true"></i> </button>
+            <button type="button" *ngIf="isEdit" class="btn btn-md btn-cstorebo" style="cursor: pointer;"
+              (click)="onAddItemList()"> {{'Update' }} </button>
+          </div>
+          <div *ngIf="isPriceGroup" class="col-sm-4">
+            <label class="form-group has-float-label col-sm-12">
+              <ng-select [items]="companyPriceGroupList" bindLabel="companyPriceGroupName"
+                placeholder="Options Based on Selection" bindValue="companyPriceGroupID"
+                formControlName="companyPriceGroupID">
+              </ng-select>
+              <span> Options Based on Selection </span>
+            </label>
+          </div>
+          <div *ngIf="isPriceGroup" class="col-sm-1">
+            <button type="button" class="btn btn-md btn-cstorebo btn-custom" style="cursor: pointer;"
+              (click)="addedAction($event)">
+              <i class="fa fa-plus"></i> </button>
+          </div>
+
+          <div *ngIf="isUPC" class="col-sm-4">
+            <label class="form-group has-float-label col-sm-12">
+              <input class="form-control" id="upcDescription" formControlName="upcDescription" name="upcDescription"
+                type="text" placeholder="UPC/Description" maxlength="250" (keyup.enter)="searchUPCCode()">
+              <span for="upcDescription"> UPC / Description</span>
+            </label>
+          </div>
+          <div *ngIf="isUPC" class="col-sm-1">
+            <button type="button" class="btn btn-md btn-cstorebo btn-custom" style="cursor: pointer;"
+              (click)="searchUPCCode()">
+              <i class="fa fa-search"></i> </button>
+          </div>
+
+        </div>
+      </div>
+      <div class="col-sm-12 form-group" *ngIf="isUPC">
+        <div class="row">
+          <!-- <div class="col-sm-4 form-group">
+            <label for="UPC_Description">UPC / Description</label>
+            <input class="form-control" id="UPC_Description" formControlName="upcDescription" name="upcDescription"
+              type="text" placeholder="UPC/Description" maxlength="250">
+          </div>
+          <div class="col-sm-4">
+            <div class="button-top"></div>
+            <button type="button" class="btn btn-md btn-primary" (click)="searchUPCCode()"><i class="fa fa-search"></i>
+              Search</button>
+          </div> -->
+        </div>
+        <div class="row form-group">
+          <div class="col-sm-6 ">
+            <app-cstore-grid [rowData]="itemListRowData" [cStoreGridOptions]="itemListGridOptions"
+              (added)="addedAction($event)" (gridReady)="onItemListGridReady($event)"></app-cstore-grid>
+          </div>
+          <div class="col-sm-6">
+            <!-- <h5>Included items</h5> -->
+            <app-cstore-grid [rowData]="includedItemListRowData" [cStoreGridOptions]="includedItemListGridOptions"
+              (gridReady)="onIncludedItemGridReady($event)" (delete)="deleteIncludedAction($event)">
+            </app-cstore-grid>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 mt-2 form-group" *ngIf="isPriceGroup">
+        <div class="row">
+          <!-- <div class="col-sm-4 form-group">
+            <label for="typeNames">Options</label>
+            <ng-select [items]="companyPriceGroupList" bindLabel="companyPriceGroupName" placeholder="Options"
+              bindValue="companyPriceGroupID" formControlName="companyPriceGroupID">
+            </ng-select>
+          </div>
+          <div class="col-sm-4">
+            <div class="button-top"></div>
+            <button type="button" class="btn btn-md btn-success" (click)="addedAction($event)"><i class="fa fa-plus"></i>
+              Add</button>
+          </div> -->
+          <div class="col-sm-12">
+            <app-expandable-grid [expandableGridOptions]="priceGroupExpandGridOptions" [rowData]="priceGroupRowData"
+              [gridHeight]="'210px'" [detailCellRenderers]="detailCellRenderer"
+              (gridReady)="onPriceGroupExpandReady($event)" (delete)="deleteIncludedAction($event)">
+            </app-expandable-grid>
+          </div>
+        </div>
+
+      </div>
+
+    </form>
+
+
+    <div class="row justify-content-end col-sm-12 form-group">
+      <div class="row">
+        <div class="inner-addon right-addon" style="width: 230px; float: right;">
+          <span>
+            <i class="fa fa-search card-title" aria-hidden="true"></i>
+          </span>
+          <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+            placeholder="Filter Search" [(ngModel)]="filterText" name="filterText">
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-12">
+        <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (edit)="editAction($event)"
+          (gridReady)="gridReady($event)" [textFilter]="filterText" (delete)="deleteAction($event)">
+        </app-cstore-grid>
+      </div>
+    </div>
+  </div>
+</div>

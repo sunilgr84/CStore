@@ -1,0 +1,58 @@
+<p>invoice bin report</p>
+<!-- <form [formGroup]="invoicebinReportForm">
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="row col-sm-3">
+          <label class="col-sm-12 form-group has-float-label" >
+            <app-daterangepicker [selectedDateRange]="selectedDateRange"
+              (dateRangeSelecetd)="dateRangeChange($event)">
+            </app-daterangepicker>
+            <span>Select Date Range</span>
+          </label>
+        </div>
+        <div class="col-sm-4 row ">
+          <label class="col-sm-12 form-group has-float-label" for="storeLocation" *ngIf="!isSingalStore">
+            <ng-select formControlName="storeLocation" [items]="storeLocationList" [multiple]="true"
+              [closeOnSelect]="false" [hideSelected]="true" bindLabel="storeName" placeholder="Store Location">
+            </ng-select>
+            <span> Store Location</span>
+          </label>
+          <label class="col-sm-12 form-group has-float-label" *ngIf="isSingalStore">
+            <input type="text" readonly class="form-control" name="store" [value]="storeLocationList[0].storeName">
+            <span> Store Location</span>
+          </label>
+        </div>
+
+       
+        <div class="row col-sm-4">
+          <label class="col-sm-12 form-group has-float-label" for="vendor">
+            <ng-select [items]="vendorList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+              bindLabel="vendorName" placeholder="Vendor" formControlName="vendorIDs">
+            </ng-select>
+            <span>Vendor</span>
+          </label>
+         
+        </div>
+        <div class="row col-sm-1">
+          <div class="form-group col-sm-12">
+            <button class="btn-md btn btn-primary" (click)="searchInvoicebinReport()">Go</button>
+          </div>
+        </div>
+      </div>
+     
+    </div>
+    <div class="row" *ngIf="this.rowData && this.rowData.length >0">
+      <div class="col-sm-12 mt-3">
+        <app-report-grid [rowData]="rowData" [expandableGridOptions]="gridOption" (gridReady)="onGridReady($event)"
+          (exportTo)="searchSalesReport($event)">
+        </app-report-grid>
+      </div>
+    </div>
+    <div class="row" *ngIf="this.rowData && this.rowData.length ===0">
+      <div class="col-sm-12 mt-3">
+        <strong>No Data Found</strong>
+      </div>
+    </div>
+  </div>
+</form> -->

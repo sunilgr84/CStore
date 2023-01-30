@@ -1,0 +1,419 @@
+<div class="mt-3">
+  <form [formGroup]="storeServiceForm">
+    <mat-vertical-stepper [linear]="isLinear" #stepper>
+
+      <mat-step stepControl="atmServiceFormGroup">
+        <ng-template matStepLabel>ATM Service</ng-template>
+        <div class="card" style="width: 30rem;">
+          <div class="card-body">
+            <div class="row mb-3">
+              <div class="col-sm-4 col-form-label">
+                <label for="storeATM">Store ATM</label>
+              </div>
+              <div class="col-sm-4">
+                <div class="custom-control custom-switch ">
+                  <input type="checkbox" class="custom-control-input" formControlName="isATMEnabled" id="storeATM">
+                  <label class="custom-control-label" for="storeATM"></label>
+                </div>
+              </div>
+            </div>
+            <div class="">
+              <div class="input-icon">
+                <label class="form-group has-float-label currency">
+                  <input type="text" floatOnly class="form-control" id="ATMTransaction"
+                    formControlName="atmTransactionFee" placeholder="ATM Transaction Fee ($)" name="ATMTransaction">
+                  <span for="ATMTransaction">ATM Transaction Fee</span>
+                  <!-- [disabled]="true" -->
+                </label>
+                <i *ngIf="storeServiceForm.get('atmTransactionFee').value">$</i>
+              </div>
+            </div>
+            <div class=" row">
+              <label class="form-group has-float-label col-sm-12">
+                <div>
+                  <select class="form-control" id="atmCreditBankAccount" formControlName="atmCreditPaymentSourceID">
+                    <option value="0">--Select Credit Bank Acct--</option>
+                    <option *ngFor="let obj of accountDetailsList" [value]="obj.paymentSourceID">{{obj.sourceName}}
+                    </option>
+                  </select>
+                  <img src="assets/images/small-spinner.gif" *ngIf="isCreditBankAccountLoading">
+                  <!-- [disabled]="false" -->
+                </div>
+                <span for="atmCreditBankAccount">Select Credit Bank Acct</span>
+              </label>
+            </div>
+            <div class="row justify-content-end">
+              <button class="btn btn-md btn-primary mr-3" (click)="save()" matStepperNext>
+                {{isEdit?'Update & Next' : 'Save & Next' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </mat-step>
+
+      <mat-step stepControl="billPayServiceFormGroup">
+        <!-- <form [formGroup]="secondFormGroup"> -->
+        <ng-template matStepLabel>Bill Pay Service</ng-template>
+        <div class="card ml-4" style="width: 25rem;">
+          <div class="card-body">
+            <div class="row mb-2">
+              <div class="col-sm-6 col-form-label"><label for="billPayService">Bill Pay Service?</label></div>
+              <div class="col-sm-4">
+                <div class="custom-control custom-switch ">
+                  <input type="checkbox" class="custom-control-input" formControlName="isBillPayEnabled"
+                    id="billPayService">
+                  <label class="custom-control-label" for="billPayService"></label>
+                </div>
+              </div>
+            </div>
+            <div class=" row">
+              <label class="form-group has-float-label col-sm-12">
+                <div>
+                  <!-- [disabled]="!storeService.isBillPayEnabled" -->
+                  <select class="form-control" id="ATMCreditBankAccount" formControlName="billPayPaymentSourceID">
+                    <option value="0">--Select Bank Acct--</option>
+                    <option *ngFor="let obj of accountDetailsList" [value]="obj.paymentSourceID">{{obj.sourceName}}
+                    </option>
+                  </select>
+                  <img src="assets/images/small-spinner.gif" *ngIf="isCreditBankAccountLoading">
+                </div>
+                <span for="ATMCreditBankAccount">Select Bank Acct</span>
+              </label>
+            </div>
+            <div class="row justify-content-end">
+              <button class="btn btn-md btn-cstorebo mr-3" mat-button matStepperPrevious>
+                Back</button> &nbsp;
+              <button class="btn btn-md btn-primary mr-3" (click)="save()" mat-button matStepperNext>{{isEdit?'Update &
+                Next' : 'Save & Next' }}</button>
+            </div>
+          </div>
+        </div>
+        <!-- </form> -->
+      </mat-step>
+
+      <mat-step stepControl="checkCashingServiceFormGroup">
+        <ng-template matStepLabel>Check Cashing Service</ng-template>
+        <div class="card ml-4" style="width: 18rem;">
+          <div class="card-body">
+            <div class="row mb-2">
+              <div class="col-sm-8 col-form-label"><label for="checkCashingService">Check Cashing Service?</label></div>
+              <div class="col-sm-4">
+                <div class="custom-switch custom-checkbox ">
+                  <input type="checkbox" class="custom-control-input" formControlName="isCheckCashingEnabled"
+                    id="checkCashingService">
+                  <label class="custom-control-label" for="checkCashingService"></label>
+                </div>
+              </div>
+            </div>
+            <div class="row justify-content-end">
+              <button class="btn btn-md btn-cstorebo mr-3" matStepperPrevious>
+                Back</button> &nbsp;
+              <button class="btn btn-md btn-primary mr-3" (click)="save()" matStepperNext>{{isEdit?'Update & Next' :
+                'Save & Next' }}</button>
+            </div>
+          </div>
+        </div>
+      </mat-step>
+
+      <mat-step stepControl="couponsFormGroup">
+        <ng-template matStepLabel>Coupons</ng-template>
+        <div class="card ml-4" style="width: 18rem;">
+          <div class="card-body">
+            <div class="row mb-2">
+              <div class="col-sm-8 col-form-label"><label for="storeAcceptCoupons">Store Accept Coupons</label></div>
+              <div class="col-sm-4">
+                <div class="custom-switch custom-checkbox ">
+                  <input type="checkbox" class="custom-control-input" formControlName="isCouponsEnabled"
+                    id="storeAcceptCoupons">
+                  <label class="custom-control-label" for="storeAcceptCoupons"></label>
+                </div>
+              </div>
+            </div>
+            <div class="row justify-content-end">
+              <button class="btn btn-md btn-cstorebo mr-3" matStepperPrevious>
+                Back</button>&nbsp;
+              <button class="btn btn-md btn-primary mr-3" (click)="save()" matStepperNext>{{isEdit?'Update & Next' :
+                'Save & Next' }}</button>
+            </div>
+          </div>
+        </div>
+      </mat-step>
+
+      <mat-step stepControl="mobileCouponsFormGroup">
+        <ng-template matStepLabel>Mobile Coupons</ng-template>
+        <div class="card ml-4" style="width: 25rem;">
+          <div class="card-body">
+            <div class="row mb-2">
+              <div class="col-sm-8 col-from-label"><label for="storeAcceptMobileCoupons">Store Accept Mobile
+                  Coupons</label></div>
+              <div class="col-sm-4">
+                <div class="custom-control custom-switch ">
+                  <input type="checkbox" class="custom-control-input" formControlName="isMobileCouponsEnabled"
+                    id="storeAcceptMobileCoupons">
+                  <label class="custom-control-label" for="storeAcceptMobileCoupons"></label>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="form-group has-float-label col-sm-12">
+                <div>
+                  <select class="form-control" id="mobileCouponsDepositAccount"
+                    formControlName="mobileCouponsPaymentSourceID">
+                    <option value="0">--Select Bank Acct--</option>
+                    <option *ngFor="let obj of accountDetailsList" [value]="obj.paymentSourceID">{{obj.sourceName}}
+                    </option>
+                  </select>
+                  <img src="assets/images/small-spinner.gif" *ngIf="isCreditBankAccountLoading">
+                </div>
+                <span for="mobileCouponsDepositAccount">Select Bank Acct</span>
+              </label>
+            </div>
+            <div class="row justify-content-end">
+              <button class="btn btn-md btn-cstorebo mr-3" matStepperPrevious>
+                Back</button>
+              &nbsp;
+              <button class="btn btn-md btn-primary mr-3" (click)="save()" matStepperNext>{{isEdit?'Update & Next' :
+                'Save & Next' }}</button>
+            </div>
+          </div>
+        </div>
+      </mat-step>
+
+      <mat-step stepControl="foodStampsEBTFormGroup">
+        <ng-template matStepLabel>Food Stamps-EBT</ng-template>
+        <div class="card ml-4" style="width: 25rem;">
+          <div class="card-body">
+            <div class="row mb-2">
+              <div class="col-sm-8 col-form-label"><label for="storeAcceptFoodStamps">Store Accept Food Stamps</label>
+              </div>
+              <div class="col-sm-4">
+                <div class="custom-control custom-switch ">
+                  <input type="checkbox" class="custom-control-input" formControlName="isFoodStampsEBTEnabled"
+                    id="storeAcceptFoodStamps">
+                  <label class="custom-control-label" for="storeAcceptFoodStamps"></label>
+                </div>
+              </div>
+            </div>
+            <div class=" row">
+              <label class="form-group has-float-label col-sm-12">
+                <div>
+                  <select class="form-control" id="ebtFundsDepositAcct" formControlName="foodStampsEBTPaymentSourceID">
+                    <option value="0">--Select Bank Acct--</option>
+                    <option *ngFor="let obj of accountDetailsList" [value]="obj.paymentSourceID">{{obj.sourceName}}
+                    </option>
+                  </select>
+                  <img src="assets/images/small-spinner.gif" *ngIf="isCreditBankAccountLoading">
+                </div>
+                <span for="ebtFundsDepositAcct">Select Bank Acct</span>
+              </label>
+            </div>
+            <div class="row justify-content-end">
+              <button class="btn btn-md btn-cstorebo mr-3" matStepperPrevious>
+
+                Back</button>&nbsp;
+              <button class="btn btn-md  btn-primary mr-3" (click)="save()" matStepperNext>{{isEdit?'Update & Next' :
+                'Save & Next' }}</button>
+            </div>
+          </div>
+        </div>
+      </mat-step>
+
+      <mat-step stepControl="fishingGameLicenceFormGroup">
+        <ng-template matStepLabel>Fishing Game Licence</ng-template>
+        <div class="card ml-4" style="width: 25rem;">
+          <div class="card-body">
+            <div class="row mb-2">
+              <div class="col-sm-8 col-form-label"><label for="storeSellsFishGameLicence">Store Sells Fish & Game
+                  Licence</label></div>
+              <div class="col-sm-4">
+                <div class="custom-control custom-switch ">
+                  <input type="checkbox" class="custom-control-input" formControlName="isFishingGameLincenseEnabled"
+                    id="storeSellsFishGameLicence">
+                  <label class="custom-control-label" for="storeSellsFishGameLicence"></label>
+                </div>
+              </div>
+            </div>
+            <div class="">
+              <div class="input-icon">
+                <label class="form-group has-float-label currency">
+                  <input type="text" floatOnly min="0" class="form-control" id="licenceFee" placeholder="Licence Fee"
+                    formControlName="fishingGameLicensefee">
+                  <span for="licenceFee">Licence Fee </span>
+                </label>
+                <i *ngIf="storeServiceForm.get('fishingGameLicensefee').value">$</i>
+              </div>
+            </div>
+            <div class="row">
+              <label class="form-group has-float-label col-sm-12">
+                <div class="">
+                  <select class="form-control" id="licenceFeeDebitAccount"
+                    formControlName="fishingGameLincensePaymentSourceID">
+                    <option value="0">--Select Debit Acct--</option>
+                    <option *ngFor="let obj of accountDetailsList" [value]="obj.paymentSourceID">{{obj.sourceName}}
+                    </option>
+                  </select>
+                  <img src="assets/images/small-spinner.gif" *ngIf="isCreditBankAccountLoading">
+                </div>
+                <span for="licenceFeeDebitAccount">Select Debit Acct</span>
+              </label>
+            </div>
+            <div class="row justify-content-end">
+              <button class="btn btn-md btn-cstorebo mr-3" matStepperPrevious>
+                Back</button> &nbsp;
+              <button class="btn btn-md btn-primary" (click)="save()" matStepperNext>{{isEdit?'Update & Next' : 'Save &
+                Next' }}</button>
+            </div>
+          </div>
+        </div>
+      </mat-step>
+
+      <mat-step stepControl="lotteryLottoKenoFormGroup">
+        <ng-template matStepLabel>Lottery Lotto & Keno</ng-template>
+        <div class="card ml-4" style="width: 25rem;">
+          <div class="card-body">
+            <div class="row mb-2">
+              <div class="col-sm-8 col-form-label"><label for="storeHasKenoMachine">Store Has Keno Machine</label></div>
+              <div class="col-sm-4">
+                <div class="custom-control custom-switch ">
+                  <input type="checkbox" class="custom-control-input" formControlName="isLotteryKenoEnabled"
+                    id="storeHasKenoMachine">
+                  <label class="custom-control-label" for="storeHasKenoMachine"></label>
+                </div>
+              </div>
+            </div>
+            <div class=" row">
+              <label class="form-group has-float-label col-sm-12">
+                <div>
+                  <input type="text" floatOnly min="0" class="form-control" id="lotteryCommision"
+                    placeholder="Lottery Commision" formControlName="lotteryCommission">
+                </div>
+                <span for="lotteryCommision">Lottery Commision</span>
+              </label>
+            </div>
+            <div class="row">
+              <label class="form-group has-float-label col-sm-12">
+                <div class="">
+                  <select class="form-control" id="licenceFeeDebitAcct" formControlName="lotteryKenoPaymentSourceID">
+                    <option value="0">--Select Debit Acct--</option>
+                    <option *ngFor="let obj of accountDetailsList" [value]="obj.paymentSourceID">{{obj.sourceName}}
+                    </option>
+                  </select>
+                  <img src="assets/images/small-spinner.gif" *ngIf="isCreditBankAccountLoading">
+                </div>
+                <span for="licenceFeeDebitAcct">Select Debit Acct</span>
+              </label>
+            </div>
+            <div class="row justify-content-end">
+              <button class="btn btn-md btn-cstorebo mr-3" matStepperPrevious>
+                Back</button>
+              &nbsp;
+              <button class="btn btn-md btn-primary mr-3" (click)="save()" matStepperNext>
+                {{isEdit?'Update & Next' : 'Save & Next' }}</button>
+            </div>
+          </div>
+        </div>
+      </mat-step>
+
+      <mat-step stepControl="moneyOrderFormGroup">
+        <ng-template matStepLabel>Money Order</ng-template>
+        <div class="card ml-4" style="width: 25rem;">
+          <div class="card-body">
+            <div class="row mb-2">
+              <div class="col-sm-8 col-form-label"><label for="sellMoneyOrder">Sell Money Order</label></div>
+              <div class="col-sm-4">
+                <div class="custom-control custom-switch ">
+                  <input type="checkbox" class="custom-control-input" formControlName="isMoneyOrderEnabled"
+                    id="sellMoneyOrder">
+                  <label class="custom-control-label" for="sellMoneyOrder"></label>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="form-group has-float-label col-sm-12">
+                <ng-select [items]="companyList" bindValue="companyID" labelForId="companyID" bindLabel="companyName"
+                  placeholder="Select Company Name" formControlName="moCompany">
+                </ng-select>
+                <img src="assets/images/small-spinner.gif" *ngIf="isCompanyLoading">
+                <span>Select Company Name</span>
+              </label>
+            </div>
+            <div class="">
+              <div class="input-icon">
+                <label class="form-group has-float-label currency">
+                  <input type="text" floatOnly class="form-control" id="moFees" placeholder="M.O Fees ($)"
+                    formControlName="moFees">
+                  <span for="moFees">M.O Fees </span>
+                </label>
+                <i *ngIf="storeServiceForm.get('moFees').value">$</i>
+              </div>
+            </div>
+            <div class="">
+              <div class="input-icon">
+                <label class="form-group has-float-label currency">
+                  <input type="text" floatOnly class="form-control" id="moBuying" placeholder="M.O Buying ($)"
+                    formControlName="moBuying" name="moBuying">
+                  <span for="moBuying">M.O Buying </span>
+                </label>
+                <i *ngIf="storeServiceForm.get('moBuying').value">$</i>
+              </div>
+            </div>
+            <div class=" row">
+              <label class="form-group has-float-label col-sm-12">
+                <div class="">
+                  <select class="form-control" id="debitBank" formControlName="moPaymentSourceID">
+                    <option value="0">--Select Debit Bank Acct--</option>
+                    <option *ngFor="let obj of accountDetailsList" [value]="obj.paymentSourceID">{{obj.sourceName}}
+                    </option>
+                  </select>
+                  <img src="assets/images/small-spinner.gif" *ngIf="isCreditBankAccountLoading">
+                </div>
+                <span for="debitBank">Select Debit Bank Acct</span>
+              </label>
+            </div>
+            <div class="row justify-content-end">
+              <button class="btn btn-md btn-cstorebo mr-3" matStepperPrevious>
+                Back</button>
+              &nbsp;
+              <button class="btn btn-md btn-primary mr-3" (click)="save()" matStepperNext>
+                {{isEdit?'Update & Next' : 'Save & Next' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </mat-step>
+
+      <mat-step stepControl="moneyTransferFormGroup">
+        <ng-template matStepLabel>Money Transfer</ng-template>
+        <div class="card ml-4" style="width: 25rem;">
+          <div class="card-body">
+            <div class="row mb-2">
+              <div class="col-sm-8 col-form-label"><label for="moneyTransfer">Money Transfer?</label></div>
+              <div class="col-sm-4">
+                <div class="custom-control custom-switch ">
+                  <input type="checkbox" class="custom-control-input" formControlName="isMoneyTransferEnabled"
+                    id="moneyTransfer">
+                  <label class="custom-control-label" for="moneyTransfer"></label>
+                </div>
+              </div>
+            </div>
+            <div class="row justify-content-end">
+              <button class="btn btn-md btn-cstorebo mr-3" matStepperPrevious>
+                Back</button>
+              &nbsp;
+              <button class="btn btn-md btn-primary mr-3" (click)="save()">
+                {{isEdit?'Update ' : 'Save' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </mat-step>
+
+    </mat-vertical-stepper>
+  </form>
+  <div class="col-sm-12 form-group justify-content-start text-right">
+    <button type="button" class="btn btn-md btn-cstorebo btnsub mr-3" (click)="onNavigateAccounting()">
+      Add Accounting</button>
+    <button type="button" class="btn btn-md btn-cstorebo mr-3" (click)="backToMainList()">
+      &nbsp; Back to Store List </button>
+  </div>
+</div>

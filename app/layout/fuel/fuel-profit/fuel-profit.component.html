@@ -1,0 +1,80 @@
+<div class="card">
+  <div class="card-body">
+    <div class="card-title col-sm-12">
+      <h5>Fuel Profit</h5>
+    </div>
+    <div class="container-fluid mt-4">
+      <label class="form-group has-float-label col-md-6">
+        <app-daterangepicker
+          [selectedDateRange]="selectedDateRange"
+          (dateRangeSelecetd)="dateRangeChange($event)">
+        </app-daterangepicker>
+        <span>Select Date Range</span>
+      </label>
+
+      <h5>{{ fuelProfitType }}</h5>
+      <table *ngIf="fuelProfitType === 'Profit Split'" class="mt-4">
+        <thead>
+          <tr>
+            <th>Fuel Grade</th>
+            <th>Total Gallons Sold</th>
+            <th>Gross Profit</th>
+            <th>Store's Share ( {{ fuelProfitData ? fuelProfitData[0].storePercentage : ''}}% )</th>
+            <th>Jobber's Share ( {{ fuelProfitData ? fuelProfitData[0].jobberPercentage : ''}}% )</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of fuelProfitData">
+            <td>{{ item.fuelGrade }}</td>
+            <td>{{ item.totalSales }}</td>
+            <td>{{ item.grossProfit }}</td>
+            <td>{{ item.storeShare }}</td>
+            <td>{{ item.jobberShare }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table *ngIf="fuelProfitType === 'Consignment'" class="mt-4">
+        <thead>
+          <tr>
+            <th>Fuel Grade</th>
+            <th>Total Sale</th>
+            <th>Profit per gallon</th>
+            <th>Gross Profit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of fuelProfitData">
+            <td>{{ item.fuelGrade }}</td>
+            <td>{{ item.totalSales }}</td>
+            <td>{{ item.profitPerGallon }}</td>
+            <td>{{ item.grossProfit }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table *ngIf="fuelProfitType === 'Purchase'" class="mt-4">
+        <thead>
+          <tr>
+            <th>Fuel Grade</th>
+            <th>Total Sale</th>
+            <th>Average Selling Price</th>
+            <th>Average Buying Price</th>
+            <th>Profit adjusted against Inventory Short/Over</th>
+            <th>Gross Profit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of fuelProfitData">
+            <td>{{ item.fuelGrade }}</td>
+            <td>{{ item.totalSales }}</td>
+            <td>{{ item.avgSellingPrice }}</td>
+            <td>{{ item.avgBuyingPrice }}</td>
+            <td>{{ item.profitAdjusted }}</td>
+            <td>{{ item.grossProfit }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

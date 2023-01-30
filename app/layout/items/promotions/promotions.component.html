@@ -1,0 +1,22 @@
+<app-page-header [heading]="'Promotion'" [icon]="'fa-beer'"></app-page-header>
+
+<div>
+  <!-- [destroyOnHide]="false" -->
+  <ngb-tabset type="pills">
+    <ngb-tab title="Item Maintenance">
+      <ng-template ngbTabContent>
+        <app-item-maintanence></app-item-maintanence>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab title="Combo Maintenance">
+      <ng-template ngbTabContent>
+        <app-combo-maintanence></app-combo-maintanence>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab title="Mix Match Maintenance">
+      <ng-template ngbTabContent>
+        <app-mixmatch-maintannece></app-mixmatch-maintannece>
+      </ng-template>
+    </ngb-tab>
+  </ngb-tabset>
+</div>

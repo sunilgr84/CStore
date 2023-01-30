@@ -1,0 +1,85 @@
+::ng-deep .popover {
+  max-width: 700px;
+}
+
+::ng-deep .date-range-container {
+  width: 650px;
+}
+
+.custom-day {
+  text-align: center;
+  padding: 0.185rem 0.25rem;
+  display: inline-block;
+  height: 2rem;
+  width: 2rem;
+}
+.custom-day.focused {
+  background-color: #e6e6e6;
+}
+.custom-day.range,
+.custom-day:hover {
+  background-color: rgb(2, 117, 216);
+  color: white;
+}
+.custom-day.faded {
+  background-color: rgba(2, 117, 216, 0.5);
+}
+
+.btn-primary-active {
+  color: #fff;
+  background-color: #19b5fe;
+  border-color: #19b5fe;
+  border-radius: 1rem;
+}
+.btn-date-selector {
+  width: 100%;
+  border-radius: 0.75rem;
+  background-color: transparent;
+  border: 1px solid #ccc;
+  padding: 0.407rem 0.75rem;
+  font-size: inherit;
+  font-family: inherit;
+}
+.input-group {
+  min-height: 36px;
+}
+
+.popover__content {
+  opacity: 0;
+  position: absolute;
+  display: block;
+  top: 4rem;
+  transform: translate(0, 10px);
+  background-color: white;
+  padding: 0.5rem 0.75rem;
+  color: #212529;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+  width: auto;
+  z-index: 1060;
+  opacity: 1;
+  transform: translate(0, -20px);
+  transition: all 0.5s cubic-bezier(0.75, -0.02, 0.2, 0.97);
+}
+.popover__content:before {
+  position: absolute;
+  z-index: -1;
+  content: "";
+  // right: calc(50% - 10px);
+  top: -8px;
+  border-style: solid;
+  border-width: 0 10px 10px 10px;
+  border-color: transparent transparent white transparent;
+  transition-duration: 0.3s;
+  transition-property: transform;
+}
+.popover__visible {
+  visibility: visible;
+}
+.popover__hidden {
+  visibility: hidden;
+}
+::ng-deep .ngb-dp-week {
+  .disabled {
+    color: #c3c3c3 !important;
+  }
+}

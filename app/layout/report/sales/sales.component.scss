@@ -1,0 +1,15 @@
+ngb-tabset .nav-item .nav-link {
+  font-size: 0.75rem !important;
+}
+::ng-deep ngb-tabset .nav-item .nav-link {
+  padding: 4.5px;
+  font-size: 0.75rem !important;
+}
+::ng-deep ngb-tabset .nav-item .nav-link:hover {
+  font-size: 1rem !important;
+  color: #dc3545;
+}
+
+::ng-deep .nav{
+    min-height: 35px;
+}

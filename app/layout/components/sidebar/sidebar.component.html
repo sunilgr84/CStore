@@ -1,0 +1,83 @@
+<nav class="sidebar" [ngClass]="{sidebarPushRight: isActive, collapsed: collapsed}">
+  <div class="list-group">
+    <div class="list-group-content" *ngFor="let menu of sidebar">
+      <a *ngIf="!menu.submenu; else withSubmenu" routerLink="/{{menu.path}}" [routerLinkActive]="['router-link-active']"
+        [title]="menu.name" class="list-group-item" (click)="addExpandClass(menu.path)">
+        <!-- <i class="fa {{menu.iconClass}}"></i>&nbsp; -->
+        <img *ngIf="menu.iconName" [src]="'assets/images/icons/'+menu.iconName" [class]="menu.customClass">&nbsp;
+        <span>{{ menu.name }}</span>
+      </a>
+      <ng-template #withSubmenu>
+        <div class="nested-menu">
+          <a class="list-group-item" (click)="addExpandClass(menu.path)" [title]="menu.name"
+            [class.expand-parent]="showMenu === menu.path">
+            <!-- <i class="fa {{menu.iconClass}}"></i>&nbsp; <span>{{ menu.name }}</span>&nbsp; -->
+            <img *ngIf="menu.iconName" [src]="'assets/images/icons/'+menu.iconName" [class]="menu.customClass">&nbsp;
+            <span class="nested-parent">{{ menu.name }}</span>&nbsp;
+            <i style="float:right;" [ngClass]="showMenu==menu.path?'fa fa-angle-down':'fa fa-angle-right'"></i>
+          </a>
+          <li class="nested" [class.expand]="showMenu === menu.path && !collapsed">
+            <ul class="submenu">
+              <li *ngFor="let submenu of menu.submenu" [title]="submenu.name">
+                <a *ngIf="submenu.fragment" routerLink="/{{menu.path}}/{{submenu.path}}"
+                  [routerLinkActive]="['router-link-active']" fragment={{submenu.fragment}}>
+                  <i [ngClass]="'fa '+submenu.iconClass" aria-hidden="true"></i>
+                  <span> {{ submenu.name }}</span>
+                </a>
+                <a *ngIf="!submenu.fragment" routerLink="/{{menu.path}}/{{submenu.path}}"
+                  [routerLinkActive]="['router-link-active']">
+                  <span>{{ submenu.name }}</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+        </div>
+      </ng-template>
+    </div>
+    <!-- <div class="list-group">
+      <div class="nested-menu" *ngIf="userInfo?.companyId">
+        <a class="list-group-item" (click)="addExpandClass(userInfo.companyId)" [title]="userInfo.companyName">
+          <span>{{ userInfo.companyName }}</span>&nbsp;
+          <i style="float:right;"
+            [ngClass]="showMenu==userInfo.companyId?'fa fa-angle-double-down':'fa fa-angle-double-right'"></i>
+        </a>
+        <li class="nested" [class.expand]="showMenu === userInfo.companyId">
+          <a (click)="companyPopup()">
+            <span>{{ 'Company Change'}}</span>
+          </a>
+        </li>
+      </div>
+    </div> -->
+
+    <div class="header-fields">
+      <div class="nested-menu">
+        <a class="list-group-item" (click)="addExpandClass('profile')">
+          <span><i class="fa fa-user"></i>&nbsp; {{userInfo.userName ? userInfo.userName  : 'Guest'}} </span>
+        </a>
+        <li class="nested" [class.expand]="showMenu === 'profile'">
+          <ul class="submenu">
+            <li>
+              <a [routerLink]="['/admin/user-management']">
+                <span><i class="fa fa-fw fa-user"></i> {{ 'Profile' }}</span>
+              </a>
+            </li>
+            <li *ngIf="userInfo && userInfo.roleName===roleNameSuperAdmin">
+              <a (click)="companyPopup()">
+                <span><i class="fa fa-retweet" aria-hidden="true"></i> {{ 'Change Company' }}</span>
+              </a>
+            </li>
+            <li>
+              <a [routerLink]="['/login']" (click)="onLoggedout()">
+                <span><i class="fa fa-fw fa-power-off"></i> {{ 'Log Out' }}</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </div>
+    </div>
+  </div>
+  <div class="toggle-button" [ngClass]="{collapsed: collapsed}" (click)="toggleCollapsed()">
+    <i class="fa fa-fw" [ngClass]="{'fa-angle-double-left': !collapsed, 'fa-angle-double-right':collapsed}"></i>&nbsp;
+    <span>{{ 'Collapse Sidebar' }}</span>
+  </div>
+</nav>

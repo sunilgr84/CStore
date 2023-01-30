@@ -1,0 +1,117 @@
+<app-page-header [heading]="'Price Group'" [icon]="'fa-bar-chart-o'"></app-page-header>
+<div [@routerTransition]>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <!-- <div class="card-header">
+          <strong>{{title}}</strong>
+        </div> -->
+        <div class="card-body">
+          <div class="col-sm-12 form-group">
+            <h5 class="card-title mb-4">{{title}}
+              <button type="button" *ngIf="!showForm" class="btn btn-md btn-cstorebo btnsub float-right mb-1"
+                (click)="addNewPriceGroup()">
+                <i class="fa fa-plus" aria-hidden="true"></i> Add New</button>
+            </h5>
+          </div>
+          <div class="col-sm-12">
+            <form novalidate [formGroup]="priceGroupForm" (ngSubmit)="editOrSave()">
+              <div class="row" *ngIf="showForm">
+                <label class="form-group has-float-label col-sm-3">
+                  <select class="form-control" formControlName="masterManufacturerID" id="masterManufacturerID"
+                    (change)="onManufacturerChanged()" required>
+                    <option value="">Select Manufacturer</option>
+                    <option *ngFor="let obj of manufacturerList" [value]="obj.manufacturerID">
+                      {{obj.manufacturerName}}</option>
+                  </select>
+                  <span for="masterManufacturerID">Select Manufacturer</span>
+                  <img src="assets/images/small-spinner.gif" *ngIf="isManufacturerLoading">
+                  <div *ngIf="submitted && priceGroupForm.controls.masterManufacturerID.errors?.required"
+                    class="alert alert-danger">
+                    Manufacturer is required
+                  </div>
+                </label>
+
+                <label class="form-group has-float-label col-sm-3">
+                  <select class="form-control" formControlName="brandID" id="brandID" required>
+                    <option value="">Select Brand</option>
+                    <option *ngFor="let obj of brandList" [value]="obj.brandID">
+                      {{obj.brandName}}</option>
+                  </select>
+                  <span for="brandID">Select Brand</span>
+                  <img src="assets/images/small-spinner.gif" *ngIf="isBrandLoading">
+                  <div *ngIf="submitted && priceGroupForm.controls.brandID.errors?.required" class="alert alert-danger">
+                    Brand is required
+                  </div>
+                </label>
+
+                <label class="form-group has-float-label col-sm-3">
+                  <input type="text" class="form-control" id="groupName" required formControlName="masterGroupName"
+                    placeholder="Group Name" maxlength="25" >
+                  <span for="groupName">Group Name</span>
+                  <div *ngIf="submitted && priceGroupForm.controls.masterGroupName.errors?.required"
+                    class="alert alert-danger">
+                    Group name is required
+                  </div>
+                </label>
+                <div class="col-sm-3">
+                  <div class="custom-control custom-checkbox checkboxOne">
+                    <input type="checkbox" class="custom-control-input form-control" id="isDefault"
+                      formControlName="isDefault">
+                    <label class="custom-control-label" for="isDefault">Is Default</label>
+                  </div>
+                </div>
+                <!-- <div class="row"> -->
+                <div class="col-sm-12 text-right mb-3 pr-0">
+                  <button type="button" class="btn btn-md btn-primary mr-3" (click)="reset()">
+                    Reset
+                  </button>
+                  <button type="submit" class="btn btn-md btn-primary">
+                    {{isEdit?'Update':'Save'}}</button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="row">
+            <div class="row justify-content-end margin-bottom-3 col-sm-12">
+              <div class="inner-addon right-addon">
+                <span> <i class="fa fa-search card-title" aria-hidden="true"></i> </span>
+                <input type="text" class="form-control" aria-label="Default"
+                  aria-describedby="inputGroup-sizing-default" placeholder="Filter Search" [(ngModel)]="filterText"
+                  name="filterText">
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12" style="margin-top:1rem">
+            <app-cstore-grid [cStoreGridOptions]="gridOptions" (edit)="editAction($event)"
+              [textFilter]="filterText" (delete)="deleteAction($event)" (details)="openSideContainer($event)" (gridReady)="onGridReady($event)">
+            </app-cstore-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="overlay" (click)="closeSideContainer()"></div>
+<div id="mySidecontainer" [ngClass]="sideContainer">
+  <a href="JavaScript:void(0);" class="closebtn" (click)="closeSideContainer()">&times;</a>
+  <div class="col-md-6 top-container">
+    <h5>All Item Data</h5>
+  </div>
+  <hr>
+  <div class="main-side-container">
+    <div class="row form-group">
+      <div class="row justify-content-end margin-bottom-3 col-sm-12">
+        <div class="inner-addon right-addon">
+          <span> <i class="fa fa-search card-title" aria-hidden="true"></i> </span>
+          <input type="text" class="form-control" aria-label="Default"
+            aria-describedby="inputGroup-sizing-default" placeholder="Filter Search" (keyup)="onSearchTextBoxChanged(filterText1)" [(ngModel)]="filterText1"
+            name="filterText1">
+        </div>
+      </div>
+    </div>
+    <app-pagination-grid [paginationGridOptions]="gridOptions1" (delete)="deleteByMasterPriceBookItemID($event)" (gridReady)="onGridReady1($event)">
+    </app-pagination-grid>
+  </div>
+</div>

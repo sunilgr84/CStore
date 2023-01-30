@@ -1,0 +1,178 @@
+::ng-deep .day-detail-accordian > ngb-accordion > .card > .card-header {
+    margin-bottom: -1px;
+    background: #eff2f8 !important;
+    padding: 10px !important;
+    color: #212529 !important;
+}
+::ng-deep .day-detail-accordian > ngb-accordion > .card > .collapse > .card-body {
+    padding: 0.5rem !important;
+}
+::ng-deep .promotions-panel {
+    color: black;
+    text-decoration: none;
+}
+:host ::ng-deep .ag-header-cell-label{
+    justify-content: center !important;
+}
+//start overlay container
+.side-container-close {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    margin-top: 70px;
+    right: 0;
+    background-color: #fff;
+    overflow-x: hidden;
+    padding-top: 60px;
+    transition: all 0.5s;
+    border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
+}
+
+.side-container-open {
+    width: 50%;
+    height: 90%;
+    position: fixed;
+    z-index: 999;
+    top: 0;
+    margin-top: 70px;
+    right: 0;
+    background-color: #fff;
+    overflow-x: hidden;
+    transition: all 0.5s;
+    border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
+}
+
+#main {
+    transition: margin-left 0.5s;
+}
+
+#overlay {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2;
+    cursor: pointer;
+}
+
+.top-container {
+    padding-left: 30px;
+}
+
+.closebtn {
+    float: right;
+    font-size: 20px;
+    position: relative;
+    top: -5px;
+    text-align: right;
+}
+
+.bg-gray {
+    background-color: rgba(0, 0, 0, 0.03);
+}
+#addItemContainer {
+    font-size: 0.9rem;
+}
+.text-muted {
+    font-size: 0.7rem;
+}
+//end overlay container
+::ng-deep #salespanel-1-header {
+    text-align: center;
+    padding: 5px 10px !important;
+}
+::ng-deep #salespanel-1-header > btn {
+    padding: 0px;
+    max-height: 28px;
+}
+::ng-deep #salespanel-0-header {
+    text-align: center;
+    padding: 5px 10px !important;
+}
+::ng-deep #salespanel-0-header > .btn {
+    padding: 0px;
+    // max-height: 28px;
+}
+::ng-deep #salespanel-2-header {
+    text-align: center;
+}
+::ng-deep #salespanel-3-header {
+    text-align: center;
+}
+::ng-deep #salespanel-4-header {
+    text-align: center;
+}
+::ng-deep #salespanel-4-header > .btn {
+    width: 90% !important;
+}
+::ng-deep #salespanel-2-header > .btn {
+    width: 90% !important;
+}
+::ng-deep #salespanel-5-header {
+    text-align: center;
+}
+::ng-deep #salespanel-7-header {
+    text-align: center;
+}
+::ng-deep #salespanel-8-header {
+    text-align: center;
+}
+.atm-top {
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    background-color: #eff2f8;
+}
+::ng-deep #salespanel-6-header {
+    text-align: center;
+}
+.mt-5px {
+    margin-top: 5px;
+}
+.image {
+    width: 35px;
+    height: 35px;
+    position: relative;
+}
+.image-card:hover img {
+    opacity: 0.5;
+}
+.image-card:hover i {
+    display: block;
+}
+.image-card i {
+    position: absolute;
+    display: none;
+}
+
+.image-card i.delete {
+    top: 22px;
+    left: 32%;
+    font-size: 18px;
+}
+
+.ft-16 {
+    font-size: 16px;
+}
+
+.close-purchase {
+    position: absolute;
+    right: 0;
+}
+::ng-deep .input-icon > input {
+    padding-left: 20px;
+}
+
+.left-25r {
+    left: 0.25rem !important;
+}
+
+.has-float-label .form-control:placeholder-shown:not(:focus) + * {
+    top: 1rem;
+}

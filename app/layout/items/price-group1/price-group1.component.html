@@ -1,0 +1,98 @@
+<div class="card">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-12">
+        <h3>Price Change by Group</h3>
+      </div>
+      <div class="col-sm-3"  *ngIf="!bulkUpdate">
+        <div class="form-group mb-2" *ngIf="storeLocationList.length>1;else singleStore">
+          <div class="mb-2">Select Store</div>
+          <ng-select class="mix-match-custom-select" [items]="storeLocationList" [hideSelected]="true"
+            bindLabel="storeName" bindValue="storeLocationID" placeholder="Select Store Location"
+            [(ngModel)]="storeLocationId" (change)="getPriceGroupData()">
+          </ng-select>
+        </div>
+        <ng-template #singleStore>
+          <div class="form-group mb-2">
+            <div class="single-company">
+              <span>Store : {{storeLocationList && storeLocationList[0] && storeLocationList[0].storeName}}</span>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+      <div class="col-sm-3" *ngIf="bulkUpdate && storeLocationList.length>1">
+        <div class="form-group mb-2">
+          <div class="mb-2">Bulk Update</div>
+          <ng-select class="mix-match-custom-select" [multiple]="true" [items]="storeLocationList" [hideSelected]="true"
+            bindLabel="storeName" bindValue="storeLocationID" placeholder="Select Store Location"
+            [(ngModel)]="storeLocationIdBulkUpdate">
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-sm-2" *ngIf="bulkUpdate">
+        <div class="form-group mb-2">
+          <div class="mb-2">Buying Cost</div>
+          <input #sprice type="text" class="form-control mix-match-search" numberTwoDecimalOnly placeholder="Buying Cost"  [(ngModel)]="buyingPrice">
+        </div>
+      </div>
+      <div class="col-sm-2" *ngIf="bulkUpdate">
+        <div class="form-group mb-2">
+          <div class="mb-2">Selling Price</div>
+          <input #sprice type="text" class="form-control mix-match-search" numberTwoDecimalOnly placeholder="Selling Price" [(ngModel)]="sellingPrice">
+        </div>
+      </div>
+      <div class="col-sm-2" *ngIf="bulkUpdate">
+        <button type="button" class="btn btn-md btn-primary mt-4"
+          (click)="updateMulti()">Update</button>
+      </div>
+      <div class="col-sm-6" *ngIf="!bulkUpdate"></div>
+      <div class="col-sm-3">
+        <div class="inner-addon right-addon mt-4">
+          <span>
+            <i class="fa fa-search card-title" aria-hidden="true"></i>
+          </span>
+          <input type="text" class="form-control mix-match-search" aria-label="Default"
+            aria-describedby="inputGroup-sizing-default" placeholder="Filter Search" [(ngModel)]="filterText"
+            name="filterText" (input)="onFilterTextBoxChanged()">
+        </div>
+      </div>
+      <div class="col-sm-12 mt-1 pagination-container">
+        <!-- <app-editable-grid [rowData]="editableRowData" [editGridOptions]="editableGridOptions"
+          (gridReady)="editableOnGridReady($event)" (delete)="deleteAction($event)" (save)="editOrSave($event,false)"
+          (edit)="editOrSave($event,true)">
+        </app-editable-grid> -->
+        <ag-grid-angular #agGrid style="width: 100%;" domLayout='autoHeight' [paginationPageSize]="paginationPageSize"
+          [pagination]="true" class="ag-theme-material" [gridOptions]="gridOptions" [headerHeight]="headerHeight"
+          [columnDefs]="columnDefs" [rowData]="rowData" [rowSelection]="rowSelection" (gridReady)="onGridReady($event)"
+          [getRowHeight]="getRowHeight" [frameworkComponents]="frameworkComponents" [editType]="editType"
+          (cellClicked)="onCellClicked($event)" (change)="onChange($event)" (modelUpdated)="onModelUpdated($event)"
+          (rowEditingStopped)="onRowEditingStopped($event)" [enableSorting]="true"  (rowSelected)="onRowSelected($event)"></ag-grid-angular>
+        <div class="pagination-header">
+          Page Size:
+          <select (change)="onPageSizeChanged()" id="page-size">
+            <!-- <option value="10" selected="">10</option> -->
+            <option value="15" selected="">15</option>
+            <option value="100">100</option>
+            <option value="500">500</option>
+            <option value="1000">1000</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- [groupSelectsChildren]="true" -->
+<!-- [groupDefaultExpanded]="groupDefaultExpanded" [autoGroupColumnDef]="autoGroupColumnDef" [defaultColDef]="defaultColDef" -->
+<div id="overlay" (click)="closeSideContainer()"></div>
+<div id="mySidecontainer" [ngClass]="sideContainer">
+  <a href="JavaScript:void(0);" class="closebtn" (click)="closeSideContainer()">&times;</a>
+  <div class="col-md-6 top-container">
+    <h5>Item Count Data</h5>
+  </div>
+  <hr>
+  <div class="main-side-container">
+    <ag-grid-angular #agGrid style="width: 100%;" domLayout='autoHeight' class="ag-theme-material"
+      [gridOptions]="gridOptions" [headerHeight]="headerHeight" [columnDefs]="subContColumnDefs"
+      [rowData]="subContRowData" [getRowHeight]="getRowHeight"></ag-grid-angular>
+  </div>
+</div>

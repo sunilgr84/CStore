@@ -1,0 +1,16 @@
+<div class="card">
+  <div class="card-body">
+    <div class="row form-group">
+      <label class="col-sm-1" for="store">Store</label>
+      <div class="col-sm-3">
+        <select class="form-control" id="store">
+          <option value="">--Select Store--</option>
+        </select>
+      </div>
+      <div class="col-sm-3"><label>Total Items:10</label></div>
+    </div>
+    <div>
+      <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (edit)="editAction($event)"></app-cstore-grid>
+    </div>
+  </div>
+</div>

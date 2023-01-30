@@ -1,0 +1,155 @@
+body {
+  font-size: 1.1rem;
+}
+#frontLeaf {
+  height: 504px;
+}
+
+#middleLeaf {
+  height: 504px;
+}
+
+#endLeaf {
+  height: 504px;
+}
+
+.ml-14 {
+  margin-left: 14rem;
+}
+
+.micr-div {
+  height: 60px;
+}
+
+.mt-140 {
+  margin-top: 140px;
+}
+
+.fs-1-1 {
+  font-size: 1.2rem;
+}
+
+.fs-1-2 {
+  font-size: 1.3rem;
+}
+
+.ml-12 {
+  margin-left: 12px;
+}
+.sig-div {
+  height: 72px;
+}
+.signatureimg {
+  height: 72px;
+  width: 100%;
+  content: "";
+  display: block;
+  border-bottom: 3px solid black;
+}
+
+.auth-sig {
+  text-align: center;
+  font-weight: bold;
+  height: 36px;
+}
+
+.check-page {
+  font-weight: 500;
+}
+
+.logoimg {
+  height: 80px;
+  width: 100%;
+}
+
+.datedata {
+  bottom: 0;
+  display: block;
+  text-align: right;
+  margin-top: 1rem;
+}
+
+.amount-box {
+  padding: 2px 30px;
+  border: 3px solid black;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.amount-symbol {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.row-bordered:after {
+  content: "";
+  display: block;
+  border-bottom: 2px solid black;
+}
+
+.row-bordered2:after {
+  content: "";
+  display: block;
+  border-bottom: 2px solid black;
+  //margin-left: 3.6rem;
+  width: 50%;
+}
+
+.row-bordered-amount:after {
+  content: "";
+  display: block;
+  border-bottom: 2px solid black;
+  margin-left: 12px;
+}
+
+.for-div {
+  height: 36px;
+  bottom: 0;
+  position: absolute;
+}
+
+@font-face {
+  font-family: micrFont;
+  src: url(src/assets/fonts/micrenc.ttf);
+}
+
+.check-number {
+  font-family: micrFont;
+  font-size: 2.375rem;
+  font-weight: 500;
+}
+
+.fi-name {
+  font-size: 1.3rem;
+}
+
+.bottom {
+  bottom: 36px;
+  position: absolute;
+}
+.limit-words {
+  white-space: nowrap;
+  width: 230px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media print {
+  .print-btn-row {
+    display: none;
+  }
+}
+.storeName {
+  font-size: 16px;
+  font-weight: 800 !important;
+}
+.payText {
+  text-align: right;
+  max-width: 15%;
+}
+.vendorName {
+  padding:0 0px 0 0px !important;
+}
+.underLine{
+  border-bottom: 1.5px solid black;
+}

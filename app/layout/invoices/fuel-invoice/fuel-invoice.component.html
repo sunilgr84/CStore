@@ -1,0 +1,114 @@
+<div class="main-content-wrap d-flex flex-column">
+  <div class="main-content">
+    <section *ngIf="!isHideAddFuelInvoice">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card m-1">
+            <form>
+              <div class="card-header">
+                <div class="col-sm-2" *ngIf="locationList && locationList.length!==1">
+                  <ng-select [items]="locationList" bindLabel="storeName" [multiple]="true"
+                    [(ngModel)]="advanceSearchForm.storeLocationID" [closeOnSelect]="false" name="storeName" [hideSelected]="true"
+                    placeholder="Store Location" groupBy="companyID" [selectableGroup]="true" [selectableGroupAsModel]="false">
+                    <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                      <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                    </ng-template>
+                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                      <div class="ng-value" *ngFor="let item of items | slice:0:4">
+                        <span class="ng-value-label">
+                          {{item.storeName}}</span>
+                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                      </div>
+                      <div class="ng-value" *ngIf="items.length > 2">
+                        <span class="ng-value-label">{{items.length - 2}} more...</span>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                  <img src="assets/images/small-spinner.gif" *ngIf="isStoreLocationLoading">
+                </div>
+                <div class="col-sm-2">
+                  <ng-select [items]="vendorList" [multiple]="true" [closeOnSelect]="false"
+                        [(ngModel)]="advanceSearchForm.vendorID" name="vendorID" [hideSelected]="true" bindLabel="vendorName"
+                        placeholder="Vendor"
+                        groupBy="companyID"
+                        [selectableGroup]="true" [selectableGroupAsModel]="false">
+                        <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                            <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                        </ng-template>
+                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                          <div class="ng-value" *ngFor="let item of items | slice:0:4">
+                            <span class="ng-value-label">
+                              {{item.vendorName}}</span>
+                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                          </div>
+                          <div class="ng-value" *ngIf="items.length > 2">
+                            <span class="ng-value-label">{{items.length - 2}} more...</span>
+                          </div>
+                        </ng-template>
+                      </ng-select>
+                      <img src="assets/images/small-spinner.gif" *ngIf="isVendorLoading">
+                </div>
+                <div class="col-sm-2">
+                  <app-daterangepicker class="invoice-daterange" [selectedDateRange]="selectedDateRange" (dateRangeSelecetd)="dateRangeChange($event)">
+                  </app-daterangepicker>
+                </div>
+                <div class="col-sm-2">
+                  <input type="text" [(ngModel)]="advanceSearchForm.invoiceNo" name="invoiceNo" class="form-control" id="invoiceNo"
+                    placeholder="Invoice No.">
+                </div>
+                <div class="col-sm-3 p-0">
+                  <button type="button" class="btn btn-md btn-primary ml-2 mw-80" (click)="invoiceSearch()">
+                    Search</button>
+                  <button type="button" class="btn btn-md btn-primary ml-2 mw-80" (click)="addFuelInvoice(true)">
+                    <i class="fa fa-plus" aria-hidden="true"></i> Add New</button>
+                </div>
+              </div>         
+            </form>
+
+            <div class="pmc-container by-none">
+              <div class="pmc-header d-flex">
+                <div class="col-sm-1 p-0">
+                  <div class="custom-control custom-checkbox d-inline" *ngIf="showSelectAll">
+                    <mat-checkbox [(ngModel)]="selectAllInvoiceFlag" (change)="selectAllInvoice()">
+                      Select All
+                    </mat-checkbox>
+                  </div>
+                </div> 
+                <div class="col-sm-1" *ngIf="showAddInvoiceOptions">
+                  <button type="button" class="ml-4 btn btn-md btn-primary" (click)="deleteBulkInvoice()">Delete
+                    Invoice</button>
+                </div>
+               
+                <div class="col-sm-3 ml-auto">
+                  <div class="inner-addon right-addon">
+                    <span>
+                      <i class="fa fa-search card-title" aria-hidden="true"></i>
+                    </span>
+                    <input type="text" class="form-control" aria-label="Default"
+                      aria-describedby="inputGroup-sizing-default" placeholder="Filter Search" name="filterText"
+                      #invoiceFilter>
+                  </div>
+                </div>
+              </div>
+              <div class="pmc-body pt-0">
+                <div class="col-12 p-0" *ngIf="gridOptions && reInitialize">
+                  <app-pagination-grid [paginationGridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+                  (edit)="editAction($event)" (delete)="deleteAction($event)" (download)="downloadInvoice($event)"
+                  (view)="uploadInvoice($event)"
+                  (rowSelected)="onRowSelected($event)">
+                </app-pagination-grid>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+    <section  *ngIf="isHideAddFuelInvoice">
+      <app-add-fuel-invoice [locationList]="locationList" [vendorList]="vendorList" [editData]="editData"
+      (backToList)="backToList($event)">
+    </app-add-fuel-invoice>
+    </section>
+  </div>
+</div>

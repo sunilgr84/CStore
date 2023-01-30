@@ -1,0 +1,62 @@
+<!-- ========================   Sales Tax    ============================= -->
+
+<div class="card mt-3">
+  <div class="card-body">
+    <div class=" form-group">
+      <div class="col-sm-12">
+        <button type="button" class="btn btn-md btn-cstorebo btn-custom" style="cursor: pointer;" (click)="addNew()">
+          <i class="fa fa-plus" aria-hidden="true"></i> </button>
+        <span class="ml-2 card-title" (click)="addNew()">Add Sales Tax</span>
+      </div>
+      <div class="col-sm-12">
+        <div style="height: 100%;  margin-top:1rem; box-sizing: border-box;">
+          <app-editable-grid [rowData]="rowData" (delete)="deleteAction($event)" [editGridOptions]="gridOptions"
+            (gridReady)="onGridReady($event)" (edit)="editOrSave($event,true)" (save)="editOrSave($event,false)">
+          </app-editable-grid>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 form-group">
+      <div class="text-right">
+        <button type="button" class="btn btn-md btn-cstorebo btnsub mr-3" (click)="onNavigateSalesRestriction()">
+          Add Sales Restriction</button>
+        <button type="button" class="btn btn-md btn-cstorebo mr-3" (click)="backToMainList()">
+          &nbsp; Back to Store List </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================   Fuel Tax    ============================= -->
+
+<div class="card mt-4">
+  <div class="card-body">
+    <div class="form-group">
+      <div class="col-sm-12">
+        <button type="button" class="btn btn-md btn-cstorebo btnsub btn-custom" style="cursor: pointer;"
+          (click)="addNewFuelTax(true)">
+          <i class="fa fa-plus" aria-hidden="true"></i> </button>
+        <span class="ml-2 card-title" (click)="addNewFuelTax(true)">Add Fuel Tax</span>
+      </div>
+      <div class="col-sm-12">
+        <div style="height: 100%;  margin-top:1rem; box-sizing: border-box;">
+          <app-pagination-grid (delete)="deleteFuelTaxAction($event)" [paginationGridOptions]="FuelTaxGridOptions"
+            (gridReady)="onFuelTaxGridReady($event)" (edit)="editFuelTax($event)"
+            (save)="editOrSaveFuelTax($event,false)" (cancel)="cancelAction($event)">
+          </app-pagination-grid>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="col-sm-12 form-group ">
+        <div class="text-right">
+          <button type="button" class="btn btn-md btn-cstorebo btnsub mr-3" (click)="onNavigateSalesRestriction()">
+            Add Sales Restriction</button>
+          <button type="button" class="btn btn-md btn-cstorebo mr-3" (click)="backToMainList()">
+
+            &nbsp; Back to Store List </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,79 @@
+<div class="align-self-center">
+  <span>
+    <!-- This Action is specifically added to disable edit button in grouping and should use only if you are grouping by row -->
+    <i class="fa fa-pencil" aria-hidden="true" data-toggle="tooltip" container="body" data-placement="bottom"
+      ngbTooltip="Edit" *ngIf="params.data && params.showEditActionForGrouping" (click)="edit()"></i>
+  </span>
+  <span>
+    <i class="fa fa-pencil" aria-hidden="true" data-toggle="tooltip" container="body" data-placement="bottom"
+      ngbTooltip="Edit" *ngIf="!params.hideEditAction" (click)="edit()"></i>
+  </span>
+  <span>
+    <i class="fa fa-floppy-o" aria-hidden="true" data-toggle="tooltip" container="body" data-placement="bottom"
+      ngbTooltip="Save" *ngIf="params.showSave" (click)="save()"></i>
+  </span>
+  <span>
+    <i class="fa fa-history" aria-hidden="true" data-toggle="tooltip" container="body" data-placement="bottom" ngbTooltip="Item History"
+      *ngIf="params.itemHistory" (click)="itemHistory()"></i>&nbsp;
+  </span>
+  <span>
+    <i class="fa fa-align-justify ml-0" aria-hidden="true" data-toggle="tooltip" container="body" data-placement="bottom"
+      ngbTooltip="Sales Activity" *ngIf="params.salesActivity" (click)="salesActivity()"></i>&nbsp;
+  </span>
+  <span>
+    <i class="fa fa-ban ml-0" data-toggle="tooltip" container="body" data-placement="bottom" ngbTooltip="Suspend"
+      *ngIf="params.showSuspend" (click)="suspend()"></i>
+  </span>
+  <span>
+    <i class="fa fa-recycle" data-toggle="tooltip" container="body" data-placement="bottom" ngbTooltip="Recover"
+      *ngIf="params.showRecover" (click)="recover()"></i>
+  </span>
+  <span>
+    <i class="fa fa-trash" data-toggle="tooltip" container="body" data-placement="bottom" ngbTooltip="Delete"
+      *ngIf="!params.hideDeleteAction && params.data" (click)="delete()"></i>
+  </span>
+  <span>
+    <i *ngIf="params.hideAddAction && params.data" class="fa fa-plus" data-toggle="tooltip" container="body"
+      data-placement="bottom" ngbTooltip="Add" (click)="added()"></i>
+  </span>
+  <span>
+    <!-- <button class="btn " *ngIf="params.showClone" type="button" (click)="clone()"><i class="fa fa-clone"></i></button> -->
+    <i class="fa fa-clone mr-2" data-toggle="tooltip" container="body" data-placement="bottom" ngbTooltip="Clone"
+      *ngIf="params.showClone" (click)="clone()"></i>
+  </span>
+  <span>
+    <!-- <button class="btn " *ngIf="params.showNote" type="button" (click)="note()"><i class="fa fa-sticky-note"></i></button> -->
+    <i class="fa fa-sticky-note" data-toggle="tooltip" container="body" data-placement="bottom" ngbTooltip="Note"
+      *ngIf="params.showNote" (click)="note()"></i>
+  </span>
+  <span>
+    <!-- <button class="btn btn-basic" *ngIf="params.showOpen" type="button" (click)="open()"><i class="fa fa-print"
+        aria-hidden="true"></i></button> -->
+    <i class="fa fa-print" data-toggle="tooltip" container="body" data-placement="bottom" ngbTooltip="Open"
+      *ngIf="params.showOpen" (click)="open()"></i>
+  </span>
+  <span>
+    <i class="fa fa-info-circle mr-3" data-toggle="tooltip" container="body" data-placement="bottom"
+      ngbTooltip="Details" *ngIf="params.showDetails" (click)="details()"></i>
+  </span>
+  <span>
+    <i class="fa fa-download" data-toggle="tooltip" container="body" data-placement="bottom" ngbTooltip="Download"
+      *ngIf="params.showDownload" (click)="download()"></i>
+  </span>
+  <span>
+    <i class="fa fa-arrow-right" *ngIf="isBoolean(params.showChild)&&!params.showChild" aria-hidden="true"
+      data-toggle="tooltip" container="body" data-placement="bottom" ngbTooltip="Details" (click)="childDetails()"></i>
+  </span>
+  <span>
+    <i class="fa fa-check" aria-hidden="true" data-toggle="tooltip" data-placement="right" ngbTooltip="Approve"
+      *ngIf="params.approveAction" (click)="approve()"></i>&nbsp;
+  </span>
+  <span>
+    <i class="fa fa-close" aria-hidden="true" data-toggle="tooltip" data-placement="right" ngbTooltip="Reject"
+      *ngIf="params.rejectAction" (click)="reject()"></i>&nbsp;
+  </span>
+  <span>
+    <i class="fa fa-close" style="margin-left: -8px;" aria-hidden="true" data-toggle="tooltip" data-placement="right"
+      ngbTooltip="Reject" *ngIf="params.rejectEmployeeAction" (click)="rejectEmployee()"></i>&nbsp;
+  </span>
+</div>

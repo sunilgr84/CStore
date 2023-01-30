@@ -1,0 +1,278 @@
+<div>
+  <app-page-header [heading]="'Price Schedule'" [icon]="'fa-edit'"></app-page-header>
+  <form [formGroup]="priceScheduleForm">
+    <div class="row" *ngIf="!departmentDetails && !isAddItem">
+        <span>On Hold</span>
+      <!-- <div class="col-sm-12 container-fluid mt-2">
+        <div class="row justify-content-end">
+          <div class="col-sm-2">
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="showPricing">
+              <label class="custom-control-label" for="showPricing">Show Pricing</label>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="input-group">
+              <input class="form-control" placeholder="Search..." type="text" id="search" aria-label="Default"
+                aria-describedby="inputGroup-sizing-default">
+              <div class="input-group-append">
+                <span class="input-group-text btn-primary" id="inputGroup-sizing-default"><i class="fa fa-search"
+                    aria-hidden="true"></i></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class=" border border-primary rounded margin-bottom-5 mt-3 ">
+          <div class="card-header bulk-update-header" (click)="isAdvanceSearchCollapsed = !isAdvanceSearchCollapsed"
+            [attr.aria-expanded]="!isAdvanceSearchCollapsed" aria-controls="bulkUpdateBody">
+            <i class="fa fa-chevron-down"></i> Addvance Search
+          </div>
+          <div class="card-body" id="bulkUpdateBody" [ngbCollapse]="isAdvanceSearchCollapsed">
+            <div class="row form-group">
+               <div class=" col-sm-6">
+                <label>Price Group</label>
+                <ng-select [items]="priceGroupList" [selectOnTab]="true" bindLabel="groupDescription" bindValue="groupID"
+                  labelForId="groupID" placeholder="Price Group" formControlName="priceGroup">
+                </ng-select>
+              </div>
+              <div class="col-sm-6">
+                <label for="storeLocation">Location</label>
+                <ng-select [items]="storeLocationList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+                  bindLabel="storeName" placeholder="Select Store Location"  formControlName="locationCriteria">
+                </ng-select>
+              </div>
+              <div class="col-sm-6">
+                <label for="department">Department</label>
+                <ng-select [items]="departmentList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+                  bindLabel="departmentDescription" bindValue="departmentID" placeholder="Select Department" formControlName="department">
+                </ng-select>
+              </div>
+              <div class="col-sm-6">
+                <label for="vendor">Vendor</label>
+                <ng-select [items]="vendorList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+                  bindLabel="vendorName" bindValue="vendorID" placeholder="Select Vendor" formControlName="vendorCriteria">
+                </ng-select>
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-sm-6">
+                <div class="col-sm-4" style="padding: initial"> <label>Selling Units</label> </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <select class="form-control" [(ngModel)]="sellingUnits" [ngModelOptions]="{standalone: true}">
+                      <option value="">--Select Selling Units--</option>
+                      <option *ngFor="let item of unitsCasePriceCost" [value]="item.id">
+                        {{item.name}}</option>
+                
+                    </select>
+                  </div>
+                  <input class="form-control col-sm-2" formControlName="sellingUnitStart" type="number">
+                  <input [hidden]="sellingUnits !='4'" formControlName="sellingUnitEnd" class="form-control col-sm-2 ml-1"
+                    type="number">
+                </div>
+              </div>
+              <div class="col-sm-6 ">
+                <div class="col-sm-4" style="padding: initial"><label>Unit in Case</label> </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <select class="form-control" [(ngModel)]="unitInCase" [ngModelOptions]="{standalone: true}">
+                      <option value="">--Select Unit in Case--</option>
+                      <option *ngFor="let item of unitsCasePriceCost" [value]="item.id">
+                        {{item.name}}</option>
+                    </select>
+                  </div>
+                  <input class="form-control col-sm-2" type="number" formControlName="unitsInCaseStart">
+                  <input [hidden]="unitInCase !='4'" class="form-control col-sm-2 ml-1" formControlName="unitsInCaseEnd"
+                    type="number">
+                </div>
+              </div>
+              <div class="col-sm-6 ">
+                <div class="col-sm-4" style="padding: initial"> <label>Current Inventory</label></div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <select class="form-control" [(ngModel)]="currentInventory" [ngModelOptions]="{standalone: true}">
+                      <option value="">--Select Current Inventory--</option>
+                      <option *ngFor="let item of unitsCasePriceCost" [value]="item.id">
+                        {{item.name}}</option>
+                    </select>
+                  </div>
+                  <input class="form-control col-sm-2" formControlName="currentInventoryStart" type="number">
+                  <input [hidden]="currentInventory !='4'" class="form-control col-sm-2 ml-1" formControlName="currentInventoryEnd"
+                    type="number">
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="col-sm-4" style="padding: initial"> <label> Selling Price</label></div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <select class="form-control" [(ngModel)]="sellingPrice" [ngModelOptions]="{standalone: true}">
+                      <option value="">--Select Selling Price--</option>
+                      <option *ngFor="let item of unitsCasePriceCost" [value]="item.id">
+                        {{item.name}}</option>
+                    </select>
+                  </div>
+                  <input class="form-control col-sm-2" type="number">
+                  <input [hidden]="sellingPrice !='4'" class="form-control col-sm-2 ml-1" type="number">
+                </div>
+              </div>
+              <div class="col-sm-6 ">
+                <div class="col-sm-4" style="padding: initial"> <label>Buying Cost</label></div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <select class="form-control" [(ngModel)]="buyingCost" [ngModelOptions]="{standalone: true}">
+                      <option value="">--Select Buying Cost--</option>
+                      <option *ngFor="let item of unitsCasePriceCost" [value]="item.id">
+                        {{item.name}}</option>                 
+                    </select>
+                  </div>
+                  <input class="form-control col-sm-2" type="number">
+                  <input [hidden]="buyingCost !='4'" class="form-control col-sm-2 ml-1" type="number">
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <label for="profitByMargin">Profit By Margin</label>
+                <div class="form-inline">
+                  <select id="profitByMargin" class="form-control col-md-6">
+                    <option value="">-- Select --</option>
+                    <option *ngFor="let item of unitsCasePriceCost" [value]="item.id" [hidden]="item.id =='4'">
+                      {{item.name}}</option>
+                  </select>
+                  <input class="form-control col-md-4 ml-2" type="number" placeholder="">
+                </div>
+              </div>
+              <div class="row form-group col-sm-12">
+                <div class="col-sm-2 form-group">
+                  <label for="trackItem">Track Item</label>
+                  <select id="trackItem" class="form-control">
+                    <option value="0">False</option>
+                    <option value="1">True</option>
+                  </select>
+                </div>
+                <div class="col-sm-2">
+                  <label for="multipack">Multipack</label>
+                  <select id="multipack" formControlName="isMultipack" class="form-control">
+                    <option value="">All</option>
+                    <option value="0">False</option>
+                    <option value="1">True</option>
+                  </select>
+                </div>
+                <div class="col-sm-2">
+                  <label for="itemIsActive">Item is Active</label>
+                  <select id="itemIsActive" formControlName="isActive" class="form-control">
+                    <option value="">All</option>
+                    <option value="0">False</option>
+                    <option value="1">True</option>
+                  </select>
+                </div>
+                <div class="col-sm-3">
+                  <label for="posSyncStatus">POS Sync Status</label>                
+                  <select class="form-control" id="posSyncStatus" name="posSyncStatus"
+                  formControlName="posSyncStatus">
+                  <option value="">All</option>
+                  <option *ngFor="let pos of posSyncStatusList" [value]="pos.posSyncStatusCode">
+                    {{pos.posSyncStatusCode}}</option>
+                </select>
+                </div>
+                <div class="col-sm-3">
+                  <label for="searchBy">Search By</label>
+                  <select id="searchBy" formControlName="SearchBy" class="form-control">
+                    <option value="0">-- Select --</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class=" form-group">
+              <button class="btn btn-md btn-danger"><i class="fa fa-refresh" aria-hidden="true"></i> Clear</button>
+              &nbsp;
+              <button class="btn btn-md btn-primary" (click)="onSearch(priceScheduleForm.value)"><i class="fa fa-search"
+                  aria-hidden="true"></i> Search</button>
+            </div>
+          </div>
+        </div>
+        <div class=" border border-primary rounded margin-bottom-5 mt-3 ">
+          <div class="card-header bulk-update-header" (click)="isBulkUpdateCollapsed = !isBulkUpdateCollapsed"
+            [attr.aria-expanded]="!isBulkUpdateCollapsed" aria-controls="bulkUpdateBody">
+            <i class="fa fa-chevron-down"></i> Bulk Update
+          </div>
+          <div class="card-body" [ngbCollapse]="isBulkUpdateCollapsed">
+            <div class="form-group">
+              <div class="row">
+                <label class="col-sm-2" for="storeLocation">Location</label>
+                <div class="col-sm-4" style="padding: initial">                 
+                  <ng-select [items]="storeLocationList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+                    bindLabel="storeName" placeholder="Select Store Location"  formControlName="locationCriteria">
+                  </ng-select>
+                </div>
+              </div>
+            </div>
+            <div class="row form-group">
+              <div class="col-sm-6 row">
+                <label class="col-sm-4" for="startDate">Start Date</label>
+                <div class="col-sm-6">
+                  <app-datepicker name="dob" id="startDate"></app-datepicker>
+                </div>
+              </div>
+              <div class="col-sm-6 row">
+                <label for="endDate" class="col-sm-4">End Date</label>
+                <div class="col-sm-6">
+                  <app-datepicker name="dob" id="endDate"></app-datepicker>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-sm-6 row">
+                <label class="col-sm-4" for="promotionPrice">Promotion Price</label>
+                <div class="col-sm-6">
+                  <input class="form-control" id="promotionPrice" placeholder="Promotion Price">
+                </div>
+              </div>
+              <div class="form-group col-sm-6 row">
+                <label class="col-md-4" for="regularPrice">Regular Price</label>
+                <div class="col-sm-6">
+                  <input class="form-control" id="regularPrice" placeholder="Regular Price">
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <button class="btn btn-md btn-primary">Bulk Update Selected</button> &nbsp;
+              <button class="btn btn-md btn-danger">Un Check All Selected Rows</button>
+            </div>
+          </div>
+        </div>
+        <div>
+        </div>
+      </div> -->
+
+    </div>
+    <!-- <div class="card margin-top-5">
+      <ngb-tabset [destroyOnHide]="false">
+        <ngb-tab title="Current Price Schedule">
+          <ng-template ngbTabContent>
+            <div class="card-body">
+              <div class="form-group mt-2">
+                <button class="btn btn-md btn-primary">Select all rows on this page</button> &nbsp;
+                <button class="btn btn-md btn-danger"></button>
+              </div>
+              <div>
+                <app-cstore-grid [rowData]="currentPriceRowData" (gridReady)="onGridReady($event)" [cStoreGridOptions]="currentPriceGridOptions"></app-cstore-grid>
+              </div>
+            </div>
+          </ng-template>
+        </ngb-tab>
+        <ngb-tab title="Add New Price Schedule">
+          <ng-template ngbTabContent>
+            <div class="card-body">
+              <div class="form-group mt-2">
+                <button class="btn btn-md btn-primary">Select all rows on this page</button>
+              </div>
+              <div>
+                <app-cstore-grid [rowData]="newPriceScheduleRowData" (gridReady)="onGridReady($event)"
+                  [cStoreGridOptions]="newPriceScheduleGridOptions"></app-cstore-grid>
+              </div>
+            </div>
+          </ng-template>
+        </ngb-tab>
+      </ngb-tabset>
+    </div> -->
+  </form>
+</div>

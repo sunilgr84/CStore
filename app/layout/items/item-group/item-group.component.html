@@ -1,0 +1,115 @@
+<div>
+  <app-page-header [heading]="'Items / Group'" [icon]="'fa-edit'"></app-page-header>
+  <div class="container-fluid">
+    <div class=" border border-primary rounded margin-bottom-5 mt-3 ">
+      <div class="card-header bulk-update-header" (click)="isMasterPriceGroupCollapsed = !isMasterPriceGroupCollapsed"
+        [attr.aria-expanded]="!isMasterPriceGroupCollapsed" aria-controls="masterPriceGroupBody">
+        <i [hidden]='!isMasterPriceGroupCollapsed' class="fa fa-chevron-down"></i> <i [hidden]='isMasterPriceGroupCollapsed'
+          class="fa fa-chevron-right"></i>
+        Master Price Group
+      </div>
+      <div class="card-body" id="masterPriceGroupBody" [ngbCollapse]="isMasterPriceGroupCollapsed">
+        <div class="row">
+          <div class="ml-3 mt-2">
+            <app-editable-grid [rowData]="customPriceGroupRowData" [editGridOptions]="customPriceGroupGridOptions"
+              [gridHeight]="'400px'" [gridWidth]="'500px'" (gridReady)="onReady($event)" (edit)="customPriceEditAction($event,content)"></app-editable-grid>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #content let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">Edit</h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- <form #employeeDetails="ngForm"> -->
+          <div class="form-group row">
+            <label class="col-sm-6" for="newPrice">Enter New Price</label>
+            <input class="form-control col-sm-5" id="newPrice" min="0" type="number" placeholder="New Price">
+          </div>
+          <div class="row form-group">
+            <div class="col-sm-10"> <label for="updateRelatedCtnOrPack">Update Related Crtn or Pack</label>
+            </div>
+            <div>
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" [(ngModel)]="updateRelatedCrtnOrPack" id="updateRelatedCtnOrPack">
+                <label class="custom-control-label" for="updateRelatedCtnOrPack"></label>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="updateRelatedCrtnOrPack">
+            <div class="form-group row">
+              <label class="col-sm-6" for="newcrtn">Enter New Crtn</label>
+              <input class="form-control col-sm-5" type="number" min="0" id="newcrtn" placeholder="New Crtn">
+            </div>
+          </div>
+          <div>
+            <button class="btn btn-md btn-success"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button>
+            &nbsp;
+            <button class="btn btn-md btn-danger" (click)="modal.dismiss('Cross click')"><i class="fa fa-times"
+                aria-hidden="true"></i> Close</button> </div>
+          <!-- </form> -->
+        </div>
+      </ng-template>
+    </div>
+    <div class=" border border-primary rounded margin-bottom-5 mt-3 ">
+      <div class="card-header bulk-update-header" (click)="isCustomPriceGroupCollapsed = !isCustomPriceGroupCollapsed"
+        [attr.aria-expanded]="!isCustomPriceGroupCollapsed" aria-controls="customPriceGroupBody">
+        <i [hidden]='!isCustomPriceGroupCollapsed' class="fa fa-chevron-down"></i> <i [hidden]='isCustomPriceGroupCollapsed'
+          class="fa fa-chevron-right"></i>
+        Custom Price Group
+      </div>
+      <div class="card-body" id="customPriceGroupBody" [ngbCollapse]="isCustomPriceGroupCollapsed">
+
+        <div class="cardd-body  mb-2">
+          <div class="form-group" [hidden]="!isHide">
+            <button class="btn-md btn btn-primary" (click)="isHide = !isHide"><i class="fa fa-plus" aria-hidden="true"></i>
+              Add New</button>
+          </div>
+          <div class="card-body border rounded" [hidden]="isHide">
+            <form [formGroup]="addCustomPriceGroupForm">
+              <div>
+                <div class="form-group row">
+                  <label for="code" class="col-sm-2"> Code</label>
+                  <input type="text" class="form-control col-sm-3" id="code" placeholder="Code" required
+                    formControlName="groupCode" maxlength="250">
+                </div>
+                <div class="form-group row">
+                  <label for="description" class="col-sm-2">Description</label>
+                  <input type="text" class="form-control col-sm-3" id="description" placeholder="Description" required
+                    formControlName="groupDescription" maxlength="250">
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-2 col-form-label"> <label for="isActive">Is Active</label> </div>
+                  <div class="col-sm-3">
+                    <div class="custom-control custom-checkbox checkboxOne">
+                      <input type="checkbox" class="custom-control-input form-control" formControlName="isActive" id="isActive">
+                      <label class="custom-control-label" for="isActive"></label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row offset-sm-2">
+                  <button class="btn btn-md btn-success" (click)="save()"><i class="fa fa-floppy-o" aria-hidden="true"></i>
+                    Save</button> &nbsp;
+                  <button class="btn btn-md btn-primary" (click)="saveAndClose()"><i class="fa fa-floppy-o" aria-hidden="true"></i>
+                    Save & Close </button> &nbsp;
+                  <button class="btn btn-md btn-danger" (click)="resetCustomForm()"><i class="fa fa-refresh"
+                      aria-hidden="true"></i> Reset</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="row">
+          <div class="ml-3 mt-2">
+            <app-editable-grid [rowData]="customPriceGroupRowData" [editGridOptions]="customPriceGroupGridOptions"
+              [gridHeight]="'400px'" [gridWidth]="'500px'" (gridReady)="onReady($event)" (edit)="customPriceEditAction($event,content)"></app-editable-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

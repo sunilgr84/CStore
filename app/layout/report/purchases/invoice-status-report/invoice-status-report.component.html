@@ -1,0 +1,91 @@
+<form [formGroup]="invoiceStatusReportForm" novalidate>
+  <div class="card mt-3" style="min-height: 350px">
+    <div class="card-body">
+      <div class="col-sm-12">
+        <div class="row mb-3">
+          <div class="col-sm-3">
+            <div class="col-sm-12 custom-control custom-radio">
+              <input type="radio" class="custom-control-input" id="invoiceStatusReport"
+                formControlName="invoiceStatusReport" value="invoiceStatusReport" name="invoiceStatusReport" checked>
+              <label class="custom-control-label" for="invoiceStatusReport">Invoice Status Report</label>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="col-sm-12 custom-control custom-radio">
+              <input type="radio" class="custom-control-input" id="invoiceStatusDetailReport"
+                value="invoiceStatusDetailReport" name="invoiceStatusReport" formControlName="invoiceStatusReport">
+              <label class="custom-control-label" for="invoiceStatusDetailReport">Invoice Status Detail Report</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+          <label class="col-sm-12 form-group has-float-label" >
+            <app-daterangepicker [selectedDateRange]="selectedDateRange"
+              (dateRangeSelecetd)="dateRangeChange($event)">
+            </app-daterangepicker>
+            <span>Select Date Range</span>
+          </label>
+         <!--  <label class="col-sm-12 form-group has-float-label">
+            <app-datepicker [isMaxDate]="true" [inputDate]="_startDate" (dateChange)="startDateChange($event)"
+              name="startDate" id="startDate"></app-datepicker>
+            <span> Start Date</span>
+          </label> -->
+        </div>
+        <div class="col-sm-4">
+          <label class="col-sm-12 form-group has-float-label" *ngIf="!isSingalStore">
+            <ng-select [items]="storeLocationList" [multiple]="true" formControlName="storeLocationID"
+              [closeOnSelect]="false" [hideSelected]="true" bindLabel="storeName" placeholder="Store Location"
+              groupBy="companyID" [selectableGroup]="true" [selectableGroupAsModel]="false">
+              <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+              </ng-template>
+              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                  <span class="ng-value-label">
+                    {{item.storeName}}</span>
+                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 2">
+                  <span class="ng-value-label">{{items.length - 2}} more...</span>
+                </div>
+              </ng-template>
+            </ng-select>
+            <span> Store Location</span>
+            <img src="assets/images/small-spinner.gif" *ngIf="isStoreLocationLoading">
+          </label>
+          <label class="col-sm-12 form-group has-float-label" *ngIf="isSingalStore">
+            <input type="text" readonly class="form-control" name="store" [value]="storeLocationList[0].storeName">
+            <span> Store Location</span>
+          </label>
+        </div>
+
+      </div>
+      <div class="row ">
+       <!--  <div class="col-sm-3">
+          <label class="col-sm-12 form-group has-float-label">
+            <app-datepicker [isMaxDate]="true" [inputDate]="_endDate" (dateChange)="endDateChange($event)"
+              name="endDate" id="endDate"></app-datepicker>
+            <span> End Date</span>
+          </label>
+        </div> -->
+        <div class="col-sm-4">
+          <div class="col-sm-12">
+            <button type="button" class="btn-md btn btn-primary mr-3" (click)="searchInvoiceStatusReport()">Go</button>
+            <!-- <button type="button" class="btn-md btn btn-primary" (click)="searchInvoiceStatusReport('excel')">Excel
+              Export</button> -->
+          </div>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="this.rowData && this.rowData.length >0">
+        <div class="col-sm-12 mt-3">
+          <app-report-grid [rowData]="rowData" [expandableGridOptions]="gridOption" (gridReady)="onGridReady($event)"
+            (exportTo)="searchReport($event)">
+          </app-report-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

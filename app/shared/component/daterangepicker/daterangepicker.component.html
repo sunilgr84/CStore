@@ -1,0 +1,55 @@
+<div class="input-group">
+    <ng-template #popContent>
+        <div class="container date-range-container">
+            <div class="row">
+                <div id="date-btn-group" class="col-md-3">
+                    <button id="Today" class="btn btn-sm btn-block btn-primary mr-2"
+                        (click)="selectToday($event,dp)">Today</button>
+                    <button id="Yesterday" class="btn btn-sm btn-block btn-primary mr-2"
+                        (click)="selectYesterday($event,dp)">Yesterday</button>
+                    <button id="Last7Days" class="btn btn-sm btn-block btn-primary mr-2"
+                        (click)="selectLast7Days($event,dp)">Last 7
+                        Days</button>
+                    <button id="Last30Days" class="btn btn-sm btn-block btn-primary mr-2"
+                        (click)="selectLst30Days($event,dp)">Last
+                        30
+                        Days</button>
+                    <button id="ThisMonth" class="btn btn-sm btn-block btn-primary mr-2"
+                        (click)="selectThisMonth($event,dp)">This
+                        Month</button>
+                    <button id="LastMonth" class="btn btn-sm btn-block btn-primary mr-2"
+                        (click)="selectLastMonth($event,dp)">Last
+                        Month</button>
+                    <button id="ThisYear" class="btn btn-sm btn-block btn-primary mr-2"
+                        (click)="selectThisYear($event,dp)">This
+                        Year</button>
+                    <button id="LastYear" class="btn btn-sm btn-block btn-primary mr-2"
+                        (click)="selectLastYear($event,dp)">Last
+                        Year</button>
+                    <button id="CustomRange" class="btn btn-sm btn-block btn-primary mr-2"
+                        (click)="selectCustomRange($event,dp)">Custom
+                        Range</button>
+                    <button id="dummyButton" style="visibility: hidden;"
+                        (click)="selectDummyButton($event,dp)"></button>
+                </div>
+                <div class="col-md-9">
+                    <ngb-datepicker #dp (select)="onDateSelection($event)" [minDate]="{year: 2001, month:1, day: 1}" [displayMonths]="2" [dayTemplate]="t"
+                        outsideDays="hidden" [maxDate]="maxDate">
+                    </ngb-datepicker>
+                    <ng-template #t let-date let-focused="focused">
+                        <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                            [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+                            (mouseleave)="hoveredDate = null">
+                            {{ date.day }}
+                        </span>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    <button type="button" class="btn btn-date-selector" [placement]="defaultPlacement" [ngbPopover]="popContent"
+        [autoClose]="'outside'" data-container="body" #popOver="ngbPopover">
+        {{fromDate?.month}}/{{fromDate?.day}}/{{fromDate?.year}} -
+        {{toDate?.month}}/{{toDate?.day}}/{{toDate?.year}}
+    </button>
+</div>

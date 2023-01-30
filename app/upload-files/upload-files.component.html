@@ -1,0 +1,53 @@
+<div class="container-fluid navbar">
+  <a href="#">
+    <img src="assets/images/360_logo_new.png" alt="cstore logo" width="100px" height="30px">
+  </a>
+</div>
+<div class="container">
+  <div class="store-info mt-2" *ngIf="selectedStoreDetails">
+    <div class="row">
+      <div class="col-sm-3">
+        <h6 class="store-name">{{selectedStoreDetails.storeName}}</h6>
+      </div>
+    </div>
+
+    <div class="row all-boxes">
+      <div class="address-box">
+        <span>
+          {{selectedStoreDetails.storeAddressLine1}},
+          {{selectedStoreDetails.city}},
+          {{selectedStoreDetails.stateCode}}-{{selectedStoreDetails.zipCode}}
+        </span>
+      </div>
+      <div class="opentime-box" *ngIf="dayReconData">
+        <span class="commondate mr-1">Opening Time:</span>
+        <span class="commontime">{{ dayReconData.movementHeaderData.openingTime}}</span>
+      </div>
+      <div class="closetime-box" *ngIf="dayReconData">
+        <span class="commondate mr-1">Closing Time:</span>
+        <span class="commontime">{{ dayReconData.movementHeaderData.closingTime}}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4 store-show justify-content-center" id="storeshowlist">
+    <div class="download-wrapper" id="beforefile">
+      <label for="uploadFile">
+        <i class="fa fa-cloud-download"></i>
+      </label>
+      <h6>Download Files</h6>
+    </div>
+    <div class="upload-wrapper" id="beforefile">
+      <label for="addfile">
+        <i class="fa fa-plus"></i>
+        <input
+          type="file"
+          id="addfile"
+          (change)="handleFileInput($event.target.files)"
+          multiple="multiple"
+          accept=".jpg,.pdf">
+      </label>
+      <h6>Add</h6>
+    </div>
+  </div>
+</div>

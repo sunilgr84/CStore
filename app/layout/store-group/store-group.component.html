@@ -1,0 +1,66 @@
+<form [formGroup]="storeGroupForm" novalidate>
+  <div class="row  mt-2">
+    <div class="col-sm-7"></div>
+    <div class="col-sm-5" *ngIf="isShowHide" [@fadeInOut]>
+      <div class="col-sm-12">
+        <label class="form-group has-float-label">
+          <input type="text" class="form-control" id="companyStoreGroupName" name="companyStoreGroupName"
+            placeholder="Group Name" formControlName="companyStoreGroupName">
+          <span for="companyStoreGroupName">Store Group Name </span>
+          <div *ngIf="ps.companyStoreGroupName.errors?.invalid">Enter valid Grp Name</div>
+        </label>
+      </div>
+      <div class="col-sm-12">
+        <label class=" form-group control-label has-float-label">
+          <textarea formControlName="notes" type="text" class="form-control"
+            placeholder="Description about the group"></textarea>
+          <span for="notes">Notes</span>
+        </label>
+      </div>
+      <div class="col-sm-12">
+        <div class="buttons">
+          <button type="button" class="btn btn-md btn-primary" style="float:right" (click)="editOrSave($event)">
+            {{ isEdit? 'Update' : 'Save' }}</button>
+          <button type="button" (click)="reset()" class="btn btn-md btn-primary btn-red mr-2" style="float:right">
+            Reset</button>
+          <button type="button" (click)="addStoreGrp()" class="btn btn-md btn-primary mr-2" style="float:right">
+            Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="row">
+  <div class="col-sm-12" *ngIf="!isShowHide">
+    <button class="btn btn-md btn-primary float-right" *ngIf="!isShowHide" (click)="addStoreGrp()"><i class="fa fa-plus"
+        aria-hidden="true"></i>
+      Add</button>
+  </div>
+  <div class="col-sm-12 mt-1">
+    <!-- <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+      (edit)="edit($event)" (delete)="delete($event)"></app-cstore-grid> -->
+    <div cdkDropListGroup>
+      <div class="store-container">
+        <h2>Unassigned</h2>
+        <div cdkDropList [cdkDropListData]="unAssigned" class="store-list" (cdkDropListDropped)="drop($event)">
+          <div class="store-box" *ngFor="let item of unAssigned" cdkDrag>{{item.storeName}}</div>
+        </div>
+      </div>
+      <div class="store-container">
+        <h2>Assigned</h2>
+        <div class="store-list p-2">
+          <div *ngFor="let assign of assigned" class="mt-2">
+            <h5>{{assign.companyGroupName}}</h5>
+            <div cdkDropList [cdkDropListData]="assign.stores" class="store-list" (cdkDropListDropped)="drop($event)">
+              <div class="store-box" *ngFor="let item of assign.stores" cdkDrag>{{item.storeName}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 mt-1 mb-5">
+    <button type="button" (click)="updateStoreGrp()" class="btn btn-md btn-primary mr-2" style="float:right">
+      Save</button>
+  </div>
+</div>

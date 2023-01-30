@@ -1,0 +1,63 @@
+<div [@routerTransition]>
+  <div class="card">
+    <div class="card-body">
+        <div class="mb-3" *ngIf="isShow">
+            <!-- [destroyOnHide]="false" -->
+            <ngb-tabset #tabs="ngbTabset" type="pills">
+              <ngb-tab title="Account Details">
+                <ng-template ngbTabContent>
+                  <app-add-vendor [vendorData]="editRowData" (backToVendorList)="backToList($event)" (cancel)="cancelEvent($event)"
+                    (enableTabs)="editenableTabs($event)"></app-add-vendor>
+                </ng-template>
+    
+              </ngb-tab>
+             <!--  <ngb-tab title="Item Details" [disabled]="!isEdit">
+                <ng-template ngbTabContent>
+                  <app-vendor-item [vendorID]="vendorID" (backToVendorList)="backToList($event)"></app-vendor-item>
+                </ng-template>
+              </ngb-tab> -->
+            </ngb-tabset>
+    
+          </div>
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row justify-content-between">
+              <div class="col-md-6">
+                  <button type="button" *ngIf = "!isShow" class="btn btn-md btn-primary" (click)="addNew(true)">
+                      ADD Account</button>
+                <!-- <button type="button" class="btn btn-md btn-cstorebo btnsub btn-custom" (click)="addNew(true)">
+                  <i class="fa fa-plus" aria-hidden="true"></i></button>
+                <span class="ml-2 card-title"  (click)="addNew(true)"> <strong>Add Account</strong> </span> -->
+              </div>
+              <div class="col-md-3 ">
+                <!-- <div class="input-group" style="width: 230px; float: right;">
+                  <input type="text" class="form-control" aria-label="Default"
+                    aria-describedby="inputGroup-sizing-default" placeholder="Filter Search" [(ngModel)]="filterText"
+                    name="filterText">
+                </div> -->
+                <div class="inner-addon right-addon">
+                  <span>
+                    <i class="fa fa-search card-title" aria-hidden="true"></i>
+                  </span>
+                  <input type="text" class="form-control" aria-label="Default"
+                    aria-describedby="inputGroup-sizing-default" placeholder="Filter Search" [(ngModel)]="filterText"
+                    name="filterText"  (input)="onFilterTextBoxChanged()">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 mt-3">
+            <div style="box-sizing: border-box;">
+              <app-expandable-grid  [getRowNodeId]="getRowNodeId" [rowData]="rowData" [expandableGridOptions]="gridOptions"
+              (gridReady)="onGridReady($event)" [detailCellRenderers]="detailCellRenderer" (edit)="editAction($event) " (delete)="deleteAction($event)"
+             ></app-expandable-grid>
+
+            </div>
+          </div>
+        </div>
+      </div>
+   
+    </div>
+  </div>
+</div>

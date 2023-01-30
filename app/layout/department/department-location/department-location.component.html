@@ -1,0 +1,42 @@
+<div class="card-body">
+  <div class="row">
+    <div class="col-sm-12" *ngIf="!newDepartmentLocation">
+      <div class="row mt-4  ">
+        <div class="margin-bottom-3 col-sm-4">
+          <button type="button" class="btn btn-md btn-cstorebo btn-custom" (click)="addDepartmentLocation(true)">
+            <i class="fa fa-plus" aria-hidden="true"></i></button>
+          <span class="card-title ml-2 mt-3 " (click)="addDepartmentLocation(true)"><strong>Add Department
+              Location</strong>
+          </span>
+        </div>
+        <div class="row justify-content-end margin-bottom-3 col-sm-8">
+          <div class="row">
+            <div class="inner-addon right-addon">
+              <span>
+                <i class="fa fa-search card-title" aria-hidden="true"></i>
+              </span>
+              <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+                placeholder="Filter Search" [(ngModel)]="filterText" name="filterText">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-3">
+        <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (edit)="edit($event)"
+          (delete)="delete($event)" [textFilter]="filterText" (gridReady)="onGridReady($event)"></app-cstore-grid>
+      </div>
+      <div class="mt-3">
+        <button type="button" class="btn btn-md btn-cstorebo" (click)="backToList()">
+          Back To Department List </button>
+      </div>
+    </div>
+
+    <div class="col-sm-12" *ngIf="newDepartmentLocation">
+      <app-new-department-location (showAllDepartmentLocations)="showAllDepartmentLocations(false)"
+        [formMode]="formMode" [selectedDepartmentLocation]="editRowData" [selectedDepartment]="selectedDepartment">
+      </app-new-department-location>
+    </div>
+
+
+  </div>
+</div>

@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="col-sm-12 mt-1 text-right">
+    <button type="button" class="btn btn-md btn-cstorebo btn-custom" (click)="editPriceGItem()">
+      <i class="fa fa-plus" aria-hidden="true"></i></button>
+    <span class="ml-2 mt-2 card-title" (click)="editPriceGItem()">Add Group</span>
+  </div>
+  <div class="col-sm-12 mt-2">
+    <app-editable-grid [rowData]="priceGRowData" [editGridOptions]="priceGGridOptions" [gridHeight]="'300px'"
+      (gridReady)="onPriceGGridReady($event)" (edit)="editPriceGAction($event)" (save)="editPriceGAction($event)"
+      (delete)="deletepriceGroup($event)">
+    </app-editable-grid>
+  </div>
+</div>

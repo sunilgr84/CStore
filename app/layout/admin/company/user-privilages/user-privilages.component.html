@@ -1,0 +1,24 @@
+<form #privilegeForm="ngForm">
+  <div class="row mt-2">
+    <div class="col-sm-9">
+
+      <div class="row ml-3">
+        <div class="col-sm-12">
+          <button class="btn btn-md btn-primary mr-3" (click)="addRoles()">
+            Save changes</button>
+
+        </div>
+      </div>
+      <div class="row mt-2 ml-3">
+        <div class="col-sm-8" *ngIf="privilagesList && privilagesList.length>0">
+
+          <app-cstore-grid [gridHeight]="'250px'" (gridReady)="onGridReady($event)" [rowData]="privilagesList"
+            [cStoreGridOptions]="gridOption"></app-cstore-grid>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</form>

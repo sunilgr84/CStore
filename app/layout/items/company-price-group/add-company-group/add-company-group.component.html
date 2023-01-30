@@ -1,0 +1,48 @@
+<div class="card1 col-sm-12" [@fadeInOut] *ngIf="isShowHide">
+  <form [formGroup]="priceGroupForm">
+    <!-- <div class="card-body"> -->
+    <div class="row">
+      <label class="form-group has-float-label col-sm-12">
+        <input type="text" class="form-control" placeholder="Group Name" id="groupName" name="groupName"
+          formControlName="CompanyPriceGroupName" (blur)="CheckPriceGroupNameByCompanyID()" maxlength="250" #groupN>
+        <span for="groupName">Group Name</span>
+        <div class="alert alert-danger" *ngIf="submited && pg.CompanyPriceGroupName.errors?.required">
+          Group Name is required.
+        </div>
+      </label>
+    </div>
+    <div class="row">
+
+      <div class="col-sm-4">
+        <div class="custom-control custom-checkbox checkboxOne">
+          <input type="checkbox" class="custom-control-input form-control" id="isSuperGroup" name="isSuperGroup"
+            formControlName="IsSuperGroup">
+          <label class="custom-control-label" for="isSuperGroup">Is Super Group</label>
+        </div>
+      </div>
+      <div class="col-sm-8 selectWrapper">
+        <label *ngIf="pgf.IsSuperGroup" class="col-sm-12 has-float-label">
+          <ng-select [items]="masterPriceGroupList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+            bindLabel="masterGroupName" placeholder="Select Groups" formControlName="GroupIDs">
+          </ng-select>
+          <span class="z_index">Groups</span>
+          <img src="assets/images/small-spinner.gif" *ngIf="isGroupsLoading">
+        </label>
+      </div>
+
+
+
+    </div>
+    <div class="form-group row mt-3">
+      <div class="col-sm-12">
+        <button type="button" class="btn btn-md btn-primary mr-3 custom-btn" (click)="cancel()">
+          Cancel</button>
+        <button type="button" class="btn btn-md btn-primary mr-3 custom-btn" (click)="onReset()">
+          Reset</button>
+        <button type="button" class="btn btn-md btn-primary mr-3 custom-btn" (click)="onSubmit()">
+          {{ isEditMode ? 'Update' : 'Save'}}</button>
+      </div>
+    </div>
+    <!-- </div> -->
+  </form>
+</div>

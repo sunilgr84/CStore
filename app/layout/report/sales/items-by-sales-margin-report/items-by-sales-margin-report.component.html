@@ -1,0 +1,34 @@
+<div class="card">
+  <div class="card-body">
+
+    <div class="row">
+
+      <div class="col-sm-4 row form-group">
+        <label class="col-sm-5" for="storeLocation">Store Location</label>
+        <ng-select class="col-sm-7" [items]="LocationList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+          bindLabel="storeName" placeholder="Store Location">
+        </ng-select>
+      </div>
+
+      <div class="col-sm-4 row form-group">
+        <label class="col-sm-5">Department</label>
+        <ng-select class="col-sm-7" [items]="LocationList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+          bindLabel="storeName" placeholder="Department">
+        </ng-select>
+      </div>
+    </div>
+    <div class="row">
+
+      <div class="col-sm-4 row form-group">
+        <label class="col-sm-5" for="profitMargin">Profit Margin</label>
+        <div class="col-sm-7">
+          <input type="text" id="profitMargin" class="form-control" placeholder="Profit Margin">
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <button class="btn btn-md btn-primary">Go</button>
+      </div>
+    </div>
+
+  </div>
+</div>

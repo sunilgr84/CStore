@@ -1,0 +1,157 @@
+<div class="card-body">
+  <div class="col-sm-12">
+    <div class="row">
+      <div class="margin-bottom-5 col-sm-4">
+        <h5 class="card-title">Employee Timesheet Detail</h5>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-6 pl-6 pr-6">
+      <label class="form-group has-float-label ">
+        <ng-select [items]="storeLocationList" bindLabel="storeName" [(ngModel)]="storeLocationID"
+          bindValue="storeLocationID" placeholder="Store Location" (change)="bindStoreLocationId()"></ng-select>
+        <span> Store Location</span>
+      </label>
+      <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-2" *ngIf="!cashier">
+      <label class="form-group has-float-label">
+        <app-datepicker [inputDate]="startDate" name="startDate" id="startDate"
+          (dateChange)="dateChange($event , 'date' )">
+        </app-datepicker>
+      </label>
+    </div>
+    <div class="col-sm-2" *ngIf="!cashier">
+      <label class="form-group has-float-label">
+        <select class="form-control" [(ngModel)]="addEmployeeId">
+          <option value="null">Select Employee</option>
+          <option *ngFor="let empName of empNameList" [value]="empName.userName">
+            {{empName.firstName}}</option>
+        </select>
+        <span for="employee">Employee</span>
+      </label>
+    </div>
+    <div class="col-sm-2" *ngIf="!cashier">
+      <button type="button" class="btn btn-md" (click)="adjusttimelog()" [disabled]=" addEmployeeId === null"> Adjust
+        Timelog
+      </button>
+    </div>
+    <div class="col-sm-2">
+      <button type="button" class="btn btn-md" (click)="checktimelog()"> Check My Timelog
+      </button>
+    </div>
+    <div class="col-sm-2" *ngIf="!cashier">
+      <button type="button" class="btn btn-md" (click)="addEmployeeTimesheetDetails(modalContent)">
+        <i class="fa fa-plus"></i> Add Time Card</button>
+    </div>
+  </div>
+  <br>
+
+  <div class="row" *ngIf="!cashier">
+    <div class="col-sm-4">
+      <label class="form-group has-float-label col-sm-12">
+        <app-daterangepicker [selectedDateRange]="selectedDateRange" (dateRangeSelecetd)="dateRangeChange($event)">
+        </app-daterangepicker>
+        <span> Select Date Range</span>
+      </label>
+    </div>
+    <div class="col-sm-3">
+      <b>{{fromdateValue}} {{fromday}} {{fromyear}} - {{todateValue}} {{today}} {{toyear}}</b>
+    </div>
+    <div class="col-sm-3">
+      <b> Total Paid Hours : {{sumTotalPaid}} </b>
+    </div>
+    <div class="col-sm-2">
+      <b> Estimate wages : $ {{sumTotalWages}} </b>
+    </div>
+  </div>
+  <div *ngIf="!cashier">
+    <div class="row" *ngIf=" this.rowData && this.rowData.length >= 0">
+      <div class="col-sm-12 mt-3">
+        <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridemployeeTimesheetDetail"
+          (gridReady)="onGridReady($event)"></app-cstore-grid>
+      </div>
+    </div>
+  </div>
+  <ng-template #modalContent let-close="close">
+    <div class="modal-header">
+      <h5 class="modal-title">Add Time Card</h5>
+      <button type="button" class="close" (click)="close()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="addEmployeeTimedheet">
+        <div class="row">
+          <div class="col-sm-6">
+            <label class="form-group has-float-label">
+              <select class="form-control" formControlName="employeeId" (change)="getTimelog(null , null)">
+                <option value="">Select Employee</option>
+                <option *ngFor="let empName of empNameList" [value]="empName.employeeId">
+                  {{empName.firstName}}</option>
+              </select>
+              <span for="employee">Employee</span>
+            </label>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-group has-float-label" style="margin-left: 12px;">
+              <app-datepicker [inputDate]="scheduleDate" name="scheduleDate" id="scheduleDate"
+                (dateChange)="dateChangeStartDate($event)">
+              </app-datepicker>
+              <span> Start Date</span>
+            </label>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-group has-float-label">
+              <select class="form-control" formControlName="shiftId" required (change)="getTimelogList()">
+                <option value="">Select Shift</option>
+                <option *ngFor="let timeLog of timeLogList" [value]="timeLog.employeeScheduleId">
+                  {{timeLog.shiftIn}} - {{timeLog.shiftOut}}</option>
+              </select>
+              <span for="employee">Select Shift</span>
+            </label>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-group has-float-label col-sm-12">
+              <!-- <input type="text" pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$" class="form-control " required
+                formControlName="punchInTime" placeholder="Enter Clock In Time" id="punchInTime" name="punchInTime"> -->
+              <input type="time" class="form-control" required formControlName="punchInTime"
+                placeholder="Enter Clock In Time" id="punchInTime" name="punchInTime">
+              <span for="punchInTime">Clock In Time</span>
+            </label>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-group has-float-label col-sm-12">
+              <!-- <input type="text" pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$" class="form-control " required
+                formControlName="punchOutTime" placeholder="Enter Clock Out Time" id="punchOutTime" name="punchOutTime"> -->
+              <input type="time" class="form-control" required formControlName="punchOutTime"
+                placeholder="Enter Clock Out Time" id="punchOutTime" name="punchOutTime">
+              <span for="punchOutTime">Clock Out Time</span>
+            </label>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-group has-float-label col-sm-12">
+              <input type="text" class="form-control" formControlName="reason" placeholder="Enter Reason" id="reason"
+                name="reason">
+              <span for="reason">Reason</span>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <button type="button" class="btn btn-md btn-primary mr-3" (click)="resetEmployeeTimesheetDetail()">
+              Reset</button>
+            <button type="button" class="btn btn-md btn-primary mr-3" [disabled]="!addEmployeeTimedheet.valid"
+              (click)="saveEmployeeTimesheetDetail()">
+              Save</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+</div>

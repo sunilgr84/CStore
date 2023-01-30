@@ -1,0 +1,25 @@
+<ag-grid-angular #paginationgrid [class]="'ag-theme-balham '+ agGridTheme" [detailCellRenderer]="detailCellRenderer"
+  [gridOptions]="gridOptions" [sideBar]="sideBar" (gridReady)="onGridReady($event)" [editType]="'fullRow'"
+  (cellClicked)="onCellClicked($event)" (rowClicked)="onRowClicked($event)"
+  (cellValueChanged)="onCellValueChanged($event)" (rowSelected)="onRowSelected($event)"
+  (paginationChanged)="paginationChanged($event)" (onRowDoubleClicked)="onRowDoubleClicked($event)"
+  (rowEditingStarted)="onRowEditingStarted($event)" (rowEditingStopped)="onRowEditingStopped($event)">
+</ag-grid-angular>
+
+<div *ngIf="showOverlayComponent" class="ag-overlay-wrapper">
+  <div class="ag-overlay-container">
+    <div class="ag-overlay-header">
+      <div class="ag-overlay-header-container">
+        <div class="col-auto">
+          <button class="v-btn-text" (click)="onBackClick.emit($event)">
+            <i class="v-btn-start-icon flaticon-arrow-chevron-left"></i>
+            <span class="ag-overlay-title">Back</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="ag-overlay-body">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

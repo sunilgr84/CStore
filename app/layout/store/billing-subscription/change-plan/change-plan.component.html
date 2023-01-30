@@ -1,0 +1,251 @@
+<div>
+  <div class="row mt-3">
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title row justify-content-center">
+            <h5>Back Office Plan</h5>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-sm-5">
+              <div class="btn btn-primary elite">
+                <h4 class="mt-3">Elite </h4>
+                <h2>$00.00</h2>
+              </div>
+            </div>
+            <div class="col-sm-5">
+              <div class="btn btn-primary enterprise">
+                <h4 class="mt-3">Enterprise </h4>
+                <h2>$00.00</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title row justify-content-center">
+            <h5>Close Additional Service</h5>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="custom-control custom-checkbox" style="margin-bottom:0.5em;">
+                <input type="checkbox" class="custom-control-input" id="dataEntryBasic" />
+                <label class="custom-control-label " for="dataEntryBasic">Data Entry Basic</label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="custom-control custom-checkbox" style="margin-bottom:0.5em;">
+                <input type="checkbox" class="custom-control-input" id="loyalty" />
+                <label class="custom-control-label " for="loyalty">Loyalty</label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="custom-control custom-checkbox" style="margin-bottom:0.5em;">
+                <input type="checkbox" class="custom-control-input" id="dataEntryPlatinum" />
+                <label class="custom-control-label " for="dataEntryPlatinum">Data Entry Platinum</label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="custom-control custom-checkbox" style="margin-bottom:0.5em;">
+                <input type="checkbox" class="custom-control-input" id="modiposAdditionalRegister" />
+                <label class="custom-control-label " for="modiposAdditionalRegister">ModiPOS Additional Register</label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="custom-control custom-checkbox" style="margin-bottom:0.5em;">
+                <input type="checkbox" class="custom-control-input" id="dataEntryPrimier" />
+                <label class="custom-control-label " for="dataEntryPrimier">Data Entry Primier</label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="custom-control custom-checkbox" style="margin-bottom:0.5em;">
+                <input type="checkbox" class="custom-control-input" id="modisoftAdditionalTv" />
+                <label class="custom-control-label " for="modisoftAdditionalTv">Modisoft additional TV</label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="custom-control custom-checkbox" style="margin-bottom:0.5em;">
+                <input type="checkbox" class="custom-control-input" id="ediEmail" />
+                <label class="custom-control-label " for="ediEmail">EDI Email</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 mt-3 mb-3">
+    <div class="row justify-content-center">
+      <h5> <strong> Store Information</strong></h5>
+    </div>
+    <div class="row">
+      <label class="has-float-label form-group col-sm-6">
+        <input type="text" maxlength="40" class="form-control" placeholder="Store Name">
+        <span>Store Name</span>
+      </label>
+      <label class="has-float-label form-group col-sm-6">
+        <input numbersOnly type="text" maxlength="40" class="form-control" placeholder="Phone Number">
+        <span>Phone Number</span>
+      </label>
+      <label class="has-float-label form-group col-sm-6">
+        <input type="text" maxlength="50" class="form-control" placeholder="Confirm Password">
+        <span>Confirm Password</span>
+      </label>
+      <label class="has-float-label form-group col-sm-6">
+        <input type="text" maxlength="50" class="form-control" placeholder="Email">
+        <span>Email</span>
+      </label>
+      <label class="has-float-label form-group col-sm-4">
+        <input type="text" maxlength="50" class="form-control" placeholder="City">
+        <span>City</span>
+      </label>
+      <label class="form-group has-float-label form-group col-sm-4">
+        <ng-select [items]="stateList" [selectOnTab]="true" bindLabel="stateName" bindValue="stateId"
+          labelForId="stateId" placeholder="State">
+        </ng-select>
+        <span>State</span>
+      </label>
+
+      <label class="has-float-label form-group col-sm-4">
+        <input type="text" maxlength="50" class="form-control" placeholder="ZIP Code">
+        <span>ZIP Code</span>
+      </label>
+      <label class="has-float-label form-group col-sm-6">
+        <input type="text" maxlength="50" class="form-control" placeholder="Owner Name">
+        <span>Owner Name</span>
+      </label>
+      <label class="has-float-label form-group col-sm-6">
+        <input type="text" maxlength="50" class="form-control" placeholder="Owner Phone Number">
+        <span>Owner Phone Number</span>
+      </label>
+      <label class="has-float-label  form-group col-sm-6">
+        <input type="text" maxlength="50" class="form-control" placeholder="Store Contact">
+        <span>Store Contact</span>
+      </label>
+      <label class="has-float-label form-group col-sm-6">
+        <input type="text" maxlength="50" class="form-control" placeholder="Store Contact Number">
+        <span>Store Contact Number</span>
+      </label>
+
+      <label class="form-group has-float-label col-sm-4">
+        <ng-select [items]="tradeAssociateList" [selectOnTab]="true" bindLabel="stateName" bindValue="stateId"
+          labelForId="stateId" placeholder="Trade Associate">
+        </ng-select>
+        <span>Trade Associate</span>
+      </label>
+
+      <label class="form-group has-float-label col-sm-4">
+        <ng-select [items]="tradeAssociateList" [selectOnTab]="true" bindLabel="stateName" bindValue="stateId"
+          labelForId="stateId" placeholder="Trade Partners">
+        </ng-select>
+        <span>Trade Partners</span>
+      </label>
+
+      <label class="has-float-label form-group col-sm-4">
+        <input type="text" maxlength="50" class="form-control" placeholder="Member No.">
+        <span>Member No.</span>
+      </label>
+    </div>
+    <div>
+      <div class="row justify-content-center">
+        <h5><strong>Bill Information</strong></h5>
+      </div>
+      <div class="row mb-3 justify-content-center">
+        <div class="col-sm-2">
+          <div class="col-sm-12 custom-control custom-radio">
+            <input type="radio" class="custom-control-input" id="ach" value="ach" name="billInfo">
+            <label class="custom-control-label" for="ach">ACH</label>
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <div class="col-sm-12 custom-control custom-radio">
+            <input type="radio" class="custom-control-input" id="creditCard" value="creditCard" name="billInfo">
+            <label class="custom-control-label" for="creditCard">Credit Card</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <label class="has-float-label form-group col-sm-6">
+        <input type="text" maxlength="50" class="form-control" placeholder="Account">
+        <span>Account</span>
+      </label>
+      <label class="has-float-label form-group col-sm-6">
+        <input type="text" maxlength="50" class="form-control" placeholder="Routing Number">
+        <span>Routing Number</span>
+      </label>
+      <label class="has-float-label form-group col-sm-6">
+        <input type="text" maxlength="50" class="form-control" placeholder="Re-enter Account Number">
+        <span>Re-enter Account Number</span>
+      </label>
+      <label class="has-float-label form-group col-sm-6">
+        <input type="text" maxlength="50" class="form-control" placeholder="Re-enter Account Number">
+        <span>Re-enter Account Number</span>
+      </label>
+      <label class="has-float-label form-group col-sm-6">
+        <input type="text" maxlength="50" class="form-control" placeholder="Bank Name">
+        <span>Bank Name</span>
+      </label>
+      <!-- <label class="has-float-label col-sm-6"> -->
+      <div class="col-sm-6">
+        <div class="custom-file col-sm-8">
+          <input type="file" class="custom-file-input" id="fileUpload" name="fileUpload" ngModel>
+          <label class="custom-file-label" for="customFile"> Upload Voided Check </label>
+          <label>Voided check is uploaded. Click to see copy</label>
+        </div>
+      </div>
+      <!-- <span>Upload Voided Check</span> -->
+      <!-- </label> -->
+      <label class="has-float-label form-group col-sm-6">
+        <input type="text" maxlength="50" class="form-control" placeholder="Billing Email">
+        <span>Billing Email</span>
+      </label>
+      <label class="has-float-label form-group col-sm-6">
+        <input type="text" maxlength="50" class="form-control" placeholder="Billing Phone">
+        <span>Billing Phone</span>
+      </label>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 " style="padding: initial">
+        <label class="has-float-label form-group col-sm-12">
+          <textarea name="" id="" class="form-control" placeholder="Billing Address"></textarea>
+          <span>Billing Address</span>
+        </label>
+      </div>
+      <div class="col-sm-6 row">
+        <label class="has-float-label form-group col-sm-12">
+          <input type="text" maxlength="50" class="form-control" placeholder="Billing City">
+          <span>Billing City</span>
+        </label>
+        <label class="form-group has-float-label form-group col-sm-6">
+          <ng-select [items]="billingStateList" [selectOnTab]="true" bindLabel="stateName" bindValue="stateId"
+            labelForId="stateId" placeholder="Billing State">
+          </ng-select>
+          <span>Billing State</span>
+        </label>
+        <label class="has-float-label form-group col-sm-6">
+          <input type="text" maxlength="50" class="form-control" placeholder="Billing ZIP Code">
+          <span>Billing ZIP Code</span>
+        </label>
+      </div>
+    </div>
+    <div>
+
+    </div>
+    <div>
+      <div class="col-sm-6">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="agree" />
+          <label class="custom-control-label " for="agree">I Agree to above terms of use.</label>
+        </div>
+      </div>
+      <div class="mt-3">
+        <button type="button" class="btn btn-primary mr-3"> Save </button>
+        <button type="button" class="btn btn-primary"> Close </button>
+      </div>
+    </div>
+  </div>
+</div>

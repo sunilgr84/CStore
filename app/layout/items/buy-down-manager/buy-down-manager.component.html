@@ -1,0 +1,196 @@
+<!-- <div [@routerTransition]>
+  <app-page-header [heading]="'Buy Down Manager'" [icon]="'fa-edit'"></app-page-header>
+
+  <div class="row mb-2">
+    <div class="col-md-3 ">
+      <div class="dropdown">
+        <div *ngIf="!isStoreLoading">
+          <div id="header-store-db" style="min-width:190px;max-width:270px;" *ngIf="storeLocationList.length>1">
+            <ng-select [clearable]="false" [items]="storeLocationList" [hideSelected]="true" bindLabel="storeDetailName"
+              bindValue="storeLocationID" placeholder="Select Store Location" [(ngModel)]="storeLocationId"
+              (change)="storeLocationChange(storeLocationId)">
+              <ng-template ng-option-tmp let-item="item">
+                <div placement="left"
+                  ngbTooltip="Client ID : {{pad(selectedCompanyId.toString(),4) +'-'+ pad(item.storeLocationID.toString(),5)}}"
+                  container="body" tooltipClass="tooltip-custom-bggreen">
+                  {{item.storeDetailName}}
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+
+          <div class="single-company mt-2" *ngIf="storeLocationList.length===1">
+            <span> {{storeLocationList[0].storeDetailName}}</span>
+          </div>
+        </div>
+        <div class="modal-body" *ngIf="isStoreLoading">
+          <img src="assets/images/small-spinner.gif">
+        </div>
+      </div>
+    </div>
+    <div class="offset-md-7 col-md-2 mt-1 text-right">
+      <button class="btn btn-action float-right" (click)="addBuyDown(buyDownModel)">
+        <i class="fa fa-plus"></i> &nbsp;Add Buy Down</button>
+      <!-- <button class="btn btn-action float-right"><i class="fa fa-plus" (click)="editPriceGItem()">
+        </i> &nbsp;Add BuyDown</button> -->
+<!-- </div>
+  </div>
+  <div>
+    <div class="buyDown">
+      <app-pagination-grid [paginationGridOptions]="buyDownGridOptions" (gridReady)="onGridReady($event)"
+        (save)="onBtStopEditing($event)" (delete)="deleteAction($event)" (cancel)="Cancel($event)"
+        (edit)="editAction($event)" (cellValueChanged)="onCellValueChanged($event)">
+      </app-pagination-grid>
+    </div>
+  </div>
+</div> -->
+
+<div class="main-content-wrap d-flex flex-column">
+  <!-- ============ Body content start ============= -->
+  <div class="main-content">
+    <section>
+      <div class="card ml-3 mr-3 mb-3 mt-2">
+        <div class="card-header">
+          <div class="col-md-7 p-0"></div>
+          <div class="col-md-5">
+            <div class="row">
+              <div class="col-md-8 p-0">
+                <!-- <div class="input-group">
+                  <input type="text" #mixMatchSearch class="form-control" placeholder="Filter Search"
+                    aria-label="Search">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-search"></i></span>
+                  </div>
+                </div> -->
+              </div>
+              <div class="col-md-4 p-0">
+                <button class="btn btn-action float-right" (click)="addBuyDown(buyDownModel)">
+                  <i class="fa fa-plus"></i> &nbsp;Add Buy Down</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body p-0">
+          <div class="col-md-12 p-2 mix-match-accordian" *ngIf="buyDownsList && buyDownsList.length > 0">
+            <ngb-accordion [closeOthers]="true" (panelChange)="toggleAccordian($event)">
+              <ngb-panel *ngFor="let buyDown of buyDownsList;" id="{{buyDown.buydownID}}">
+                <ng-template ngbPanelHeader>
+                  <div class="d-block">
+                    <label class="mt-1 mb-1" (click)="toggleAccordian($event)">
+                      <i class="fa fa-folder blue-folder-color"></i>
+                      <span class="font-weight-bold ml-1">{{buyDown.name}}</span>
+                      <i class="fa fa-file gray-file-color ml-1"></i>
+                      <span class="ml-1 font-weight-bold">Manufacturer : </span>
+                      <span class="ml-1">{{buyDown.manufacturerName}}</span>
+                      <span class="ml-1 font-weight-bold">Price Groups : </span>
+                      <span class="ml-1">
+                        <span *ngFor="let priceGroup of buyDown.groupList;let isLast=last"
+                          (click)="openSideContainer(priceGroup)">
+                          <span class="cursor-pointer store-price-group">{{priceGroup.companyPriceGroupName}}</span>
+                          {{isLast ? '' :','}}
+                        </span>
+                        <span class="ml-1">No. of </span>
+                        <span class="ml-1 badge badge-secondary">{{buyDown.itemCountSum}}</span>
+                        <span class="ml-1"> Items</span>
+                      </span>
+
+                    </label>
+                    <div class="float-right">
+                      <button class="btn light-blue-color pl-1 pr-1" (click)="onEditBuyDown(buyDown,buyDownModel)"><i
+                          class="fa fa-edit"></i></button>
+                      <button class="btn color-red pl-1 pr-1" (click)="onDeleteBuyDown(buyDown.buydownID)"><i
+                          class="fa fa-trash"></i></button>
+                      <button ngbPanelToggle class="btn btn-link p-0 ml-3"><i
+                          class='fa {{ opened ? "fa-chevron-up" : "fa-chevron-down" }}'></i></button>
+                    </div>
+                  </div>
+                </ng-template>
+                <ng-template ngbPanelContent class="p-0">
+                  <app-pagination-grid class="mixMatchDetail" [paginationGridOptions]="childGridOptions"
+                    (gridReady)="onChildGridReady($event)" (save)="saveBuyDownStoreLocationAction($event)"
+                    (delete)="deleteBuyDownStoreLocationAction($event)"
+                    (cancel)="cancelBuyDownStoreLocationAction($event)" (edit)="editBuyDownStoreLocationAction($event)">
+                  </app-pagination-grid>
+                  <!-- (save)="onBtStopEditing($event)" (delete)="deleteAction($event)" (cancel)="cancelAction($event)"
+                    (edit)="editAction($event)" (cellValueChanged)="onCellValueChanged($event)"
+                    >
+                  </app-pagination-grid> -->
+                </ng-template>
+              </ngb-panel>
+            </ngb-accordion>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<ng-template #buyDownModel let-modal>
+  <div class="mix-match modal-header">
+    <h4 class="modal-title">{{buyDownForm.value.buydownId===0?'New':'Update'}} Buy Down</h4>
+    <button type="button" class="mix-match close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <form [formGroup]="buyDownForm" (ngSubmit)="saveBuyDown(buyDownForm)">
+    <div class="modal-body">
+      <div class="form-group mb-2">
+        <label>Buy Down Name<span style="color: red">*</span></label>
+        <input type="text" class="form-control" id="buyDownName" (keypress)="onBuyDownKeyPress($event)" maxlength="100"
+          autofocus aria-describedby="MixMatchName" placeholder="Give a name of a buy down"
+          formControlName="buyDownName">
+        <div *ngIf="buyDownName.invalid && (buyDownName.dirty || buyDownName.touched)" class="alert alert-danger">
+          <div *ngIf="buyDownName.errors.required">
+            Buy Down Name is required.
+          </div>
+          <div *ngIf="buyDownName.errors.minlength">
+            Name must be at least 4 characters long.
+          </div>
+        </div>
+      </div>
+      <div class="form-group mb-2">
+        <label>Select Manufacturer<span style="color: red">*</span></label>
+        <ng-select class="mix-match-custom-select" [items]="manufacturersList" [hideSelected]="true"
+          bindLabel="manufacturerName" bindValue="manufacturerID" placeholder="Select Manufacturer"
+          formControlName="manufacturerID">
+        </ng-select>
+        <div *ngIf="manufacturerID.invalid && (manufacturerID.dirty || manufacturerID.touched)"
+          class="alert alert-danger">
+          <div *ngIf="manufacturerID.errors.required">
+            Manufacturer Selection is required.
+          </div>
+        </div>
+      </div>
+      <div class="form-group mb-2">
+        <label>Select Price Group<span style="color: red">*</span></label>
+        <ng-select class="mix-match-custom-select" [items]="priceGroupList" [hideSelected]="true"
+          (change)="setIdToList($event)" bindLabel="CompanyPriceGroupName" bindValue="CompanyPriceGroupID"
+          placeholder="Select Price Group" formControlName="priceGroupIDs" [multiple]="true">
+        </ng-select>
+        <div *ngIf="priceGroupIDs.invalid && (priceGroupIDs.dirty || priceGroupIDs.touched)" class="alert alert-danger">
+          <div *ngIf="priceGroupIDs.errors.required">
+            Price Group Selection is required.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mix-match modal-footer">
+      <button type="button" class="btn btn-light" (click)="clear()">Clear</button>
+      <button type="submit" class="btn btn-primary"
+        [disabled]="!buyDownForm.valid">{{buyDownForm.value.buydownId===0?'Create':'Update'}}</button>
+    </div>
+  </form>
+</ng-template>
+
+<div id="overlay" (click)="closeSideContainer()"></div>
+<div id="mySidecontainer" [ngClass]="sideContainer">
+  <a href="JavaScript:void(0);" class="closebtn" (click)="closeSideContainer()">&times;</a>
+  <div class="col-md-6 top-container">
+    <h5>Price Group Data</h5>
+  </div>
+  <hr>
+  <div class="main-side-container">
+    <app-pagination-grid (gridReady)="priceGroupGridReady($event)" [paginationGridOptions]="priceGroupGridOptions">
+    </app-pagination-grid>
+  </div>
+</div>

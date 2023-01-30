@@ -1,0 +1,207 @@
+<form [formGroup]="salesReportForm">
+  <div class="card mt-3" style="min-height: 450px">
+    <div class="card-body">
+      <div class="col-sm-12">
+        <div class="row mb-4">
+          <div class="col-sm-3 custom-control custom-radio">
+            <input type="radio" class="custom-control-input" (click)="SalesReportClick()" formControlName="salesReport"
+              id="departmentSalesReport" name="salesReport" value="departmentSalesReport">
+            <label class="custom-control-label" for="departmentSalesReport">Department Sales</label>
+          </div>
+
+          <div class="col-sm-3 custom-control custom-radio">
+            <input type="radio" class="custom-control-input" (click)="SalesReportClick()" formControlName="salesReport"
+              id="departmentSalesReportDetail" name="salesReport" value="departmentSalesReportDetail">
+            <label class="custom-control-label" for="departmentSalesReportDetail">Department Sales Detail</label>
+          </div>
+
+          <div class="col-sm-3 custom-control custom-radio">
+            <input type="radio" class="custom-control-input" (click)="itemSalesReportClick()"
+              formControlName="salesReport" id="itemSalesReport" name="salesReport" value="itemSalesReport">
+            <label class="custom-control-label" for="itemSalesReport">Item Sales</label>
+          </div>
+
+          <div class="col-sm-3 custom-control custom-radio">
+            <input type="radio" class="custom-control-input" (click)="SalesReportClick()" formControlName="salesReport"
+              id="itemSalesReportDetail" name="salesReport" value="itemSalesReportDetail">
+            <label class="custom-control-label" for="itemSalesReportDetail">Item Sales Detail</label>
+          </div>
+
+          <div class="col-sm-3 custom-control custom-radio">
+            <input type="radio" class="custom-control-input" (click)="SalesReportClick()" formControlName="salesReport"
+              id="salesPercentReport" name="salesReport" value="salesPercentReport">
+            <label class="custom-control-label" for="salesPercentReport">Sales Percent</label>
+          </div>
+
+          <!-- <div class="col-sm-3 custom-control custom-radio">
+            <input type="radio" class="custom-control-input" (click)="SalesReportClick()" formControlName="salesReport"
+              id="promotionItemsReport" name="salesReport" value="promotionItemsReport">
+            <label class="custom-control-label" for="promotionItemsReport">Promotion Items</label>
+          </div> -->
+
+          <div class="col-sm-3 custom-control custom-radio">
+            <input type="radio" class="custom-control-input" (click)="salesReportByVendorClick()"
+              formControlName="salesReport" id="salesReportByVendor" name="salesReport" value="salesReportByVendor">
+            <label class="custom-control-label" for="salesReportByVendor">Sales By Vendor</label>
+          </div>
+
+          <div class="col-sm-3 custom-control custom-radio">
+            <input type="radio" class="custom-control-input" (click)="SalesReportClick()" formControlName="salesReport"
+              id="salesReport" name="salesReport" value="salesReport">
+            <label class="custom-control-label" for="salesReport">Sales Report</label>
+          </div>
+
+          <div class="col-sm-3 custom-control custom-radio">
+            <input type="radio" class="custom-control-input" (click)="salesReportByPriceGroupClick()"
+              formControlName="salesReport" id="salesReportByPriceGroup" name="salesReport"
+              value="salesReportByPriceGroup">
+            <label class="custom-control-label" for="salesReportByPriceGroup">Sales By PriceGroup</label>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-3">
+          <label class="form-group has-float-label">
+            <!-- <app-datepicker [isMaxDate]="true" [inputDate]="startDate" id="date"
+                    (dateChange)="dateChange($event,'startDate')"></app-datepicker> -->
+            <app-daterangepicker [selectedDateRange]="selectedDateRange" (dateRangeSelecetd)="dateRangeChange($event)">
+            </app-daterangepicker>
+            <span> Select Date Range</span>
+          </label>
+        </div>
+        <div class="col-sm-4">
+          <label class="form-group has-float-label" *ngIf="storeLocationList && storeLocationList.length!==1">
+            <ng-select [items]="storeLocationList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+              bindLabel="storeName" placeholder="Store Location" formControlName="storeLocation" groupBy="companyID"
+              [selectableGroup]="true" [selectableGroupAsModel]="false">
+              <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+              </ng-template>
+              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                <div class="ng-value" *ngFor="let item of items | slice:0:9">
+                  <span class="ng-value-label">
+                    {{item.storeName}}</span>
+                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 9">
+                  <span class="ng-value-label">{{items.length - 9}} more...</span>
+                </div>
+              </ng-template>
+            </ng-select>
+            <span> Store Location</span>
+            <img src="assets/images/small-spinner.gif" *ngIf="isStoreLoading">
+          </label>
+          <label class="col-sm-12 form-group has-float-label" *ngIf="storeLocationList && storeLocationList.length===1">
+            <input readonly type="text" class="form-control" [value]="storeLocationList[0].storeName">
+            <span>Store Location</span>
+          </label>
+
+        </div>
+        <!-- </div>
+      <div class="row"> -->
+        <div *ngIf="isShowDepartment" class="col-sm-4">
+          <label class="form-group has-float-label">
+            <ng-select [items]="departmentList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+              bindLabel="departmentDescription" placeholder="Department" formControlName="departmentIDs"
+              groupBy="companyID" [selectableGroup]="true" [selectableGroupAsModel]="false">
+              <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+              </ng-template>
+              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                <div class="ng-value" *ngFor="let item of items | slice:0:9">
+                  <span class="ng-value-label">
+                    {{item.departmentDescription}}</span>
+                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 9">
+                  <span class="ng-value-label">{{items.length - 9}} more...</span>
+                </div>
+              </ng-template>
+            </ng-select>
+            <span> Department</span>
+          </label>
+        </div>
+        <div *ngIf="isShowVendor" class="col-sm-3">
+          <label class="form-group has-float-label">
+            <ng-select [items]="vendorList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+              bindLabel="vendorName" placeholder="Vendor" formControlName="vendor" groupBy="companyID"
+              [selectableGroup]="true" [selectableGroupAsModel]="false">
+              <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+              </ng-template>
+              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                <div class="ng-value" *ngFor="let item of items | slice:0:9">
+                  <span class="ng-value-label">
+                    {{item.vendorName}}</span>
+                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 9">
+                  <span class="ng-value-label">{{items.length - 9}} more...</span>
+                </div>
+              </ng-template>
+            </ng-select>
+            <span> Vendor</span>
+          </label>
+        </div>
+        <div *ngIf="isShowPriceGroup" class="col-sm-3">
+          <label class="form-group has-float-label">
+            <ng-select [items]="priceGroupList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+              bindLabel="CompanyPriceGroupName" placeholder="Price Group" formControlName="groupID" groupBy="CompanyID"
+              [selectableGroup]="true" [selectableGroupAsModel]="false">
+              <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+              </ng-template>
+              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                <div class="ng-value" *ngFor="let item of items | slice:0:9">
+                  <span class="ng-value-label">
+                    {{item.CompanyPriceGroupName}}</span>
+                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 9">
+                  <span class="ng-value-label">{{items.length - 9}} more...</span>
+                </div>
+              </ng-template>
+            </ng-select>
+            <span> Price Group</span>
+          </label>
+        </div>
+        <div *ngIf="isShowOrderBy" class="col-sm-3">
+          <label class="form-group has-float-label">
+            <ng-select [items]="orderByList" [multiple]="false" [closeOnSelect]="true" [hideSelected]="true"
+              bindLabel="name" bindValue="value" placeholder="Order By" formControlName="orderBy">
+            </ng-select>
+            <span> Order By</span>
+          </label>
+        </div>
+
+        <div class="col-sm-1">
+          <button type="button" class="btn btn-md btn-primary btn-go" (click)="SalesReport()">Go</button>
+        </div>
+      </div>
+
+      <!-- <div class="row">
+        <div class="col-sm-3">
+          <label class="col-sm-12 form-group has-float-label">
+            <app-datepicker [isMaxDate]="true" [inputDate]="endDate" id="date"
+              (dateChange)="dateChange($event,'endDate')"></app-datepicker>
+            <span> End Date</span>
+          </label>
+        </div>
+      </div> -->
+      <div class="row" *ngIf="this.reportRowData && this.reportRowData.length >0">
+        <div class="col-sm-12 mt-3">
+          <app-report-grid [rowData]="reportRowData" [expandableGridOptions]="gridOption"
+            (gridReady)="onGridReady($event)" (exportTo)="searchSalesReport($event)">
+          </app-report-grid>
+        </div>
+      </div>
+      <div class="row" *ngIf="this.reportRowData && this.reportRowData.length ===0">
+        <div class="col-sm-12 mt-3">
+          <strong>No Record Available</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

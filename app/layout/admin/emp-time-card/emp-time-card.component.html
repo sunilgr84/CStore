@@ -1,0 +1,69 @@
+<app-page-header [heading]="'Admin / Employee Timecard'" [icon]="'fa-bar-chart-o'"></app-page-header>
+<!-- <div class="row"> -->
+<div class="col-sm-12">
+
+  <form [formGroup]="employeeTimeCardSearch">
+    <div class="row mt-2">
+      <div class="col-md-4">
+        <label class="form-group has-float-label col-sm-12">
+          <ng-select [items]="storeLocations" [multiple]="true" [hideSelected]="true" bindValue="storeLocationID"
+            formControlName="storeLocationIDs" bindLabel="storeName" placeholder="Store Name"></ng-select>
+          <img src="assets/images/small-spinner.gif" *ngIf="isStoreLoading">
+          <span>Store Name</span>
+        </label>
+      </div>
+      <div class="col-md-4">
+        <label class="form-group has-float-label col-sm-12">
+          <ng-select [items]="employeeNames" [multiple]="true" [hideSelected]="true" bindValue="employeeId"
+            formControlName="employeeNameIDs" bindLabel="employeeName" placeholder="Employee Name"></ng-select>
+          <img src="assets/images/small-spinner.gif" *ngIf="isEmployeeLoading">
+          <span>Employee Name</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- </div> -->
+
+    <div class="row">
+      <div class="col-md-4">
+        <label class="form-group has-float-label col-sm-12">
+          <app-daterangepicker [selectedDateRange]="selectedDateRange" (dateRangeSelecetd)="dateRangeChange($event)">
+          </app-daterangepicker>
+          <span> Select Date Range</span>
+        </label>
+      </div>
+      <div class="col-md-3 pt-2">
+        <div class="row">
+          <div class="custom-control custom-checkbox col-md-3">
+            <input class="custom-control-input" formControlName="isOnlyMissedClockOutEmployee" type="radio"
+              name="isOnlyMissedClockOutEmployee" id="isOnlyMissedClockOutEmployeeOne" [value]=false>
+            <label class="custom-control-label" for="isOnlyMissedClockOutEmployeeOne">
+              All
+            </label>
+          </div>
+          <div class="custom-control custom-checkbox col-md-5">
+            <input class="custom-control-input" formControlName="isOnlyMissedClockOutEmployee" type="radio"
+              name="isOnlyMissedClockOutEmployee" id="isOnlyMissedClockOutEmployeeTwo" [value]=true>
+            <label class="custom-control-label" for="isOnlyMissedClockOutEmployeeTwo">
+              Missed Clock-Out
+            </label>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <button class="btn btn-md btn-primary" type="button" [disabled]="!employeeTimeCardSearch.valid"
+              (click)="onSubmit()">
+              Search</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="col-sm-12">
+  <div style="height: 100%; width:95%; padding-top: 25px; box-sizing: border-box;">
+    <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (gridReady)="onGridReady($event)">
+    </app-cstore-grid>
+  </div>
+</div>
+<!-- </div> -->

@@ -1,0 +1,13 @@
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+import { DepartmentTypeComponent } from './department-type.component';
+
+const routes: Routes = [
+  { path: '', component: DepartmentTypeComponent }
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class DepartmentTypeRoutingModule { }

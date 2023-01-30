@@ -1,0 +1,103 @@
+.day-recond {
+  .card-header {
+    padding: 0.5rem 1.25rem !important;
+    background-color: #d1e7ff !important;
+    font-size: 1rem !important;
+    color: #000 !important;
+    font-weight: 700 !important;
+  }
+
+  .card-body {
+    padding-bottom: 0 !important;
+  }
+
+  .right {
+    float: right;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: none !important;
+  }
+}
+
+.gray {
+  color: #999;
+  opacity: 0.7;
+}
+
+.monthSales {
+  height: 120px;
+  background-color: #8a95f8;
+  color: white;
+}
+
+.monthGallons {
+  height: 120px;
+  background-color: green;
+  color: white;
+}
+
+.monthFuelSales {
+  height: 120px;
+  background-color: rgb(253, 9, 29);
+  color: white;
+}
+
+th,
+td {
+  padding: 0.75rem;
+  vertical-align: top;
+  // border-top: none!important;
+  // border-top:1px solid #ddd!important;
+
+  border: 1px solid #dee2e6;
+  // border-bottom: 1px solid #ddd;
+}
+
+.day-recons {
+
+  // .cal-month-view ,.cal-cell-top {
+  //     min-height: 30px !important;
+  //     max-height: 40px !important;
+  // }
+  .cal-month-view,
+  .cal-day-cell,
+  .cal-cell-top {
+    min-height: 10px !important;
+    // max-height: 40px !important;
+  }
+}
+
+.reduce-font {
+  font-size: smaller !important;
+}
+
+// add css
+
+// .cal-day-selected,
+// .cal-day-selected:hover {
+//   background-color: deeppink !important;
+//   .day-recons .cal-month-view .cal-cell-top {
+//     background-color: deeppink !important;
+//   }
+// }
+.cal-day-selected .cal-cell-top {
+  background-color: pink !important;
+}
+
+.cal-disabled  .cal-cell-top {
+  background-color: rgb(68, 68, 68);
+  pointer-events: none;
+}
+
+.cal-disabled .cal-day-number .cal-cell-top {
+  opacity: 0.1;
+}
+.showSettings-icon{
+  cursor: pointer;
+  font-size:2em;
+  float:right;
+}

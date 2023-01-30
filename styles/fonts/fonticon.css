@@ -1,0 +1,148 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('./icomoon.eot?iy43mz');
+  src:  url('./icomoon.eot?iy43mz#iefix') format('embedded-opentype'),
+    url('./icomoon.ttf?iy43mz') format('truetype'),
+    url('./icomoon.woff?iy43mz') format('woff'),
+    url('./icomoon.svg?iy43mz#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-accounts:before {
+  content: "\e900";
+  color: inherit;
+}
+.icon-admin:before {
+  content: "\e901";
+  color: inherit;
+}
+.icon-arrow:before {
+  content: "\e902";
+  color: inherit;
+}
+.icon-arrow-down:before {
+  content: "\e902";
+  color: inherit;
+  transform: rotate(180deg);
+}
+.icon-barcode:before {
+  content: "\e903";
+  color: inherit;
+}
+.icon-Bulk-Items-update:before {
+  content: "\e904";
+  color: inherit;
+}
+.icon-checkbox_checked .path1:before {
+  content: "\e905";
+  color: inherit;
+}
+.icon-checkbox_checked .path2:before {
+  content: "\e906";
+  color: inherit;
+  margin-left: -1em;
+  color: none;
+}
+.icon-checkbox_checked .path3:before {
+  content: "\e907";
+  color: inherit;
+  margin-left: -1em;
+  /* color: ; */
+}
+.icon-radio:before {
+  content: "\e908";
+  color: inherit;
+}
+.icon-cloud:before {
+  content: "\e909";
+  color: inherit;
+}
+.icon-company:before {
+  content: "\e90a";
+  color: inherit;
+}
+.icon-dashboard:before {
+  content: "\e90b";
+  color: inherit;
+}
+.icon-delete:before {
+  content: "\e90c";
+  color: inherit;
+}
+.icon-edit:before {
+  content: "\e90d";
+  color: inherit;
+}
+.icon-filter:before {
+  content: "\e90e";
+  color: inherit;
+}
+.icon-fuel:before {
+  content: "\e90f";
+  color: inherit;
+}
+.icon-info:before {
+  content: "\e910";
+  color: inherit;
+}
+.icon-invoicing:before {
+  content: "\e911";
+  color: inherit;
+}
+.icon-lottery:before {
+  content: "\e912";
+  color: inherit;
+}
+.icon-notification:before {
+  content: "\e913";
+  color: inherit;
+}
+.icon-plus:before {
+  content: "\e914";
+  color: inherit;
+}
+.icon-price-book:before {
+  content: "\e915";
+  color: inherit;
+}
+.icon-reports:before {
+  content: "\e916";
+  color: inherit;
+}
+.icon-search:before {
+  content: "\e917";
+  color: inherit;
+}
+.icon-stores:before {
+  content: "\e918";
+  color: inherit;
+}
+.icon-checkbox:before {
+  content: "\e919";
+  color: inherit;
+}
+.icon-radio_checked:before {
+  content: "\e91a";
+  color: inherit;
+}
+.icon-upload:before {
+  content: "\e91b";
+  color: inherit;
+}

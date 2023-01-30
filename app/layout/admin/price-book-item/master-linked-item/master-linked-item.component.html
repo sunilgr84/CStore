@@ -1,0 +1,72 @@
+<div class="row mt-1">
+  <div class="col-md-12">
+    <button type="button" *ngIf="!showForm" class="btn btn-md btn-cstorebo float-right" (click)="onAdd()">
+      <i class="fa fa-plus" aria-hidden="true"></i> Add Linked Items</button>
+  </div>
+</div>
+<form novalidate [formGroup]="masterLinkItemForm" (ngSubmit)="saveLocalLinkedItem()">
+  <div class="row" *ngIf="showForm">
+    <div class="col-sm-3 ">
+      <div class="input-icon">
+        <label class="form-group has-float-label mb-1">
+          <input numbersOnly type="text" class="form-control" id="linkedUpcCode" maxlength="100"
+            placeholder="Enter UPC Code" formControlName="posCode" (blur)="searchUpcCode($event)" #linkedUPCCode>
+          <span for="upcCode">UPC Code</span>
+        </label>
+        <div *ngIf="submitted && masterLinkItemControls.posCode.errors?.required" class="alert alert-danger">
+          UPC Code is required
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3 ">
+      <div class="input-icon">
+        <label class="form-group has-float-label mb-1">
+          <input type="text" class="form-control" id="linkedInDescription" maxlength="100" placeholder="Description"
+            formControlName="description">
+          <span for="description">Description</span>
+        </label>
+        <div *ngIf="submitted && masterLinkItemControls.description.errors?.required" class="alert alert-danger">
+          Description is required
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3 ">
+      <label class="form-group has-float-label">
+        <ng-select [items]="linkedItemTypeList" [selectOnTab]="true" bindLabel="description"
+          bindValue="linkedItemTypeID" labelForId="linkedItemTypeID" placeholder="Select Linked Type"
+          formControlName="linkedItemTypeID">
+        </ng-select>
+        <span for="linkedItemTypeID">Linked Type</span>
+        <div *ngIf="submitted && masterLinkItemControls.linkedItemTypeID.errors?.required" class="alert alert-danger">
+          Linked Type is required
+        </div>
+      </label>
+    </div>
+
+    <div class="col-sm-3 ">
+      <div class="input-icon">
+        <label class="form-group has-float-label mb-1">
+          <input type="text" decimalOnly class="form-control" id="linkedInDiscount" maxlength="100"
+            placeholder="Discount" formControlName="promoDiscountAmount">
+          <span for="linkedInDiscount">Discount</span>
+          <div *ngIf="submitted && masterLinkItemControls.promoDiscountAmount.errors?.required" class="alert alert-danger">
+            Discount is required
+          </div>
+        </label>
+      </div>
+    </div>
+    <div class="col-sm-8"></div>
+    <div class="col-sm-4 text-right">
+      <button type="submit" ng-disabled="!masterLinkItemForm.valid" class="btn btn-md btn-primary ml-3">
+        {{isEditLinkedItem?'Update':'Save'}} </button>
+      <button type="button" (click)="onClear()" class="btn btn-md btn-primary ml-3">
+        Cancel </button>
+    </div>
+  </div>
+</form>
+<div class="mt-2">
+  <app-editable-grid [rowData]="linkedIRowData" [editGridOptions]="linkedIGridOptions" [gridHeight]="'300px'"
+    (gridReady)="onLinkedGridReady($event)" (edit)="updateLinkedItem($event)"
+    (cellValueChanged)="onLinkedCellValueChanged($event)" (delete)="deleteLinkedAction($event)">
+  </app-editable-grid>
+</div>

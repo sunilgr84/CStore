@@ -1,0 +1,49 @@
+.ng-valid[required],
+.ng-valid.required {
+  border-left: 5px solid #42a948;
+  /* green */
+}
+
+.ng-invalid:not(form) {
+  border-left: 5px solid #a94442;
+  /* red */
+}
+.form-inline label {
+  justify-content: left !important;
+}
+.alert-text {
+  color: #721c24;
+  background: #f8d7da;
+  margin-left: 0.2em;
+}
+.btn-green{
+  background-color: green;
+  color:white;
+}
+.btn-red{
+  background-color: #a94442;
+  color:white;
+}
+.image {
+  width:126px;
+  height:149px; 
+  position: relative;
+}
+.image-card:hover img{
+   opacity:0.5;
+}
+.image-card:hover i {
+   display: block;
+}
+.image-card i {
+   position:absolute;
+   display:none;
+}
+.image-card i.delete {
+  top: 22px;
+  left: 42%;
+  font-size:18px;
+}
+.buttons button{
+  min-width: 62px;
+}

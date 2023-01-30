@@ -1,0 +1,21 @@
+<!-- isSearchTextBoxRequired -->
+<!-- <div class="row justify-content-end margin-bottom-5" *ngIf="false">
+  <div class="col-sm-3">
+    <div class="input-group" style="width: 230px; float: right;">
+      <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+        placeholder="Filter text..." [(ngModel)]="filterText" name="filterText" (keydown)="onFilterTextBoxChanged()">
+      <div class="input-group-append">
+        <span class="input-group-text" id="inputGroup-sizing-default" (click)="onFilterTextBoxChanged()"><i
+            class="fa fa-search" aria-hidden="true"></i></span>
+      </div>
+    </div>
+  </div>
+</div> -->
+<!-- class="ag-theme-balham" [ngClass]="fontSizeDecrease?'ag-theme-balham-decrease':'ag-theme-balham'" -->
+<ag-grid-angular #editableGrid [ngClass]="fontSizeDecrease?'ag-theme-balham-decrease':'ag-theme-balham'"
+  [ngStyle]="{'height': gridHeight, 'width': gridWidth?gridWidth:'100%' }" class="ag-theme-balham"
+  [enableSorting]="true" [rowData]="rowData" [columnDefs]="columnDefs" [frameworkComponents]="frameworkComponents"
+  [gridOptions]="gridOptions" (gridReady)="onGridReady($event)" (cellValueChanged)="onCellValueChanged($event)"
+  (cellClicked)="onCellClicked($event)" [editType]="editType" (selectionChanged)="onSelectionChanged($event)"
+  [rowSelection]="'multiple'" (rowSelected)="onRowSelected($event)"  [enableColResize]="true">
+</ag-grid-angular>

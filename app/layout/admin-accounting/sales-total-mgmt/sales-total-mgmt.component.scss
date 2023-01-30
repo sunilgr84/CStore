@@ -1,0 +1,29 @@
+::ng-deep .my-class .modal-dialog {
+    max-width: 50%;
+    width: 50%;
+    margin-top: 15%;
+}
+.search-card {
+    padding: 0.75rem !important;
+}
+.selct {
+    width: 370px;
+    margin-left: 20px;
+}
+.selct1 {
+    width: 200px;
+    margin-left: 20px;
+}
+.period {
+    width: 150px;
+    margin-left: 20px;
+}
+label {
+    font-weight: bold;
+}
+// ::ng-deep .date-picker-stotal > app-datepicker > .input-group > .mat-form-field > .mat-form-field-wrapper {
+//     padding-bottom: 0px;
+// }
+// .font{
+// font-size:19px;
+// }

@@ -1,0 +1,63 @@
+.field-wrapper > .form-control {
+  border-radius: 0px !important;
+}
+
+.input-hidden {
+  width: 0px;
+  padding: 0px;
+  border: 0px;
+}
+
+.bb-none {
+  border-bottom-width: 0 !important;
+}
+::ng-deep .cal-no-data {
+  background-color: #f13637;
+  border-radius: 20px;
+}
+::ng-deep .cal-info {
+  background-color: #3dc13c;
+  border-radius: 20px;
+}
+::ng-deep .cal-warning {
+  background-color: #fd8e39;
+  border-radius: 20px;
+}
+::ng-deep .text-nodata {
+  color: #f13637;
+}
+::ng-deep .text-reconciled {
+  color: #3dc13c;
+}
+::ng-deep .text-unreconciled {
+  color: #fd8e39;
+}
+
+.btn-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+}
+
+::ng-deep .my-class .modal-dialog {
+  width: 400px;
+  margin-top: 2rem;
+}
+
+.attachment-link {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: 0.5rem;
+
+  &:hover {
+    color: #fff;
+  }
+}
+
+.pmc-container {
+  width: 98%;
+  margin-right: 0;
+  margin-left: 0;
+}

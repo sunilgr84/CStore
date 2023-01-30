@@ -1,0 +1,398 @@
+<link href='https://fonts.googleapis.com/css?family=Ubuntu:400,500,700' rel='stylesheet' type='text/css'>
+<style>
+  /**/
+  .tk-proxima-nova {
+    font-family: "proxima-nova", sans-serif;
+  }
+
+  @font-face {
+    font-family: tk-proxima-nova-n7;
+    src: url(https://use.typekit.net/af/949f99/00000000000000003b9b3068/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3) format("woff2"), url(https://use.typekit.net/af/949f99/00000000000000003b9b3068/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3) format("woff"), url(https://use.typekit.net/af/949f99/00000000000000003b9b3068/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3) format("opentype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: auto;
+  }
+
+  @font-face {
+    font-family: tk-proxima-nova-i7;
+    src: url(https://use.typekit.net/af/4c4052/00000000000000003b9b3069/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i7&v=3) format("woff2"), url(https://use.typekit.net/af/4c4052/00000000000000003b9b3069/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i7&v=3) format("woff"), url(https://use.typekit.net/af/4c4052/00000000000000003b9b3069/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i7&v=3) format("opentype");
+    font-weight: 700;
+    font-style: italic;
+    font-display: auto;
+  }
+
+  @font-face {
+    font-family: tk-proxima-nova-n8;
+    src: url(https://use.typekit.net/af/d82519/00000000000000003b9b306a/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n8&v=3) format("woff2"), url(https://use.typekit.net/af/d82519/00000000000000003b9b306a/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n8&v=3) format("woff"), url(https://use.typekit.net/af/d82519/00000000000000003b9b306a/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n8&v=3) format("opentype");
+    font-weight: 800;
+    font-style: normal;
+    font-display: auto;
+  }
+
+  @font-face {
+    font-family: tk-proxima-nova-i8;
+    src: url(https://use.typekit.net/af/3e6df8/00000000000000003b9b306b/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i8&v=3) format("woff2"), url(https://use.typekit.net/af/3e6df8/00000000000000003b9b306b/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i8&v=3) format("woff"), url(https://use.typekit.net/af/3e6df8/00000000000000003b9b306b/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i8&v=3) format("opentype");
+    font-weight: 800;
+    font-style: italic;
+    font-display: auto;
+  }
+
+  @font-face {
+    font-family: tk-proxima-nova-n6;
+    src: url(https://use.typekit.net/af/576d53/00000000000000003b9b3066/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n6&v=3) format("woff2"), url(https://use.typekit.net/af/576d53/00000000000000003b9b3066/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n6&v=3) format("woff"), url(https://use.typekit.net/af/576d53/00000000000000003b9b3066/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n6&v=3) format("opentype");
+    font-weight: 600;
+    font-style: normal;
+    font-display: auto;
+  }
+
+  @font-face {
+    font-family: tk-proxima-nova-i6;
+    src: url(https://use.typekit.net/af/f7d492/00000000000000003b9b3067/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i6&v=3) format("woff2"), url(https://use.typekit.net/af/f7d492/00000000000000003b9b3067/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i6&v=3) format("woff"), url(https://use.typekit.net/af/f7d492/00000000000000003b9b3067/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i6&v=3) format("opentype");
+    font-weight: 600;
+    font-style: italic;
+    font-display: auto;
+  }
+
+  @font-face {
+    font-family: tk-proxima-nova-n4;
+    src: url(https://use.typekit.net/af/705e94/00000000000000003b9b3062/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3) format("woff2"), url(https://use.typekit.net/af/705e94/00000000000000003b9b3062/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3) format("woff"), url(https://use.typekit.net/af/705e94/00000000000000003b9b3062/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3) format("opentype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: auto;
+  }
+
+  @font-face {
+    font-family: tk-proxima-nova-i4;
+    src: url(https://use.typekit.net/af/5c70f2/00000000000000003b9b3063/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i4&v=3) format("woff2"), url(https://use.typekit.net/af/5c70f2/00000000000000003b9b3063/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i4&v=3) format("woff"), url(https://use.typekit.net/af/5c70f2/00000000000000003b9b3063/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i4&v=3) format("opentype");
+    font-weight: 400;
+    font-style: italic;
+    font-display: auto;
+  }
+
+  @font-face {
+    font-family: tk-proxima-nova-n3;
+    src: url(https://use.typekit.net/af/cebe0e/00000000000000003b9b3060/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3) format("woff2"), url(https://use.typekit.net/af/cebe0e/00000000000000003b9b3060/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3) format("woff"), url(https://use.typekit.net/af/cebe0e/00000000000000003b9b3060/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3) format("opentype");
+    font-weight: 300;
+    font-style: normal;
+    font-display: auto;
+  }
+
+  @font-face {
+    font-family: tk-proxima-nova-i3;
+    src: url(https://use.typekit.net/af/40ff7f/00000000000000003b9b3061/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i3&v=3) format("woff2"), url(https://use.typekit.net/af/40ff7f/00000000000000003b9b3061/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i3&v=3) format("woff"), url(https://use.typekit.net/af/40ff7f/00000000000000003b9b3061/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i3&v=3) format("opentype");
+    font-weight: 300;
+    font-style: italic;
+    font-display: auto;
+  }
+
+  @font-face {
+    font-family: proxima-nova;
+    src: url(https://use.typekit.net/af/949f99/00000000000000003b9b3068/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3) format("woff2"), url(https://use.typekit.net/af/949f99/00000000000000003b9b3068/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3) format("woff"), url(https://use.typekit.net/af/949f99/00000000000000003b9b3068/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3) format("opentype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: auto;
+  }
+
+  @font-face {
+    font-family: proxima-nova;
+    src: url(https://use.typekit.net/af/4c4052/00000000000000003b9b3069/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i7&v=3) format("woff2"), url(https://use.typekit.net/af/4c4052/00000000000000003b9b3069/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i7&v=3) format("woff"), url(https://use.typekit.net/af/4c4052/00000000000000003b9b3069/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i7&v=3) format("opentype");
+    font-weight: 700;
+    font-style: italic;
+    font-display: auto;
+  }
+
+  @font-face {
+    font-family: proxima-nova;
+    src: url(https://use.typekit.net/af/d82519/00000000000000003b9b306a/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n8&v=3) format("woff2"), url(https://use.typekit.net/af/d82519/00000000000000003b9b306a/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n8&v=3) format("woff"), url(https://use.typekit.net/af/d82519/00000000000000003b9b306a/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n8&v=3) format("opentype");
+    font-weight: 800;
+    font-style: normal;
+    font-display: auto;
+  }
+
+  @font-face {
+    font-family: proxima-nova;
+    src: url(https://use.typekit.net/af/3e6df8/00000000000000003b9b306b/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i8&v=3) format("woff2"), url(https://use.typekit.net/af/3e6df8/00000000000000003b9b306b/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i8&v=3) format("woff"), url(https://use.typekit.net/af/3e6df8/00000000000000003b9b306b/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i8&v=3) format("opentype");
+    font-weight: 800;
+    font-style: italic;
+    font-display: auto;
+  }
+
+  @font-face {
+    font-family: proxima-nova;
+    src: url(https://use.typekit.net/af/576d53/00000000000000003b9b3066/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n6&v=3) format("woff2"), url(https://use.typekit.net/af/576d53/00000000000000003b9b3066/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n6&v=3) format("woff"), url(https://use.typekit.net/af/576d53/00000000000000003b9b3066/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n6&v=3) format("opentype");
+    font-weight: 600;
+    font-style: normal;
+    font-display: auto;
+  }
+
+  @font-face {
+    font-family: proxima-nova;
+    src: url(https://use.typekit.net/af/f7d492/00000000000000003b9b3067/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i6&v=3) format("woff2"), url(https://use.typekit.net/af/f7d492/00000000000000003b9b3067/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i6&v=3) format("woff"), url(https://use.typekit.net/af/f7d492/00000000000000003b9b3067/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i6&v=3) format("opentype");
+    font-weight: 600;
+    font-style: italic;
+    font-display: auto;
+  }
+
+  @font-face {
+    font-family: proxima-nova;
+    src: url(https://use.typekit.net/af/705e94/00000000000000003b9b3062/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3) format("woff2"), url(https://use.typekit.net/af/705e94/00000000000000003b9b3062/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3) format("woff"), url(https://use.typekit.net/af/705e94/00000000000000003b9b3062/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3) format("opentype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: auto;
+  }
+
+  @font-face {
+    font-family: proxima-nova;
+    src: url(https://use.typekit.net/af/5c70f2/00000000000000003b9b3063/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i4&v=3) format("woff2"), url(https://use.typekit.net/af/5c70f2/00000000000000003b9b3063/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i4&v=3) format("woff"), url(https://use.typekit.net/af/5c70f2/00000000000000003b9b3063/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i4&v=3) format("opentype");
+    font-weight: 400;
+    font-style: italic;
+    font-display: auto;
+  }
+
+  @font-face {
+    font-family: proxima-nova;
+    src: url(https://use.typekit.net/af/cebe0e/00000000000000003b9b3060/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3) format("woff2"), url(https://use.typekit.net/af/cebe0e/00000000000000003b9b3060/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3) format("woff"), url(https://use.typekit.net/af/cebe0e/00000000000000003b9b3060/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3) format("opentype");
+    font-weight: 300;
+    font-style: normal;
+    font-display: auto;
+  }
+
+  @font-face {
+    font-family: proxima-nova;
+    src: url(https://use.typekit.net/af/40ff7f/00000000000000003b9b3061/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i3&v=3) format("woff2"), url(https://use.typekit.net/af/40ff7f/00000000000000003b9b3061/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i3&v=3) format("woff"), url(https://use.typekit.net/af/40ff7f/00000000000000003b9b3061/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i3&v=3) format("opentype");
+    font-weight: 300;
+    font-style: italic;
+    font-display: auto;
+  }
+
+  @font-face {
+    font-family: Verlag-Black;
+    src: url(https://cdn.joinhomebase.com/assets/480d128bb0c7dacef5f4ef791b3c5976.eot?#iefix) format("embedded-opentype"), url(https://cdn.joinhomebase.com/assets/6115ddf0f77c2c48423c829847a2d2ad.woff) format("woff"), url(https://cdn.joinhomebase.com/assets/0a2373e3aab0c6d5046f5e80953fd2cc.svg) format("svg"), url(https://cdn.joinhomebase.com/assets/e52d23db0fede21a1ae22347826c2667.ttf) format("truetype");
+  }
+</style>
+
+<div class="card-body">
+  <div class="col-sm-12">
+    <div class="row">
+      <div class="margin-bottom-5 col-sm-4">
+        <h5 class="card-title">Scheduling</h5>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-6 pl-6 pr-6">
+      <label class="form-group has-float-label ">
+        <ng-select [items]="storeLocationList" bindLabel="storeName" [(ngModel)]="storeLocationID"
+          bindValue="storeLocationID" placeholder="Store Location" (change)="bindStoreLocationId()"></ng-select>
+        <span> Store Location</span>
+      </label>
+      <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+    </div>
+  </div>
+
+    <div class="row">
+    <div class="col-sm-3">
+      <label class="form-group has-float-label">
+        <app-datepicker [inputDate]="startDate" name="startDate" id="startDate" (dateChange)="dateRangeChange($event)">
+        </app-datepicker>
+      </label>
+      <!-- <label class="form-group has-float-label col-sm-12">
+        <app-daterangepicker [selectedDateRange]="selectedDateRange" (dateRangeSelecetd)="dateRangeChange($event)">
+        </app-daterangepicker>
+        <span> Select Date Range</span>
+      </label> -->
+    </div>
+    <div class="col-sm-2">
+      <select id="structure" class="form-control" name="structure" [(ngModel)]="structure"
+        (change)='onOptionsSelected()'>
+        <option value="">--Select-- </option>
+        <!-- <option value="0">Days</option> -->
+        <option value="1">Week</option>
+        <option value="2">Month</option>
+      </select>
+    </div>
+    <div class="col-sm-4">
+      <button type="button" class="btn btn-md btn-cstorebo" (click)="btnAdd(0)">
+        <i class="fa fa-plus"></i> Add</button>
+    </div>
+  </div>
+  <br>
+  <table *ngIf="structure == '1'">
+    <!-- <tr>
+      <td colspan="8" class="day employee">{{week[0].date}} - {{week[6].date}}</td>
+    </tr> -->
+    <tr>
+      <th class="employee-header">All Employee ({{totalCount}})</th>
+      <th class="day-name header" *ngFor="let row of week"> {{row.weekname}} <br><span
+          class="day-number">{{row.day}}</span> </th>
+    </tr>
+    <tr *ngFor="let row of empNameList">
+      <td class="day employee"> {{row.empFullName}}
+        <!-- <span>
+           {{row.totalScheduleHours}} <span *ngIf = "row.totalScheduleHours !== null">  Hrs </span> <span *ngIf = "row.totalPayscale != null"> / $</span>   {{row.totalPayscale}} <span *ngIf = "row.totalPayscale != null"> .00 </span>
+        </span> -->
+      </td>
+      <td class="day" *ngFor="let row1 of week" (mouseover)="focusFunction($event)"
+        (mouseout)="focusOutFunction($event)">
+        <div *ngFor="let a of schedulingDataList">
+          <!-- <div class="cell"
+            *ngIf="!(row.employeeId === a.employeeId && row1.dateValue >= a.newStartDateTime && row1.dateValue <= a.newEndDateTime)">
+            <div class="color-td">
+              <div class="title" (click)="btnAdd(row.employeeId)">
+                add +
+              </div>
+            </div>
+          </div> -->
+          <div class="cell"
+            *ngIf="row.employeeId === a.employeeId && row1.dateValue >= a.newStartDateTime && row1.dateValue <= a.newEndDateTime">
+            <div class="shift-block">
+              <div class="period blue" *ngIf="a.shiftNumber === null">
+                <section class="data">
+                  <div class="time">{{a.startHour}} - {{a.endHour}}</div>
+                  <div class="label-role">
+                    {{roleName}}
+                  </div>
+                  <div>
+                    <i class="fa fa-close delete" (click)="btnDelete(a.employeeScheduleId)"></i>
+                  </div>
+                </section>
+              </div>
+              <div class="period blue" *ngIf="a.shiftNumber === 1">
+                <section class="data">
+                  <div class="time">{{a.startHour}} - {{a.endHour}}</div>
+                  <div class="label-role">
+                    {{roleName}}
+                  </div>
+                  <div>
+                    <i class="fa fa-close delete" (click)="btnDelete(a.employeeScheduleId)"></i>
+                  </div>
+                </section>
+              </div>
+
+              <div class="period1 blue" *ngIf="a.shiftNumber === 2">
+                <section class="data">
+                  <div class="time">{{a.startHour}} - {{a.endHour}}</div>
+                  <div class="label-role">
+                    {{roleName}}
+                  </div>
+                  <div>
+                    <i class="fa fa-close delete" (click)="btnDelete(a.employeeScheduleId)"></i>
+                  </div>
+                </section>
+              </div>
+
+              <div class="period2 blue" *ngIf="a.shiftNumber === 3">
+                <section class="data">
+                  <div class="time">{{a.startHour}} - {{a.endHour}}</div>
+                  <div class="label-role">
+                    {{roleName}}
+                  </div>
+                  <div>
+                    <i class="fa fa-close delete" (click)="btnDelete(a.employeeScheduleId)"></i>
+                  </div>
+                </section>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <!-- <div *ngIf="totalCountScheduling == 0">
+          <div class="cell">
+            <div class="color-td">
+              <div class="title" (click)="btnAdd(row.employeeId)">
+                add +
+              </div>
+            </div>
+          </div>
+        </div> -->
+      </td>
+    </tr>
+  </table>
+
+  <table *ngIf="structure == '2'" style="  display: block;overflow-x: auto;white-space: nowrap;">
+    <!-- <tr>
+      <td colspan="8" class="day employee">{{week[0].date}} - {{week[6].date}}</td>
+    </tr> -->
+    <tr>
+      <th class="employee-header">All Employee ({{totalCount}})</th>
+      <th class="day-name header" *ngFor="let row of month"> {{row.dayNo}} <br><span
+          class="day-number">{{row.day}}</span> </th>
+    </tr>
+    <tr *ngFor="let row of empNameList">
+      <td class="day employee"> {{row.empFullName}}</td>
+      <td class="day" *ngFor="let row1 of month" (mouseover)="focusFunction($event)"
+        (mouseout)="focusOutFunction($event)">
+        <div *ngFor="let a of schedulingDataList">
+          <!-- <div class="cell"
+            *ngIf="!(row.employeeId === a.employeeId && row1.dateValue >= a.newStartDateTime && row1.dateValue <= a.newEndDateTime)">
+            <div class="color-td">
+              <div class="title" (click)="btnAdd(row.employeeId)">
+                add +
+              </div>
+            </div>
+          </div> -->
+          <div class="cell"
+            *ngIf="row.employeeId === a.employeeId && row1.dateValue >= a.newStartDateTime && row1.dateValue <= a.newEndDateTime">
+            <div class="shift-block">
+              <div class="period blue" *ngIf="a.shiftNumber === null">
+                <section class="data">
+                  <div class="time">{{a.startHour}} - {{a.endHour}}</div>
+                  <div class="label-role">
+                    {{roleName}}
+                  </div>
+                  <div>
+                    <i class="fa fa-close delete" (click)="btnDelete(a.employeeScheduleId)"></i>
+                  </div>
+                </section>
+              </div>
+
+              <div class="period blue" *ngIf="a.shiftNumber === 1">
+                <section class="data">
+                  <div class="time">{{a.startHour}} - {{a.endHour}}</div>
+                  <div class="label-role">
+                    {{roleName}}
+                  </div>
+                  <div>
+                    <i class="fa fa-close delete" (click)="btnDelete(a.employeeScheduleId)"></i>
+                  </div>
+                </section>
+              </div>
+              <div class="period1 blue" *ngIf="a.shiftNumber === 2">
+                <section class="data">
+                  <div class="time">{{a.startHour}} - {{a.endHour}}</div>
+                  <div class="label-role">
+                    {{roleName}}
+                  </div>
+                  <div>
+                    <i class="fa fa-close delete" (click)="btnDelete(a.employeeScheduleId)"></i>
+                  </div>
+                </section>
+              </div>
+              <div class="period2 blue" *ngIf="a.shiftNumber === 3">
+                <section class="data">
+                  <div class="time">{{a.startHour}} - {{a.endHour}}</div>
+                  <div class="label-role">
+                    {{roleName}}
+                  </div>
+                  <div>
+                    <i class="fa fa-close delete" (click)="btnDelete(a.employeeScheduleId)"></i>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="totalCountScheduling == 0">
+          <!-- <div class="cell">
+            <div class="color-td">
+              <div class="title" (click)="btnAdd(row.employeeId)">
+                add +
+              </div>
+            </div>
+          </div> -->
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>

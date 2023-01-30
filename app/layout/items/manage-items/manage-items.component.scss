@@ -1,0 +1,128 @@
+.items-count-wrapper {
+  font-size: 0.875rem;
+}
+
+.showAmountSign {
+  position: absolute;
+  margin-left: 5px;
+  margin-top: 8.5px;
+}
+
+.search-result-grid {
+  & .search-result-row {
+    border: 1px solid #e2eaee;
+    border-top: 0;
+    padding-top: 8px;
+    padding-bottom: 8px;
+
+    & .search-result-title-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    & .search-result-title {
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    & .search-result-subtitle {
+      font-size: 0.75rem;
+      color: #adadad;
+    }
+
+    & .search-result-filter-wrapper {
+      & > * {
+        margin-right: 8px;
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+
+      & .field-input {
+        min-width: 260px;
+      }
+    }
+  }
+}
+.showPricing {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: #333951;
+  margin-top: 0.85rem;
+}
+.min_height_400 {
+  min-height: 400px;
+}
+
+::ng-deep .field-input:focus-visible {
+  outline: -webkit-focus-ring-color auto 0px;
+}
+::ng-deep .ag-header-cell-text {
+  color: #000 !important;
+  font-weight: bold !important;
+}
+::ng-deep .justify-content-center span.ag-header-cell-text {
+  width: 100% !important;
+  text-align: center !important;
+}
+::ng-deep app-manage-items {
+  .ag-overlay {
+    margin-top: 40px;
+  }
+  app-adv-pagination-grid .ag-overlay-wrapper {
+    padding-top: 20px !important;
+  }
+  app-adv-pagination-grid .ag-theme-balham {
+    font-size: 14px !important;
+  }
+  app-adv-pagination-grid .ag-theme-balham .ag-header {
+    font-size: 14px !important;
+    background: linear-gradient(0deg, #003774 0, #003774 100%);
+  }
+  .ag-theme-balham .ag-header-cell-label .ag-header-cell-text {
+    color: white !important;
+    font-weight: 600 !important;
+  }
+  .ag-column-hover {
+    background-color: #9f9f9f !important;
+  }
+}
+
+.w-47 {
+  width: 47%;
+}
+::ng-deep .w-170 {
+  width: 170px;
+}
+
+::ng-deep .dollar-four-digit {
+  top: 50% !important;
+}
+
+.dollar-input {
+  top: -27px;
+  position: relative;
+  padding-left: 4px;
+}
+
+.manage-items-grid-box {
+  min-height: 400px;
+  display: block;
+}
+
+.form-control {
+  border-radius: 4px !important;
+}
+
+::ng-deep .adv-search {
+  .field-wrapper {
+    padding: 0px;
+  }
+  .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-placeholder {
+    top: 8px;
+    padding-left: 10px !important;
+  }
+  .field-wrapper ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value {
+    font-size: 1em;
+  }
+}

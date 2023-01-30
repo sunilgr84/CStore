@@ -1,0 +1,12 @@
+<ag-grid-angular #paginationgrid class="ag-theme-material" [masterDetail]="true"
+  [detailCellRenderer]="detailCellRenderer" [gridOptions]="gridOptions" [sideBar]="sideBar"
+  (gridReady)="onGridReady($event)" [editType]="'fullRow'" (cellClicked)="onCellClicked($event)"
+  (rowSelected)="onRowSelected($event)" (cellValueChanged)="onCellValueChanged($event)"
+  (columnResized)="onColumnResized($event)" [getRowHeight]="getRowHeight" (rowEditingStopped)="onRowEditingStopped($event)"  >
+</ag-grid-angular>
+
+<span *ngIf="isPageSizeShow" class="page-size">
+  <select  [(ngModel)]="selectedPageSize" (change)="setPageRowCount(selectedPageSize)" id="page-size">
+    <option *ngFor="let page of pageSizeList" [value]="page.value">{{page.key}}</option>
+  </select>
+</span>

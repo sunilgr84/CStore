@@ -1,0 +1,244 @@
+<div class="card mt-3">
+  <div class="card-body">
+
+    <div class="row">
+      <div class="col-sm-5">
+        <div class="card">
+          <div class="card-body">
+            <!-- <div class="col-sm-12 row ">
+              <div class="margin-bottom-3">
+                <button type="button" class="btn btn-md btn-cstorebo btn-custom"> <i class="fa fa-plus"></i>
+                </button>
+                <span class="ml-2 card-title"> {{'Add Item List'}}</span>
+              </div>
+            </div> -->
+            <label class="mt-3 form-group has-float-label col-sm-12"
+              *ngIf="storeLocationList && storeLocationList.length!==1">
+              <ng-select [items]="storeLocationList" bindLabel="storeName" [multiple]="true" [hideSelected]="true"
+                placeholder="Select Store Location" [(ngModel)]="_storeLocationId" name="_storeLocationId"
+                #LocationId="ngModel" (change)="GetComboDealMaintanence()" groupBy="companyID" [selectableGroup]="true"
+                [selectableGroupAsModel]="false">
+                <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                  <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                </ng-template>
+                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                  <div class="ng-value" *ngFor="let item of items | slice:0:4">
+                    <span class="ng-value-label">
+                      {{item.storeName}}</span>
+                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                  </div>
+                  <div class="ng-value" *ngIf="items.length > 2">
+                    <span class="ng-value-label">{{items.length - 2}} more...</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <img src="assets/images/small-spinner.gif" *ngIf="isStoreLocationLoading">
+              <span> Store Location</span>
+            </label>
+            <label class="mt-3 form-group has-float-label col-sm-12"
+              *ngIf="storeLocationList && storeLocationList.length===1">
+              <input readonly type="text" class="form-control" [value]="storeLocationList[0].storeName">
+              <span> Store Location</span>
+            </label>
+            <img src="assets/images/small-spinner.gif" *ngIf="isStoreLocationLoading">
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-7">
+        <div class="card col-sm-12">
+          <!-- <div class="card-header"> {{isEditMode ? 'Update Combo Deal':'Add Combo Deal'}} </div> -->
+          <form [formGroup]="comboMainanenceForm">
+            <div class="card-body">
+              <div class="row form-group">
+                <h5 class="card-title">{{isEditMode ? 'Update Combo Deal':'Add Combo Deal'}}</h5>
+              </div>
+              <div class="row">
+                <div class="row">
+                  <label [hidden]="isEditMode" class="form-group has-float-label col-sm-6"
+                    *ngIf="storeLocationList && storeLocationList.length!==1">
+                    <ng-select [items]="storeLocationList" bindLabel="storeName" bindValue="storeLocationID"
+                      placeholder="Select Store Location" [multiple]="true" [hideSelected]="true"
+                      formControlName="storeLocationID" groupBy="companyID" [selectableGroup]="true"
+                      [selectableGroupAsModel]="false">
+                      <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                        <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                      </ng-template>
+                      <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                        <div class="ng-value" *ngFor="let item of items | slice:0:4">
+                          <span class="ng-value-label">
+                            {{item.storeName}}</span>
+                          <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                        </div>
+                        <div class="ng-value" *ngIf="items.length > 2">
+                          <span class="ng-value-label">{{items.length - 2}} more...</span>
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                    <span> Store Location</span>
+                    <img src="assets/images/small-spinner.gif" *ngIf="isStoreLocationLoading">
+                    <div *ngIf="submited && cmfValid.storeLocationID.errors?.required" class="alert alert-danger">
+                      store location is required
+                    </div>
+                  </label>
+                  <label [hidden]="!isEditMode" class="form-group has-float-label col-sm-6">
+                    <input readonly type="text" class="form-control" name="storeName" [value]="storeLocationName">
+                    <span> Store Location</span>
+                  </label>
+                  <label class="form-group has-float-label col-sm-6"
+                    *ngIf="storeLocationList && storeLocationList.length===1 && !isEditMode">
+                    <input readonly type="text" class="form-control" [value]="storeLocationList[0].storeName">
+                    <span> Store Location</span>
+                  </label>
+                  <label class="form-group has-float-label col-sm-6">
+                    <input type="text" class="form-control" name="comboName" id="comboName" placeholder="Combo Name"
+                      formControlName="comboName" maxlength="250">
+                    <span for="comboName"> Combo Name</span>
+                    <div *ngIf="submited && cmfValid.comboName.errors?.required" class="alert alert-danger">
+                      combo name is required
+                    </div>
+                  </label>
+
+                  <label [hidden]="isEditMode" class="form-group has-float-label col-sm-6">
+                    <ng-select [items]="itemNameList" bindLabel="itemListName" bindValue="itemListID"
+                      placeholder="Item List Name" formControlName="itemListID">
+                    </ng-select>
+                    <span> Item List Name</span>
+                    <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+                    <div *ngIf="submited && cmfValid.itemListID.errors?.required" class="alert alert-danger">
+                      item list name is required
+                    </div>
+                  </label>
+                  <label [hidden]="!isEditMode" class="form-group has-float-label col-sm-6">
+                    <input readonly type="text" class="form-control" name="storeName" [value]="itemListName">
+                    <span> Item List Name</span>
+                  </label>
+                  <div class="col-sm-6  form-group"></div>
+                  <label class=" has-float-label col-sm-6">
+                    <app-datepicker name="beginDate" id="beginDate" [inputDate]="_beginDate"
+                      (dateChange)="dateChange($event,'beginDate')"></app-datepicker>
+                    <span> Begin Date</span>
+                  </label>
+
+                  <label class=" has-float-label col-sm-6">
+                    <app-datepicker name="endDate" id="endDate" [inputDate]="_endDate"
+                      (dateChange)="dateChange($event,'endDate')"></app-datepicker>
+                    <span> End Date</span>
+                  </label>
+                  <label class="form-group has-float-label col-sm-6">
+                    <ng-select [items]="coFunded" bindLabel="name" bindValue="value" labelForId="name"
+                      placeholder="Is Co-funded" formControlName="co_funded" (change)="selectCofunded()">
+                    </ng-select>
+                    <span> Is Co-Funded</span>
+                  </label>
+                  <!-- </div> -->
+                  <!-- <div class="col-sm-6 ">
+                  <div class="col-form-label"><label for="ISCofunded">Is Co-funded</label></div>
+                  <div class="custom-control custom-switch ">
+                    <input type="checkbox" class="custom-control-input" name="co_funded" formControlName="co_funded" id="ISCofunded"
+                      (change)="selectCofunded()">
+                    <label class="custom-control-label" for="ISCofunded"></label>
+                  </div>
+                </div> -->
+
+
+                  <!-- <div class="col-sm-6 form-group" [hidden]="!_comboMainanenc.co_funded"> -->
+                  <div [hidden]="!_comboMainanenc.co_funded" class="col-sm-6">
+                    <div class="input-icon">
+                      <label class="form-group has-float-label currency">
+                        <input type="text" decimalOnly class="form-control " id="manufacturerDiscountAmount"
+                          placeholder="Manufacturer Discount Amount" name="manufacturerFunded"
+                          formControlName="manufacturerFunded" (input)="sumManufacturerRetailer()">
+                        <span for="manufacturerDiscountAmount" style="font-size: 100%"> Manufacturer Discount Amount
+                        </span>
+                      </label>
+                      <i *ngIf="comboMainanenceForm.get('manufacturerFunded').value">$</i>
+                    </div>
+                  </div>
+                  <div [hidden]="!_comboMainanenc.co_funded" class="col-sm-6">
+                    <div class="input-icon">
+                      <label class="form-group has-float-label currency">
+                        <input type="text" decimalOnly class="form-control " id="retailerDiscountAmount"
+                          (input)="sumManufacturerRetailer()" placeholder="Retailer Discount Amount"
+                          name="retailerFunded" formControlName="retailerFunded">
+                        <span for="retailerDiscountAmount"> Retailer Discount Amount </span>
+                      </label>
+                      <i *ngIf="comboMainanenceForm.get('retailerFunded').value">$</i>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="input-icon">
+                      <label class="form-group has-float-label currency">
+                        <input type="text" decimalOnly [readonly]="_comboMainanenc.co_funded" class="form-control "
+                          id="comboAmount" placeholder="Combo Amount" name="comboAmount" formControlName="comboAmount"
+                          (input)="comboDetailsChange()" #comboAmount>
+                        <span for="comboAmount"> Combo Amount</span>
+                        <div *ngIf="submited && cmfValid.comboAmount.errors?.required" class="alert alert-danger">
+                          Combo amount is required
+                        </div>
+                      </label>
+                      <i *ngIf="comboMainanenceForm.get('comboAmount').value">$</i>
+                    </div>
+                  </div>
+                  <label class="form-group has-float-label col-sm-6">
+                    <input type="text" class="form-control" numbersOnly id="comboQty" placeholder="Combo Quantity"
+                      name="comboUnits" formControlName="comboUnits">
+                    <span> Combo Quantity</span>
+                    <div *ngIf="submited && cmfValid.comboUnits.errors?.required" class="alert alert-danger">
+                      combo quantity is required
+                    </div>
+                  </label>
+
+                  <label class="form-group has-float-label col-sm-6">
+                    <ng-select [items]="comboPriorityTypes" bindLabel="comboPriorityTypeName"
+                      bindValue="comboPriorityTypeID" placeholder="Priority Type" formControlName="comboPriorityTypeID">
+                    </ng-select>
+                    <span> Priority Type</span>
+                    <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+                    <div *ngIf="submited && cmfValid.comboPriorityTypeID.errors?.required" class="alert alert-danger">
+                      priority type is required
+                    </div>
+                  </label>
+
+                  <label class="form-group has-float-label col-sm-6">
+                    <ng-select [items]="POSSyncStatus" bindLabel="posSyncStatusCode" bindValue="posSyncStatusID"
+                      labelForId="posSyncStatusID" placeholder="Status" formControlName="posSyncStatusID">
+                    </ng-select>
+                    <span> Status</span>
+                    <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+                    <div *ngIf="submited && cmfValid.posSyncStatusID.errors?.required" class="alert alert-danger">
+                      status is required
+                    </div>
+                  </label>
+                  <div class="col-sm-12">
+                    <button type="button" class="float-right btn btn-md btn-primary ml-2" (click)="editOrSave($event)">
+                      {{isEditMode ?'Update' :'Save' }}</button>
+                    <button type="button" (click)="resetComboMaintaenceForm()" class="float-right btn btn-md btn-primary">
+                      Reset</button>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="row justify-content-end col-sm-12 form-group">
+        <div class="inner-addon right-addon" style="width: 230px; float: right;">
+          <span>
+            <i class="fa fa-search card-title" aria-hidden="true"></i>
+          </span>
+          <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+            placeholder="Filter Search" [(ngModel)]="filterText" name="filterText">
+        </div>
+      </div>
+    </div>
+    <div>
+      <app-cstore-grid [rowData]="rowData" (delete)="deleteRow($event)" (edit)="editComboDeal($event)"
+        (gridReady)="onGridReady($event)" [cStoreGridOptions]="editGridOptions" [textFilter]="filterText">
+      </app-cstore-grid>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,58 @@
+<app-page-header [heading]="'Items / Price Group'" [icon]="'fa-edit'"></app-page-header>
+<!-- <ngb-tabset>
+  <ngb-tab title="Add Company Group">
+    <ng-template ngbTabContent>
+      <app-add-company-group (_companyPriceGroup)="getCompanyPriceGroup()" [selectedCompanyPriceGroup]="selectedCompanyPriceGroup"></app-add-company-group>
+    </ng-template>
+  </ngb-tab>
+  <ngb-tab title="Import Group">
+    <ng-template ngbTabContent>
+      <app-import-group (_companyPriceGroup)="getCompanyPriceGroup()"></app-import-group>
+    </ng-template>
+  </ngb-tab>
+</ngb-tabset>
+<div class="row">
+  <div class="col-sm-6 mt-2">
+    <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (delete)="delete($event)" (gridReady)="onGridReady($event)"
+      (edit)="edit($event)"></app-cstore-grid>
+  </div>
+</div> -->
+
+<div class="row">
+  <div class="col-sm-5">
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title"> {{'Company Price Group'}}</h5>
+            <app-add-company-group class="row" (_companyPriceGroup)="getCompanyPriceGroup()" [isDisplay]="isDisplay"
+              (showAdd)="showAdd($event)" [selectedCompanyPriceGroup]="selectedCompanyPriceGroup">
+            </app-add-company-group>
+            <div class="row margin-bottom-5" style="padding: initial">
+
+              <div class=" col-sm-6">
+                <button type="button" *ngIf="!isDisplay" class="btn btn-md btn-primary" (click)="addPriceGroup()">
+                  Add Price Group</button>
+              </div>
+              <div class=" col-sm-6">
+                <div class="inner-addon right-addon">
+                  <span> <i class="fa fa-search card-title" aria-hidden="true"></i> </span>
+                  <input type="text" class="form-control" aria-label="Default"
+                    aria-describedby="inputGroup-sizing-default" placeholder="Filter Search" [(ngModel)]="filterText"
+                    name="filterText">
+                </div>
+              </div>
+            </div>
+            <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (delete)="delete($event)"
+              [textFilter]="filterText" [paginationCenter]="false" [ellipses]="false"  (columnResized)="onColumnResized($event)" (child)="childAction($event)" (gridReady)="onGridReady($event)"
+              (edit)="edit($event)" (modelUpdated)="onModelUpdated($event)"></app-cstore-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-7">
+    <app-price-group-details [childParams]="childParams" (refreshParent)="refreshParent($event)"></app-price-group-details>
+  </div>
+</div>

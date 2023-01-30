@@ -1,0 +1,217 @@
+<div [@routerTransition]>
+  <app-page-header [heading]="'Department'" [icon]="'fa-edit'"></app-page-header>
+  <div class="card">
+    <div class="card-body">
+      <div class="row" [hidden]="departmentDetails">
+        <div class="col-sm-12">
+          <h5 class="card-title margin-bottom-3">{{'Bulk Update'}}</h5>
+          <form [formGroup]="bulkUpdateForm">
+            <div class="row">
+
+              <div class="row col-md-6">
+                <label class="form-group has-float-label col-sm-12">
+                  <!-- <div class="form-group col-sm-12"> -->
+                  <ng-select [items]="updateDataFor" [selectOnTab]="true" bindLabel="name" bindValue="value"
+                    labelForId="value" placeholder="Update data for" formControlName="updateDataValue"
+                    (change)="changeUpdateData($event)">
+                  </ng-select>
+                  <span> Update Data For </span>
+                  <!-- </div> -->
+                </label>
+                <!-- <div class="col-sm-12"> -->
+                <label class="form-group has-float-label col-sm-12" *ngIf="isStoreMulti">
+                  <ng-select [items]="storeLocationList" bindLabel="storeName" [multiple]="true" [hideSelected]="true"
+                    [closeOnSelect]="false" placeholder="Select Store Location" formControlName="storeLocationId"
+                    groupBy="companyID" [selectableGroup]="true" [selectableGroupAsModel]="false">
+                    <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                      <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                    </ng-template>
+                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                      <div class="ng-value" *ngFor="let item of items | slice:0:4">
+                        <span class="ng-value-label">
+                          {{item.storeName}}</span>
+                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                      </div>
+                      <div class="ng-value" *ngIf="items.length > 2">
+                        <span class="ng-value-label">{{items.length - 2}} more...</span>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                  <span> Store Location </span>
+                  <img src="assets/images/small-spinner.gif" *ngIf="isStoreLocationLoading">
+                </label>
+                <!-- </div> -->
+              </div>
+              <div class="row col-md-6">
+                <div class="col-sm-6" *ngIf="isPOSSyncStatus">
+                  <label class="form-group has-float-label col-sm-12">
+                    <ng-select [items]="POSSyncStatusList" [selectOnTab]="true" bindLabel="posSyncStatusCode"
+                      bindValue="posSyncStatusID" labelForId="posSyncStatusID" placeholder="POS Sync Status"
+                      formControlName="POSSyncStatus">
+                    </ng-select>
+                    <span> POS Sync Status </span>
+                  </label>
+                </div>
+
+                <div class="col-sm-6" *ngIf="isFlagValue">
+                  <label class="form-group has-float-label col-sm-12">
+                    <ng-select [items]="trueFalseList" [selectOnTab]="true" bindLabel="name" bindValue="value"
+                      labelForId="value" placeholder="Select Status" formControlName="flagValue">
+                    </ng-select> <span> Status </span>
+                  </label>
+                </div>
+
+                <div class="col-sm-6" *ngIf="areSpecialDiscountsAllowedFlag">
+                  <label class="form-group has-float-label col-sm-12">
+                    <ng-select [items]="trueFalseList" [selectOnTab]="true" bindLabel="name" bindValue="value"
+                      labelForId="value" placeholder="Select Status" formControlName="AreSpecialDiscountsAllowedFlag">
+                    </ng-select> <span> Status </span>
+                  </label>
+                </div>
+
+                <div class="col-sm-6" *ngIf="allowFoodStampsFlag">
+                  <label class="form-group has-float-label col-sm-12">
+                    <ng-select [items]="trueFalseList" [selectOnTab]="true" bindLabel="name" bindValue="value"
+                      labelForId="value" placeholder="Select Status" formControlName="AllowFoodStampsFlag">
+                    </ng-select> <span> Status </span>
+                  </label>
+                </div>
+
+                <div class="col-sm-6" *ngIf="salesRestriction">
+                  <label class="form-group has-float-label col-sm-12">
+                    <ng-select [items]="storeLocationList" bindLabel="storeName" [selectOnTab]="true"
+                      bindValue="storeLocationID" labelForId="storeLocationID" placeholder="Select Store Location"
+                      (change)="changeSalesRestriction($event,'salesRestriction')" formControlName="storeLocationId">
+                    </ng-select>
+                    <span> Store Location </span>
+                  </label>
+                </div>
+
+                <div class="col-sm-6" *ngIf="salesRestriction">
+                  <label class="form-group has-float-label col-sm-12">
+                    <ng-select [items]="salesRestrictionList" [selectOnTab]="true"
+                      bindLabel="salesRestrictionDescription" bindValue="storeLocationSalesRestrictionID"
+                      labelForId="storeLocationSalesRestrictionID" placeholder="Sales Restriction"
+                      formControlName="SalesRestriction">
+                    </ng-select>
+                    <span> Sales Restriction </span>
+                  </label>
+                </div>
+
+                <div class="col-sm-6" *ngIf="tax">
+                  <label class="form-group has-float-label col-sm-12">
+                    <ng-select [items]="storeLocationList" bindLabel="storeName" [selectOnTab]="true"
+                      bindValue="storeLocationID" labelForId="storeLocationID" placeholder="Select Store Location"
+                      (change)="changeSalesRestriction($event,'tax')" formControlName="storeLocationId">
+                    </ng-select>
+                    <span> Store Location </span>
+                  </label>
+                </div>
+
+                <div class="col-sm-6" *ngIf="tax">
+                  <label class="form-group has-float-label col-sm-12">
+                    <ng-select [items]="taxList" [selectOnTab]="true" bindLabel="taxStrategyDescription"
+                      bindValue="storeLocationTaxID" labelForId="storeLocationTaxID" placeholder="Store Tax"
+                      formControlName="Tax">
+                    </ng-select>
+                    <span> Store Tax </span>
+                    <img src="assets/images/small-spinner.gif" *ngIf="isStoreTaxLoading">
+                  </label>
+                </div>
+
+                <div class="col-sm-6" *ngIf="departmentTypes">
+                  <label class="form-group has-float-label col-sm-12">
+                    <ng-select [items]="departmentTypeList" [selectOnTab]="true" bindLabel="departmentTypeName"
+                      bindValue="departmentTypeID" labelForId="departmentTypeID" placeholder="Department Type"
+                      formControlName="DepartmentTypes">
+                    </ng-select>
+                    <span> Department Type </span>
+                  </label>
+                </div>
+
+                <div class="col-sm-6" *ngIf="profitMargin">
+                  <div class="input-icon">
+                    <label class="form-group has-float-label currency">
+                      <input type="text" decimalOnly min="0" class="form-control" placeholder="Profit Margin"
+                        id="profitMargin" formControlName="ProfitMargin"
+                        onKeyPress="if(this.value.length==5 ) return false;">
+                      <span for="profitMargin"> Profit Margin </span>
+                    </label>
+                    <i *ngIf="bulkUpdateForm.get('ProfitMargin').value"> $</i>
+                  </div>
+                </div>
+
+                <div class="col-sm-6" *ngIf="profitPercent">
+                  <label class="form-group has-float-label col-sm-12">
+                    <input type="text" decimalOnly min="0" class="form-control" placeholder="Profit Percent"
+                      id="profitPercent" formControlName="ProfitPercent"
+                      onKeyPress="if(this.value.length==5 ) return false;">
+                    <span for="profitPercent"> Profit Percent </span>
+                  </label>
+                </div>
+
+                <div class="col-sm-6" *ngIf="productCode">
+                  <label class="form-group has-float-label col-sm-12">
+                    <input type="text" numbersOnly min="0" class="form-control" placeholder="Product Code"
+                      id="productCode" formControlName="ProductCode"
+                      onKeyPress="if(this.value.length==4 ) return false;">
+                    <span for="productCode"> Product Code </span>
+                  </label>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="form-group">
+              <span class="text-black-50 col-md-4" *ngIf="selectedItems > 0; else notSelected">Total selected Item(s) :
+                {{selectedItems}}</span>
+              <ng-template #notSelected>
+                <span class="text-black-50 col-md-4">No items selected!</span>
+              </ng-template>
+              <button type="button" class="btn btn-primary ml-3" (click)="updateBulkSelected()">Bulk Update
+                Selected</button>
+            </div>
+
+          </form>
+          <div class="row mt-4  ">
+            <div class="margin-bottom-3 col-sm-4">
+              <button type="button" class="btn btn-md btn-cstorebo btnsub btn-custom"
+                (click)="addDepartmentDetails(true)">
+                <i class="fa fa-plus"></i></button>
+              <span class="card-title ml-2 mt-3 " (click)="addDepartmentDetails(true)"><strong>Add Department</strong>
+              </span>
+            </div>
+            <div class="row justify-content-end margin-bottom-3 col-sm-8">
+              <div class="row">
+                <!-- <div class="input-group" style="width: 230px; float: right;">
+                  <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+                    placeholder="Filter Search" [(ngModel)]="filterText" name="filterText">
+                </div> -->
+                <div class="col-sm-12">
+                  <div class="inner-addon right-addon">
+                    <span>
+                      <i class="fa fa-search card-title" aria-hidden="true"></i>
+                    </span>
+                    <input type="text" class="form-control" aria-label="Default"
+                      aria-describedby="inputGroup-sizing-default" placeholder="Filter Search" [(ngModel)]="filterText"
+                      name="filterText">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:1rem;">
+            <app-cstore-grid [rowData]="departmentRowData" [cStoreGridOptions]="departmentGridOptions"
+              (edit)="editDepartment($event)" (delete)="deleteDepartment($event)" [textFilter]="filterText"
+              (gridReady)="onDepartmentGridReady($event)" (rowSelected)="onRowSelected($event)"></app-cstore-grid>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="departmentDetails">
+        <app-department-details-container [formMode]="formMode" [selectedDepartment]="selectedDepartment"
+          (showAllDepartment)="addDepartmentDetails(false)"></app-department-details-container>
+      </div>
+    </div>
+  </div>
+</div>

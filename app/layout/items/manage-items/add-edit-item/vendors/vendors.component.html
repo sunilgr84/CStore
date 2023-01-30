@@ -1,0 +1,6 @@
+<div class="expansion-body no-gutters">
+    <div *ngIf="isShow" class="col-12 vendors-detail">
+        <app-adv-pagination-grid [agGridTheme]="'inline-edit'" (gridReady)="onVendorGridReady($event)" [rowData]="vendorRowData" [paginationGridOptions]="vendorOptions"
+            (cancel)="onCancel($event)" (edit)="onEdit($event)" (delete)="deleteVendorItem($event)" (save)="editVendorItemAction($event)"></app-adv-pagination-grid>
+    </div>
+</div>

@@ -1,0 +1,10 @@
+::ng-deep #toDate {
+    mat-form-field {
+        .mat-form-field-wrapper {
+            .mat-form-field-underline {
+                bottom: 0 !important;
+                display: none;
+            }
+        }
+    }
+}

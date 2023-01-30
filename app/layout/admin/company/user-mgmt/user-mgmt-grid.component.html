@@ -1,0 +1,77 @@
+<div class="row mt-3">
+  <div class="col-sm-9" *ngIf="!showDetail">
+    <div class="row justify-content-between">
+      <div class="col-sm-3">
+        <button type="button" class="btn btn-md btn-cstorebo btn-custom" (click)="addNewUser(true)">
+          <i class="fa fa-plus" aria-hidden="true"></i></button>
+        <span class="ml-2 card-title" (click)="addNewUser(true)"> Add User</span>
+      </div>   
+      <div class="col-sm-4">
+        <div class="inner-addon right-addon">
+          <span>
+            <i class="fa fa-search card-title" aria-hidden="true"></i>
+          </span>
+          <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+            placeholder="Filter Search" [(ngModel)]="filterText" name="filterText">
+        </div>
+
+      </div>
+    </div>
+    <div style="margin-top:1rem;">
+      <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" [gridHeight]="'350px'"
+        [textFilter]="filterText" (edit)="edit($event)" (delete)="delete($event)" (gridReady)="onGridReady($event)">
+      </app-cstore-grid>
+    </div>
+    <button type="button" [hidden]="userInfo && userInfo.roleName!==roleName"
+      class="btn btn-md btn-cstorebo mt-3 mr-3" (click)="onNavigatePrivilege()"> Add
+      Privilege</button>
+    <button type="button" [hidden]="userInfo && userInfo.roleName!==roleName" class="btn btn-md btn-cstorebo mt-3" (click)="showComapnyList()"> Back To Company List
+    </button>
+
+  </div>
+  <div class="col-sm-3" *ngIf="!showDetail">
+    <!-- <div class="card mt-4">
+      <div class="card-body">
+
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.709 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18457 2.99721 7.13633 4.39828 5.49707C5.79935 3.85782 7.69279 2.71538 9.79619 2.24015C11.8996 1.76491 14.1003 1.98234 16.07 2.86"
+                stroke="#03A678" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M22 4L12 14.01L9 11.01" stroke="#03A678" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+            &nbsp; Company
+            Details </li>
+          <li class="list-group-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.709 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18457 2.99721 7.13633 4.39828 5.49707C5.79935 3.85782 7.69279 2.71538 9.79619 2.24015C11.8996 1.76491 14.1003 1.98234 16.07 2.86"
+                stroke="#03A678" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M22 4L12 14.01L9 11.01" stroke="#03A678" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+            &nbsp; Add Bank </li>
+          <li class="list-group-item"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.709 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18457 2.99721 7.13633 4.39828 5.49707C5.79935 3.85782 7.69279 2.71538 9.79619 2.24015C11.8996 1.76491 14.1003 1.98234 16.07 2.86"
+                stroke="#03A678" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M22 4L12 14.01L9 11.01" stroke="#03A678" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+            &nbsp; User
+            Management </li>
+          <li class="list-group-item"> <svg width="20" height="20" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="7.5" stroke="black" />
+            </svg>
+            &nbsp; User Privileges
+          </li>
+        </ul>
+      </div>
+    </div> -->
+  </div>
+  <div class="col-sm-12" *ngIf="showDetail">
+    <app-user-mgmt-detail [username]="selectedUserName" [companyData]="userData" [companyId]="companyId"
+      (backToUserList)="backToUserList($event)"></app-user-mgmt-detail>
+  </div>
+</div>

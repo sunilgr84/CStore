@@ -1,0 +1,507 @@
+<div class="pmc-body gutters-between-small align-items-start" style="border-radius: 0 0 4px 4px;">
+  <div class="col-12">
+    <div class="row">
+      <div class="col-12 mb-3">
+        <div class="statbox-container day-recon-stats-header">
+          <div class="statbox-row">
+            <div class="col statbox-info align-items-start">
+              <div class="d-xl-inline-flex d-none v-icon v-contained v-large bg-white day-recon-stats-icon">
+                <img src="assets/images/icons/Total_POS_Sales.png" class="day-recon-icons" />
+              </div>
+              <span class="statbox-number-small ml-5">{{totalMopAmount|currency}}</span>
+              <span class="statbox-title ml-5">TOTAL POS SALES</span>
+            </div>
+            <div class="col statbox-info align-items-start">
+              <div class="d-xl-inline-flex d-none v-icon v-contained v-large bg-white day-recon-stats-icon">
+                <img src="assets/images/icons/Total_Inside_Sales.png" class="day-recon-icons" />
+              </div>
+              <span class="statbox-number-small ml-5">{{deprttotalAmount|currency}}</span>
+              <span class="statbox-title ml-5">TOTAL INSIDE SALES</span>
+            </div>
+            <div class="col statbox-info align-items-start">
+              <div class="d-xl-inline-flex d-none v-icon v-contained v-large bg-white day-recon-stats-icon">
+                <img src="assets/images/icons/Total_Fuel_Sales.png" class="day-recon-icons" />
+              </div>
+              <span class="statbox-number-small ml-5">{{totalFuelGradeSalesAmount|currency}}</span>
+              <span class="statbox-title ml-5">TOTAL FUEL SALES</span>
+            </div>
+            <div class="col statbox-info align-items-start">
+              <div class="d-xl-inline-flex d-none v-icon v-contained v-large bg-white day-recon-stats-icon">
+                <img src="assets/images/icons/Total_Sales_Tax.png" class="day-recon-icons" />
+              </div>
+              <span class="statbox-number-small ml-5">{{saleTaxObj.totalAmount|currency}}</span>
+              <span class="statbox-title ml-5">TOTAL SALES TAX</span>
+            </div>
+            <div class="col statbox-info align-items-start">
+              <div class="d-xl-inline-flex d-none v-icon v-contained v-large bg-white day-recon-stats-icon">
+                <img src="assets/images/icons/Short_Over.png" class="day-recon-icons" />
+              </div>
+              <span class="statbox-number-small ml-5">$0.00</span>
+              <span class="statbox-title ml-5">SHORT/OVER</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- POS Sales column -->
+      <div class="col-6 col-lg-6">
+        <!-- <span>POS Sales</span> -->
+        <div class="statbox-container">
+          <div class="statbox-row justify-content-start statbox-header">
+            <div class="col-1 d-xl-inline-flex d-none"></div>
+            <div class="col-auto statbox-info align-items-start">
+              <span class="statbox-number-small color-white">Method of Payment (MOP)</span>
+            </div>
+          </div>
+          <button type="button" class="btn btn-md btn-cstorebo"
+            style="position: absolute;top: 50%;transform: translate(-10px, -50%); right: 1%;"
+            (click)="addMOP(mopModel)">
+            <i class="fa fa-plus" aria-hidden="true"></i> Add
+          </button>
+          <div class="d-xl-inline-flex d-none v-icon v-contained v-large bg-white"
+            style="position: absolute;top: 50%;transform: translate(-10px, -50%);">
+            <img src="assets/images/icons/Method_of_payment_icon.png" class="day-recon-icons" />
+          </div>
+        </div>
+
+        <div class="statbox-container">
+          <div class="statbox-row p-0 overflow-auto"
+            style="border-radius: 0;background: #D1D1D1;border-bottom-left-radius: 8px;border-bottom-right-radius: 8px;">
+            <table class="w-100">
+              <thead>
+                <tr style="height: 46px;">
+                  <td class="px-3">Category</td>
+                  <td class="px-3">Count</td>
+                  <td class="px-3 width-50">Sales</td>
+                  <td class="px-3 width-10"></td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let mopSales of editableRowData;let i = index"
+                  [style.background-color]="i%2===0?'#DEDCDC':''" style="height: 46px;">
+                  <td class="px-3">{{mopSales.MOPName}}</td>
+                  <td class="px-3">{{mopSales.MOPCount|number}}</td>
+                  <td class="px-3">{{mopSales.MOPAmount|currency}}</td>
+                  <td class="px-3">
+                    <button data-toggle="tooltip" container="body" data-placement="bottom" ngbTooltip="Edit"
+                      class="v-btn-icon v-small v-btn-edit v-btn-primary" (click)="editMOP(mopSales,mopModel)">
+                      <img src="assets/images/icons/edit_new.png" style="width: 15px; height : 14px;" />
+                    </button>
+                  </td>
+                </tr>
+                <tr style="height: 46px;background: #4F586A;color: white;">
+                  <td class="px-3" colspan="2">Total POS Sale:</td>
+                  <td class="px-3">{{totalMopAmount|currency}}</td>
+                  <td class="px-3"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fuel Sales Column -->
+      <div class="col-6 col-lg-6">
+        <div class="statbox-container">
+          <div class="statbox-row justify-content-start statbox-header">
+            <div class="col-1 d-xl-inline-flex d-none"></div>
+            <div class="col-auto statbox-info align-items-start">
+              <span class="statbox-number-small color-white">Fuel Sales</span>
+            </div>
+          </div>
+          <div class="d-xl-inline-flex d-none v-icon v-contained v-large bg-white"
+            style="position: absolute;top: 50%;transform: translate(-10px, -50%);">
+            <i class="icon-fuel color-primary"></i>
+          </div>
+        </div>
+        <!-- section: fuel sales by category -->
+        <div class="statbox-container">
+          <div class="statbox-row p-0 overflow-auto"
+            style="border-radius: 0;background: #D1D1D1;border-bottom-left-radius: 8px;border-bottom-right-radius: 8px;">
+            <table class="w-100">
+              <thead>
+                <tr style="height: 46px;">
+                  <td class="px-3">Category</td>
+                  <td class="px-3">Avg Price/Gallon</td>
+                  <td class="px-3">Volume</td>
+                  <td class="px-3">Sales</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let fuelSales of rowData;let i = index" [style.background]="'#'+fuelSales.Colour"
+                  style="height: 46px;">
+                  <td class="px-3">{{fuelSales.StoreFuelGradeName}}</td>
+                  <td class="px-3">
+                    {{(fuelSales.FuelGradeSalesAmount/fuelSales.FuelGradeSalesVolume).toFixed(2)|currency}}</td>
+                  <td class="px-3">{{fuelSales.FuelGradeSalesVolume|number}}</td>
+                  <td class="px-3">{{fuelSales.FuelGradeSalesAmount|currency}}</td>
+                </tr>
+                <tr
+                  style="height: 46px;background: #4F586A;color: white;border-bottom-left-radius: 8px;border-bottom-right-radius: 8px;">
+                  <td class="px-3" colspan="2">Total Fuel Sale:</td>
+                  <td class="px-3">{{totalFuelGradeSalesVolume|number}}</td>
+                  <td class="px-3">{{totalFuelGradeSalesAmount|currency}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Critical Stats -->
+      <div class="col-6 col-lg-6 mt-3" *ngIf="dayReconData.criticalStats.length > 0">
+        <div class="statbox-container">
+          <div class="statbox-row justify-content-start statbox-header">
+            <div class="col-1 d-xl-inline-flex d-none"></div>
+            <div class="col-auto statbox-info align-items-start">
+              <span class="statbox-number-small color-white">Critical Stats</span>
+            </div>
+          </div>
+          <div class="d-xl-inline-flex d-none v-icon v-contained v-large bg-white"
+            style="position: absolute;top: 50%;transform: translate(-10px, -50%);">
+            <img src="assets/images/icons/Method_of_payment_icon.png" class="day-recon-icons" />
+          </div>
+        </div>
+        <!-- section: critical stats -->
+        <div class="statbox-container">
+          <div class="statbox-row p-0 overflow-auto"
+            style="border-radius: 0;background: #D1D1D1;border-bottom-left-radius: 8px;border-bottom-right-radius: 8px;">
+            <table class="w-100">
+              <thead>
+                <tr style="height: 46px;">
+                  <td class="px-3">Name</td>
+                  <td class="px-3">Value</td>
+                  <td class="px-3">Count</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let criticalStatsObj of dayReconData.criticalStats;let i = index;"
+                  [style.background-color]="i%2===0?'#DEDCDC':''" style="height: 46px;">
+                  <td class="px-3">{{criticalStatsObj.statName}}</td>
+                  <td class="px-3">$ {{criticalStatsObj.amount | number:'1.2-2' }}</td>
+                  <td class="px-3">{{criticalStatsObj.countValue}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Critical Stats -->
+      <div class="col-6 col-lg-6 mt-3" *ngIf="networkCardsRowData.length > 0">
+        <div class="statbox-container">
+          <div class="statbox-row justify-content-start statbox-header">
+            <div class="col-1 d-xl-inline-flex d-none"></div>
+            <div class="col-auto statbox-info align-items-start">
+              <span class="statbox-number-small color-white">Network Report</span>
+            </div>
+          </div>
+          <div class="d-xl-inline-flex d-none v-icon v-contained v-large bg-white"
+            style="position: absolute;top: 50%;transform: translate(-10px, -50%);">
+            <img src="assets/images/icons/Method_of_payment_icon.png" class="day-recon-icons" />
+          </div>
+        </div>
+        <!-- section: critical stats -->
+        <div class="statbox-container">
+          <div class="statbox-row p-0 overflow-auto"
+            style="border-radius: 0;background: #D1D1D1;border-bottom-left-radius: 8px;border-bottom-right-radius: 8px;">
+            <table class="w-100">
+              <thead>
+                <tr style="height: 46px;">
+                  <td class="px-3">Name</td>
+                  <td class="px-3">Count</td>
+                  <td class="px-3">Sales</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let networkCardsData of networkCardsRowData;let i = index;"
+                  [style.background-color]="i%2===0?'#DEDCDC':''" style="height: 46px;">
+                  <td class="px-3">{{networkCardsData.Name}}</td>
+                  <td class="px-3">{{networkCardsData.Count}}</td>
+                  <td class="px-3">{{networkCardsData.Sales|currency}}</td>
+                </tr>
+                <tr style="height: 46px;background: #4F586A;color: white;">
+                  <td class="px-3" colspan="1">Total Network Sale:</td>
+                  <td class="px-3">{{totalNetworkCount}}</td>
+                  <td class="px-3">{{totalNetworkSales|currency}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Department Sales -->
+<div class="aside-label-wrapper aside-label-wrapper--house-change">
+  <a class="aside-label" (click)="onDialogOpen($event, 'department-sales')">Department Sales</a>
+</div>
+<day-recon-department-sales
+  [deprttotalAmount]="deprttotalAmount"
+  [deptDetailrowData]="deptDetailrowData"
+  [isOpen]="currentOpenDialog=='department-sales'"
+  (onClose)="onDialogClose($event)">
+</day-recon-department-sales>
+
+<!-- transaction -->
+<div class="aside-label-wrapper aside-label-wrapper--transactions">
+  <a class="aside-label" (click)="onDialogOpen($event, 'transaction')">Transactions</a>
+</div>
+<day-recon-transaction [storeLocationID]="storeLocationID" [dayReconData]="dayReconData"
+  [purchasesRowData]="purchasesRowData" [movementHeaderID]="movementHeaderID" [totalTransactions]="totalTransactions"
+  [reconciledPayOut]="reconciledPayOut" [unreconciledPay]="unreconciledPay" [isOpen]="currentOpenDialog=='transaction'"
+  (onClose)="onDialogClose($event)" (onUpdate)="getPurchases()">
+</day-recon-transaction>
+
+<!-- atm deposit -->
+<!-- <div class="aside-label-wrapper aside-label-wrapper--atm-deposit">
+  <a class="aside-label" (click)="onDialogOpen($event, 'atm-deposit')">ATM Deposit</a>
+</div>
+<day-recon-atm-deposit [storeLocationID]="storeLocationID" [dayReconData]="dayReconData"
+  [isOpen]="currentOpenDialog=='atm-deposit'" (onClose)="onDialogClose($event)">
+</day-recon-atm-deposit> -->
+
+<!-- Promotions -->
+<div class="aside-label-wrapper aside-label-wrapper--lottery">
+  <a class="aside-label" (click)="onDialogOpen($event, 'promotions')">Promotions</a>
+</div>
+<app-dialog [isOpen]="currentOpenDialog=='promotions'" [ngClass]="{'dialog-open': currentOpenDialog=='promotions'}"
+  [fullscreen]="true" class="dialog-aside-panel" dialogLabel="Promotions" (onClose)="onDialogClose($event)">
+  <app-dialog-header [headerTemplate]="dialogHeaderTemplateLottery" (onClose)="onDialogClose($event)">
+  </app-dialog-header>
+  <app-dialog-body>
+    <app-expandable-grid [rowData]="promotionsRowData" [expandableGridOptions]="promotionsGridOptions"
+      (gridReady)="onPromotionsGridReady($event)">
+    </app-expandable-grid>
+  </app-dialog-body>
+</app-dialog>
+<ng-template #dialogHeaderTemplateLottery>
+  <header class="dialog-header-container">
+    <div class="col">
+      <div class="dialog-title-wrapper">
+        <div class="dialog-title space-wrapper d-inline-flex">
+          <div class="mr-2">
+            <span>Txn Count:&nbsp;</span>
+            <span style="color: #C3C3C3">{{transcationCount}}</span>
+          </div>
+          <div class="mr-2">
+            <span>Total Discount: &nbsp;</span>
+            <span style="color: #C3C3C3">{{totalDiscount |currency}}</span>
+          </div>
+          <div class="mr-2">
+            <span>Sales Qty: &nbsp;</span>
+            <span style="color: #C3C3C3">{{totalSalesQty}}</span>
+          </div>
+          <div class="mr-2">
+            <span>Sales Amount: &nbsp;</span>
+            <span style="color: #C3C3C3">{{totalSalesAmount |currency}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-auto">
+      <button class="v-btn-icon" (click)="onDialogClose($event)">
+        <i class="flaticon-cancel"></i>
+      </button>
+    </div>
+  </header>
+</ng-template>
+
+<!-- category -->
+<!-- <div class="aside-label-wrapper aside-label-wrapper--add-fund">
+  <a class="aside-label" (click)="onDialogOpen($event, 'category')">Category</a>
+</div>
+<app-dialog [isOpen]="currentOpenDialog=='category'" [ngClass]="{'dialog-open': currentOpenDialog=='category'}"
+  [fullscreen]="true" class="dialog-aside-panel" dialogLabel="Category" (onClose)="onDialogClose($event)">
+  <app-dialog-header [headerTemplate]="dialogHeaderTemplateCategory" (onClose)="onDialogClose($event)">
+  </app-dialog-header>
+  <app-dialog-body>
+    <div class="cat-details">
+      <app-cstore-grid [rowData]="categoryCardsRowData" [cStoreGridOptions]="categoryGridOptions"
+        (gridReady)="onCategoryGridReady($event)">
+      </app-cstore-grid>
+    </div>
+  </app-dialog-body>
+</app-dialog> -->
+<ng-template #dialogHeaderTemplateCategory>
+  <header class="dialog-header-container">
+    <div class="col">
+      <div class="dialog-title-wrapper">
+        <div class="dialog-title space-wrapper d-inline-flex">
+          <div class="mr-2">
+            <span>Sales:&nbsp;</span>
+            <span style="color: #C3C3C3">{{totalCategorySales |currency}}</span>
+          </div>
+          <div class="mr-2">
+            <span>Count:&nbsp;</span>
+            <span style="color: #C3C3C3">{{totalCategoryCount |number}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-auto">
+      <button class="v-btn-icon" (click)="onDialogClose($event)">
+        <i class="flaticon-cancel"></i>
+      </button>
+    </div>
+  </header>
+</ng-template>
+
+<!-- network -->
+<!-- <div class="aside-label-wrapper aside-label-wrapper--add-fund">
+  <a class="aside-label" (click)="onDialogOpen($event, 'network')">Network</a>
+</div>
+<app-dialog [isOpen]="currentOpenDialog=='network'" [ngClass]="{'dialog-open': currentOpenDialog=='network'}"
+  [fullscreen]="true" class="dialog-aside-panel" dialogLabel="Network" (onClose)="onDialogClose($event)">
+  <app-dialog-header [headerTemplate]="dialogHeaderTemplateNetwork" (onClose)="onDialogClose($event)">
+  </app-dialog-header>
+  <app-dialog-body>
+    <app-cstore-grid [rowData]="networkCardsRowData" [cStoreGridOptions]="networkGridOptions"
+      (gridReady)="onNetworkGridReady($event)">
+    </app-cstore-grid>
+  </app-dialog-body>
+</app-dialog>
+<ng-template #dialogHeaderTemplateNetwork>
+  <header class="dialog-header-container">
+    <div class="col">
+      <div class="dialog-title-wrapper">
+        <div class="dialog-title space-wrapper d-inline-flex">
+          <div class="mr-2">
+            <span>Sales:&nbsp;</span>
+            <span style="color: #C3C3C3">{{totalNetworkSales |currency}}</span>
+          </div>
+          <div class="mr-2">
+            <span>Count:&nbsp;</span>
+            <span style="color: #C3C3C3">{{totalNetworkCount |number}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-auto">
+      <button class="v-btn-icon" (click)="onDialogClose($event)">
+        <i class="flaticon-cancel"></i>
+      </button>
+    </div>
+  </header>
+</ng-template> -->
+
+<!-- bank deposit -->
+<div class="aside-label-wrapper aside-label-wrapper--bank-deposites">
+  <a class="aside-label" (click)="onDialogOpen($event, 'bank-deposit')">Bank Deposites</a>
+</div>
+<app-dialog [isOpen]="currentOpenDialog=='bank-deposit'" [ngClass]="{'dialog-open': currentOpenDialog=='bank-deposit'}"
+  [fullscreen]="true" class="dialog-aside-panel" dialogLabel="Bank Deposits" (onClose)="onDialogClose($event)">
+  <app-dialog-header [headerTemplate]="dialogHeaderTemplateBankDeposits" (onClose)="onDialogClose($event)">
+  </app-dialog-header>
+  <app-dialog-body>
+    <div *ngIf="availableBanks.length > 0">
+      <div class="row mt-3">
+        <div class="col-sm-3 pl-2 pr-2" *ngFor="let bank of availableBanks">
+          <label class="form-group has-float-label ">
+            <div class="input-icon">
+              <input money type="text" class="form-control  has-float-label currency"
+                (keydown)="depositKeyDown(bank.BankAccountTypeID)"
+                (keyup)="splitAmountChange($event,bank.BankAccountTypeID, false)" [(ngModel)]="bank.Amount"
+                placeholder="Amount" maxlength="250">
+              <i>$</i>
+            </div>
+            <span> {{bank.BankNickName}}:</span>
+          </label>
+          <div class="form-check" *ngIf="bank.BankAccountTypeID===5">
+            <input (change)="splitAmountChange($event,bank.BankAccountTypeName, false)" type="checkbox"
+              class="form-check-input" id="atmIsCheck" [(ngModel)]="bank.IsCheck">
+            <label class="form-check-label" for="atmIsCheck"> ATM Check</label>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-md-12 text-right">
+          <button type="button" class="btn btn-md btn-primary" (click)="depositCancel()">Cancel</button>
+          <button type="button" class="btn btn-md btn-primary ml-3" (click)="saveSplitDeposit()">Save</button>
+        </div>
+      </div>
+    </div>
+  </app-dialog-body>
+</app-dialog>
+<ng-template #dialogHeaderTemplateBankDeposits>
+  <header class="dialog-header-container">
+    <div class="col">
+      <div class="dialog-title-wrapper">
+        <div class="dialog-title space-wrapper d-inline-flex">
+          <div class="mr-2">
+            <span>Total Deposit:&nbsp;</span>
+            <span style="color: #C3C3C3">{{totalBankDeposit |currency}}</span>
+          </div>
+          <div class="mr-2">
+            <span>Lottery Deposit:&nbsp;</span>
+            <span style="color: #C3C3C3">{{lotteryBankDeposit |currency}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-auto">
+      <button class="v-btn-icon" (click)="onDialogClose($event)">
+        <i class="flaticon-cancel"></i>
+      </button>
+    </div>
+  </header>
+</ng-template>
+
+<ng-template #mopModel let-modal>
+  <div class="mix-match modal-header">
+    <h4 class="modal-title">{{mopForm.value.mopDetailID===0?'New':'Update'}} Method of Payment</h4>
+    <button type="button" class="mix-match close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <form [formGroup]="mopForm" (ngSubmit)="saveMOP(mopForm)">
+    <div class="modal-body">
+      <div class="form-group mb-2">
+        <label>Category<span style="color: red">*</span></label>
+        <ng-select class="mix-match-custom-select" [items]="mopDetailList" [hideSelected]="true" bindLabel="mopName"
+          bindValue="mopName" placeholder="Select Category" formControlName="mopName">
+        </ng-select>
+        <div *ngIf="mopName.invalid && (mopName.dirty || mopName.touched)" class="alert alert-danger">
+          <div *ngIf="mopName.errors.required">
+            Category Selection is required.
+          </div>
+        </div>
+      </div>
+      <div class="form-group mb-2">
+        <label>Count<span style="color: red">*</span></label>
+        <input type="number" class="form-control" id="mopCount" aria-describedby="mopCount" placeholder="Count"
+          formControlName="mopCount">
+        <div *ngIf="mopCount.invalid && (mopCount.dirty || mopCount.touched)" class="alert alert-danger">
+          <div *ngIf="mopCount.errors.required">
+            Count is required.
+          </div>
+          <div *ngIf="mopCount.errors.minlength">
+            Count Should be greater than Zero.
+          </div>
+        </div>
+      </div>
+      <div class="form-group mb-2 input-icon">
+        <label>Amount<span style="color: red">*</span></label>
+        <input type="number" class="form-control" id="mopAmount" aria-describedby="mopAmount" placeholder="Amount"
+          formControlName="mopAmount">
+        <i>$</i>
+        <div *ngIf="mopAmount.invalid && (mopAmount.dirty || mopAmount.touched)" class="alert alert-danger">
+          <div *ngIf="mopAmount.errors.required">
+            Amount is required.
+          </div>
+          <div *ngIf="mopAmount.errors.minlength">
+            Amount should be greater than Zero.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mix-match modal-footer">
+      <button type="button" class="btn btn-light" (click)="clear()">Clear</button>
+      <button type="submit" class="btn btn-primary"
+        [disabled]="!mopForm.valid">{{mopForm.value.mopDetailID===0?'Create':'Update'}}</button>
+    </div>
+  </form>
+</ng-template>

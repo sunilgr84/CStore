@@ -1,0 +1,22 @@
+<div class="mt-3">
+  <app-subscription-details></app-subscription-details>
+</div>
+<div class="mt-3">
+  <ngb-tabset type="pills" #tabs="ngbTabset">
+    <ngb-tab title="Change Plan / Payment Method">
+      <ng-template ngbTabContent>
+        <app-change-plan></app-change-plan>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab title="Payment History">
+      <ng-template ngbTabContent>
+        <app-payment-history></app-payment-history>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab title="Subscription History">
+      <ng-template ngbTabContent>
+        <app-subscription-history></app-subscription-history>
+      </ng-template>
+    </ngb-tab>
+  </ngb-tabset>
+</div>

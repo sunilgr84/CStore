@@ -1,0 +1,737 @@
+<div id="overlay" (click)="closeSideContainer()"></div>
+<div id="mySidecontainer" [ngClass]="sideContainer">
+  <div [hidden]="view">
+    <form class="needs-validation" novalidate [formGroup]="dataForm" (ngSubmit)="ondataFormSubmit(0)">
+      <div class="row upper-side-container" id="upper-side-container">
+        <!-- <div class="col-md-1 pl-0">
+        <a href="JavaScript:void(0);" class="closebtn" (click)="closeSideContainer()"
+          >&times;</a
+        >
+      </div> -->
+        <div class="col-md-4">
+          <h3 class="pt-2">Edit</h3>
+        </div>
+        <div class="col-md-8">
+          <div class="form-row float-right pt-1 pb-0">
+            <div class="col">
+              <button class="my-btn my-sec-btn" type="button" (click)="closeSideContainer()">
+                Cancel
+              </button>
+            </div>
+            <div class="col">
+              <button class="my-btn my-primary-btn" type="submit">
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="main-side-container">
+        <!-- <div class="form-row view-container">
+          <div class="col-md-6">
+            <label>No.</label>
+          </div>
+          <div class="col-md-6 side-input">
+            <label>{{ dataForm.value.id }}</label>
+          </div>
+        </div> -->
+        <div class="row">
+          <div class="col">
+            <div class="form-row view-container">
+              <div class="col-md-6">
+                <label>Manufacturer Name</label>
+              </div>
+              <div class="col-md-6 side-input">
+                <input formControlName="ManufacturerName" readonly>
+              </div>
+            </div>
+            <div class="form-row view-container">
+              <div class="col-md-6">
+                <label>Transaction ID</label>
+              </div>
+              <div class="col-md-6 side-input">
+                <input formControlName="TransactionId">
+              </div>
+            </div>
+            <div class="form-row view-container">
+              <div class="col-md-6">
+                <label>Account Discount Amount</label>
+              </div>
+              <div class="col-md-6 side-input">
+                <input formControlName="AccountDiscAmt">
+                <!-- <div *ngIf="dataForm.get('RegisterId').invalid && (dataForm.get('RegisterId').dirty || dataForm.get('RegisterId').touched)"
+              class="alert alert-danger">
+            <div *ngIf="dataForm.get('RegisterId').errors.required">
+            Register ID is required!!.
+            </div>
+          </div> -->
+              </div>
+            </div>
+            <div class="form-row view-container">
+              <div class="col-md-6">
+                <label>Total Sale Amount</label>
+              </div>
+              <div class="col-md-6 side-input">
+                <input formControlName="TotalSaleAmt">
+              </div>
+            </div>
+            <div class="form-row view-container">
+              <div class="col-md-6">
+                <label>UPC Description</label>
+              </div>
+              <div class="col-md-6 side-input">
+                <input formControlName="Description">
+              </div>
+            </div>
+            <div class="form-row view-container">
+              <div class="col-md-6">
+                <label>Promotion Flag</label>
+              </div>
+              <div class="col-md-6 side-input">
+                <input formControlName="DiscountSign">
+              </div>
+            </div>
+
+            <div class="form-row view-container">
+              <div class="col-md-6">
+                <label>OMP Qty</label>
+              </div>
+              <div class="col-md-6 side-input">
+                <input formControlName="MultipackReqQty">
+              </div>
+            </div>
+
+            <div class="form-row view-container">
+              <div class="col-md-6">
+                <label>Manuf Disc Amt</label>
+              </div>
+              <div class="col-md-6 side-input">
+                <input formControlName="MfgDiscAmt">
+              </div>
+            </div>
+
+            <div class="form-row view-container">
+              <div class="col-md-6">
+                <label>Coupen Amount</label>
+              </div>
+              <div class="col-md-6 side-input">
+                <input formControlName="CouponAmt">
+              </div>
+            </div>
+
+            <div class="form-row view-container">
+              <div class="col-md-6">
+                <label>Manufacturer MP Qty</label>
+              </div>
+              <div class="col-md-6 side-input">
+                <input formControlName="ManufacturerMultipackQty">
+              </div>
+            </div>
+
+            <div class="form-row view-container">
+              <div class="col-md-6">
+                <label>Manufacturer Buy-Down Description</label>
+              </div>
+              <div class="col-md-6 side-input">
+                <input formControlName="MfgBuyDownDescription">
+              </div>
+            </div>
+
+            <div class="form-row view-container">
+              <div class="col-md-6">
+                <label>Manufacturer MP Description</label>
+              </div>
+              <div class="col-md-6 side-input">
+                <input formControlName="MfgBuyDownDescription">
+              </div>
+            </div>
+
+          </div>
+          <div class="col">
+            <div class="form-row view-container">
+              <div class="col-md-6">
+                <label>Trnansaction Date</label>
+              </div>
+              <div class="col-md-6 side-input">
+                <input type="date" formControlName="TransactionDate" readonly>
+              </div>
+            </div>
+            <div class="form-row view-container">
+              <div class="col-md-6">
+                <label>Account Promotion Name</label>
+              </div>
+              <div class="col-md-6 side-input">
+                <input formControlName="AccountDiscDescription">
+              </div>
+            </div>
+            <div class="form-row view-container">
+              <div class="col-md-6">
+                <label>Sales Qty</label>
+              </div>
+              <div class="col-md-6 side-input">
+                <input formControlName="SalesQty">
+              </div>
+            </div>
+            <div class="form-row view-container">
+              <div class="col-md-6">
+                <label>UPC Code</label>
+              </div>
+              <div class="col-md-6 side-input">
+                <input formControlName="Upc">
+              </div>
+            </div>
+            <div class="form-row view-container">
+              <div class="col-md-6">
+                <label>Unit Of Measure</label>
+              </div>
+              <div class="col-md-6 side-input">
+                <input formControlName="Uom">
+              </div>
+            </div>
+            <div class="form-row view-container">
+              <div class="col-md-6">
+                <label>OMP Flag</label>
+              </div>
+              <div class="col-md-6 side-input">
+                <input formControlName="MultipackIndicator">
+              </div>
+            </div>
+            <div class="form-row view-container">
+              <div class="col-md-6">
+                <label>OMP Disc Amt</label>
+              </div>
+              <div class="col-md-6 side-input">
+                <input formControlName="MultipackDiscAmt">
+              </div>
+            </div>
+            <div class="form-row view-container">
+              <div class="col-md-6">
+                <label>Coupen ID</label>
+              </div>
+              <div class="col-md-6 side-input">
+                <input formControlName="CouponId">
+              </div>
+            </div>
+            <div class="form-row view-container">
+              <div class="col-md-6">
+                <label>Manufacturer MP Flag</label>
+              </div>
+              <div class="col-md-6 side-input">
+                <input formControlName="ManufacturerMultipackIndicator">
+              </div>
+            </div>
+            <div class="form-row view-container">
+              <div class="col-md-6">
+                <label>Manufacturer Promotion Description</label>
+              </div>
+              <div class="col-md-6 side-input">
+                <input formControlName="MfgDiscDescription">
+              </div>
+            </div>
+            <div class="form-row view-container">
+              <div class="col-md-6">
+                <label>Manufacturer Buy-Down Amount</label>
+              </div>
+              <div class="col-md-6 side-input">
+                <input formControlName="MfgBuyDownAmt">
+              </div>
+            </div>
+            <div class="form-row view-container">
+              <div class="col-md-6">
+                <label>Account Loyalty Number</label>
+              </div>
+              <div class="col-md-6 side-input">
+                <input formControlName="LoyaltyNumber">
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <!-- <div [hidden]="!view">
+    <h3>View</h3>
+    <hr>
+    <div class="main-side-container">
+      <div class="row view-container" *ngFor="let view of viewData">
+        <div class="col">
+          <label>{{view.key}}</label>
+        </div>
+        <div class="col">
+          <span>{{view.value}}</span>
+        </div>
+      </div>
+    </div>
+  </div> -->
+</div>
+
+<div id="main" class="row min_height">
+
+  <div class="main">
+    <div class="row-container">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="card my-card">
+            <div class="my-auto">
+              <div class="row card-title">
+                <div class="col text-center">
+                  <h4>Total Sales</h4>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col text-center">
+                  <h3 class="text-count" style="color: darkmagenta;">{{ totalSalesAmt }}</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card my-card">
+            <div class="my-auto">
+              <div class="row card-title">
+                <div class="col text-center">
+                  <h4>Total Qty</h4>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col text-center">
+                  <h3 class="text-count" style="color: green;">{{ totalSalesQty }}</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card my-card">
+            <div class="row card-title">
+              <div class="col text-center">
+                <h4>Total Discount Amount</h4>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <h3 class="text-count-left" style="color: red;">{{ manufDiscAmt }}</h3>
+                <h6>Manufacturer</h6>
+              </div>
+              <div class="col text-right">
+                <h3 class="text-count-right" style="color: orange;">{{ outletDiscAmt }}</h3>
+                <h6>Retailer</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card my-card">
+            <div class="row card-title">
+              <div class="col text-center">
+                <h4>Total Discount Qty</h4>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <h3 class="text-count-left" style="color: blue;">{{ manufDiscQty }}</h3>
+                <h6>Manufacturer</h6>
+              </div>
+              <div class="col text-right">
+                <h3 class="text-count-right" style="color: blueviolet;">{{ outletDiscQty }}</h3>
+                <h6>Retailer</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row-container">
+      <app-scan-data-errors></app-scan-data-errors>
+    </div>
+    <div class="row-container">
+      <p *ngFor="let warning of warnings">
+        <ngb-alert [dismissible]="true" (close)="closeAlert(warning)">
+          {{ warning }} <strong>!</strong>
+        </ngb-alert>
+      </p>
+    </div>
+    <div class="row-container">
+      <div class="row">
+        <div class="col-3">
+          <div class="custom-control custom-switch w-50 d-inline mr-3">
+            <input type="checkbox" class="custom-control-input" id="customSwitch1" (change)="onPromotion($event)">
+            <label class="custom-control-label" for="customSwitch1">Promotion</label>
+          </div>
+          <div class="custom-control custom-switch w-50 d-inline ml-3">
+            <input type="checkbox" class="custom-control-input" id="invalidData" (change)="onInvalidData($event)">
+            <label class="custom-control-label" for="invalidData">Invalid Data</label>
+          </div>
+        </div>
+        <div class="col p-0" *ngIf="submissionType?.id === 1 || submissionType?.id === 2">
+          <mat-button-toggle-group name="fontStyle" aria-label="Font Style" [(ngModel)]="submissionType.id"
+            (change)="onSubmissionTypeChange()">
+            <mat-button-toggle [value]="1">Autosubmit</mat-button-toggle>
+            <mat-button-toggle [value]="2">ReviewAndSubmit</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+
+        <div class="col">
+          <label class="form-group has-float-label col-sm-12 p-0"
+            *ngIf="(storeLocationList && storeLocationList.length>1);else singleStore">
+            <ng-select [items]="storeLocationList" [selectOnTab]="true" bindLabel="storeName"
+              bindValue="storeLocationID" labelForId="storeLocationID" [(ngModel)]="storeLocationId"
+              placeholder="Store Location" (change)="onStoreSelection($event)">
+            </ng-select>
+            <span>Store Location</span>
+          </label>
+          <ng-template #singleStore>
+            <label class="form-group has-float-label"
+              *ngIf="storeLocationList && storeLocationList.length===1">
+              <input type="text" class="form-control" id="storeName" [value]="storeLocationList[0].storeName"
+                name="storeName" placeholder="Store Name" readonly>
+              <span> Store Location </span>
+            </label>
+          </ng-template>
+        </div>
+        <div class="col p-0">
+          <label class="col-sm-12 form-group has-float-label p-0">
+            <app-daterangepicker [selectedDateRange]="selectedDateRange" [placement]="placement"
+              (dateRangeSelecetd)="dateRangeChange($event)">
+            </app-daterangepicker>
+            <span> Select Date Range</span>
+          </label>
+        </div>
+
+        <div class="col">
+          <select class="custom-select" (change)="onManufacturereChange($event.target.value)"
+            [(ngModel)]="manufacturerId">
+            <option selected="selected" value="">Select Manufacturer</option>
+            <option *ngFor="let manufacturer of manufactureresByCompany" [value]="manufacturer.id">
+              {{ manufacturer.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="">
+      <h5 *ngIf="scanData.length > 0" class="icon ml-5">{{ invalidDataCount }} Invalid Data</h5>
+      <table *ngIf="scanData.length > 0">
+        <thead>
+          <th></th>
+          <th>Edit</th>
+          <th>Transaction DT</th>
+          <th class="text-desc">Transaction ID</th>
+          <th>Qty</th>
+          <th>Price</th>
+          <th class="text-desc">UPC Code</th>
+          <th class="text-desc">UPC Desc</th>
+          <th class="text-desc">Promotion Flag</th>
+          <th class="text-desc">OMP Flag</th>
+          <th class="text-desc">OMP Qty</th>
+          <th class="text-desc">OMP DMT</th>
+          <th>APN</th>
+          <th>ADA</th>
+          <th class="text-desc">MfgDiscAmt</th>
+          <th class="text-desc">MfgDiscDescription</th>
+          <th class="text-desc">AccountDiscAmt</th>
+          <th class="text-desc">AccountDiscDescription</th>
+          <th class="text-desc">ManufacturerMultiPackIndicator</th>
+          <th class="text-desc">ManufacturerMultiPackQty</th>
+          <th class="text-desc">ManufacturerMultiPackDiscAmt</th>
+          <th class="text-desc">MfgBuyDownDisc</th>
+          <th class="text-desc">MfgBuyDownAmt</th>
+          <th class="text-desc">ManufacturerDiscDescription</th>
+          <th class="text-desc">LoyaltiNumber</th>
+        </thead>
+        <tbody>
+          <tr></tr>
+          <!-- <tr [formGroup]="row" *ngFor="let row of rowFormCopy.controls |  slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; index as i"> -->
+          <tr [formGroup]="row" *ngFor="let row of rowFormCopy.controls; index as i">
+            <td>
+              <div class="icon" *ngIf="!row.value.isValid">
+                <i class="fa fa-exclamation-triangle fa-fw" aria-hidden="true"></i>
+              </div>
+            </td>
+            <td>
+              <i *ngIf="row.value.status !== 'Posted'" class="fa fa-pencil fa-fw icon-pointer" aria-hidden="true"
+                (click)="openSideContainer(row.value)"></i>
+              <i *ngIf="row.value.status === 'Posted'" class="fa fa-download fa-fw" aria-hidden="true"></i>
+            </td>
+            <td [ngClass]="{'err-text': row.value.TransactionDate_err}">{{row.value.TransactionDate}}</td>
+            <td [ngClass]="{'err-text': row.value.TransactionId_err}">{{ row.value.TransactionId }}</td>
+            <td [ngClass]="{'err-text': row.value.SalesQty_err}"
+              (dblclick)="editField(row.value,i.toString()+'100',i.toString()+'101')">
+              <div [id]="i.toString()+'100'">
+                {{ row.value.SalesQty }}
+              </div>
+              <div class="table-input-container" [id]="i.toString()+'101'">
+                <input type="text" [id]="i.toString()+'101' + 'input'" placeholder="trn d/t" formControlName="SalesQty"
+                  (blur)="onInputBlur(i,row.value,i.toString()+'100',i.toString()+'101')">
+              </div>
+            </td>
+            <td [ngClass]="{'err-text': row.value.TotalSaleAmt_err}"
+              (dblclick)="editField(row.value,i.toString()+'102',i.toString()+'103')">
+              <div [id]="i.toString()+'102'">
+                {{ row.value.TotalSaleAmt }}
+              </div>
+              <div class="table-input-container" [id]="i.toString()+'103'">
+                <input type="text" [id]="i.toString()+'103' + 'input'" placeholder="price"
+                  formControlName="TotalSaleAmt"
+                  (blur)="onInputBlur(i,row.value,i.toString()+'102',i.toString()+'103')">
+              </div>
+            </td>
+            <td [ngClass]="{'err-text': row.value.Upc_err}">{{ row.value.Upc}}</td>
+            <td [ngClass]="{'err-text': row.value.Description_err}"
+              (dblclick)="editField(row.value,i.toString()+'104',i.toString()+'105')">
+              <div [id]="i.toString()+'104'" class="text-desc">
+                {{ row.value.Description }}
+              </div>
+              <div class="table-input-container" [id]="i.toString()+'105'">
+                <input type="text" [id]="i.toString()+'105' + 'input'" placeholder="Description"
+                  formControlName="Description" (blur)="onInputBlur(i,row.value,i.toString()+'104',i.toString()+'105')">
+              </div>
+            </td>
+            <td [ngClass]="{'err-text': row.value.DiscountSign_err}"
+              (dblclick)="editField(row.value,i.toString()+'106',i.toString()+'107')">
+              <div [id]="i.toString()+'106'">
+                {{ row.value.DiscountSign }}
+              </div>
+              <div class="table-input-container" [id]="i.toString()+'107'">
+                <input type="text" [id]="i.toString()+'107' + 'input'" placeholder="Promotion Flag"
+                  formControlName="DiscountSign"
+                  (blur)="onInputBlur(i,row.value,i.toString()+'106',i.toString()+'107')">
+              </div>
+            </td>
+            <td [ngClass]="{'err-text': row.value.MultipackIndicator_err}"
+              (dblclick)="editField(row.value,i.toString()+'108',i.toString()+'109')">
+              <div [id]="i.toString()+'108'">
+                {{ row.value.MultipackIndicator }}
+              </div>
+              <div class="table-input-container" [id]="i.toString()+'109'">
+                <input type="text" [id]="i.toString()+'109' + 'input'" placeholder="OMP Flag"
+                  formControlName="MultipackIndicator"
+                  (blur)="onInputBlur(i,row.value,i.toString()+'108',i.toString()+'109')">
+              </div>
+            </td>
+            <td [ngClass]="{'err-text': row.value.MultipackReqQty_err}"
+              (dblclick)="editField(row.value,i.toString()+'110',i.toString()+'111')">
+              <div [id]="i.toString()+'110'">
+                {{ row.value.MultipackReqQty }}
+              </div>
+              <div class="table-input-container" [id]="i.toString()+'111'">
+                <input type="text" [id]="i.toString()+'111' + 'input'" placeholder="OMP_qty"
+                  formControlName="MultipackReqQty"
+                  (blur)="onInputBlur(i,row.value,i.toString()+'110',i.toString()+'111')">
+              </div>
+            </td>
+            <td [ngClass]="{'err-text': row.value.MultipackDiscAmt_err}"
+              (dblclick)="editField(row.value,i.toString()+'112',i.toString()+'113')">
+              <div [id]="i.toString()+'112'">
+                {{ row.value.MultipackDiscAmt }}
+              </div>
+              <div class="table-input-container" [id]="i.toString()+'113'">
+                <input type="text" [id]="i.toString()+'113' + 'input'" placeholder="OMP DMT"
+                  formControlName="MultipackDiscAmt"
+                  (blur)="onInputBlur(i,row.value,i.toString()+'112',i.toString()+'113')">
+              </div>
+            </td>
+            <td [ngClass]="{'err-text': row.value.AccountDiscDescription_err}"
+              (dblclick)="editField(row.value,i.toString()+'114',i.toString()+'115')">
+              <div [id]="i.toString()+'114'">
+                {{ row.value.AccountDiscDescription }}
+              </div>
+              <div class="table-input-container" [id]="i.toString()+'115'">
+                <input type="text" [id]="i.toString()+'115' + 'input'" placeholder="APN"
+                  formControlName="AccountDiscDescription"
+                  (blur)="onInputBlur(i,row.value,i.toString()+'114',i.toString()+'115')">
+              </div>
+            </td>
+            <td [ngClass]="{'err-text': row.value.AccountDiscAmt_err}"
+              (dblclick)="editField(row.value,i.toString()+'116',i.toString()+'117')">
+              <div [id]="i.toString()+'116'">
+                {{ row.value.AccountDiscAmt }}
+              </div>
+              <div class="table-input-container" [id]="i.toString()+'117'">
+                <input type="text" placeholder="ADA" [id]="i.toString()+'117' + 'input'"
+                  formControlName="AccountDiscAmt"
+                  (blur)="onInputBlur(i,row.value,i.toString()+'116',i.toString()+'117')">
+              </div>
+            </td>
+            <td [ngClass]="{'err-text': row.value.MfgDiscAmt_err}"
+              (dblclick)="editField(row.value,i.toString()+'118',i.toString()+'119')">
+              <div [id]="i.toString()+'118'">
+                {{ row.value.MfgDiscAmt }}
+              </div>
+              <div class="table-input-container" [id]="i.toString()+'119'">
+                <input type="text" [id]="i.toString()+'119' + 'input'" placeholder="MANUF DMT"
+                  formControlName="MfgDiscAmt" (blur)="onInputBlur(i,row.value,i.toString()+'118',i.toString()+'119')">
+              </div>
+            </td>
+            <td [ngClass]="{'err-text': row.value.MfgDiscDescription_err}"
+              (dblclick)="editField(row.value,i.toString()+'126',i.toString()+'127')">
+              <div [id]="i.toString()+'126'" class="text-desc">
+                {{ row.value.MfgDiscDescription }}
+              </div>
+              <div class="table-input-container" [id]="i.toString()+'127'">
+                <input type="text" [id]="i.toString()+'127' + 'input'" placeholder="manuf pd"
+                  formControlName="MfgDiscDescription"
+                  (blur)="onInputBlur(i,row.value,i.toString()+'126',i.toString()+'127')">
+              </div>
+            </td>
+            <td [ngClass]="{'err-text': row.value.AccountDiscAmt_err}"
+              (dblclick)="editField(row.value,i.toString()+'AccountDiscAmt_val',i.toString()+'AccountDiscAmt')">
+              <div [id]="i.toString()+'AccountDiscAmt_val'" class="text-desc">
+                {{ row.value.AccountDiscAmt }}
+              </div>
+              <div class="table-input-container" [id]="i.toString()+'AccountDiscAmt'">
+                <input type="text" [id]="i.toString()+'AccountDiscAmt' + 'input'" placeholder="AccountDiscAmt"
+                  formControlName="AccountDiscAmt"
+                  (blur)="onInputBlur(i,row.value,i.toString()+'AccountDiscAmt_val',i.toString()+'AccountDiscAmt')">
+              </div>
+            </td>
+            <td [ngClass]="{'err-text': row.value.AccountDiscDescription_err}"
+              (dblclick)="editField(row.value,i.toString()+'AccountDiscDescription_val',i.toString()+'AccountDiscDescription')">
+              <div [id]="i.toString()+'AccountDiscDescription_val'" class="text-desc">
+                {{ row.value.AccountDiscDescription }}
+              </div>
+              <div class="table-input-container" [id]="i.toString()+'AccountDiscDescription'">
+                <input type="text" [id]="i.toString()+'AccountDiscDescription' + 'input'"
+                  placeholder="AccountDiscDescription" formControlName="AccountDiscDescription"
+                  (blur)="onInputBlur(i,row.value,i.toString()+'AccountDiscDescription_val',i.toString()+'AccountDiscDescription')">
+              </div>
+            </td>
+            <td [ngClass]="{'err-text': row.value.ManufacturerMultipackIndicator_err}"
+              (dblclick)="editField(row.value,i.toString()+'120',i.toString()+'121')">
+              <div [id]="i.toString()+'120'">
+                {{ row.value.ManufacturerMultipackIndicator }}
+              </div>
+              <div class="table-input-container" [id]="i.toString()+'121'">
+                <input type="text" [id]="i.toString()+'121' + 'input'" placeholder="MNUF MPF"
+                  formControlName="ManufacturerMultipackIndicator"
+                  (blur)="onInputBlur(i,row.value,i.toString()+'120',i.toString()+'121')">
+              </div>
+            </td>
+            <td [ngClass]="{'err-text': row.value.ManufacturerMultipackQty_err}"
+              (dblclick)="editField(row.value,i.toString()+'122',i.toString()+'123')">
+              <div [id]="i.toString()+'122'">
+                {{ row.value.ManufacturerMultipackQty }}
+              </div>
+              <div class="table-input-container" [id]="i.toString()+'123'">
+                <input type="text" [id]="i.toString()+'123' + 'input'" placeholder="MANUF MPQ"
+                  formControlName="ManufacturerMultipackQty"
+                  (blur)="onInputBlur(i,row.value,i.toString()+'122',i.toString()+'123')">
+              </div>
+            </td>
+            <td [ngClass]="{'err-text': row.value.ManufacturerMultipackDiscAmt_err}"
+              (dblclick)="editField(row.value,i.toString()+'124',i.toString()+'125')">
+              <div [id]="i.toString()+'124'">
+                {{ row.value.ManufacturerMultipackDiscAmt }}
+              </div>
+              <div class="table-input-container" [id]="i.toString()+'125'">
+                <input type="text" [id]="i.toString()+'125' + 'input'" placeholder="mnuf mpdmt"
+                  formControlName="ManufacturerMultipackDiscAmt"
+                  (blur)="onInputBlur(i,row.value,i.toString()+'124',i.toString()+'125')">
+              </div>
+            </td>
+            <td [ngClass]="{'err-text': row.value.MfgBuyDownDescription_err}"
+              (dblclick)="editField(row.value,i.toString()+'128',i.toString()+'129')">
+              <div [id]="i.toString()+'128'" class="text-desc">
+                {{ row.value.MfgBuyDownDescription }}
+              </div>
+              <div class="table-input-container" [id]="i.toString()+'129'">
+                <input type="text" [id]="i.toString()+'129' + 'input'" placeholder="manuf bd"
+                  formControlName="MfgBuyDownDescription"
+                  (blur)="onInputBlur(i,row.value,i.toString()+'128',i.toString()+'129')">
+              </div>
+            </td>
+            <td [ngClass]="{'err-text': row.value.MfgBuyDownAmt_err}"
+              (dblclick)="editField(row.value,i.toString()+'130',i.toString()+'131')">
+              <div [id]="i.toString()+'130'">
+                {{ row.value.MfgBuyDownAmt }}
+              </div>
+              <div class="table-input-container" [id]="i.toString()+'131'">
+                <input type="text" [id]="i.toString()+'131' + 'input'" placeholder="manuf ba"
+                  formControlName="MfgBuyDownAmt"
+                  (blur)="onInputBlur(i,row.value,i.toString()+'130',i.toString()+'131')">
+              </div>
+            </td>
+            <td [ngClass]="{'err-text': row.value.MfgDiscDescription_err}"
+              (dblclick)="editField(row.value,i.toString()+'132',i.toString()+'133')">
+              <div [id]="i.toString()+'132'" class="text-desc">
+                {{ row.value.MfgDiscDescription }}
+              </div>
+              <div class="table-input-container" [id]="i.toString()+'133'">
+                <input type="text" [id]="i.toString()+'133' + 'input'" placeholder="manuf_mpd"
+                  formControlName="MfgDiscDescription"
+                  (blur)="onInputBlur(i,row.value,i.toString()+'132',i.toString()+'133')">
+              </div>
+            </td>
+            <td [ngClass]="{'err-text': row.value.LoyaltyNumber_err}"
+              (dblclick)="editField(row.value,i.toString()+'134',i.toString()+'135')">
+              <div [id]="i.toString()+'134'">
+                {{ row.value.LoyaltyNumber }}
+              </div>
+              <div class="table-input-container" [id]="i.toString()+'135'">
+                <input type="text" [id]="i.toString()+'135' + 'input'" placeholder="account LID"
+                  formControlName="LoyaltyNumber"
+                  (blur)="onInputBlur(i,row.value,i.toString()+'134',i.toString()+'135')">
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="row-container">
+        <div class="row my-position-fixed">
+          <div class="col-md-4">
+            <div class="row">
+              <ngb-pagination *ngIf="scanData.length > 0" [(page)]="page" (pageChange)="onPageChange($event)"
+                [pageSize]="pageSize" [collectionSize]="scanDataCount" [maxSize]="5" [rotate]="true" [ellipses]="false"
+                [boundaryLinks]="true">
+              </ngb-pagination>
+              <select class="my-select" [(ngModel)]="pageSize" *ngIf="scanData.length > 0"
+                (change)="onPageSizeChange($event.target.value)">
+                <option [value]="2">2</option>
+                <option [value]="5">5</option>
+                <option [value]="10">10</option>
+                <option [value]="100">100</option>
+                <option [value]="500">500</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <button *ngIf="scanData.length > 0 && dataStatus !== 'Posted'"
+              class="my-btn my-primary-btn float-right mx-3" (click)="openSubmitAlertModal()">
+              Submit
+            </button>
+            <button *ngIf="scanData.length > 0 && dataStatus !== 'Posted'"
+              class="my-btn my-primary-btn float-right mx-3" [disabled]="editRowForm.length === 0"
+              (click)="onTableDataSubmit(0)">
+              Save
+            </button>
+            <button class="my-btn my-primary-btn float-right mx-3" (click)="reSyncData()"
+              *ngIf="dataStatus !== 'Posted' || scanData.length === 0" [disabled]="resyncProcess">
+              Re-sync
+            </button>
+            <button *ngIf="scanData.length > 0 && dataStatus === 'Posted'" class="my-btn my-primary-btn float-right"
+              (click)="downloadFile()">
+              Download
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="scanData.length === 0 && !resyncProcess" class="no-data">
+      <span><i class="fa fa-exclamation-triangle fa-5x warn" aria-hidden="true"></i></span>
+      <h3>
+        No Data To Display
+      </h3>
+    </div>
+    <div *ngIf="resyncProcess" class="no-data">
+      <span><i class="fa fa-check-circle fa-5x success" aria-hidden="true"></i></span>
+      <h3>
+        Re-sync process initiated successfully <span>
+          <i class="fa fa-refresh success pointer" matTooltip="click to get data" aria-hidden="true"
+            (click)="onRefresh()"></i>
+        </span>
+      </h3>
+    </div>
+  </div>
+</div>

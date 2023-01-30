@@ -1,0 +1,266 @@
+<form novalidate [formGroup]="vendorForm">
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="row mt-3">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title"> {{title}} </h5>
+              <div class="row mt-3">
+                <div class="col-sm-6 pr-0 ">
+                  <label class="form-group has-float-label row pr-0 col-sm-12">
+                    <input type="text" class="form-control" placeholder="Vendor Code" formControlName="vendorCode"
+                      #vendorCode (blur)="checkExistsVendorCode()" id="vendorCode" required>
+                    <span for="vendorCode"> Account Code </span>
+                    <div *ngIf="submitted && vendor.vendorCode.errors?.required" class="alert alert-danger">
+                      Account Code is required
+                    </div>
+                    <img src="assets/images/small-spinner.gif" *ngIf="isVenderCode">
+                  </label>
+                </div>
+                <div class=" col-sm-6 pr-0 ">
+                  <label class="form-group has-float-label row  pr-0  col-sm-12">
+                    <input type="text" class="form-control" placeholder="Vendor Name" formControlName="vendorName"
+                      required id="vendorName">
+                    <span for="vendorName"> Account Name </span>
+                    <div *ngIf="submitted && vendor.vendorName.errors?.required" class="alert alert-danger">
+                      Account Name is required
+                    </div>
+                  </label>
+                </div>
+                <div class="col-sm-12 pr-0 ">
+                  <label class="form-group has-float-label  pr-0  row col-sm-12">
+                    <input type="text" class="form-control" name="vendorAddressLine1" placeholder="Address Line1"
+                      formControlName="vendorAddressLine1" id="addressLine1"
+                      (onAddressChange)="handleAddressChange($event)" ngx-google-places-autocomplete
+                      #placesRef="ngx-places" [options]="options">
+                    <span for="addressLine1"> Address Line1 </span>
+                  </label>
+                </div>
+                <div class=" col-sm-6 pr-0">
+                  <label class="form-group has-float-label  pr-0  row col-sm-12">
+                    <input type="text" class="form-control" id="city" name="city" placeholder="City"
+                      formControlName="city">
+                    <span for="city"> City </span>
+                  </label>
+                </div>
+                <div class="col-sm-6 pr-0 ">
+                  <!-- (change)="onCountyChange(val.countyCode)" -->
+                  <label class="form-group has-float-label  pr-0  row col-sm-12">
+                    <select class="form-control" formControlName="countyCode" id="county">
+                      <option value="">--Select County--</option>
+                      <option *ngFor="let item of countyFilterList" [value]="item.countyCode">{{item.countyName}}
+                      </option>
+                    </select>
+                    <span for="county"> County </span>
+                    <div *ngIf="submitted && vendor.countyCode.errors?.required" class="alert alert-danger">
+                      County is required
+                    </div>
+                    <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+                  </label>
+                </div>
+                <div class="col-sm-6 pr-0 ">
+                  <label class="form-group has-float-label   pr-0 row col-sm-12">
+                    <select class="form-control" formControlName="stateCode" (change)="onStaeChange(false)"
+                      id="stateCode">
+                      <option value="">--Select State--</option>
+                      <option *ngFor="let item of stateList" [value]="item.stateCode">{{item.stateName}}</option>
+                    </select>
+                    <span for="stateCode"> State </span>
+                    <div *ngIf="submitted && vendor.stateCode.errors?.required" class="alert alert-danger">
+                      State is required
+                    </div>
+                    <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+                  </label>
+                </div>
+                <div class="col-sm-6 pr-0 ">
+                  <label class="form-group has-float-label row  pr-0  col-sm-12">
+                    <input type="text" class="form-control" minlength="5" maxlength="5" placeholder="Zip Code"
+                      formControlName="zipCode" id="zipCode">
+                    <span for="zipCode"> Zip Code </span>
+                    <div *ngIf="vendor.zipCode.errors?.minlength" class="alert alert-danger">
+                      Zip Code must be 5 digit.
+                    </div>
+                  </label>
+                </div>
+                <div class="pr-0  col-sm-6">
+                  <label class="form-group has-float-label row  pr-0  col-sm-12">
+
+                    <input numbersOnly type="text" class="form-control" placeholder="Company Contact Number"
+                      formControlName="companyPhoneNo" (blur)="formatPhoneNumber('companyPhoneNo')" id="companyPhoneNo"
+                      pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$">
+                    <span for="companyPhoneNo">Phone No </span>
+                    <div *ngIf="submitted && vendor.companyPhoneNo.errors?.minlength" class="alert alert-danger">
+                      Phone number must be 10 digit.
+                    </div>
+                    <div *ngIf="submitted && vendor.companyPhoneNo.errors?.pattern" class="alert alert-danger">
+                      Phone number is not valid
+                    </div>
+                  </label>
+                </div>
+                <div class="pr-0 col-sm-6">
+                  <label class="form-group has-float-label col-sm-5 row pr-0 col-sm-12">
+                    <ng-select [items]="categoriesList" [selectOnTab]="true" [hideSelected]="true"
+                      bindLabel="chartOfAccountCategoryName" bindValue="chartOfAccountCategoryID"
+                      placeholder="Select Category" formControlName="chartOfAccountCategoryID">
+                    </ng-select>
+                    <span>Category</span>
+                    <img src="assets/images/small-spinner.gif" *ngIf="isCategories">
+                  </label>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-sm-6">
+
+      <div class="row mt-3">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title"> {{'Contact Information'}}</h5>
+              <div class="row">
+                <div class=" col-sm-12">
+                  <label class="form-group has-float-label col-sm-12">
+                    <input type="text" name="salesContactName" class="form-control" id="name" placeholder="Name"
+                      formControlName="salesContactName">
+                    <span for="name"> Name </span>
+                  </label>
+                </div>
+                <div class=" col-sm-12">
+                  <label class="form-group has-float-label col-sm-12">
+                    <input numbersOnly type="text" class="form-control" name="salesContactPhoneNo"
+                      placeholder="Phone Number" formControlName="salesContactPhoneNo"
+                      (blur)="formatPhoneNumber('salesContactPhoneNo')"
+                      pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$">
+                    <span for="phoneNo"> Phone No </span>
+                    <div *ngIf="submitted && vendor.salesContactPhoneNo.errors?.minlength" class="alert alert-danger">
+                      Phone number must be 10 digit.
+                    </div>
+                    <div *ngIf="submitted && vendor.salesContactPhoneNo.errors?.pattern" class="alert alert-danger">
+                      Phone number is not valid
+                    </div>
+                  </label>
+                </div>
+                <div class=" col-sm-12">
+                  <label class="form-group has-float-label col-sm-12">
+                    <input type="text" class="form-control" placeholder="E-Mail" name="salesContactE_mail"
+                      formControlName="salesContactE_mail" id="eMail"
+                      pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
+                    <span for="eMail"> E-Mail </span>
+                    <div *ngIf="submitted && vendor.salesContactE_mail.errors?.pattern" class="alert alert-danger">
+                      E-Mail is not valid
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-sm-12">
+          <div class="card">
+            <!-- <div class="card-header">
+                  <strong>Vendor Parameters</strong>
+                </div> -->
+            <div class="card-body">
+              <h5 class="card-title"> {{'Account Parameters'}}</h5>
+              <div class="custom-control custom-checkbox mt-3">
+                <div class="col-sm-3 float-left">
+                  <input type="checkbox" class="custom-control-input" formControlName="isActive" id="activeVendor">
+                  <label class="custom-control-label" for="activeVendor">Active</label>
+                </div>
+                <div class="col-sm-5 float-left">
+                  <input type="checkbox" class="custom-control-input" formControlName="doesVendorSupportEDIInvoice"
+                    id="sendsElectronicInvoices">
+                  <label class="custom-control-label" for="sendsElectronicInvoices">Sends Electronic
+                    Invoices</label>
+                </div>
+                <div class="col-sm-4 float-left">
+                  <input type="checkbox" class="custom-control-input" formControlName="isFuelVendor" id="fuelVendor">
+                  <label class="custom-control-label" for="fuelVendor">Fuel Vendor</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="row mt-4">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title"> {{'Payment Details'}}</h5>
+              <div class="row">
+                <div class="col-sm-12 ">
+                  <label class="form-group has-float-label col-sm-12">
+
+                    <input type="number" class="form-control" name="accountNO" placeholder="Account Number"
+                      formControlName="accountNO" onKeyPress="if(this.value.length==50 ) return false;return event.charCode >= 48 && event.charCode <= 57"
+                      id="accountNO">
+                    <span for="accountNO"> Account Number </span>
+                  </label>
+                </div>
+                <div class="col-sm-12">
+                  <label class="form-group has-float-label col-sm-12">
+                    <ng-select [items]="paymentMethodList" bindValue="methodOfPaymentID" formControlName="methodOfPaymentID"
+                      bindLabel="methodOfPaymentDescription" placeholder="Payment Method" (change)="selectMethodOfPayment(val.methodOfPaymentID)"></ng-select>
+                    <span> Payment Method </span>
+                  </label>
+                </div>
+                <div [hidden]="isPrintCheck" class="mb-3 ml-3">
+
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="customCheck1" formControlName="isPrintCheck">
+                    <label class="custom-control-label" for="customCheck1">Print Check </label>
+                  </div>
+                </div>
+                <div class="col-sm-12">
+                  <label class="form-group has-float-label col-sm-12">
+                    <ng-select [items]="paymentTermsList" bindValue="paymentTermID" bindLabel="paymentTermDescription"
+                      placeholder="Payment Terms" formControlName="paymentTermsID"></ng-select>
+                    <span> Payment Terms </span>
+                  </label>
+                </div>
+
+                <div class="col-sm-12">
+                  <label class="form-group has-float-label col-sm-12">
+                    <ng-select [items]="purchaseFrequencyList" bindValue="purchaseFrequencyID" bindLabel="frequencyDescription"
+                      placeholder="Purchase Frequency" formControlName="purchaseFrequencyID">
+                    </ng-select>
+                    <span> Purchase Frequency</span>
+                  </label>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
+    </div>
+  </div>
+  <div class="row justify-content-between mt-3">
+    <div class="col-sm-12">
+      <button type="button" class="btn btn-md btn-primary mr-3 float-right" (click)="cancelEvent()">Cancel</button>
+      <button type="button" class="btn btn-md btn-primary mr-3 float-right" (click)="editOrSaveClose($event)">
+        {{isEdit?'Update':'Save'}}</button>
+      <button type="button" *ngIf="!isEdit" class="btn btn-md btn-primary mr-3 float-right" (click)="reset()">
+        {{'Reset'}}</button>
+
+      <!-- <button type="button" class="btn btn-md btn-primary mr-3" (click)="editOrSaveClose($event)">
+        {{isEdit?'Update &amp; Close':'Save &amp; Close'}}</button> -->
+    </div>
+    <!-- <div class="col-sm-2">
+      <button type="button" class="btn btn-md btn-primary " (click)="backToList()">
+        Back To Vendor List</button>
+    </div> -->
+  </div>
+
+
+
+</form>

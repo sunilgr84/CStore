@@ -1,0 +1,77 @@
+<app-page-header [heading]="'Files'" [icon]="'fa-file'"></app-page-header>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="row form-group">
+          <div class="col-sm-3 row">
+            <div class="col-sm-8"> <label for="companyLevel">Company Level</label></div>
+            <div class="custom-control custom-radio">
+              <input type="radio" class="custom-control-input" name="group1" id="companyLevel">
+              <label class="custom-control-label" for="companyLevel"></label>
+            </div>
+          </div>
+          <div class="col-sm-3 row">
+            <div class="col-sm-7"><label for="storeLocation">Store Location</label></div>
+            <div class="custom-control custom-radio">
+              <input type="radio" class="custom-control-input" name="group1" id="storeLocation">
+              <label class="custom-control-label" for="storeLocation"></label>
+            </div>
+          </div>
+          <div class="col-sm-2"></div>
+          <div class="col-sm-3 row">
+            <div class="col-sm-7"><label for="previousWeek">Previous Week</label></div>
+            <div class="custom-control custom-radio">
+              <input type="radio" class="custom-control-input" name="group2" id="previousWeek">
+              <label class="custom-control-label" for="previousWeek"></label>
+            </div>
+          </div>
+          <div class="col-sm-2 row">
+            <div class="col-sm-10"><label for="dateRange">Date Range</label></div>
+            <div class="custom-control custom-radio">
+              <input type="radio" class="custom-control-input" name="group2" id="dateRange">
+              <label class="custom-control-label" for="dateRange"></label>
+            </div>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-sm-5 row">
+            <div class="col-sm-4"><label class="fromDate">From Date</label></div>
+            <div class="col-sm-7">
+              <app-datepicker name="dob" id="fromDate"></app-datepicker>
+            </div>
+          </div>
+          <div class="col-sm-5 row">
+            <div class="col-sm-4"><label for="endDate"> End Date</label></div>
+            <div class="col-sm-7">
+              <app-datepicker id="endDate" name="dob"></app-datepicker>
+            </div>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-sm-5 row">
+            <div class="col-sm-4"> <label for="manufacturer">Manufacturer</label></div>
+            <div class="col-sm-7">
+              <select class="form-control" id="manufacturer">
+                <option value="">--Select Manufacturer--</option>
+                <option *ngFor="let obj of  manufacturerList" [value]="obj.manufacturerID">{{obj.manufacturerName}}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-5 row">
+            <div class="col-sm-4"> <label for="fromStore">From Store</label></div>
+            <div class="col-sm-7">
+              <select class="form-control" id="fromStore">
+                <option value="">--Select Store--</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div>
+          <button class="btn btn-md btn-primary">Create & Download File</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,33 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3" *ngIf="storeList && storeList.length!==1">
+      <div class="field-wrapper">
+        <ng-select [items]="storeList" [hideSelected]="true" [(ngModel)]="selectedStore" bindLabel="storeName"
+          bindValue="storeLocationID" placeholder="Store Location">
+        </ng-select>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="date-range-border-phistory">
+        <app-daterangepicker [placement]="'top'" [selectedDateRange]="selectedDateRange" (dateRangeSelecetd)="dateRangeChange($event)">
+        </app-daterangepicker>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="custom-control custom-checkbox m-2">
+        <input type="checkbox" class="form-check-input" name="showDetails" id="showDetails"
+          [(ngModel)]="showOnlyPriceChanges" (change)="onOnlyPriceChanges()" />
+        <label class="showPricing">Show Only Price Changes</label>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <button class="v-btn-contained v-btn-secondary" (click)="searchActivity()"> Search</button>
+    </div>
+  </div>
+  <div class="row mt-2">
+    <div class="col-md-12 purchase-history">
+      <app-adv-pagination-grid [agGridTheme]="'inline-edit'" [paginationGridOptions]="paginationGridOptions" (gridReady)="onGridReady($event)">
+      </app-adv-pagination-grid>
+    </div>
+  </div>
+</div>

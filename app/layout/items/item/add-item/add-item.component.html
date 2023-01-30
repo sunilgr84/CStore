@@ -1,0 +1,393 @@
+<div class="card" style="min-height: 400px;">
+  <div class="card-body">
+    <!-- [destroyOnHide]="false" -->
+    <!-- <div class="row justify-content-end" *ngIf="isEditMode">
+        <div class="col-sm-3 form-group">
+          <strong for="upcCodes">UPC Code : &nbsp; {{itemDetailsForm.value.posCode}} </strong>
+
+          <ngx-barcode *ngFor="let bcValue of values" [bc-element-type]="elementType" [bc-value]="bcValue"
+            [bc-format]="format" [bc-line-color]="lineColor" [bc-width]="width" [bc-height]="height"
+            [bc-display-value]="displayValue" [bc-font-options]="fontOptions" [bc-font]="font"
+            [bc-text-align]="textAlign" [bc-text-position]="textPosition" [bc-text-margin]="textMargin"
+            [bc-font-size]="fontSize" [bc-background]="background" [bc-margin]="margin" [bc-margin-top]="marginTop"
+            [bc-margin-bottom]="marginBottom" [bc-margin-left]="marginLeft" [bc-margin-right]="marginRight">
+          </ngx-barcode>
+        </div>
+      </div> -->
+    <div class="row">
+      <div class="col-sm-10">
+        <ngb-tabset #tabs="ngbTabset" type="pills" (tabChange)="tabChange($event)">
+          <ngb-tab title="Item" id='tab-item'>
+            <ng-template ngbTabContent>
+              <div class="row mt-4">
+                <div class="col-sm-12">
+                  <form [formGroup]="itemDetailsForm" novalidate>
+                    <div class="row ">
+                      <label class="col-sm-6 has-float-label form-group">
+                        <input [readOnly]="isEditMode" numbersOnly type="text" class="form-control " id="upcCode"
+                          id="upcCodes" maxlength="25" (blur)="checkUPCCode($event.target.value)" min="0"
+                          placeholder="Scan or Enter Item to Search" formControlName="posCode" required>
+                        <div *ngIf="submitedItem && _item.posCode.errors?.required" class="invalid">
+                          UPC Code is required
+                        </div>
+                        <span for="upcCodes">UPC Code</span>
+                      </label>
+                      <label class="col-sm-6 has-float-label form-group">
+                        <input type="text" class="form-control" id="description" formControlName="description"
+                          placeholder="Description" (input)="setDescriptionUpperCase($event.target.value)" required
+                          maxlength="512" id="descriptions" />
+                        <div *ngIf="submitedItem && _item.description.errors?.required" class="invalid">
+                          Description is required
+                        </div>
+                        <span for="descriptions">Description</span>
+                      </label>
+                      <label class="col-sm-6 has-float-label form-group">
+                        <ng-select [items]="departmentList" bindLabel="departmentDescription" bindValue="departmentID"
+                          id="Departments" labelForId="departmentID" placeholder="Department"
+                          formControlName="departmentID" required>
+                        </ng-select>
+                        <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+
+                        <div *ngIf="submitedItem && _item.departmentID.errors?.required" class="invalid">
+                          Departments is required
+                        </div>
+                        <span for="descriptions">Department</span>
+                      </label>
+                      <div class="col-sm-2">
+                        <div class="custom-control custom-checkbox">
+                          <input type="checkbox" class="custom-control-input" id="isMultipackFlag"
+                            formControlName="isMultipackFlag" />
+                          <label class="custom-control-label" for="isMultipackFlag">Is Multipack</label>
+                        </div>
+                      </div>
+                      <div class="col-sm-4 form-group" [hidden]="true">
+                        <input numbersOnly type="text" class="form-control" min="0" id="baseUnitsInCase"
+                          placeholder="Base Units" formControlName="noOfBaseUnitsInCase">
+                        <!-- <div *ngIf="submitedItem && _item.noOfBaseUnitsInCase.errors?.required" class="invalid">
+                        Base Unit is required
+                      </div> -->
+                      </div>
+                      <label class="col-sm-4 has-float-label form-group">
+                        <input numbersOnly type="text" class="form-control" id="sellingUnits" min="0"
+                          placeholder="Selling Units" formControlName="sellingUnits" maxlength="25">
+                        <span for="sellingUnits">Selling Units</span>
+                      </label>
+                      <label class="col-sm-4 has-float-label form-group">
+                        <input numbersOnly type="text" class="form-control" min="0" id="unitInCase"
+                          placeholder="Unit In Case" formControlName="unitsInCase" required maxlength="25">
+                        <div *ngIf="submitedItem && _item.unitsInCase.errors?.required" class="invalid">
+                          Unit In Case is required
+                        </div>
+                        <span for="unitInCase"> Unit In Case</span>
+                      </label>
+                      <label class="col-sm-4 has-float-label form-group">
+                        <ng-select [items]="uomList" [selectOnTab]="true" bindLabel="uomDescription" bindValue="uomid"
+                          id="uomid" labelForId="uomid" placeholder="Units Of Measurement" formControlName="uomid">
+                        </ng-select>
+                        <img src="assets/images/small-spinner.gif" *ngIf="isUnitsOfMeasurementLoading">
+                        <span for="uomid"> Units Of Measurement</span>
+                      </label>
+
+
+                    </div>
+                    <div class="row">
+                      <div class="col-md-7">
+                        <span (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
+                          aria-controls="addParameter" class="card-title"><strong>Additional Parameters</strong> </span>
+                        &nbsp;
+                        <i [hidden]='isCollapsed' class="fa fa-chevron-down"></i> <i [hidden]='!isCollapsed'
+                          class="fa fa-chevron-right"></i>
+                      </div>
+                    </div>
+                    <div id="addParameter" class="row mt-3" [ngbCollapse]="isCollapsed">
+                      <div class="row">
+                        <div class="col-sm-3">
+                          <div class="custom-control custom-checkbox" style="margin-left:1.5em;">
+                            <input type="checkbox" class="custom-control-input" id="showActiveItem"
+                              formControlName="activeFlag" />
+                            <label class="custom-control-label " for="showActiveItem">Active Item</label>
+                          </div>
+                        </div>
+                        <!-- <div class="col-sm-3">
+                        <div class="custom-control custom-checkbox" style="margin-left:1.5em;">
+                          <input type="checkbox" class="custom-control-input" id="showFlexiblePricingForItem"
+                            formControlName="priceRequiredFlag" />
+                          <label class="custom-control-label " for="showFlexiblePricingForItem">Flexible Pricing For
+                            Item</label>
+                        </div>
+                      </div> -->
+                        <div class="col-sm-3">
+                          <div class="custom-control custom-checkbox" style="margin-left:1.5em;">
+                            <input type="checkbox" class="custom-control-input" id="showPartialQuantitySales"
+                              formControlName="isFractionalQtyAllowedFlag" />
+                            <label class="custom-control-label " for="showPartialQuantitySales">Partial Quantity
+                              Sales</label>
+                          </div>
+                        </div>
+                        <div class="col-sm-3">
+                          <div class="custom-control custom-checkbox" style="margin-left:1.5em;">
+                            <input type="checkbox" class="custom-control-input" id="showFoodStampSales"
+                              formControlName="allowFoodStampsFlag" />
+                            <label class="custom-control-label " for="showFoodStampSales">Food Stamp Sales</label>
+                          </div>
+                        </div>
+                        <div class="col-sm-3">
+                          <div class="custom-control custom-checkbox" style="margin-left:1.5em;">
+                            <input type="checkbox" class="custom-control-input" id="showItemReturns"
+                              formControlName="isItemReturnableFlag" />
+                            <label class="custom-control-label " for="showItemReturns">Item Returns</label>
+                          </div>
+                        </div>
+                        <div class="col-sm-3 mt-3">
+                          <div class="custom-control custom-checkbox" style="margin-left:1.5em;">
+                            <input type="checkbox" class="custom-control-input" id="showLoyaltyRedeemSales"
+                              formControlName="isLoyaltyRedeemEligibleFlag" />
+                            <label class="custom-control-label " for="showLoyaltyRedeemSales">Loyalty Redeem
+                              Sales</label>
+                          </div>
+                        </div>
+                        <div class="col-sm-3 mt-3">
+                          <div class="custom-control custom-checkbox" style="margin-left:1.5em;">
+                            <input type="checkbox" class="custom-control-input" id="showSpecialDiscounts"
+                              formControlName="areSpecialDiscountsAllowedFlag" />
+                            <label class="custom-control-label " for="showSpecialDiscounts">Special Discounts</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row justify-content-between mt-3">
+                      <div class="col-sm-12">
+                        <button type="button" [hidden]="isEditMode" class="btn btn-md btn-primary mr-3"
+                          (click)="addMoreItem()">
+                          {{'Reset'}}</button>
+                        <button type="button" class="btn btn-md btn-primary mr-3" [hidden]="isEditModeRedOnly"
+                          (click)="addNewItem()">
+                          Save</button>
+                        <!-- [hidden]="!isEditModeRedOnly"  -->
+                        <button type="button" [hidden]="!isEditModeRedOnly" class="btn btn-md btn-primary mr-3"
+                          (click)="addMoreItem()">
+                          {{'Add More'}}</button>
+                        <button type="button" class="btn btn-md btn-primary mr-3" (click)="editItem()"
+                          [hidden]="!isEditModeRedOnly">
+                          Edit</button>
+                        <button type="button" class="btn btn-md btn-primary mr-3" [hidden]="!isCancelClick"
+                          (click)="cancel()">
+                          Cancel</button>
+                        <button type="button" class="btn btn-md btn-primary mr-3" [hidden]="!isEditMode"
+                          (click)="navigateTap('tab-pricing')">
+                          Pricing</button>
+                        <button type="button" class="btn btn-md btn-primary float-right" [hidden]="!isEditMode"
+                          (click)="backToAdvSearchList()">
+                          Back To List</button>
+                      </div>
+                      <!-- <div class="col-sm-2 mt-2 ">
+                      <button type="button" class="btn btn-md btn-primary" (click)="backToMainList()">
+                        &nbsp;Back To List</button>
+                    </div> -->
+
+                    </div>
+                  </form>
+
+                </div>
+              </div>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab title="Pricing" id='tab-pricing' [disabled]="!isEditMode">
+            <ng-template ngbTabContent>
+              <div class="mt-2">
+                <ngb-tabset #tabss="ngbTabset" type="pills">
+                  <ngb-tab title="Pricing" id='tab-sub-pricing'>
+                    <ng-template ngbTabContent>
+                      <app-add-pricing [itemId]="itemId" [unitsInCase]="_noOfBaseUnitsInCase"></app-add-pricing>
+                    </ng-template>
+                  </ngb-tab>
+                  <ngb-tab title="Multipacks" id='tab-multipacks' [disabled]="!isAddMultipacks">
+                    <ng-template ngbTabContent>
+                      <app-add-multipacks [itemId]="itemId" [unitsInCase]="_noOfBaseUnitsInCase"></app-add-multipacks>
+                    </ng-template>
+                  </ngb-tab>
+                </ngb-tabset>
+                <div class="row justify-content-between">
+                  <div class="col-sm-12 mt-2 text">
+                    <button type="button" class="btn btn-md btn-primary float-right" [hidden]="!isEditMode"
+                      (click)="backToAdvSearchList()">
+                      Back To List</button>
+                    <button type="button" class="btn btn-md btn-primary mr-3 float-right" [hidden]="!isEditMode"
+                      (click)="navigateTap('tab-price-group')">
+                      Price Group</button>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab title="Price Group" id='tab-price-group' [disabled]="!isEditMode">
+            <ng-template ngbTabContent>
+              <div class="mt-2">
+                <app-add-item-pricegroup [itemId]="itemId"></app-add-item-pricegroup>
+                <div class="row justify-content-between">
+                  <div class="col-sm-12 mt-2">
+                    <button type="button" class="btn btn-md btn-primary float-right" [hidden]="!isEditMode"
+                      (click)="backToAdvSearchList()">
+                      Back To List</button>
+                    <button type="button" class="btn btn-md btn-primary mr-3 float-right" [hidden]="!isEditMode"
+                      (click)="navigateTap('tab-vendor-item')">
+                      Vendor Items</button>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab title="Vendor Items" id='tab-vendor-item' [disabled]="!isEditMode">
+            <ng-template ngbTabContent>
+              <div class="mt-2">
+                <app-add-item-vendor [itemId]="itemId"></app-add-item-vendor>
+                <div class="row justify-content-between">
+                  <div class="col-sm-12 mt-2">
+                    <button type="button" class="btn btn-md btn-primary float-right" [hidden]="!isEditMode"
+                      (click)="backToAdvSearchList()">
+                      Back To List</button>
+                    <button type="button" class="btn btn-md btn-primary float-right mr-3" [hidden]="!isEditMode"
+                      (click)="navigateTap('tab-multipliers')">
+                      Multipliers</button>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab title="Multipliers" id='tab-multipliers' [disabled]="!isEditMode">
+            <ng-template ngbTabContent>
+              <div class="mt-2">
+                <app-add-item-multipliers [isDefault]="itemDetailsForm.value.isDefault" [itemId]="itemId"
+                  [masterData]="masterData" [itemInfo]="itemDetailsForm.value">
+                </app-add-item-multipliers>
+
+                <div class="row justify-content-between">
+                  <div class="col-sm-12 mt-2">
+                    <button type="button" class="btn btn-md btn-primary float-right" [hidden]="!isEditMode"
+                      (click)="backToAdvSearchList()">
+                      Back To List</button>
+                    <button type="button" class="btn btn-md btn-primary float-right mr-3" [hidden]="!isEditMode"
+                      (click)="navigateTap('tab-linked-item')">
+                      Linked Items</button>
+                  </div>
+                </div>
+
+              </div>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab title="Linked Items" id='tab-linked-item' [disabled]="!isEditMode">
+            <ng-template ngbTabContent>
+              <div class="mt-2">
+                <app-add-linked-item [itemId]="itemId" [masterData]="masterData" [itemInfo]="itemDetailsForm.value">
+                </app-add-linked-item>
+                <div class="row justify-content-between">
+                  <div class="col-sm-12 mt-2">
+                    <button type="button" class="btn btn-md btn-primary float-right" [hidden]="!isEditMode"
+                      (click)="backToAdvSearchList()">
+                      Back To List</button>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab title="Item History" id='tab-item-history' [disabled]="!isEditMode">
+            <ng-template ngbTabContent>
+              <div class="mt-2">
+                <app-stock-transactions [itemId]="itemId" [masterData]="masterData" [itemInfo]="itemDetailsForm.value">
+                </app-stock-transactions>
+                <div class="row justify-content-between">
+                  <div class="col-sm-12 mt-2">
+                    <button type="button" class="btn btn-md btn-primary float-right" [hidden]="!isEditMode"
+                      (click)="backToAdvSearchList()">
+                      Back To List</button>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab title="Activity" id='tab-sales-activity' [disabled]="!isEditMode">
+            <ng-template ngbTabContent>
+              <div class="mt-2">
+                <app-purchase-history [itemId]="itemId" [masterData]="masterData" [itemInfo]="itemDetailsForm.value">
+                </app-purchase-history>
+                <div class="row justify-content-between">
+                  <div class="col-sm-12 mt-2">
+                    <button type="button" class="btn btn-md btn-primary float-right" [hidden]="!isEditMode"
+                      (click)="backToAdvSearchList()">
+                      Back To List</button>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </ngb-tab>
+        </ngb-tabset>
+      </div>
+      <div class="col-sm-2 text-center p-0" *ngIf="isEditMode">
+        <!-- <strong class="ml-3" for="upcCodes">UPC Code : &nbsp; {{itemDetailsForm.value.posCode}} </strong> -->
+        <span class="font-size-11" for="upcCodes">{{descriptionLable}} </span>
+        <ngx-barcode *ngFor="let bcValue of values" [bc-element-type]="elementType" [bc-value]="bcValue"
+          [bc-format]="format" [bc-line-color]="lineColor" [bc-width]="width" [bc-height]="height"
+          [bc-display-value]="displayValue" [bc-font-options]="fontOptions" [bc-font]="font" [bc-text-align]="textAlign"
+          [bc-text-position]="textPosition" [bc-text-margin]="textMargin" [bc-font-size]="fontSize"
+          [bc-background]="background" [bc-margin]="margin" [bc-margin-top]="marginTop"
+          [bc-margin-bottom]="marginBottom" [bc-margin-left]="marginLeft" [bc-margin-right]="marginRight">
+        </ngx-barcode>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Multipack</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="col-sm-12">
+        <app-editable-grid [rowData]="multipacksIEditRowData" [gridHeight]="'300px'"
+          [editGridOptions]="multipacksIEditGridOptions" (gridReady)="onMultipacksEditGridReady($event)">
+        </app-editable-grid>
+
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-md btn-cstorebo mr-3" (click)="saveMultipacks()"> Save</button>
+    <button type="button" class="btn btn-md btn-cstorebo" (click)="modal.close('cancel click')"> Cancel</button>
+  </div>
+</ng-template>
+<button [hidden]="true" type="button" class="btn btn-md btn-primary" id="open_model"
+  (click)="itemImportOpen(itemImport)"><i class="fa fa-plus"></i>
+  Add</button>
+<ng-template #itemImport let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-title">Information</h4>
+    <button type="button" class="close" aria-describedby="modal-title" (click)="itemImportClose()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <form #itemImportForm="ngForm" novalidate>
+    <div class="modal-body">
+      <p><strong>This item doesn't exists in the company. Do you wish to import whole group?</strong></p>
+      <div class="row">
+        <div class="col-sm-7">
+          <ng-select [(ngModel)]="popDepartmentID" name="popDepartmentID" placeholder="Department Name" required>
+            <ng-option *ngFor="let arr of departmentList" [value]="arr.departmentID">{{arr.departmentDescription}}
+            </ng-option>
+          </ng-select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-md btn-outline-secondary" id="cancel_model"
+        (click)="itemImportClose()">Cancel</button>
+      <button type="button" class="btn btn-md btn-success" (click)="ImportData(itemImportForm)">
+        <i class="fa fa-save"></i> Import</button>
+    </div>
+  </form>
+
+
+</ng-template>

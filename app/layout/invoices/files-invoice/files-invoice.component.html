@@ -1,0 +1,54 @@
+<div>
+  <app-page-header [heading]="'files-invoice'" [icon]="'fa-bar-chart-o'"></app-page-header>
+  <div class=" border border-primary rounded margin-bottom-5 mt-3 ">
+    <div class="card-header bulk-update-header" (click)="isAdvanceSearchCollapsed = !isAdvanceSearchCollapsed"
+      [attr.aria-expanded]="!isAdvanceSearchCollapsed" aria-controls="bulkUpdateBody">
+      <i class="fa fa-chevron-down"></i> Advance Search
+    </div>
+    <form>
+      <div class="card-body" id="bulkUpdateBody" [ngbCollapse]="isAdvanceSearchCollapsed">
+        <div class="row">
+          <div class="col-sm-4 ">
+            <label for="storeLocation">Store Location</label>
+            <ng-select class="col-sm-12" [items]="storeLocationList" [multiple]="true" [closeOnSelect]="false"
+              [hideSelected]="true" bindLabel="storeName" placeholder="Location"  groupBy="companyID"
+              [selectableGroup]="true" [selectableGroupAsModel]="false">
+              <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                  <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+              </ng-template>
+              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                <div class="ng-value" *ngFor="let item of items | slice:0:4">
+                  <span class="ng-value-label">
+                    {{item.storeName}}</span>
+                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 2">
+                  <span class="ng-value-label">{{items.length - 2}} more...</span>
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+
+          <div class="col-sm-4 ">
+            <label for="beginDate">Begin Date</label>
+            <app-datepicker class="col-sm-8" name="dob" id="beginDate"></app-datepicker>
+          </div>
+          <div class="col-sm-4 ">
+            <label for="endDate">End Date</label>
+            <app-datepicker class="col-sm-8" name="dob" id="endDate"></app-datepicker>
+          </div>
+        </div>
+        <div class="row ml-2">
+          <button type="button" class="btn btn-md btn-danger"><i class="fa fa-ban" aria-hidden="true"></i> Clear</button>
+          &nbsp;
+          <button type="button" class="btn btn-md btn-primary"> <i class="fa fa-search" aria-hidden="true"></i> Search</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div>
+    <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (gridReady)="onGridReady($event)">
+    </app-cstore-grid>
+  </div>
+</div>

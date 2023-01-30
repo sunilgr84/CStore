@@ -1,0 +1,48 @@
+<div class="row" [formGroup]="listBoxForm">
+  <div class="col-md-5 col-lg-5 col-sm-12">
+      <h5 class="text-center vertical-spacing-5">{{availableText}}</h5>
+      <input type="text" class="form-control vertical-spacing-5" placeholder="{{availableFilterPlaceholder}}"
+             formControlName="availableSearchInput" />
+      <select class="form-control list-box" formControlName="availableListBox" multiple>
+          <option *ngFor="let item of availableItems | arrayFilter:['text', searchTermAvailable] | arraySort:['text'];trackBy:trackByValue"
+                  [value]="item?.value"
+                  (dblclick)="moveAvailableItemToSelected(item)">{{item?.text}}</option>
+      </select>
+  </div>
+  <div class="col-md-2 col-lg-2 col-sm-12 center-block text-center">
+      <button type="button"
+              class="btn btn-default col-md-8 col-md-offset-2 atr top80 sm-spacing"
+              *ngIf="moveAllButton" (click)="moveAllItemsToSelected()">
+              <i class="fa fa-list"></i>
+              <i class="fa fa-chevron-right"></i>
+      </button>
+      <button type="button"
+              class="btn btn-default col-md-8 col-md-offset-2 str vertical-spacing-5 sm-spacing"
+              [disabled]="!availableListBoxControl.value?.length"
+              (click)="moveMarkedAvailableItemsToSelected()">
+              <i class="fa fa-chevron-right"></i>
+      </button>
+      <button type="button"
+              class="btn btn-default col-md-8 col-md-offset-2 stl vertical-spacing-5 sm-spacing"
+              [disabled]="!selectedListBoxControl.value?.length"
+              (click)="moveMarkedSelectedItemsToAvailable()">
+              <i class="fa fa-chevron-left"></i>
+      </button>
+      <button type="button"
+              class="btn btn-default col-md-8 col-md-offset-2 atl bottom10 sm-spacing"
+              *ngIf="moveAllButton" (click)="moveAllItemsToAvailable()">
+              <i class="fa fa-chevron-left"></i>
+              <i class="fa fa-list"></i>
+      </button>
+  </div>
+  <div class="col-md-5 col-lg-5 col-sm-12">
+      <h5 class="text-center vertical-spacing-5">{{selectedText}}</h5>
+      <input type="text" class="form-control vertical-spacing-5" placeholder="{{selectedFilterPlaceholder}}"
+             formControlName="selectedSearchInput" />
+      <select class="form-control list-box" formControlName="selectedListBox" multiple>
+          <option *ngFor="let item of selectedItems | arrayFilter:['text', searchTermSelected] | arraySort:['text'];trackBy:trackByValue"
+                  [value]="item?.value"
+                  (dblclick)="moveSelectedItemToAvailable(item)">{{item?.text}}</option>
+      </select>
+  </div>
+</div>

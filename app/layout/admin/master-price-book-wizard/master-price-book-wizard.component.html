@@ -1,0 +1,113 @@
+<div class="main-content-wrap d-flex flex-column">
+  <div class="main-content">
+    <div class="page-header">
+      <h1>Master Price Book Wizard</h1>
+    </div>
+    <section>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card m-1">
+            <div class="row m-0 card-body">
+              <div class="col-md-12 row">
+                <div class="col-md-1"></div>
+                <div class="col-md-4" style="border: 1px solid rgba(0, 0, 0, 0.125);">
+                  <div class="row">
+                    <div class="col-sm-12 pt-3 form-group"
+                      style="text-align: center;background-color:#eff2f8;border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
+                      <h2>Source</h2>
+                    </div>
+                    <div class="col-sm-2 form-group"></div>
+                    <div class="col-sm-8 form-group">
+                      <ng-select [(ngModel)]="manufacturerID" (change)="getBrandByManufacturerID(manufacturerID)"
+                        [items]="manufacturerList" [hideSelected]="true" bindLabel="manufacturerName"
+                        placeholder="Select Manufacturer" bindValue="manufacturerID">
+                      </ng-select>
+                    </div>
+                    <div class="col-sm-2 form-group"></div>
+                    <div class="col-sm-2 form-group"></div>
+                    <div class="col-sm-8 form-group">
+                      <ng-select [(ngModel)]="brandID" (change)="getPriceGroupByBrandID(brandID)" [items]="brandList"
+                        [hideSelected]="true" bindLabel="brandName" placeholder="Select Brand" bindValue="brandID">
+                      </ng-select>
+                    </div>
+                    <div class="col-sm-2 form-group"></div>
+                    <div class="col-sm-2 form-group"></div>
+                    <div class="col-sm-8 form-group">
+                      <ng-select [(ngModel)]="masterPriceGroupID" [items]="priceGroupList" [hideSelected]="true"
+                        bindLabel="masterGroupName" placeholder="Select Price Group" bindValue="masterPriceGroupID">
+                      </ng-select>
+                    </div>
+                    <div class="col-sm-2 form-group"></div>
+                    <div class="col-sm-2 form-group"></div>
+                    <div class="col-sm-8 form-group">
+                      <ng-select [(ngModel)]="masterDepartmentID" [items]="departmentList" [hideSelected]="true"
+                        bindLabel="masterDepartmentDescription" placeholder="Select Department" bindValue="masterDepartmentID">
+                      </ng-select>
+                    </div>
+                    <div class="col-sm-2 form-group"></div>
+                    <div class="col-sm-2 form-group"></div>
+                    <div class="col-sm-8 form-group">
+                      <ng-select [(ngModel)]="uomTypeID" [items]="uomList" [hideSelected]="true"
+                        bindLabel="uomDescription" placeholder="Select UOM" bindValue="uomTypeID">
+                      </ng-select>
+                    </div>
+
+                    <div class="col-md-12 form-group" style="text-align: center;">
+                      <button class="btn btn-action" (click)="searchData()" *ngIf="manufacturerID!=undefined || brandID!=undefined || masterPriceGroupID!=undefined || masterDepartmentID!=undefined || uomTypeID!=undefined"><i class="fa fa-search"></i>
+                        Search</button>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="col-md-2"></div>
+
+                <div class="col-md-4" style="border: 1px solid rgba(0, 0, 0, 0.125);">
+                  <div class="row">
+                    <div class="col-sm-12 form-group pt-3"
+                      style="text-align: center;background-color:#eff2f8;border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
+                      <h2>Target</h2>
+                    </div>
+                    <div class="col-sm-2 form-group"></div>
+                    <div class="col-sm-8 form-group">
+                      <ng-select [(ngModel)]="companyID" (change)="getDeparmentByCompnayID(companyID)"
+                        [items]="companyList" [hideSelected]="true" bindLabel="companyName" placeholder="Select Company"
+                        bindValue="companyID">
+                      </ng-select>
+                    </div>
+                    <div class="col-sm-2 form-group"></div>
+                    <div class="col-sm-2 form-group"></div>
+
+                    <div class="col-sm-8 form-group">
+                      <ng-select [(ngModel)]="departmentID1" [items]="departmentList1" [hideSelected]="true"
+                        bindLabel="departmentDescription" placeholder="Select Department" bindValue="departmentID">
+                      </ng-select>
+                    </div>
+                    <div class="col-sm-2 form-group"></div>
+
+                  </div>
+                </div>
+                <div class="col-md-12 form-group">
+                  <div class="row">
+                    <div class="col-md-12" style="text-align: center;">
+                      <button class="btn btn-success"(click)="copyToTarget()" *ngIf="copyToTargetFlag">
+                        Copy to Target</button>
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+
+              <div class="col-md-12 p-0" style="min-height: 300px;">
+                <app-pagination-grid [paginationGridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+                   (rowSelected)="ismUpdateRowSelected($event)">
+                </app-pagination-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

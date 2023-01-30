@@ -1,0 +1,103 @@
+<div class="login-page" [@routerTransition]>
+    <div class="card">
+        <div class="card-header p-0">
+            <h3 *ngIf="isLoginForm" class="mb-4 mt-4 text-left">Sign in</h3>
+            <h3 *ngIf="!isLoginForm" class="mb-4 mt-4 text-left">Reset Password <span
+                    style="color: green;text-align: center;">{{result}}</span>
+            </h3>
+            <img src="assets/images/logo.png" class="login-logo user-avatar" />
+        </div>
+        <form *ngIf="isLoginForm" #loginForm="ngForm" role="form" (ngSubmit)="validdToResetPassword(loginForm)">
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="usr">User Name</label>
+                    <input type="text" name="userName" [(ngModel)]="user.userName" class="form-control input-lg"
+                        placeholder="User Name" #userName="ngModel" required minlength="2" maxlength="150" />
+                    <div *ngIf="submitted && userName.errors?.required" class="alert alert-danger">
+                        Username is required
+                    </div>
+                    <div *ngIf="submitted && userName.errors?.minlength" class="alert alert-danger">
+                        Enter at least 2 characters
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="usr">Password</label>
+                    <input type="password" name="password" [(ngModel)]="user.password" class="form-control input-lg"
+                        required placeholder="Password" passwordToggle #password="ngModel" />
+                    <div *ngIf="submitted && password.errors?.required" class="alert alert-danger">
+                        Password is required
+                    </div>
+                </div>
+                <label class="link cursor-pointer" (click)="isLoginForm=!isLoginForm">Forgot
+                    Password?</label>
+            </div>
+            <div class="text-right">
+                <button type="submit" class="btn btn-md btn-primary mr-3"> <i class="fa fa-sign-in"
+                        aria-hidden="true"></i> &nbsp;Log
+                    In </button>
+                <button type="button" class="btn btn-md btn-cstorebo" (click)="loginForm.reset();submitted=false;">
+                    Reset
+                </button>
+            </div>
+            <div class="form-group text-center mt-2 mb-0">
+                <label class="mt-2 fw-bold fs-4">We aim to serve you better!</label>
+                <label>For Support Call <span class="link cursor-pointer">(302) 351-4514</span></label>
+                <label>Write To Us - <span class="link cursor-pointer">support@cstoreiq.com</span></label>
+            </div>
+        </form>
+        <form *ngIf="!isLoginForm" #forgotPwd="ngForm" role="form" (ngSubmit)="forgotPassword(forgotPwd)">
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="usr">User Name</label>
+                    <input type="text" name="userName" [(ngModel)]="fPassword.userName" class="form-control input-lg"
+                        placeholder="User Name" #userName="ngModel" required />
+                </div>
+                <div class="form-group" *ngIf="isUserExist">
+                    <label for="email">Email</label>
+                    <input type="text" name="emailId" [(ngModel)]="fPassword.emailId" class="form-control input-lg"
+                        required placeholder="Email Id" #email="ngModel" />
+                </div>
+                <div class="form-group" *ngIf="otpRequired">
+                    <label for="email">OTP</label>
+                    <input type="text" name="otp" [(ngModel)]="fPassword.otp" class="form-control input-lg" required
+                        placeholder="OTP" #otp="ngModel" />
+                </div>
+                <div class="form-group" *ngIf="otpRequired">
+                    <label for="newpwd">New Password</label>
+                    <input type="text" class="form-control input-lg" name="password" required
+                        [(ngModel)]="fPassword.password" placeholder="Enter New password"
+                        [ngClass]="{ 'is-invalid': isForgetPassword && password?.errors }"
+                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[!@#\$%\^&\*])(?=.*[A-Z]).{8,}" #password="ngModel">
+                    <div *ngIf="isForgetPassword && password.errors" class="invalid-feedback">
+                        <div *ngIf="password.errors?.required">Password is required</div>
+                        <div *ngIf="password.errors?.minlength">Password must be at least 8
+                            characters
+                        </div>
+                        <div *ngIf="password.errors?.pattern">Password must be at 1 uppercase ,1
+                            lowercase ,1 numbers and 1
+                            special character</div>
+                    </div>
+                </div>
+                <div class="form-group" *ngIf="otpRequired">
+                    <label for="newpwd">Confirm Password</label>
+                    <input type="password" class="form-control input-lg" required
+                        [(ngModel)]="fPassword.confirmPassword" placeholder="Confirm password" name="confirmPassword"
+                        #confirmPassword="ngModel"
+                        [ngClass]="{ 'is-invalid': fPassword.password!==fPassword.confirmPassword }">
+                    <div *ngIf="fPassword.password!==fPassword.confirmPassword" class="invalid-feedback">
+                        <div>Passwords must match</div>
+                    </div>
+                </div>
+                <label class="link cursor-pointer" (click)="backToLogin()">Back to
+                    login</label>
+            </div>
+            <div class="text-right">
+                <button type="submit" class="btn btn-md btn-primary mr-3"> <i class="fa fa-sign-in"
+                        aria-hidden="true"></i> &nbsp;Submit </button>
+                <button type="button" class="btn btn-md btn-cstorebo"
+                    (click)="forgotPwd.reset();submitted=false;isForgetPassword=false"> Reset
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

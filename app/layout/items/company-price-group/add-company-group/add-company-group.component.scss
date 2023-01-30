@@ -1,0 +1,10 @@
+.custom-btn{
+    min-width: 50px;
+}
+::ng-deep .selectWrapper .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value .ng-value-label{
+    width:90%;
+    white-space: pre-wrap !important;
+}
+.z_index{
+    z-index: 1002;
+  }

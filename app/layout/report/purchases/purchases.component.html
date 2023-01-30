@@ -1,0 +1,27 @@
+<div>
+  <app-page-header [heading]="'Purchases'" [icon]="'fa-edit'"></app-page-header>
+  <div>
+    <ngb-tabset type="pills">
+      <ngb-tab title="Purchase Report">
+        <ng-template ngbTabContent>
+          <app-purchase-report></app-purchase-report>
+        </ng-template>
+      </ngb-tab>
+      <ngb-tab title="Invoice Bin Report" *ngIf="false">
+        <ng-template ngbTabContent>
+          <app-invoice-bin-report></app-invoice-bin-report>
+        </ng-template>
+      </ngb-tab>
+      <ngb-tab title="Weekly Report">
+        <ng-template ngbTabContent>
+          <app-weekly-report></app-weekly-report>
+        </ng-template>
+      </ngb-tab>
+      <ngb-tab title="Invoice Status Report">
+        <ng-template ngbTabContent>
+          <app-invoice-status-report></app-invoice-status-report>
+        </ng-template>
+      </ngb-tab>
+    </ngb-tabset>
+  </div>
+</div>

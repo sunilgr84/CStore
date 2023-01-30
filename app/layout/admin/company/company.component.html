@@ -1,0 +1,84 @@
+<app-page-header [heading]="'company'" [icon]="'fa-bar-chart-o'"></app-page-header>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title" *ngIf="hederTitle">{{hederTitle}}</h5>
+        <div class="row" *ngIf="!isAddCompany">
+            <div class="col-sm-12">
+                <div class="col-sm-12">
+                    <div class="row justify-content-between margin-bottom-5">
+                        <div class="col-sm-3">
+                            <button type="button" class="btn btn-md btn-cstorebo" (click)="addCompany(true)"><i
+                                    class="fa fa-plus"></i>
+                                &nbsp;Add New Company</button>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="inner-addon right-addon">
+                                <span>
+                                    <i class="fa fa-search card-title" aria-hidden="true"></i>
+                                </span>
+                                <input type="text" class="form-control" aria-label="Default"
+                                    aria-describedby="inputGroup-sizing-default" placeholder="Filter Search"
+                                    [(ngModel)]="filterText" name="filterText" (input)="onFilterTextBoxChanged()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <app-expandable-grid #companyInfoGrid [expandableGridOptions]="gridOptions" [rowData]="rowData"
+                        (gridReady)="onGridReady($event)" [detailCellRenderers]="detailCellRenderer"
+                        [gridHeight]="'410px'" (edit)="editAction($event)" (delete)="deleteAction($event)">
+                    </app-expandable-grid>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="isAddCompany">
+            <ngb-tabset #tabs="ngbTabset" type="pills" (tabChange)="tabChange($event)" [activeId]="activeIdString">
+                <ngb-tab id="add-company" title="Company Details" [disabled]="isPriCompany">
+                    <ng-template ngbTabContent>
+                        <app-company-details [paramId]="paramId" [companyData]="editRowData"
+                            (changeTabs)="selectTab($event)" (enableTabs)="enableAllTabs($event)"
+                            (backToCompanyList)="backToCompanyList($event)">
+                        </app-company-details>
+                    </ng-template>
+                </ngb-tab>
+                <ngb-tab id="add-bank" title="Add Bank" [disabled]="isAddBankEnable || isPriAddBank">
+                    <ng-template ngbTabContent>
+                        <app-payment-source [companyData]="editRowData" (changeTabs)="selectTab($event)"
+                            (backToCompanyList)="backToCompanyList($event)">
+                        </app-payment-source>
+                    </ng-template>
+                </ngb-tab>
+                <!-- <ngb-tab id="tab-add-categories" title="Add Company Categories" [disabled]="isCompanyRecEnable">
+                    <ng-template ngbTabContent>
+                        <app-company-recon-parameter [companyData]="editRowData"
+                        (changeTabs)="selectTab($event)"    (backToCompanyList)="backToCompanyList($event)"></app-company-recon-parameter>
+                    </ng-template>
+                </ngb-tab> -->
+                <!-- <ngb-tab title="Fuel Grade" [disabled]="isFuelGradeEnable">
+                    <ng-template ngbTabContent>
+                        <app-fuel-grade [companyData]="editRowData" (backToCompanyList)="backToCompanyList($event)"></app-fuel-grade>
+                    </ng-template>
+                </ngb-tab> -->
+                <!-- <ngb-tab title="Manufacturer Details" [disabled]="true">
+                    <ng-template ngbTabContent>
+                        <h5>Manifacturer Details</h5>
+                    </ng-template> isUserMgmtEnable
+                </ngb-tab> -->
+                <ngb-tab id="user-management" title="User Management" [disabled]="isUserMgmtEnable || isPriUserBank">
+                    <ng-template ngbTabContent>
+                        <app-user-mgmt-grid (changeTabs)="selectTab($event)" [companyData]="editRowData"
+                            (backToCompanyList)="backToCompanyList($event)">
+                        </app-user-mgmt-grid>
+                    </ng-template>
+                </ngb-tab>
+                <!-- <ngb-tab id="add-privilege" title="User Privilege"
+                    [disabled]="isAddPrivilage || roleName!==roleNameSuperAdmin">
+                    <ng-template ngbTabContent>
+                        <app-user-privilages [companyData]="editRowData"
+                            (backToCompanyList)="backToCompanyList($event)"></app-user-privilages>
+                    </ng-template>
+                </ngb-tab> -->
+            </ngb-tabset>
+        </div>
+    </div>
+</div>

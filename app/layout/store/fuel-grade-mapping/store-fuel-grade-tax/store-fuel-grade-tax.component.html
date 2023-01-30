@@ -1,0 +1,65 @@
+<div class="pt-3">
+  <!-- <div class="row">
+    <h6 class="col-md-3 font-weight-bold">Add New Fuel Grade Tax</h6>
+
+  </div> -->
+  <form [formGroup]="storeFuelGradeTaxForm" class="container-fluid">
+    <div class="row mt-2 card">
+      <div class="card-header" (click)="isStorefuelGradeTaxCollapsed = !isStorefuelGradeTaxCollapsed"
+        [attr.aria-expanded]="!isStorefuelGradeTaxCollapsed" aria-controls="storeFuelGradeTaxBody">
+        <i [hidden]='!isStorefuelGradeTaxCollapsed' class="fa fa-chevron-down"></i> <i [hidden]='isStorefuelGradeTaxCollapsed'
+          class="fa fa-chevron-right"></i>
+        <!-- {{displayFormTitle()}} -->
+        Add New Store Fuel Grade Tax
+      </div>
+      <div class="col-md-12 card-body" id="storeFuelGradeTaxBody" [ngbCollapse]="isStorefuelGradeTaxCollapsed">
+        <div class="col-sm-6">
+          <div class="form-group row">
+            <label for="storeFuelGrade" class="col-sm-4">Fuel Tax Description</label>
+            <input type="text" class="form-control col-sm-8" required formControlName="fuelTaxDescription" placeholder="Enter fuel tax description"
+              maxlength="250">
+            <!-- <div [hidden]="companyName.valid || companyName.pristine" class="alert alert-danger">
+                            Company Name is required
+                        </div> -->
+          </div>
+          <!-- <div class="form-group row">
+            <label for="fuelGradeID" class="col-sm-4">Select Fuel Grade</label>
+            <select class="form-control col-sm-8" formControlName="fuelGradeID">
+              <option [value]="fuelGrade.fuelGradeID" *ngFor="let fuelGrade of fuelGradeList">{{fuelGrade.fuelGradeName}}</option>
+            </select>
+          </div> -->
+          <div class="form-group row">
+            <label for="fuelTaxRate" class="col-sm-4">Fuel Tax Rate</label>
+            <input type="text" class="form-control col-sm-8" required formControlName="fuelTaxRate" placeholder="Enter fuel tax rate"
+              maxlength="250">
+            <!-- <div [hidden]="companyName.valid || companyName.pristine" class="alert alert-danger">
+                            Company Name is required
+                        </div> -->
+          </div>
+          <div class="form-group pb-3 row">
+            <label class="form-check-label col-sm-6" for="isApplyPrice">
+              Apply Tax to All Fuel Grade
+            </label>
+            <input class="  " type="checkbox" value="" formControlName="isApplyPrice">
+          </div>
+        </div>
+        <div>
+          <button class="btn btn-md btn-primary ml-2" (click)="save()" [disabled]="storeFuelGradeTaxForm.invalid"> Save</button>
+          <button class="btn btn-md btn-primary ml-2" (click)="save(true)" [disabled]="storeFuelGradeTaxForm.invalid"> Save &amp; Close</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <!-- <div class="margin-bottom-5 mt-3">
+        <button type="button" class="btn btn-md btn-primary" (click)="addFuelGradeTaxes(true)"><i class="fa fa-plus"></i>
+          Add Fuel Grade Taxes</button>
+      </div> -->
+    <div style="margin-top:1rem;">
+      <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (edit)="edit($event)" (delete)="delete($event)"
+        (gridReady)="onGridReady($event)"></app-cstore-grid>
+    </div>
+  </div>
+</div>

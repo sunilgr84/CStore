@@ -1,0 +1,174 @@
+<form #importForm="ngForm">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title"> {{'Import Master Group'}}</h5>
+      <div class="col-sm-12 mt-2">
+        <div class="row">
+          <div class="row col-sm-12">
+            <label class="form-group has-float-label col-sm-12">
+              <input type="text" class="form-control" id="masterPriceDiscription" name="masterPriceDiscription"
+                [(ngModel)]="searchPriceGroup.MasterPriceGroupName" placeholder="Description">
+              <span>Description</span>
+            </label>
+          </div>
+          <div class="row col-sm-12" [hidden]="true">
+            <label class="form-group has-float-label col-sm-12">
+              <ng-select [items]="masterPriceGroupList" [closeOnSelect]="true" bindLabel="masterGroupName"
+                [addTag]="true" [(ngModel)]="searchPriceGroup.MasterPriceGroupName" name="MasterPriceGroupName"
+                placeholder="Select Groups">
+                <ng-template ng-tag-tmp let-search="searchTerm">
+                  <b>Search for </b>: {{search}}
+                </ng-template>
+              </ng-select>
+              <span>Groups</span>
+              <img src="assets/images/small-spinner.gif" *ngIf="isPriceGroupLoading">
+            </label>
+          </div>
+          <div class="row col-sm-12">
+            <label class="form-group has-float-label col-sm-12">
+              <ng-select [items]="manufacturerList" [closeOnSelect]="false" [multiple]="true" [hideSelected]="true"
+                bindLabel="manufacturerName" placeholder="Select Manufacturer" (change)="selectManufacture($event)"
+                [(ngModel)]="searchPriceGroup.ManufacturerIDS" name="ManufacturerIDS"  groupBy="companyID" [selectableGroup]="true" [selectableGroupAsModel]="false">
+                <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                  <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                </ng-template>
+                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                  <div class="ng-value" *ngFor="let item of items | slice:0:4">
+                    <span class="ng-value-label">
+                      {{item.manufacturerName}}</span>
+                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                  </div>
+                  <div class="ng-value" *ngIf="items.length > 2">
+                    <span class="ng-value-label">{{items.length - 2}} more...</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <span> Manufacturer</span>
+              <img src="assets/images/small-spinner.gif" *ngIf="isManufacturerLoading">
+            </label>
+          </div>
+          <div class="row col-sm-12">
+            <label class="form-group has-float-label col-sm-12">
+              <ng-select [items]="brandList" [closeOnSelect]="false" [multiple]="true" [hideSelected]="true"
+                bindLabel="brandName" placeholder="Select Brand" [(ngModel)]="searchPriceGroup.BrandIDS"
+                name="BrandIDS" groupBy="companyID" [selectableGroup]="true" [selectableGroupAsModel]="false">
+                <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                  <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                </ng-template>
+                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                  <div class="ng-value" *ngFor="let item of items | slice:0:4">
+                    <span class="ng-value-label">
+                      {{item.brandName}}</span>
+                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                  </div>
+                  <div class="ng-value" *ngIf="items.length > 2">
+                    <span class="ng-value-label">{{items.length - 2}} more...</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <span>Brand</span>
+              <img src="assets/images/small-spinner.gif" *ngIf="isBrandLoading">
+            </label>
+          </div>
+          <div class="row col-sm-12">
+            <label class="form-group has-float-label col-sm-12">
+              <ng-select [items]="packageList" [closeOnSelect]="false" [multiple]="true" [hideSelected]="true"
+                bindLabel="uomDescription" [(ngModel)]="searchPriceGroup.UOMIDS" placeholder="Select Package"
+                name="uomid"  groupBy="companyID" [selectableGroup]="true" [selectableGroupAsModel]="false">
+                <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                  <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                </ng-template>
+                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                  <div class="ng-value" *ngFor="let item of items | slice:0:4">
+                    <span class="ng-value-label">
+                      {{item.uomDescription}}</span>
+                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                  </div>
+                  <div class="ng-value" *ngIf="items.length > 2">
+                    <span class="ng-value-label">{{items.length - 2}} more...</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <span> Package</span>
+              <img src="assets/images/small-spinner.gif" *ngIf="isPackageLoading">
+            </label>
+          </div>
+          <div class="form-group col-sm-4 mt-2">
+            <button type="button" class="btn btn-md btn-primary" (click)="onSearch()">
+              Search</button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row justify-content-end margin-bottom-5 col-sm-12" style="padding: initial">
+            <div class="inner-addon right-addon">
+              <span> <i class="fa fa-search card-title" aria-hidden="true"></i> </span>
+              <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+                placeholder="Filter Search" [(ngModel)]="filterText" name="filterText">
+            </div>
+          </div>
+          <div class="col-sm-12 mb-3">
+            <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOption" (gridReady)="onGridReady($event)"
+              [textFilter]="filterText" (rowSelected)="onRowSelected($event)" (details)="getPriceGroupDetails($event)">
+            </app-cstore-grid>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <!-- <div>
+            <div class=""> -->
+          <label class="form-group has-float-label col-sm-12">
+            <ng-select [items]="storeLocationList" [dropdownPosition]="'top'" [closeOnSelect]="true"
+              bindLabel="storeName" bindValue="storeLocationID" placeholder="Select Store Location"
+              [(ngModel)]="searchPriceGroup.DestStoreLocationID" name="DestStoreLocationID"
+              #DestStoreLocationID="ngModel">
+            </ng-select>
+            <span>Store Location</span>
+            <img src="assets/images/small-spinner.gif" *ngIf="isStoreLocationLoading">
+            <div *ngIf="submitted && DestStoreLocationID.errors?.required" class="alert-text">
+              Store Location is required
+            </div>
+          </label>
+          <!-- </div>
+            <div class=""> -->
+          <label class="form-group has-float-label col-sm-12">
+            <ng-select required [items]="departmentList" [dropdownPosition]="'top'" [closeOnSelect]="true"
+              bindLabel="departmentDescription" bindValue="departmentID" placeholder="Select Department"
+              [(ngModel)]="searchPriceGroup.DestDepartmentID" name="DestDepartmentID" #DestDepartmentID="ngModel">
+            </ng-select>
+            <span>Department</span>
+            <img src="assets/images/small-spinner.gif" *ngIf="isDepartmentLoading">
+            <div *ngIf="submitted && DestDepartmentID.errors?.required" class="alert-text">
+              Department is required
+            </div>
+          </label>
+          <!-- </div> -->
+          <div class="form-group mt-4">
+            <button type="button" class="btn btn-md btn-primary mr-3" (click)="onReset()">
+              Reset</button>
+            <button type="button" class="btn btn-md btn-primary mr-3" (click)="onImport(importForm)">
+              IMPORT</button>
+          </div>
+
+          <!-- </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Price Group Details</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div>
+      <app-expandable-grid #companyInfoGrid [expandableGridOptions]="expandableGridOption" [rowData]="priceGroupList"
+        (gridReady)="onGridReady($event)" [detailCellRenderers]="detailCellRenderer" [gridHeight]="'500px'"
+        (rowDoubleClicked)="rowDoubleClicked($event)" (cellDoubleClicked)="cellDoubleClicked($event)">
+      </app-expandable-grid>
+    </div>
+  </div>
+</ng-template>

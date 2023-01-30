@@ -1,0 +1,108 @@
+<div [@routerTransition]>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title mb-4">Master Department Type
+            <button type="button" *ngIf="!showAddGrid" class="btn btn-primary btn-md mb-1 float-right" (click)="addDeptType()">
+              <i class="fa fa-plus" aria-hidden="true"></i> Add New</button>
+          </h5>
+          <form [formGroup]="departmentTypeForm">
+            <div class="row mt-3" *ngIf="showAddGrid">
+              <div class="col-sm-4">
+                <label class="form-group has-float-label">
+                  <select class="form-control" required formControlName="naxmlDepartmentTypeCodeID"
+                    id="naxmlDepartmentType">
+                    <option value="">Select Naxml Department Type</option>
+                    <option *ngFor="let obj of naxmlDepartmentTypeList" [value]="obj.naxmlDepartmentTypeCodeID">
+                      {{obj.naxmlDepartmentTypeCode}}</option>
+                  </select>
+                  <span for="naxmlDepartmentType">Naxml Department Type</span>
+                  <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+                  <div *ngIf="submitted && deptTypeControl.naxmlDepartmentTypeCodeID.errors?.required"
+                    class="alert alert-danger">
+                    Naxml Department type is required
+                  </div>
+                </label>
+              </div>
+              <div class="col-sm-4">
+                <label class="form-group has-float-label">
+                  <input #departmentType class="form-control" required formControlName="departmentTypeName"
+                    id="departmentType" placeholder="Naxml Department Type">
+                  <span for="departmentType">Department Type</span>
+                  <div *ngIf="submitted && deptTypeControl.departmentTypeName.errors?.required"
+                    class="alert alert-danger">
+                    Department type is required
+                  </div>
+                  <div *ngIf="submitted && deptTypeControl.departmentTypeName.errors?.pattern"
+                  class="alert alert-danger">
+                  Department type is invalid
+                </div>
+                </label>
+              </div>
+              <div class="col-sm-4">
+                <label class="form-group has-float-label">
+                  <input numbersOnly class="form-control" formControlName="displayOrder" id="displayOrder"
+                    placeholder="Display Order">
+                  <span for="displayOrder">Display Order</span>
+                </label>
+              </div>
+              <div class="custom-control custom-checkbox mb-3 col-sm-4 text-center">
+                <input type="checkbox" class="custom-control-input" formControlName="isFractionalQtyAllowedFlag"
+                  id="isFractionalQtyAllowedFlag">
+                <label class="custom-control-label" for="isFractionalQtyAllowedFlag">Is Fractional Qty Allowed
+                  Flag</label>
+              </div>
+              <div class="custom-control custom-checkbox col-sm-4 text-center">
+                <input type="checkbox" class="custom-control-input" formControlName="isItemReturnableFlag"
+                  id="isItemReturnableFlag">
+                <label class="custom-control-label" for="isItemReturnableFlag">Is Item Returnable Flag</label>
+              </div>
+              <div class="custom-control custom-checkbox col-sm-4 text-center">
+                <input type="checkbox" class="custom-control-input" formControlName="isDepartmentNegative"
+                  id="isDepartmentNegative">
+                <label class="custom-control-label" for="isDepartmentNegative">Is Department Negative</label>
+              </div>
+              <div class="custom-control custom-checkbox mb-3 col-sm-4 text-center">
+                <input type="checkbox" class="custom-control-input" formControlName="isInsideSalesDept"
+                  id="isInsideSalesDept">
+                <label class="custom-control-label" for="isInsideSalesDept">Is Inside Sales Dept</label>
+              </div>
+              <div class="custom-control custom-checkbox col-sm-4 text-center">
+                <input type="checkbox" class="custom-control-input" formControlName="allowFoodStampsFlag"
+                  id="allowFoodStampsFlag">
+                <label class="custom-control-label" for="allowFoodStampsFlag">Allow Food Stamps Flag</label>
+              </div>
+              <div class="custom-control custom-checkbox col-sm-4 text-center">
+                <input type="checkbox" class="custom-control-input" formControlName="salesRestrictionRequiredFlag"
+                  id="salesRestrictionRequiredFlag">
+                <label class="custom-control-label" for="salesRestrictionRequiredFlag">Sales Restriction Required
+                  Flag</label>
+              </div>
+              <div class="col-sm-12 text-right mb-3">
+                <button type="button" class="btn btn-primary btn-md mr-3" (click)="reset()">
+                  Cancel</button>
+                <button type="button" class="btn btn-primary btn-md" (click)="saveOrEdit()">
+                  {{ isEdit?'Update':'Save' }} </button>
+              </div>
+            </div>
+          </form>
+          <div class="row mb-3">
+            <div class="col-sm-9"></div>
+            <div class="col-sm-3 mb-3">
+              <div class="inner-addon right-addon">
+                <span> <i class="fa fa-search card-title" aria-hidden="true"></i> </span>
+                <input type="text" class="form-control" aria-label="Default"
+                  aria-describedby="inputGroup-sizing-default" placeholder="Filter Search" [(ngModel)]="filterText"
+                  name="filterText">
+              </div>
+            </div>
+            <div class="col-md-12">
+              <app-cstore-grid [cStoreGridOptions]="gridOptions" (edit)="edit($event)"
+                (delete)="delete($event)" [textFilter]="filterText" (gridReady)="onGridReady($event)"></app-cstore-grid>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

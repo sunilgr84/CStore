@@ -1,0 +1,173 @@
+<div class="card">
+  <div *ngIf="!isVendorInovice">
+    <form [formGroup]="searchBinInvoiceForm">
+      <div class="card-body" id="bulkUpdateBody">
+        <div class="row">
+          <div class="col-md-12 mb-3">
+            <div class="card-title form-group">
+              <h5> Advance Search &nbsp; &nbsp; <i class="fa fa-chevron-down"></i> </h5>
+            </div>
+          </div>
+          <div class="row">
+            <label class="form-group has-float-label col-sm-3">
+              <ng-select [items]="storeLocationList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+                bindLabel="storeName" bindValue="storeLocationID" labelForId="storeLocationID"
+                formControlName="locationCriteria" placeholder="Store Location" groupBy="companyID"
+                [selectableGroup]="true" [selectableGroupAsModel]="false">
+                <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                  <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                </ng-template>
+                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                  <div class="ng-value" *ngFor="let item of items | slice:0:4">
+                    <span class="ng-value-label">
+                      {{item.storeName}}</span>
+                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                  </div>
+                  <div class="ng-value" *ngIf="items.length > 2">
+                    <span class="ng-value-label">{{items.length - 2}} more...</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <span>Store Location</span>
+            </label>
+
+
+            <label class="form-group has-float-label col-sm-3">
+              <ng-select [items]="vendorList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+                bindLabel="vendorName" bindValue="vendorID" labelForId="vendorID" placeholder="Vendor"
+                formControlName="vendorCriteria" groupBy="companyID" [selectableGroup]="true"
+                [selectableGroupAsModel]="false">
+                <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                  <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                </ng-template>
+                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                  <div class="ng-value" *ngFor="let item of items | slice:0:4">
+                    <span class="ng-value-label">
+                      {{item.vendorName}}</span>
+                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                  </div>
+                  <div class="ng-value" *ngIf="items.length > 2">
+                    <span class="ng-value-label">{{items.length - 2}} more...</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <span>Vendor</span>
+            </label>
+
+            <label class="form-group has-float-label col-sm-3">
+              <input type="text" class="form-control " formControlName="invoiceNo" id="invoiceNo"
+                placeholder="Invoice No">
+              <span>Invoice No</span>
+            </label>
+
+            <label class=" has-float-label col-sm-3">
+              <app-datepicker name="invoiceCreatedDate" id="invoiceCreatedDate" [inputDate]="createdDate"
+                (dateChange)="dateChange($event)">
+              </app-datepicker>
+              <span>Invoice Created Date</span>
+            </label>
+            <label class="form-group has-float-label col-sm-3">
+              <app-daterangepicker [selectedDateRange]="selectedDateRange"
+                (dateRangeSelecetd)="dateRangeChange($event)">
+              </app-daterangepicker>
+              <span> Select Date Range</span>
+            </label>
+          </div>
+
+
+        </div>
+        <div class="row justify-content-between">
+          <div class="col-sm-9">
+            <button type="button" class="btn btn-md btn-primary mr-3" (click)="reset()">
+              Reset</button>
+            <button type="button" class="btn btn-md btn-primary mr-3" (click)="search()">
+              Search</button>
+          </div>
+          <div class="col-sm-3">
+            <div class="inner-addon right-addon">
+              <span>
+                <i class="fa fa-search card-title" aria-hidden="true"></i>
+              </span>
+              <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+                placeholder="Filter Search" formControlName="filterText" name="filterText">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+
+
+          <div class="col-sm-12 mt-2">
+            <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+              [textFilter]="searchBinInvoiceForm.get('filterText').value" (edit)="edit($event)"
+              (download)="openPDF(true,$event)" (delete)="deleteAction($event)">
+            </app-cstore-grid>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<div *ngIf="isVendorInovice">
+  <!-- <app-bin-vendor-invoice [_invoiceID]="invoiceId" [invoiceDetail]="invoiceDetail" (backToList)="backToList($event)">
+  </app-bin-vendor-invoice> -->
+  <app-add-invoice [_invoiceID]="invoiceId" [invoiceDetail]="invoiceDetail" (backToList)="backToList($event)">
+  </app-add-invoice>
+</div>
+
+<ng-template #modalContent let-close="close">
+  <div class="modal-header">
+    <h5 class="card-title">Associate Invoice</h5>
+    <button type="button" class="close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="associateInvoiceForm">
+      <div class="col-sm-12">
+        <div class="row form-group">
+          <strong> <span class="col-sm-3">Store Location | </span>{{selectedBinInvoice.storeName}}</strong>
+        </div>
+        <div class="row mt-3">
+          <label class="form-group has-float-label col-sm-10">
+            <ng-select [items]="vendorList" [multiple]="false" [closeOnSelect]="true" [hideSelected]="true"
+              bindLabel="vendorName" bindValue="vendorID" labelForId="vendorID" formControlName="vendorID"
+              placeholder="Vendor">
+            </ng-select>
+            <span>Vendor</span>
+          </label>
+        </div>
+        <div class="row">
+          <label class="form-group has-float-label col-sm-10">
+            <input type="text" class="form-control" formControlName="invoiceNo" id="invoiceNo" placeholder="Invoice No">
+            <span>Invoice No</span>
+          </label>
+        </div>
+        <div class="row ">
+          <label class="form-group has-float-label col-sm-10">
+            <input type="text" class="form-control" formControlName="invoiceAmount" id="invoiceNo"
+              placeholder="Invoice Amount">
+            <span>Invoice Amount</span>
+          </label>
+        </div>
+        <div class="row">
+          <label class="form-group has-float-label col-sm-10">
+            <input type="date" class="form-control" formControlName="invoiceDate" id="invoiceNo"
+              placeholder="Invoice Date">
+            <span>Invoice Date</span>
+          </label>
+        </div>
+        <div class="row mb-5">
+          <button type="button" class="btn btn-md btn-primary mr-3" (click)="associateInvoice()"> Associate
+            Invoice</button> &nbsp;
+          <button type="button" *ngIf="this.associateInvoiceForm.get('isFileExist').value"
+            class="btn btn-md btn-primary  mr-3" (click)="openPDF(false)">Download Invoice</button>
+          <button type="button" class="btn btn-md btn-primary" (click)="close()">
+            Close
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>

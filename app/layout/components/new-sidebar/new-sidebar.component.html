@@ -1,0 +1,24 @@
+<asm-angular-sidebar-menu
+  [menu]="menu"
+  [mode]="mode"
+  toggleIconClasses="fa fa-angle-left"
+  iconClasses="fa fa-circle-o"
+></asm-angular-sidebar-menu>
+<div
+  class="toggle-button text-white fixed-bottom px-3 py-2"
+  style="cursor: pointer; right: unset; background: #003774;"
+  (click)="mode = modes.MINI"
+  *ngIf="mode == modes.EXPANDED; else expandModeBtn"
+>
+  <i class="fa fa-fw fa-angle-double-left"></i>&nbsp;
+  <span>{{ "Collapse Sidebar" }}</span>
+</div>
+<ng-template #expandModeBtn>
+  <div
+    class="toggle-button text-white fixed-bottom px-3 py-2"
+    style="cursor: pointer; right: unset; background: #003774;"
+    (click)="mode = modes.EXPANDED"
+  >
+    <i class="fa fa-fw fa-angle-double-right"></i>
+  </div>
+</ng-template>

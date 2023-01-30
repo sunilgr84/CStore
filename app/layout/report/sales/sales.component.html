@@ -1,0 +1,85 @@
+<div>
+  <app-page-header [heading]="'Sales'" [icon]="'fa-edit'"></app-page-header>
+  <div>
+    <ngb-tabset type="pills">
+      <ngb-tab title="Sales">
+        <ng-template ngbTabContent>
+          <app-sales-report></app-sales-report>
+        </ng-template>
+      </ngb-tab>
+
+      <ngb-tab title="Day Recon">
+        <ng-template ngbTabContent>
+          <app-day-recon-report></app-day-recon-report>
+        </ng-template>
+      </ngb-tab>
+
+      <ngb-tab title="Abnormal Profit Margin">
+        <ng-template ngbTabContent>
+          <app-abnormal-profit-margin></app-abnormal-profit-margin>
+        </ng-template>
+      </ngb-tab>
+
+      <ngb-tab title="Weekly" *ngIf="false">
+        <ng-template ngbTabContent>
+          <app-weekly-report></app-weekly-report>
+        </ng-template>
+      </ngb-tab>
+      // remaining
+      <ngb-tab title="Sales Comparision Year Ago">
+        <ng-template ngbTabContent>
+          <app-sales-comparision-year-ago-report></app-sales-comparision-year-ago-report>
+        </ng-template>
+      </ngb-tab>
+
+      <ngb-tab title="Sales History By UPC">
+        <ng-template ngbTabContent>
+          <app-sales-history-by-upc-report></app-sales-history-by-upc-report>
+        </ng-template>
+      </ngb-tab>
+
+      <ngb-tab title="Modifier Sales">
+        <ng-template ngbTabContent>
+          <app-modifier-sales-report></app-modifier-sales-report>
+        </ng-template>
+      </ngb-tab>
+
+      <ngb-tab title="Sales Comparison">
+        <ng-template ngbTabContent>
+          <app-sales-comparison-report></app-sales-comparison-report>
+        </ng-template>
+      </ngb-tab>
+
+      <ngb-tab title="Manual Data Entry" *ngIf="false">
+        <ng-template ngbTabContent>
+          <app-manual-data-entry-report></app-manual-data-entry-report>
+        </ng-template>
+      </ngb-tab>
+
+      <ngb-tab title="Items By Sales Margin" *ngIf="false">
+        <ng-template ngbTabContent>
+          <app-items-by-sales-margin-report></app-items-by-sales-margin-report>
+        </ng-template>
+      </ngb-tab>
+
+      <ngb-tab title="Promotion">
+        <ng-template ngbTabContent>
+          <app-promotion-report></app-promotion-report>
+        </ng-template>
+      </ngb-tab>
+
+      <ngb-tab title="Taxable Items">
+        <ng-template ngbTabContent>
+          <app-taxable-items-report></app-taxable-items-report>
+        </ng-template>
+      </ngb-tab>
+
+      <ngb-tab title="SIR Inventory Control">
+        <ng-template ngbTabContent>
+          <app-sir-inventory-control-report></app-sir-inventory-control-report>
+        </ng-template>
+      </ngb-tab>
+
+    </ngb-tabset>
+  </div>
+</div>

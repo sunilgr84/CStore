@@ -1,0 +1,121 @@
+<form [formGroup]="weeklyReportForm">
+
+  <div class="card mt-3" style="min-height: 400px">
+    <div class="card-body">
+      <div class="col-sm-12">
+        <div class="row mb-4">
+          <div class="col-sm-3">
+            <div class="col-sm-12 custom-control custom-radio">
+              <input type="radio" class="custom-control-input" formControlName="weeklyReportButtonClick"
+                value="weeklySaleReport" (click)="weeklySaleReportClick()" id="weeklySaleReport"
+                name="weeklyReportButtonClick" checked>
+              <label class="custom-control-label" for="weeklySaleReport">Weekly Sale Report</label>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="col-sm-12 custom-control custom-radio">
+              <input type="radio" class="custom-control-input" formControlName="weeklyReportButtonClick"
+                value="weeklyPurchaseReport" (click)="weeklySaleReportClick()" id="weeklyPurchaseReport"
+                name="weeklyReportButtonClick">
+              <label class="custom-control-label" for="weeklyPurchaseReport">Weekly Purchase Report</label>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="col-sm-12 custom-control custom-radio">
+              <input type="radio" class="custom-control-input" formControlName="weeklyReportButtonClick"
+                value="weeklySaleByDepartmentTypeReport" (click)="weeklySaleByDepartmentTypeReportClick()"
+                id="weeklySaleByDepartmentTypeReport" name="weeklyReportButtonClick">
+              <label class="custom-control-label" for="weeklySaleByDepartmentTypeReport">Weekly Sale By Department Type
+                Report</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+          <label class="col-sm-12 form-group has-float-label">
+            <app-daterangepicker [selectedDateRange]="selectedDateRange" (dateRangeSelecetd)="dateRangeChange($event)">
+            </app-daterangepicker>
+            <span> Select Date Range</span>
+          </label>
+          <!--  <label class="col-sm-12 form-group has-float-label">
+            <app-datepicker [isMaxDate]="true" [maxDate]="_endDate" [inputDate]="_startDate"
+              (dateChange)="startDateChange($event)" name="startDate" id="startDate">
+            </app-datepicker>
+            <span> Start Date</span>
+          </label> -->
+        </div>
+        <div class="col-sm-4">
+          <label class="col-sm-12 form-group has-float-label" for="storeLocation" *ngIf="!isSingalStore">
+            <ng-select formControlName="storeLocationIds" [items]="storeLocationList" [multiple]="true"
+              [closeOnSelect]="false" [hideSelected]="true" bindLabel="storeName" placeholder="Store Location"
+              groupBy="companyID" [selectableGroup]="true" [selectableGroupAsModel]="false">
+              <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+              </ng-template>
+              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                  <span class="ng-value-label">
+                    {{item.storeName}}</span>
+                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 2">
+                  <span class="ng-value-label">{{items.length - 2}} more...</span>
+                </div>
+              </ng-template>
+            </ng-select>
+            <span> Store Location</span>
+          </label>
+          <label class="col-sm-12 form-group has-float-label" *ngIf="isSingalStore">
+            <input type="text" readonly class="form-control" name="store" [value]="storeLocationList[0].storeName">
+            <span> Store Location</span>
+          </label>
+        </div>
+      </div>
+      <div class="row ">
+        <!-- <div class="col-sm-3">
+          <label class="col-sm-12 form-group has-float-label">
+            <app-datepicker [isMaxDate]="true" [inputDate]="_endDate" (dateChange)="endDateChange($event)"
+              name="endDate" id="endDate">
+            </app-datepicker>
+            <span> End Date</span>
+          </label>
+        </div> -->
+        <div *ngIf="isShowDepartmentType" class="col-sm-4">
+          <label class="col-sm-12 form-group has-float-label">
+            <ng-select formControlName="departmentTypeID" [items]="departmentTypeList" [multiple]="true"
+              [closeOnSelect]="false" [hideSelected]="true" bindLabel="departmentTypeName" placeholder="Department Type"
+              groupBy="companyID" [selectableGroup]="true" [selectableGroupAsModel]="false">
+              <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+              </ng-template>
+              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                  <span class="ng-value-label">
+                    {{item.departmentTypeName}}</span>
+                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 2">
+                  <span class="ng-value-label">{{items.length - 2}} more...</span>
+                </div>
+              </ng-template>
+            </ng-select>
+            <span> Department Type</span>
+          </label>
+        </div>
+        <div class="col-sm-4 ml-3">
+          <button type="button" class="btn-md btn btn-primary mr-3" (click)="searchWeeklyReport()">
+            Go</button>
+
+        </div>
+      </div>
+      <div class="row" *ngIf="this.rowData && this.rowData.length >0">
+        <div class="col-sm-12 mt-3">
+          <app-report-grid [rowData]="rowData" [expandableGridOptions]="gridOption" (gridReady)="onGridReady($event)"
+            (exportTo)="searchReport($event)">
+          </app-report-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

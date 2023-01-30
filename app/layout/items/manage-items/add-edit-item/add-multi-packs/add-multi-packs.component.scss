@@ -1,0 +1,13 @@
+::ng-deep .multi-packs-child {
+    app-adv-pagination-grid .ag-theme-balham .ag-cell {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    app-adv-pagination-grid .ag-theme-balham .ag-cell-inline-editing {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+    app-adv-pagination-grid app-input-cell .field-wrapper {
+        padding: 0px !important;
+    }
+}

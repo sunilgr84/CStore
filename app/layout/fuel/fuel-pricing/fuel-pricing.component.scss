@@ -1,0 +1,31 @@
+.fuel-pricing {
+    min-height: 350px;
+}
+.fuel-data-input {
+    width: 90%;
+}
+.mr-56 {
+    margin-right: 56px;
+}
+.input-icon > i {
+    top: 50%;
+    width: 22px;
+}
+
+table {
+    width: 50%;
+    box-shadow: 0 2px 20px 5px #eee;
+    
+
+    th, td {
+        padding: .5rem;
+        font-size: .9rem;
+        border-bottom: 1px solid #eee;
+    }
+
+    th {
+        background-color: #003774;
+        color: #f9f9f9;
+        letter-spacing: 1px;
+    }
+}

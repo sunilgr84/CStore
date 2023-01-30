@@ -1,0 +1,514 @@
+<div [@routerTransition]>
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-2">
+          <h5 class="card-title mt-2"> Master PriceBook </h5>
+        </div>
+        <div class="col-md-10">
+          <button type="button" class="btn btn-md btn-primary mr-2" (click)="openAdvanceSearch()">
+            Advance Search</button>
+          <button type="button" class="btn btn-md btn-primary mr-2" (click)="openAddItem()">
+            Add Item</button>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-md-12" *ngIf="isAddItem">
+          <div class="card">
+            <div class="card-body">
+              <ngb-tabset type="pills" #tabs="ngbTabset">
+                <ngb-tab title="Add New Item" id="addNewMasterItem">
+                  <ng-template ngbTabContent>
+                    <form [formGroup]="priceBookItemForm" novalidate>
+                      <!-- <h5 class="card-title"> {{ isEditMode? 'Update Item' : 'Add New Item' }} </h5> -->
+                      <div class="row mt-2">
+                        <label class="form-group has-float-label col-sm-4">
+                          <input numbersOnly type="text" #upcCodes class="form-control" id="upcCode" required
+                            formControlName="upcCode" min="0" maxlength="25" placeholder="Enter UPC Code"
+                            (blur)="checkUPCCode($event)" (input)="checkLength($event.target.value)">
+                          <span for="upcCode"> UPC Code </span>
+                          <div *ngIf="submitted && f.upcCode.errors?.required" class="alert alert-danger">
+                            UPC Code is required
+                          </div>
+                        </label>
+                        <label class="form-group has-float-label col-sm-4">
+                          <input type="text" #descriptions class="form-control" id="description"
+                            formControlName="description" placeholder="Enter Description" maxlength="250" required>
+                          <span for="description"> Description </span>
+                          <div *ngIf="submitted && f.description.errors?.required" class="alert alert-danger">
+                            Description is required
+                          </div>
+                        </label>
+                        <label class="form-group has-float-label col-sm-4">
+                          <ng-select [items]="departmentList" [selectOnTab]="true"
+                            bindLabel="masterDepartmentDescription" bindValue="masterDepartmentID"
+                            labelForId="masterDepartmentID" formControlName="masterDepartmentID"
+                            placeholder="Select Department" required>
+                          </ng-select>
+                          <span> Department </span>
+                          <div *ngIf="submitted && f.masterDepartmentID.errors?.required" class="alert alert-danger">
+                            Department is required
+                          </div>
+                        </label>
+                        <label class="form-group has-float-label col-sm-4">
+                          <ng-select [items]="uomList" [selectOnTab]="true" bindLabel="uomDescription" bindValue="uomid"
+                            labelForId="uomid" placeholder="Units of Measurement" formControlName="uomid" required>
+                          </ng-select>
+                          <span> Units of Measurement </span>
+                          <div *ngIf="submitted && f.uomid.errors?.required" class="alert alert-danger">
+                            Units of Measurement is required
+                          </div>
+                        </label>
+                        <label class="form-group has-float-label  col-sm-4">
+                          <input required type="text" decimalOnly class="form-control" min="0" numbersOnly
+                            id="unitInCase" formControlName="unitsInCase" placeholder="Enter Unit In Case"
+                            onKeyPress="if(this.value.length==9 ) return false;return event.charCode >= 48 && event.charCode <= 57">
+                          <span for="unitInCase"> Unit In Case </span>
+                          <div *ngIf="submitted && f.unitsInCase.errors?.required" class="alert alert-danger">
+                            Unit In Case is required
+                          </div>
+                        </label>
+
+                        <label class="form-group has-float-label col-sm-4">
+                          <input required type="text" decimalOnly class="form-control" min="0" numbersOnly
+                            id="sellingUnits" formControlName="sellingUnits" placeholder="Enter Selling Units"
+                            onKeyPress="if(this.value.length==9 ) return false;return event.charCode >= 48 && event.charCode <= 57">
+                          <span for="sellingUnits"> Selling Units </span>
+                          <div *ngIf="submitted && f.sellingUnits.errors?.required" class="alert alert-danger">
+                            Selling Units is required
+                          </div>
+                        </label>
+
+                        <div class="row col-md-4 m-0">
+                          <div class="custom-control custom-checkbox ml-3 mt-2">
+                            <input type="checkbox" class="custom-control-input" formControlName="isDefault"
+                              id="isDefault">
+                            <label class="custom-control-label" for="isDefault">Is Default</label>
+                          </div>
+                          <div class="custom-control custom-checkbox ml-5 mt-2">
+                            <input type="checkbox" class="custom-control-input" formControlName="isPack" id="isPack">
+                            <label class="custom-control-label" for="isPack">Is Pack</label>
+                          </div>
+                        </div>
+
+                        <ng-container *ngIf="priceBookItemForm.get('isPack').value">
+                          <label class="form-group has-float-label col-sm-4">
+                            <input numbersOnly type="text" #cartonPackUpc class="form-control" id="cartonPackUPC"
+                              (blur)="getCartonUpcCodeDetails();" formControlName="cartonPackMasterPriceBookItemUpc"
+                              maxlength="13" placeholder="Enter Carton/Pack UPC">
+                            <span for="cartonPackUPC"> Carton/Pack UPC </span>
+                          </label>
+                          <label class="col-sm-4">
+                            {{cartonPackDescription}}
+                          </label>
+                        </ng-container>
+
+                        <label class="form-group has-float-label col-sm-4">
+                          <ng-select [items]="manufacturerList" [selectOnTab]="true" bindLabel="manufacturerName"
+                            (change)="onManufacturerChanged()" bindValue="manufacturerID" labelForId="manufacturerID"
+                            placeholder="Manufacturer Name" formControlName="manufacturerID" required>
+                          </ng-select>
+                          <span>Manufacturer </span>
+                          <div *ngIf="submitted && f.manufacturerID.errors?.required" class="alert alert-danger">
+                            Manufacturer is required
+                          </div>
+                        </label>
+                        <label class="form-group has-float-label col-sm-4">
+                          <ng-select [items]="brandNameList" [selectOnTab]="true" bindLabel="brandName"
+                            (change)="onBrandChanged()" bindValue="brandID" labelForId="brandID"
+                            formControlName="brandID" placeholder="Select Brand" required>
+                          </ng-select>
+                          <span> Brand </span>
+                          <img src="assets/images/small-spinner.gif" *ngIf="isBrandLoading">
+                          <div *ngIf="submitted && f.brandID.errors?.required" class="alert alert-danger">
+                            Brand is required
+                          </div>
+                        </label>
+                        <label class="form-group has-float-label col-sm-4">
+                          <ng-select [items]="groupNameList" [selectOnTab]="true" bindLabel="masterGroupName"
+                            bindValue="masterPriceGroupID" labelForId="masterPriceGroupID"
+                            formControlName="masterPriceGroupID" placeholder="Select Group Name" required>
+                          </ng-select>
+                          <span>Price Group </span>
+                          <img src="assets/images/small-spinner.gif" *ngIf="isGroupNameLoading">
+                          <div *ngIf="submitted && f.masterPriceGroupID.errors?.required" class="alert alert-danger">
+                            Price Group is required
+                          </div>
+                        </label>
+                        <label class="form-group has-float-label col-sm-4" [hidden]="true">
+                          <input type="text" decimalOnly class="form-control" min="0" numbersOnly id="baseUnitsInCase"
+                            formControlName="baseUnitsInCase" placeholder="Enter Base Units In Case"
+                            onKeyPress="if(this.value.length==9 ) return false;return event.charCode >= 48 && event.charCode <= 57">
+                          <span for="baseUnitsInCase"> Base Units In Case </span>
+                        </label>
+                      </div>
+                      <div class="row col-md-4" *ngIf="false">
+                        <div class="custom-control custom-checkbox ml-2 mt-2">
+                          <input type="checkbox" class="custom-control-input" formControlName="IsLinkedItem"
+                            id="IsLinkedItem">
+                          <label class="custom-control-label" for="IsLinkedItem">IsLinked Item</label>
+                        </div>
+                      </div>
+                      <div class="row mt-3" *ngIf="false" formGroupName="masterPriceBookLinkedItemDetails">
+                        <label class="form-group has-float-label col-sm-6">
+                          <input numbersOnly type="text" class="form-control" id="linkedUpcCode" maxlength="100"
+                            placeholder="Enter UPC Code" formControlName="upcCode" (blur)="searchUpcCode($event)"
+                            #linkedUPCCode>
+                          <span for="linkedUpcCode"> UPC Code </span>
+                        </label>
+
+                        <label class="form-group has-float-label col-sm-6">
+                          <input type="text" class="form-control" id="linkedInDescription" maxlength="100"
+                            placeholder="Description" formControlName="description">
+                          <span for="description"> Description </span>
+                        </label>
+                        <label class="form-group has-float-label col-sm-6">
+                          <input type="text" decimalOnly class="form-control" id="linkedInDiscount" maxlength="100"
+                            placeholder="Discount" formControlName="promoDiscountAmount">
+                          <span for="linkedInDiscount"> Discount</span>
+                        </label>
+                        <label class="form-group has-float-label col-sm-6">
+                          <ng-select [items]="linkedItemTypeList" [selectOnTab]="true" bindLabel="description"
+                            bindValue="linkedItemTypeID" labelForId="linkedItemTypeID" placeholder="Select Linked Type"
+                            formControlName="linkedItemTypeID">
+                          </ng-select>
+                          <span> Linked Type </span>
+                        </label>
+                      </div>
+                      <div class="col-sm-12 text-right mb-3 pr-0">
+                        <button type="button" class="btn btn-md btn-primary mr-3" (click)="reset()">
+                          {{ isEditMode ? 'Add More' : 'Reset' }} </button>
+                        <button type="button" class="btn btn-md btn-primary mr-3" (click)="saveNewItem('')">
+                          {{ isEditMode ? 'Update' : 'Save' }} </button>
+                        <button type="button" class="btn btn-md btn-primary" (click)="saveNewItem('linkItems')">
+                          {{ isEditMode ? 'Update & Link Items' : 'Save & Link Items' }} </button>
+                      </div>
+                    </form>
+                  </ng-template>
+                </ngb-tab>
+                <ngb-tab title="Linked Items" id="addLinkedItems" [disabled]="!isEditMode">
+                  <ng-template ngbTabContent>
+                    <div class="row mt-2">
+                      <div class="col-sm-12">
+                        <app-master-linked-item [masterPriceBookItemID]="priceBookItemForm.value.masterPriceBookItemID"
+                          [masterData]="masterPriceBookLinkedItemList">
+                        </app-master-linked-item>
+                      </div>
+                    </div>
+                  </ng-template>
+                </ngb-tab>
+              </ngb-tabset>
+            </div>
+          </div>
+          <!-- <ngb-tabset type="pills" #tabs="ngbTabset" hidden> -->
+
+          <!-- <ngb-tab title="Add New Item" id="addNewItem">
+              <ng-template ngbTabContent>-->
+          <!-- <div class="col-md-4 mt-2">
+                  <div class="inner-addon right-addon">
+                    <span (click)="onAdvanSearch(true)">
+                      <i class="fa fa-search card-title" aria-hidden="true"></i>
+                    </span>
+                    <input type="text" class="form-control" [(ngModel)]="upcOrDescSearch"
+                      (keyup.enter)="onAdvanSearch(true)" name="search" placeholder="Search" />
+                  </div>
+                </div> -->
+          <!-- </ng-template>
+            </ngb-tab> -->
+          <!-- <ngb-tab title="Bulk Update">
+              <ng-template ngbTabContent>
+                <div class="row mt-3">
+                  <div class="col-sm-6">
+                    <div class="card">
+                      <div class="card-body">
+                        <h5 class="card-title mb-3"> Advanced Search</h5>
+                        <form [formGroup]="advanSearchForm">
+                          <div class="">
+                            <div class="">
+                              <div class="row">
+                                <!-- <div class=" col-sm-12"> -->
+          <!-- <label class="form-group has-float-label col-sm-12">
+                                  <input type="text" class="form-control" id="upcCode" formControlName="PosCodeOrDesc"
+                                    (keyup.enter)="onAdvanSearch()" maxlength="250"
+                                    placeholder="Enter UPC Code/ Description ">
+                                  <span for="upcCode"> UPC Code/ Description </span>
+                                </label>
+                                <label class="form-group has-float-label col-sm-12">
+                                  <ng-select [items]="groupNameList" [selectOnTab]="true" bindLabel="masterGroupName"
+                                    bindValue="masterPriceGroupID" labelForId="masterPriceGroupID"
+                                    (change)="SelectGroupManu('Group')" placeholder="Select Group Name"
+                                    formControlName="GroupID">
+                                  </ng-select>
+                                  <span> Group Name </span>
+                                </label>
+                                <label class="form-group has-float-label col-sm-12">
+                                  <ng-select [items]="manufacturerList" [selectOnTab]="true"
+                                    bindLabel="manufacturerName" bindValue="manufacturerID" labelForId="manufacturerID"
+                                    placeholder="Select Manufacturer" formControlName="Manufacturer"
+                                    (change)="selectManufacture()">
+                                  </ng-select>
+                                  <span> Manufacturer </span>
+                                </label>
+                                <label class="form-group has-float-label col-sm-12">
+                                  <ng-select [items]="advanBrandNameList" [selectOnTab]="true" bindLabel="brandName"
+                                    bindValue="brandID" labelForId="brandID" placeholder="Select Brand"
+                                    formControlName="BrandID">
+                                  </ng-select>
+                                  <span> Brand </span>
+                                </label>
+
+                                <label class="form-group has-float-label col-sm-12">
+                                  <ng-select [items]="departmentList" [selectOnTab]="true"
+                                    bindLabel="masterDepartmentDescription" bindValue="masterDepartmentID"
+                                    labelForId="masterDepartmentID" placeholder="Select Department"
+                                    formControlName="Department">
+                                  </ng-select>
+                                  <span> Department </span>
+                                </label>
+
+                                <label class="form-group has-float-label col-sm-12">
+                                  <ng-select [items]="uomList" [selectOnTab]="true" bindLabel="uomDescription"
+                                    bindValue="uomid" labelForId="uomid" placeholder="Units of Measurement"
+                                    formControlName="UOMID">
+                                  </ng-select>
+                                  <span> Units of Measurement </span>
+                                </label> -->
+
+          <!-- <div class="col-sm-12 row mt-2">
+                                    <div class="col-sm-4">
+                                      <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="isDefault1"
+                                          formControlName="IsDefault">
+                                        <label class="custom-control-label" for="isDefault1">Is Default</label>
+                                      </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                      <div class="custom-control custom-checkbox ">
+                                        <input type="checkbox" class="custom-control-input" id="isPack1"
+                                          formControlName="IsPack">
+                                        <label class="custom-control-label" for="isPack1">Is Pack</label>
+                                      </div>
+                                    </div>
+                                  </div> -->
+          <!-- </div> -->
+          <!-- <div class="col-sm-6">
+                                    <label class="form-group has-float-label col-sm-12">
+                                      <input class="form-control" type="number" placeholder="Unit In Case" id="unitsInCases"
+                                        min="0" formControlName="UnitsIncase">
+                                      <span for="unitsInCases"> Unit In Case </span>
+                                    </label>
+                                  </div> -->
+          <!-- </div>
+                            </div>
+
+                          </div>
+                          <div class="row mt-3">
+                            <div class="col-sm-12">
+                              <button type="button" class="btn btn-md btn btn-primary mr-3" (click)="onReset()">
+                                Reset</button>
+                              <button type="button" class="btn btn-md btn-primary mr-3" (click)="onAdvanSearch(false)">
+                                Search</button>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </ng-template>
+            </ngb-tab> -->
+          <!-- </ngb-tabset> -->
+        </div>
+      </div>
+
+      <div class="row mb-2 mt-2" *ngIf="isAdvanceSearch">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body card-min-height">
+              <div class="row mb-1">
+                <div class="col-sm-11">
+                  <h5 class="card-title">Advance Search</h5>
+                </div>
+                <div class="col-sm-1">
+                  <span class="pull-right cursor-pointer" (click)="openAdvanceSearch()">X</span>
+                </div>
+              </div>
+              <form [formGroup]="newAdvancedSearchForm" novalidate>
+                <div class="row">
+                  <label class="form-group has-float-label col-sm-4">
+                    <input type="text" class="form-control" placeholder="UPC / Description"
+                      formControlName="posCodeOrDesc" (keyup.enter)="priceBookAdvSearch()">
+                    <span for="storeName">UPC / Description</span>
+                  </label>
+                  <label class="form-group has-float-label col-sm-4">
+                    <ng-select [items]="groupNameList" [selectOnTab]="true" bindLabel="masterGroupName"
+                      bindValue="masterPriceGroupID" labelForId="masterPriceGroupID" placeholder="Select Group"
+                      formControlName="groupID">
+                    </ng-select>
+                    <span>Group</span>
+                  </label>
+                  <label class="form-group has-float-label col-sm-4">
+                    <ng-select [items]="manufacturerList" [selectOnTab]="true" bindLabel="manufacturerName"
+                      bindValue="manufacturerID" formControlName="manufacturer" labelForId="manufacturerID"
+                      placeholder="Manufacturer">
+                    </ng-select>
+                    <span>Manufacturer</span>
+                  </label>
+                  <label class="form-group has-float-label col-sm-4">
+                    <ng-select [items]="brandNameList" [selectOnTab]="true" bindLabel="brandName" bindValue="brandID"
+                      formControlName="brand" labelForId="brandID" placeholder="Brand">
+                    </ng-select>
+                    <span>Brand</span>
+                  </label>
+                  <label class="form-group has-float-label col-sm-4">
+                    <ng-select [items]="departmentList" [selectOnTab]="true" bindLabel="masterDepartmentDescription"
+                      bindValue="masterDepartmentID" labelForId="masterDepartmentID" placeholder="Select Department"
+                      formControlName="department">
+                    </ng-select>
+                    <span>Department</span>
+                  </label>
+                  <label class="form-group has-float-label  col-sm-4">
+                    <input type="text" decimalOnly class="form-control" min="0" numbersOnly id="unitInCase"
+                      formControlName="unitsInCase" placeholder="Enter Unit In Case"
+                      onKeyPress="if(this.value.length==9 ) return false;return event.charCode >= 48 && event.charCode <= 57">
+                    <span for="unitInCase"> Unit In Case </span>
+                  </label>
+                  <label class="form-group has-float-label col-sm-4">
+                    <input type="text" decimalOnly class="form-control" min="0" numbersOnly id="sellingUnits"
+                      formControlName="sellingUnits" placeholder="Enter Selling Units"
+                      onKeyPress="if(this.value.length==9 ) return false;return event.charCode >= 48 && event.charCode <= 57">
+                    <span for="sellingUnits">Selling Units</span>
+                  </label>
+                  <div class="custom-control custom-checkbox ml-3 mt-2 col-sm-2">
+                    <input type="checkbox" class="custom-control-input" formControlName="isPack" id="isPackAdvSearch">
+                    <label class="custom-control-label" for="isPackAdvSearch">Is Pack</label>
+                  </div>
+                  <label class="form-group has-float-label col-sm-4">
+                    <ng-select [items]="uomList" [selectOnTab]="true" bindLabel="uomDescription" bindValue="uomid"
+                      labelForId="uomid" placeholder="Units of Measurement" formControlName="uOMID">
+                    </ng-select>
+                    <span> Units of Measurement </span>
+                  </label>
+                  <div class="col-sm-12 mt-2">
+                    <button type="button" class="btn btn-md btn-primary mr-3 float-right"
+                      (click)="priceBookAdvSearch()">
+                      Search</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-md-9">
+          <form [formGroup]="updateDataForm">
+            <div class="row" *ngIf="selectedItems > 0">
+              <!-- <span class="text-black-50 col-sm-4" *ngIf="selectedItems > 0">
+                {{selectedItems}} Rows Selected
+              </span> -->
+              <label class="form-group has-float-label col-sm-4">
+                <ng-select [items]="updateDataList" [selectOnTab]="true" bindLabel="columnName" bindValue="columnId"
+                  labelForId="columnId" placeholder="Update Data For" formControlName="column"
+                  (change)="updateDataChange($event)">
+                </ng-select>
+                <span> Update Data For </span>
+              </label>
+
+              <label *ngIf="isUnitInCase" class="form-group has-float-label col-sm-4">
+                <input class="form-control" type="text" numbersOnly min="0" id="value" formControlName="value"
+                  placeholder="Value" name="updateDataCount">
+                <span for="value"> Value </span>
+              </label>
+
+              <label *ngIf="isSellingunits" class="form-group has-float-label col-sm-4">
+                <input class="form-control" type="text" numbersOnly min="0" id="value" formControlName="value"
+                  placeholder="Value" name="updateDataCount">
+                <span for="value"> Value </span>
+              </label>
+              <!-- sellingunits -->
+              <label *ngIf="isUOMeasurement" class="form-group has-float-label col-sm-4">
+                <ng-select [items]="uomList" [selectOnTab]="true" bindLabel="uomDescription" bindValue="uomid"
+                  formControlName="value" labelForId="uomid" placeholder="Units of Measurement">
+                </ng-select>
+                <span> Units of Measurement </span>
+              </label>
+
+              <label *ngIf="isManufacturer" class="form-group has-float-label col-sm-4">
+                <ng-select [items]="manufacturerList" [selectOnTab]="true" bindLabel="manufacturerName"
+                  bindValue="manufacturerID" formControlName="value" labelForId="manufacturerID"
+                  placeholder="Manufacturer">
+                </ng-select>
+                <span> Manufacturer </span>
+              </label>
+
+              <label *ngIf="isBrand" class="form-group has-float-label col-sm-4">
+                <ng-select [items]="brandNameList" [selectOnTab]="true" bindLabel="brandName" bindValue="brandID"
+                  formControlName="value" labelForId="brandID" placeholder="Brand">
+                </ng-select>
+                <span> Brand </span>
+              </label>
+
+              <label *ngIf="isGroupName" class="form-group has-float-label col-sm-4">
+                <ng-select [items]="groupNameList" [selectOnTab]="true" bindLabel="masterGroupName"
+                  bindValue="masterPriceGroupID" labelForId="masterPriceGroupID" placeholder="Select Group Name"
+                  formControlName="value">
+                </ng-select>
+                <span> Group Name </span>
+              </label>
+
+              <label class="form-group has-float-label col-sm-4" *ngIf="isDepartment">
+                <ng-select [items]="departmentList" [selectOnTab]="true" bindLabel="masterDepartmentDescription"
+                  bindValue="masterDepartmentID" labelForId="masterDepartmentID" placeholder="Select Department"
+                  formControlName="value">
+                </ng-select>
+                <span> Department </span>
+              </label>
+
+              <div class="col-sm-4">
+                <button type="button" class="btn btn-md btn-primary ml-3" (click)="bulkUpdate()">
+                  Update Selected</button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="col-md-3 mb-2">
+          <div class="inner-addon right-addon" *ngIf="showGrid">
+            <span> <i class="fa fa-search card-title" aria-hidden="true"></i> </span>
+            <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+              placeholder="Filter Search" [(ngModel)]="filterText" name="filterText">
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="showGrid">
+        <div class="col-sm-12">
+          <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (gridReady)="gridReady($event)"
+            [textFilter]="filterText" (rowSelected)="onRowSelected($event)" (edit)="editAction($event)"
+            (delete)="deleteAction($event)">
+          </app-cstore-grid>
+          <!-- (cellValueChanged)="onCellChanged($event)" -->
+          <!-- <app-expandable-grid [expandableGridOptions]="gridOptions" [rowData]="rowData"
+          (gridReady)="gridReady($event)"  [detailCellRenderers]="masterLinkedItemRenderer"
+          [gridHeight]="'350px'"></app-expandable-grid> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #modalContent let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">Do you wish to affect the changes to Items</h5>
+    <button type="button" class="close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="col-sm-12 row">
+      <button type="button" class="btn  ml-2 btn-primary" (click)="affectChangesYes()"> Yes </button>
+      <div class="col-sm-1"></div>
+      <button type="button" class="btn  btn-cstorebo" (click)="affectChangesNo()"> No </button>
+    </div>
+  </div>
+
+</ng-template>

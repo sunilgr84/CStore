@@ -1,0 +1,162 @@
+<div class="row">
+  <div class="card-body">
+    <div class="row mt-4">
+      <div class="col-sm-12">
+        <form [formGroup]="itemDetailsForm" novalidate>
+          <div class="row ">
+            <label class="col-sm-6 has-float-label form-group">
+              <input #upcCodeFoucs [readOnly]="isEditMode" numbersOnly type="text" class="form-control " id="upcCode"
+                id="upcCodes" maxlength="25" (blur)="checkUPCCode($event.target.value)" min="0"
+                placeholder="Scan or Enter Item to Search" formControlName="posCode" required>
+              <div *ngIf="submitedItem && _item.posCode.errors?.required" class="invalid">
+                UPC Code is required
+              </div>
+              <span for="upcCodes">UPC Code</span>
+            </label>
+            <label class="col-sm-6 has-float-label form-group">
+              <input type="text" class="form-control" id="description" formControlName="description"
+                placeholder="Description" (input)="setDescriptionUpperCase($event.target.value)" required
+                maxlength="512" id="descriptions" />
+              <div *ngIf="submitedItem && _item.description.errors?.required" class="invalid">
+                Description is required
+              </div>
+              <span for="descriptions">Description</span>
+            </label>
+            <label class="col-sm-6 has-float-label form-group">
+              <ng-select [items]="departmentList" bindLabel="departmentDescription" bindValue="departmentID"
+                id="Departments" labelForId="departmentID" placeholder="Department" formControlName="departmentID"
+                required>
+              </ng-select>
+              <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+
+              <div *ngIf="submitedItem && _item.departmentID.errors?.required" class="invalid">
+                Departments is required
+              </div>
+              <span for="descriptions">Department</span>
+            </label>
+            <div class="col-sm-2">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="isMultipackFlag"
+                  formControlName="isMultipackFlag" />
+                <label class="custom-control-label" for="isMultipackFlag">Is Multipack</label>
+              </div>
+            </div>
+            <div class="col-sm-4 form-group" [hidden]="true">
+              <input numbersOnly type="text" class="form-control" min="0" id="baseUnitsInCase" placeholder="Base Units"
+                formControlName="noOfBaseUnitsInCase">
+              <!-- <div *ngIf="submitedItem && _item.noOfBaseUnitsInCase.errors?.required" class="invalid">
+                Base Unit is required
+              </div> -->
+            </div>
+            <label class="col-sm-4 has-float-label form-group">
+              <input numbersOnly type="text" class="form-control" id="sellingUnits" min="0" placeholder="Selling Units"
+                formControlName="sellingUnits" maxlength="25">
+              <span for="sellingUnits">Selling Units</span>
+            </label>
+            <label class="col-sm-4 has-float-label form-group">
+              <input numbersOnly type="text" class="form-control" min="0" id="unitInCase" placeholder="Unit In Case"
+                formControlName="unitsInCase" required maxlength="25">
+              <div *ngIf="submitedItem && _item.unitsInCase.errors?.required" class="invalid">
+                Unit In Case is required
+              </div>
+              <span for="unitInCase"> Unit In Case</span>
+            </label>
+            <label class="col-sm-4 has-float-label form-group">
+              <ng-select [items]="uomList" [selectOnTab]="true" bindLabel="uomDescription" bindValue="uomid" id="uomid"
+                labelForId="uomid" placeholder="Units Of Measurement" formControlName="uomid">
+              </ng-select>
+              <img src="assets/images/small-spinner.gif" *ngIf="isUnitsOfMeasurementLoading">
+              <span for="uomid"> Units Of Measurement</span>
+            </label>
+          </div>
+
+          <div class="row">
+            <div class="col-md-7">
+              <span (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
+                aria-controls="addParameter" class="card-title"><strong>Additional Parameters</strong> </span>
+              &nbsp;
+              <i [hidden]='isCollapsed' class="fa fa-chevron-down"></i> <i [hidden]='!isCollapsed'
+                class="fa fa-chevron-right"></i>
+            </div>
+          </div>
+          <div id="addParameter" class="row mt-3" [ngbCollapse]="isCollapsed">
+            <div class="row">
+              <div class="col-sm-3">
+                <div class="custom-control custom-checkbox" style="margin-left:1.5em;">
+                  <input type="checkbox" class="custom-control-input" id="showActiveItem"
+                    formControlName="activeFlag" />
+                  <label class="custom-control-label " for="showActiveItem">Active Item</label>
+                </div>
+              </div>
+              <!-- <div class="col-sm-3">
+                <div class="custom-control custom-checkbox" style="margin-left:1.5em;">
+                  <input type="checkbox" class="custom-control-input" id="showFlexiblePricingForItem"
+                    formControlName="priceRequiredFlag" />
+                  <label class="custom-control-label " for="showFlexiblePricingForItem">Flexible Pricing For
+                    Item</label>
+                </div>
+              </div> -->
+              <div class="col-sm-3">
+                <div class="custom-control custom-checkbox" style="margin-left:1.5em;">
+                  <input type="checkbox" class="custom-control-input" id="showPartialQuantitySales"
+                    formControlName="isFractionalQtyAllowedFlag" />
+                  <label class="custom-control-label " for="showPartialQuantitySales">Partial Quantity
+                    Sales</label>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="custom-control custom-checkbox" style="margin-left:1.5em;">
+                  <input type="checkbox" class="custom-control-input" id="showFoodStampSales"
+                    formControlName="allowFoodStampsFlag" />
+                  <label class="custom-control-label " for="showFoodStampSales">Food Stamp Sales</label>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="custom-control custom-checkbox" style="margin-left:1.5em;">
+                  <input type="checkbox" class="custom-control-input" id="showItemReturns"
+                    formControlName="isItemReturnableFlag" />
+                  <label class="custom-control-label " for="showItemReturns">Item Returns</label>
+                </div>
+              </div>
+              <div class="col-sm-3 mt-3">
+                <div class="custom-control custom-checkbox" style="margin-left:1.5em;">
+                  <input type="checkbox" class="custom-control-input" id="showLoyaltyRedeemSales"
+                    formControlName="isLoyaltyRedeemEligibleFlag" />
+                  <label class="custom-control-label " for="showLoyaltyRedeemSales">Loyalty Redeem
+                    Sales</label>
+                </div>
+              </div>
+              <div class="col-sm-3 mt-3">
+                <div class="custom-control custom-checkbox" style="margin-left:1.5em;">
+                  <input type="checkbox" class="custom-control-input" id="showSpecialDiscounts"
+                    formControlName="areSpecialDiscountsAllowedFlag" />
+                  <label class="custom-control-label " for="showSpecialDiscounts">Special Discounts</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row justify-content-between mt-3">
+            <div class="col-sm-8">
+              <button type="button" [hidden]="isEditMode" class="btn btn-md btn-primary mr-3" (click)="addMoreItem()">
+                {{'Reset'}}</button>
+              <button type="button" class="btn btn-md btn-primary mr-3" [hidden]="isEditModeRedOnly"
+                (click)="addNewItem()">
+                Save</button>
+              <!-- [hidden]="!isEditModeRedOnly"  -->
+              <button type="button" [hidden]="!isEditModeRedOnly" class="btn btn-md btn-primary mr-3"
+                (click)="addMoreItem()">
+                {{'Add More'}}</button>
+              <button type="button" class="btn btn-md btn-primary mr-3" (click)="editItem()"
+                [hidden]="!isEditModeRedOnly">
+                Edit</button>
+              <button type="button" class="btn btn-md btn-primary mr-3" [hidden]="!isCancelClick" (click)="cancel()">
+                Cancel</button>
+            </div>
+
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>

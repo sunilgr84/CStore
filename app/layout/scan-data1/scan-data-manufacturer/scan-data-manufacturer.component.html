@@ -1,0 +1,237 @@
+<div id="overlay" (click)="closeSideContainer()"></div>
+<div id="mySidecontainer" [ngClass]="sideContainer">
+  <a href="JavaScript:void(0);" class="closebtn" (click)="closeSideContainer()"
+    >&times;</a
+  >
+  <div [hidden]="view">
+    <h3 *ngIf="!manuFactForm.value.id">Add Manufacturer</h3>
+    <h3 *ngIf="manuFactForm.value.id">Update Manufacturer</h3>
+    <form class="main-side-container" [formGroup]="manuFactForm" (ngSubmit)="onManuFactFormSubmit()">
+      <div class="form-row">
+        <div class="col">
+          <label for="manufacturerId">Manufacturer Name</label>
+          <select
+            #manufaturer_name
+            class="custom-select"
+            formControlName="manufacturerId"
+            (change)="onManufacturerSelect($event.target.value)"
+            required
+          >
+            <option value="">Select Manufacturer</option>
+            <option *ngFor="let manufacturer of manufacturers" [value] = "manufacturer.id">
+              {{manufacturer.name}}
+            </option>
+          </select>
+          <div *ngIf="manuFactForm.get('manufacturerId').invalid && (manuFactForm.get('manufacturerId').dirty || manuFactForm.get('manufacturerId').touched)"
+          class="alert alert-danger">
+        <div *ngIf="manuFactForm.get('manufacturerId').errors.required">
+        Manufacturer Name is required!!.
+        </div>
+        </div>
+        </div>
+        <div class="col">
+          <label for="datahandlerId">Data Handler</label>
+            <select
+              formControlName="datahandlerId"
+              class="custom-select"
+              (change)="onDataHandlerIdChange($event.target.value)"
+              required
+            >
+              <option value="">Select DataHandler</option>
+              <option *ngFor="let dataHandler of dataHandlers" [value]="dataHandler.id">
+                {{ dataHandler.name }}
+              </option>
+            </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="col">
+          <label for="fileGenerationPeriod">File Generation Period</label>
+          <select
+            class="custom-select"
+            formControlName="fileGenerationPeriod"
+          >
+            <option value="">Select Period</option>
+            <option value="Monday-Sunday">Monday-Sunday</option>
+            <option value="Sunday-Saturday">Sunday-Saturday</option>
+          </select>
+        </div>
+        <div class="col">
+          <!-- <label for="fileNameFormat">File Name Format</label>
+          <select
+            class="custom-select"
+            formControlName="fileNameFormat"
+          >
+            <option value="companyname-date">Companyname Date</option>
+          </select> -->
+
+<!-- <ng-select
+[items]="fileFormatName"
+[multiple]="true"
+bindLabel="name"
+[selectableGroup]="false"
+[closeOnSelect]="false"
+bindValue="id"
+>
+<ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+    <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.name}}
+</ng-template>
+</ng-select> -->
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="col">
+          <label>FileNameFormat</label>
+          <ng-select
+            class="my-custom-select"
+            [items]="fileFormatName"
+            [multiple]="true"
+            [closeOnSelect]="false"
+            [searchable]="false"
+            bindLabel="name"
+            [formControl]="fileFormatNameControl"
+            placeholder="Select fileNameFormat"
+            (add)="addFileFormatName($event)"
+            (remove)="removeFileFormatName($event)"
+            (clear)="clearFileFormatName()"
+            >
+          </ng-select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="col">
+          <label for="fileGenerationDay">File Generation Day</label>
+          <select
+            class="custom-select"
+            formControlName="fileGenerationDay"
+          >
+            <option value="">Select day</option>
+            <option value="monday">Monday</option>
+            <option value="tuesday">Tuesday</option>
+            <option value="wednesday">Wednesday</option>
+            <option value="thursday">Thursday</option>
+            <option value="friday">Friday</option>
+            <option value="saturday">Saturday</option>
+            <option value="sunday">Sunday</option>
+          </select>
+        </div>
+        <div class="col">
+          <label for="fileFormat">File Format</label>
+          <select
+            class="custom-select"
+            formControlName="fileFormat"
+            required
+          >
+            <option value="">Select File Format</option>
+            <option value="PIPE">PIPE</option>
+            <option value="JSON">JSON</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="col">
+          <label for="gracePeriod">Grace Period(days)</label>
+          <input
+            type="number"
+            class="form-control"
+            formControlName="gracePeriod"
+          />
+        </div>
+        <div class="col">
+          <label class="form-control-placeholder" for="hostName">Host Name</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="hostName"
+            id="host_name"
+          />
+          <!-- <span class="has-float-label">
+            <input class="form-control" id="first" type="text" placeholder="Name"/>
+            <label for="first">First</label>
+          </span> -->
+        </div>
+      </div>
+      <div class="align-bottom">
+        <div class="form-row manuf-btn-container float-right">
+          <div class="col">
+            <button class="my-btn my-sec-btn" type="button" (click)="closeSideContainer()">
+              Cancel
+            </button>
+          </div>
+          <div class="col">
+            <button
+            *ngIf="!manuFactForm.value.id"
+            class="my-btn my-primary-btn"
+            type="submit"
+          >
+            Add
+          </button>
+          <button
+            *ngIf="manuFactForm.value.id"
+            class="my-btn my-primary-btn"
+            type="submit"
+          >
+            Update
+          </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div [hidden]="!view">
+    <h3>View</h3>
+    <hr>
+    <div class="main-side-view-container">
+      <div class="row lable-row" *ngFor="let view of viewData">
+        <div class="col-md-6" *ngIf="view.key!=='id'">
+          <label>{{view.key}}</label>
+        </div>
+        <div class="col-md-6" *ngIf="view.key!=='id'">
+          <span>{{view.value}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="main">
+  <div>
+    <button
+      class="my-btn my-primary-btn float-right"
+      id="add-manufact-btn"
+      (click)="openSideContainer(false,false)"
+    >
+      <i class="fa fa-plus" aria-hidden="true"></i> Add New
+    </button>
+  </div>
+  <table>
+    <thead>
+      <th>Sr No.</th>
+      <th>Manufacturer Name</th>
+      <th>File Format Name</th>
+      <th>File Generation Period</th>
+      <th>File Format</th>
+      <th>File Generation Day</th>
+      <th>Actions</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of rowData; let i = index">
+        <td>{{ (i+1)? (i+1): '-' }}</td>
+        <td>{{ row.manufacturerName? row.manufacturerName:'-' }}</td>
+        <td>{{ row.fileNameFormat? row.fileNameFormat:'-' }}</td>
+        <td>{{ row.fileGenerationPeriod? row.fileGenerationPeriod: '-' }}</td>
+        <td>{{ row.fileFormat? row.fileFormat:'-' }}</td>
+        <td>{{ row.fileGenerationDay? row.fileGenerationDay:'-' }}</td>
+        <td>
+          <i
+            class="fa fa-pencil fa-fw action-icon"
+            aria-hidden="true"
+            (click)="openSideContainer(row)"
+          ></i>
+          <i class="fa fa-eye fa-fw action-icon" aria-hidden="true" (click)="openSideContainer(row,true)"></i>
+          <i class="fa fa-ban fa-fw action-icon" aria-hidden="true" (click)="openConfirmationModal(row.id)"></i>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

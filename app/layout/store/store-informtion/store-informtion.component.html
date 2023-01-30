@@ -1,0 +1,337 @@
+<form [formGroup]="storeInfoForm" novalidate>
+  <div class="mt-2">
+    <div>
+      <div class="row">
+
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-title">
+                <div class="form-group">Store Information</div>
+              </h6>
+              <div class="row">
+                <!-- <label class="col-sm-4 col-form-label" for="storeName">Store Name</label>
+                <div class="col-sm-12">
+                  <input type="text" class="form-control" formControlName="storeName" placeholder="Store Name"
+                    maxlength="150" required>
+                </div> -->
+
+                <label class="form-group has-float-label col-md-6 col-sm-12">
+                  <input type="text" class="form-control" id="storeFullName" name="storeFullName"
+                    formControlName="storeFullName" placeholder="Store Full Name" minlength="3" maxlength="40" required>
+                  <span for="storeName">Store Full Name</span>
+                </label>
+                <label class="form-group has-float-label col-md-6 col-sm-12">
+                  <input type="text" class="form-control" formControlName="storeName" placeholder="Store Name"
+                    maxlength="20" required>
+                  <span> Store Name</span>
+                </label>
+              </div>
+              <div class="form-group row" hidden>
+                <label class="col-sm-4 col-form-label" for="iSJobberOnly">Enable IsJobberOnly</label>
+                <div class="col-sm-12">
+                  <input type="checkbox" class="checkbox" formControlName="isJobberOnly">
+                </div>
+              </div>
+              <div class="form-group row" hidden>
+                <label class="col-sm-4 col-form-label" for="iSOwnStore">IS OwnStore</label>
+                <div class="col-sm-12">
+                  <input type="checkbox" class="checkbox">
+                </div>
+              </div>
+              <div class="row">
+                <!-- <label class="col-sm-4 col-form-label" for="storeContactName">Store Contact Name</label>
+                <div class="col-sm-12">
+                  <input type="text" class="form-control" formControlName="storeContactName" maxlength="20" placeholder="Contact Name">
+                </div> -->
+                <label class="form-group has-float-label col-sm-12">
+                  <input type="text" class="form-control" formControlName="storeContactName" maxlength="20"
+                    placeholder="Contact Name" id="contactName" name="contactName">
+                  <span for="contactName">Contact Name</span>
+                </label>
+              </div>
+              <div class="row">
+                <label class="form-group has-float-label col-md-6 col-sm-12">
+                  <input type="text" class="form-control" formControlName="storeAddressLine1"
+                    placeholder="Store Address" maxlength="250" required id="storeAddressLine1" name="storeAddressLine1"
+                    (onAddressChange)="handleAddressChange($event)" ngx-google-places-autocomplete
+                    #placesRef="ngx-places" [options]="options">
+                  <span for="storeAddressLine1">Store Address</span>
+                </label>
+                <label class="form-group has-float-label col-md-6 col-sm-12">
+                  <input type="text" class="form-control" formControlName="city" placeholder="City" maxlength="100"
+                    required id="city" name="city">
+                  <span for="city">City</span>
+                </label>
+              </div>
+              <!-- <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="storeAddressLine2">Store Address Line2</label>
+                <div class="col-sm-12">
+                  <input type="text" class="form-control" formControlName="storeAddressLine2" placeholder="Store Address Line2"
+                    maxlength="250">
+                </div>
+              </div> -->
+              <div class="row">
+                <label class="form-group has-float-label col-md-4 col-sm-12">
+                  <div>
+                    <!-- (change)="onCountyChange()" -->
+                    <select placeholder="Select County" class="form-control" formControlName="countyCode" required
+                      id="county" name="county">
+                      <option value="">Select County</option>
+                      <option *ngFor="let county of countyFilterList" [value]="county.countyCode">{{county.countyName}}
+                      </option>
+                    </select>
+                    <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+                  </div>
+                  <span for="county">County</span>
+                </label>
+                <label class="form-group has-float-label col-md-4 col-sm-12">
+                  <div>
+                    <select placeholder="Select State" class="form-control" formControlName="stateCode"
+                      (change)="onStaeChange()" required id="stateCode" name="stateCode">
+                      <option value="">Select State</option>
+                      <option *ngFor="let state of stateList" [value]="state.stateCode">{{state.stateName}}</option>
+                    </select>
+                    <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+                  </div>
+                  <span for="stateCode">State</span>
+                </label>
+                <label class=" has-float-label col-md-4 col-sm-12">
+                  <input numbersOnly type="text" minlength="5" maxlength="5" class="form-control"
+                    formControlName="zipCode" placeholder="ZIP Code" required id="zipCode" name="zipCode">
+                  <div *ngIf="submitted && store.zipCode.errors?.required" class="alert alert-danger">
+                    Zip Code is required
+                  </div>
+                  <div *ngIf="store.zipCode.errors?.minlength" class="alert alert-danger">
+                    Zip Code must be 5 digit.
+                  </div>
+                  <span for="zipCode">ZIP Code</span>
+                </label>
+              </div>
+              <div class=" row">
+                <label class="form-group has-float-label col-md-6 col-sm-12">
+                  <input numbersOnly type="text" class="form-control" formControlName="phoneNo"
+                    (blur)="formatPhoneNumber(storeInfoForm.value.phoneNo,'phoneNo')" placeholder="Phone Number"
+                    pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$" required maxlength="20" id="phoneNo"
+                    name="phoneNo">
+                  <div *ngIf="submitted && store.phoneNo.errors?.required" class="alert alert-danger">
+                    Phone number is required
+                  </div>
+                  <div *ngIf="submitted && store.phoneNo.errors?.minlength" class="alert alert-danger">
+                    Phone number must be 10 digit.
+                  </div>
+                  <div *ngIf="submitted && store.phoneNo.errors?.pattern" class="alert alert-danger">
+                    Phone number is not valid
+                  </div>
+                  <span for="phoneNo">Phone Number</span>
+                </label>
+                <label class="form-group has-float-label col-md-6 col-sm-12">
+                  <input type="email" class="form-control" required formControlName="e_Mail" placeholder="Email"
+                    pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" maxlength="50" id="email" name="email">
+                  <span for="email">Email</span>
+                </label>
+              </div>
+              <!-- <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="fax">Fax</label>
+                <div class="col-sm-12">
+                  <input type="text" class="form-control" formControlName="fax" placeholder="Fax" maxlength="250">
+                </div>
+              </div> -->
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-title">
+                <div class="form-group">Notification</div>
+              </h6>
+              <!-- <div class="form-group row">
+                <div class="col-sm-2">
+                  <input type="checkbox" (change)="changed($event)" id="no" [checked]="isChecked">
+                </div>
+                <label class="col-sm-9 col-form-label" for="isSamecontactDetails">
+                  Use Same Contact details for Report Notifications</label>
+              </div> -->
+              <div class="mb-3">
+                <div class="col-sm-12 custom-control custom-checkbox checkboxOne">
+                  <input type="checkbox" class="custom-control-input" id="no" (change)="changed($event.target.checked)"
+                    id="no" [checked]="isChecked" />
+                  <label class="custom-control-label padding-right-10" for="no" style="display: inline-block;"> Use
+                    Same Contact details for Report Notifications</label>
+                </div>
+              </div>
+              <div class="row">
+                <label class="form-group has-float-label col-md-6 col-sm-12">
+                  <input numbersOnly type="text" class="form-control"
+                    (blur)="formatPhoneNumber(storeInfoForm.value.notificationSMSPhoneNo,'notificationSmsPhoneNo')"
+                    formControlName="notificationSMSPhoneNo" placeholder="Add Phone Number for Notification"
+                    [readonly]="isSamecontactDetails" maxlength="20" id="notificationSMSPhoneNo"
+                    name="notificationSMSPhoneNo">
+                  <!-- pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$" -->
+                  <!-- <div *ngIf="submitted && store.notificationSMSPhoneNo.errors?.minlength" class="alert alert-danger">
+                    Phone number must be 10 digit.
+                  </div>
+                  <div *ngIf="submitted && store.notificationSMSPhoneNo.errors?.pattern" class="alert alert-danger">
+                    Phone number is not valid
+                  </div> -->
+                  <span for="notificationSMSPhoneNo">Phone Number</span>
+                </label>
+                <label class="form-group has-float-label col-md-6 col-sm-12">
+                  <input type="text" class="form-control" formControlName="notificationE_Mail"
+                    placeholder="Add Email for Notification" [readonly]="isSamecontactDetails" maxlength="50"
+                    id="notificationE_mail" name="notificationE_mail">
+                  <span for="notificationE_mail">Email</span>
+                </label>
+              </div>
+              <!-- <div class="form-group row">
+                <label class="col-sm-6 col-form-label" for="smsPayloadTypeID">SMS Pay Load</label>
+                <div class="col-sm-6">
+                  <select class="form-control" formControlName="smsPayloadTypeID">
+                    <option value="0">--Select SMS Pay Load--</option>
+                    <option *ngFor="let smsPayLoadType of smsPlayLoadTypeList"
+                      [value]="smsPayLoadType.smsPayloadTypeID">{{smsPayLoadType.smsPayLoadTypeName}}</option>
+                  </select>
+                  <img src="assets/images/small-spinner.gif" *ngIf="isSmsPlayLoadTypeLoading">
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-6 custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="isSmsSent" formControlName="isSmsSent" />
+                  <label class="custom-control-label padding-right-10" for="isSmsSent">Confirm SMS DELIVERY</label>
+                </div>
+              </div> -->
+              <div class="form-group row" hidden>
+                <div class="col-sm-4 offset-sm-8">
+                  <button type="button" class="btn btn-secondary btn-block">
+                    Test Sms </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card mt-3">
+            <div class="card-body">
+              <h6 class="card-title">
+                <div class="form-group">POS Details</div>
+              </h6>
+              <!-- <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="posStoreLocationID">Store LocationID</label>
+                <div class="col-sm-8">
+                  <input type="number" class="form-control" formControlName="posStoreLocationID" placeholder="Store LocationID">
+                </div>
+              </div> -->
+              <div class="row">
+                <label class="form-group has-float-label col-sm-12">
+                  <div class="">
+                    <select class="form-control" formControlName="posSystemCD" (change)="hideIsMixMatch()" required
+                      id="posSystem" name="posSystem">
+                      <option value="">Select POS System</option>
+                      <option *ngFor="let posSystem of posSystemList" [value]="posSystem.storeLocationPosID">
+                        {{posSystem.posSystemName}}</option>
+                    </select>
+                  </div>
+                  <span for="posSystem">POS System</span>
+                </label>
+              </div>
+              <div class="row" hidden>
+                <label class="col-sm-4 col-form-label" for="posSystemSubCD">POS Interface</label>
+                <div class="col-sm-12">
+                  <select placeholder="Select POS System SubCD" class="form-control" formControlName="posSystemSubCD">
+                    <option> 0</option>
+                    <option> Veeder-Root </option>
+                    <option>Franklin Fuel</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-2 row" *ngIf="isMixMatch">
+                <!-- [hidden]="storeInfoForm.get('posSystemCD').value !== 'PASSPORT' || storeInfoForm.get('posSystemCD').value !== 'RUBY-SAPPHIRE'" -->
+                <!-- <div class="col-sm-12 offset-sm-4"> -->
+                <div class=" offset-sm-4 col-sm-12 custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input checkboxOne" id="isMixMatchEnabled"
+                    formControlName="isMixMatchEnabled">
+                  <label class="form-label custom-control-label" for="isMixMatchEnabled"
+                    style="display: inline-block;">Is
+                    Mixmatch Enabled on POS</label>
+                  <!-- </div> -->
+                </div>
+              </div>
+              <div class="row" *ngIf="userInfo && userInfo.roleName !== roleName">
+                <label class="form-group has-float-label col-sm-12" [hidden]="!isEdit">
+                  <input type="text" readonly class="form-control" formControlName="storeLocationIdentifier">
+                  <span class="col-form-label" for="storeLocationIdentifier">AuthKey</span>
+                </label>
+              </div>
+              <div class="row" *ngIf="userInfo && userInfo.roleName === roleName">
+                <label class="form-group has-float-label col-sm-9" [hidden]="!isEdit" (mouseover)="isMouseEnter=true"
+                  (mouseout)="isMouseEnter=false" (click)="copyTextValue()" title="click to copy text">
+                  <input type="text" readonly class="form-control" formControlName="storeLocationIdentifier"
+                    [ngStyle]="{'color':isMouseEnter? '#357edd':'#333'}">
+                  <span class="col-form-label" for="storeLocationIdentifier">AuthKey</span>
+                </label>
+                <div class="col-sm-3" [hidden]="!isEdit">
+                  <button class="btn  btn-cstorebo" (click)="generateAuthKey()"> Regenerate </button>
+                </div>
+              </div>
+              <div class="form-group row" hidden>
+                <label class="col-sm-4 col-form-label" for="smsSent">Is Auto PushToPOS</label>
+                <div class="col-sm-8">
+                  <input type="checkbox" class="checkbox" formControlName="isAutoPushToPOS">
+                </div>
+              </div>
+              <div class="form-group row" hidden>
+                <label class="col-sm-4 col-form-label" for="isInvoiceEnabled">Is Invoice Enabled</label>
+                <div class="col-sm-8">
+                  <input type="checkbox" class="checkbox" formControlName="isInvoiceEnabled">
+                </div>
+              </div>
+              <div class="form-group row" hidden>
+                <label class="col-sm-4 col-form-label" for="isInPOSSyncStatus">See Data in POS Sync Status </label>
+                <div class="col-sm-8">
+                  <input type="checkbox" class="checkbox" formControlName="isInPOSSyncStatus">
+                </div>
+              </div>
+              <div class="form-group row" hidden>
+                <label class="col-sm-4 col-form-label" for="isFuelPriceUpdateEnabled">Push Fuel Price To POS
+                </label>
+                <div class="col-sm-8">
+                  <input type="checkbox" class="checkbox" formControlName="isFuelPriceUpdateEnabled">
+                </div>
+              </div>
+              <div class="form-group row" hidden>
+                <label class="col-sm-4 col-form-label" for="isDayCloseLocation">Only Day Close </label>
+                <div class="col-sm-8">
+                  <input type="checkbox" class="checkbox" formControlName="isDayCloseLocation">
+                </div>
+              </div>
+              <div class="form-group row" hidden>
+                <label class="col-sm-4 col-form-label" for="enableDayReconSubmission">Enable DayRecon Submission
+                </label>
+                <div class="col-sm-8">
+                  <input type="checkbox" class="checkbox" formControlName="enableDayReconSubmission">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-12 mt-3">
+        <div class="">
+          <div class="text-right">
+            <button type="button" class="btn btn-md btn-cstorebo btnsub mr-3" [hidden]="isEdit" (click)="resetForm()">
+              Reset</button>
+            <button type="button" class="btn btn-md btn-primary btnsub mr-3" [disabled]="storeInfoForm.invalid"
+              (click)="editOrSave($event,true)">
+              {{isEdit? 'Update':'Save'}} and Continue </button>
+            <button type="button" class="btn btn-md btn-cstorebo btnsub mr-3" [disabled]="!isEdit"
+              (click)="onNavigateSalesTaxSetup()">
+              Add Sales Tax Setup</button>
+            <button type="button" class="btn btn-md btn-cstorebo btnsub mr-3" (click)="backToList()"> Back to Store
+              List
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,701 @@
+<div class="card ml-2">
+  <div class="card-body">
+    <div class="row mb-3 text-center">
+      <div class="col-sm-1 text-left">
+        <button type="button" class="btn btn-cstorebo" (click)="backToCalendar()"> <i class="fa fa-chevron-left"></i>
+        </button>
+      </div>
+      <h5 class="col-sm-2 text-left p-0 mt-5px">
+        <strong class="ml-3"> Sales Tax: {{saleTaxObj.totalAmount|currency}} </strong>
+      </h5>
+      <!-- <h5 class="col-sm-3"><strong> Total POS Sales:{{totalPosSales|currency}} </strong> </h5> -->
+      <!-- <h5 class="col-sm-2"><strong> Total MOP: {{totalMopAmount| currency}} </strong></h5> -->
+      <div class="col-sm-5 mt-5px">
+        <h5>
+          <strong [style.color]="shortOver < 0 ? 'red' : 'black'"> Short Over:</strong>
+          <strong [style.color]="shortOver < 0 ? 'red' : 'green'"> {{shortOver|negativeNumber}}</strong>
+        </h5>
+      </div>
+      <div class="col-sm-4 justify-content-end text-right">
+        <span> {{dayReconData.storeName}}</span>
+        <span class="ml-3">{{dayReconData.selectedDate | date }}</span>
+        <span class="ml-3">{{shiftWiseValue.name}}</span>
+        <span class="btn btn-cstorebo ml-3" (click)="printDayRecon()" style="margin-top: -7px;"> <i class="fa fa-print"
+            style="font-size: 16px;" aria-hidden="true"></i></span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4 day-detail-accordian">
+        <ngb-accordion activeIds="salespanel-5,salespanel-6,salespanel-7">
+          <ngb-panel id="salespanel-6">
+            <ng-template ngbPanelTitle>
+              <div class="row font-weight-bold promotions-panel">
+                <div class="col-md-12 p-0">
+                  <h5 class="font-weight-bold">MOP Sales : {{totalMopAmount |currency}}</h5>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template ngbPanelContent>
+              <div class="row col-md-12 justify-content-end p-0 ml-0 mt-2 mb-2">
+                <button type="button" class="btn btn-primary" (click)="addNew()"> Add MOP </button>
+              </div>
+              <app-editable-grid [rowData]="editableRowData" [editGridOptions]="editableGridOptions"
+                (gridReady)="editableOnGridReady($event)" (delete)="deleteAction($event)"
+                (save)="editOrSave($event,false)" (edit)="editOrSave($event,true)">
+              </app-editable-grid>
+            </ng-template>
+          </ngb-panel>
+          <ngb-panel id="salespanel-5">
+            <ng-template ngbPanelTitle>
+              <div class="row font-weight-bold promotions-panel">
+                <div class="col-md-12 p-0">
+                  <h4 class="font-weight-bold">Fuel Sales</h4>
+                </div>
+                <div class="col-md-6 p-0">Volume : {{totalFuelGradeSalesVolume|number}}</div>
+                <div class="col-md-6 p-0">Amount : {{totalFuelGradeSalesAmount|currency}}</div>
+              </div>
+            </ng-template>
+            <ng-template ngbPanelContent>
+              <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (gridReady)="onGridReady($event)">
+              </app-cstore-grid>
+            </ng-template>
+          </ngb-panel>
+          <ngb-panel id="salespanel-7">
+            <ng-template ngbPanelTitle>
+              <div class="row font-weight-bold promotions-panel">
+                <div class="col-md-12 p-0">
+                  <h4 class="font-weight-bold">Network Report</h4>
+                </div>
+                <div class="col-md-6 p-0">Sales : {{totalNetworkSales|currency}}</div>
+                <div class="col-md-6 p-0">Count : {{totalNetworkCount|number}}</div>
+              </div>
+            </ng-template>
+            <ng-template ngbPanelContent>
+              <app-cstore-grid [rowData]="networkCardsRowData" [cStoreGridOptions]="networkGridOptions"
+                (gridReady)="onNetworkGridReady($event)">
+              </app-cstore-grid>
+            </ng-template>
+          </ngb-panel>
+        </ngb-accordion>
+        <!-- Bank Details Grid -->
+        <!-- <div class="mt-4">
+          <app-editable-grid [rowData]="bankDepositRowData" [editGridOptions]="bankDepositEditableGridOptions"
+            (gridReady)="bankDepositOnGridReady($event)">
+          </app-editable-grid>
+        </div> -->
+        <!-- <div class="row mt-2"> -->
+        <!-- <span class="col-sm-4"> <strong>Short Over:</strong> </span>
+          <span class="col-sm-3 p-0">
+            <strong [style.color]="totalShortOver < 0 ? 'red' : 'green'"> {{totalShortOver |currency}}
+            </strong>
+          </span> -->
+        <!-- <div class="col-sm-7"></div>
+          <div class="col-sm-5 p-0">
+            <button type="button" class="btn btn-md btn-primary" (click)="editBankDeposit($event)">Save
+              Change</button>
+          </div> -->
+        <!-- </div> -->
+        <!-- <div class="row mt-2 mb-2">
+          <span class="col-sm-4"> <strong>Total Bank Deposit:</strong> </span>
+          <span class="col-sm-2 p-0 mr-4">
+            <strong [style.color]="totalBankDeposit < 0 ? 'red' : 'green'"> {{totalBankDeposit |currency}}
+            </strong>
+          </span> -->
+        <!-- <span class="col-sm-4 p-0">
+            <button type="button" class="btn btn-md btn-primary ml-3" (click)="getBanks()">Split deposites</button>
+          </span> -->
+        <!-- </div> -->
+        <!-- <div class="card ml-2">
+          <div class="col-md-12 p-3 atm-top">
+            <h5 class="font-weight-bold">ATM</h5>
+          </div>
+        </div> -->
+      </div>
+      <div class="col-sm-8 day-detail-accordian">
+        <ngb-accordion destroyOnHide="false" (panelChange)="toggleAccordian($event)">
+          <ngb-panel id="salespanel-0">
+            <ng-template ngbPanelTitle>
+              <div class="row font-weight-bold promotions-panel mb-2">
+                <div class="col-md-12 p-0 mt-2">
+                  <h4 class="font-weight-bold">Transactions : {{totalTransactions|currency}}</h4>
+                </div>
+                <!-- <div class="col-md-4 p-0">Pay Out from POS : {{payOutFromPOS|currency}}</div> -->
+                <!-- <div class="col-md-3 p-0">Pay In from POS : {{payInFromPOS|currency}}</div> -->
+                <!-- <div class="col-md-3 p-0">Pay Out Check : {{payOutCheck|currency}}</div>
+                <div class="col-md-3 p-0">Purchase : {{totalPurchaseAmount|currency}}</div> -->
+
+                <div class="p-0" [ngClass]="unreconciledPay>0?'col-md-6':'col-md-12'">Reconciled Pay Out :
+                  <!-- [style.color]="reconciledPayOut === payOutFromPOS ? 'green' : 'red'" -->
+                  <strong>
+                    {{reconciledPayOut|currency}}
+                  </strong>
+                </div>
+
+                <div class="col-md-6 p-0" *ngIf="unreconciledPay>0">Unreconciled Pay Out : {{unreconciledPay|currency}}
+                </div>
+                <!-- <div class="col-md-3 p-0">Reconciled Pay In :
+                  <strong [style.color]="reconciledPayIn === payInFromPOS ? 'green' : 'red'">
+                    {{reconciledPayIn|currency}}
+                  </strong>
+                </div> -->
+                <!-- <div class="col-md-3 p-0">Pay In Check : {{payInCheck|currency}}</div> -->
+              </div>
+            </ng-template>
+            <ng-template ngbPanelContent>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="text-right mb-2">
+                    <button type="button" class="btn btn-md btn-primary mr-1" (click)="openAddPurchases($event)">Import
+                      Purchases</button>
+                    <button type="button" class="btn btn-md btn-primary mr-1" (click)="openAddIncome($event)">Add
+                      Income</button>
+                    <button type="button" class="btn btn-md btn-primary" (click)="openAddExpenses($event)">Add
+                      Expense</button>
+                  </div>
+                  <app-cstore-grid [rowData]="purchasesRowData" [cStoreGridOptions]="purchasesGridOptions"
+                    (gridReady)="onPurchasesGridReady($event)" (viewFile)="viewFileAction($event)"
+                    (viewFileDelete)="viewFileDeleteAction($event)">
+                  </app-cstore-grid>
+                </div>
+              </div>
+            </ng-template>
+          </ngb-panel>
+          <ngb-panel id="salespanel-3">
+            <ng-template ngbPanelTitle>
+              <div class="row font-weight-bold promotions-panel">
+                <div class="col-md-12 p-0">
+                  <h4 class="font-weight-bold">ATM</h4>
+                  <!-- : {{transactionForm.value.DispensedAmount |currency}} -->
+                </div>
+              </div>
+            </ng-template>
+            <ng-template ngbPanelContent>
+              <div class="card-body p-1">
+                <div class="row">
+                  <div class="col-md-12 text-right">
+                    <button type="button" class="btn btn-md btn-primary ml-3" (click)="addNewATM()">Add New</button>
+                  </div>
+                  <div class="col-sm-12 mt-2">
+                    <app-editable-grid [rowData]="atmRowData" [editGridOptions]="atmGridOptions"
+                      (gridReady)="atmOnGridReady($event)" (delete)="deleteATM($event)"
+                      (save)="saveOrUpdateATM($event,true)" (edit)="saveOrUpdateATM($event,false)"
+                      (download)="downloadATMFile($event)" (view)="uploadATMFile($event)"
+                      (cellValueChanged)="onCellValueChangedATM($event)">
+                    </app-editable-grid>
+                  </div>
+                </div>
+              </div>
+              <form [formGroup]="transactionForm" novalidate>
+                <div class="card-body" hidden>
+                  <div class="row">
+                    <div class="col-sm-3 pl-2 pr-2">
+                      <label class="form-group has-float-label ">
+                        <div class="input-icon">
+                          <input type="text" money (input)="OnChange()" class="form-control" placeholder="Begin Amount"
+                            formControlName="BeginAmount" maxlength="250">
+                          <i *ngIf="transactionF.BeginAmount.value">$</i>
+                        </div>
+                        <span class="left-25r"> Begin Amount</span>
+                      </label>
+                      <div *ngIf="atmSubmitted && transactionF.BeginAmount.errors?.required" class="alert alert-danger">
+                        Begin Amount is Required
+                      </div>
+                    </div>
+
+                    <div class="col-sm-2 pl-2 pr-2">
+                      <label class="form-group has-float-label ">
+                        <div class="input-icon">
+                          <input type="text" money class="form-control" (input)="OnChange()" placeholder="Loaded Amount"
+                            formControlName="InputAmount" maxlength="250">
+                          <i>$</i>
+                        </div>
+                        <span class="left-25r"> Loaded Amt</span>
+                      </label>
+                      <div *ngIf="atmSubmitted && transactionF.InputAmount.errors?.required" class="alert alert-danger">
+                        Loaded Amount is Required
+                      </div>
+                    </div>
+
+                    <div class="col-sm-2 pl-2 pr-2">
+                      <label class="form-group has-float-label ">
+                        <div class="input-icon">
+                          <input type="text" money class="form-control" (input)="OnChange()" placeholder="End Amount"
+                            formControlName="DispensedAmount" maxlength="250">
+                          <i>$</i>
+                        </div>
+                        <span class="left-25r"> End Amt</span>
+                      </label>
+                      <div *ngIf="atmSubmitted && transactionF.DispensedAmount.errors?.required"
+                        class="alert alert-danger">
+                        End Amount is Required
+                      </div>
+                    </div>
+
+                    <div class="col-sm-2 pl-2 pr-2">
+                      <label class="form-group has-float-label ">
+                        <div class="input-icon">
+                          <input type="text" readonly money class="form-control" placeholder="Dispensed Amt"
+                            formControlName="EndAmount" maxlength="250">
+                          <i>$</i>
+                        </div>
+                        <span class="left-25r"> Dispensed Amt</span>
+                      </label>
+                      <div *ngIf="atmSubmitted && transactionF.EndAmount.errors?.required" class="alert alert-danger">
+                        Dispensed Amt is Required
+                      </div>
+                    </div>
+
+                    <div class="col-sm-3 pl-2 pr-2">
+                      <label class="form-group has-float-label ">
+                        <input type="text" numbersOnly class="form-control" placeholder="# Tranx"
+                          formControlName="NoOfTransactions" maxlength="250">
+                        <span class="left-25r"> # Tranx</span>
+                      </label>
+                      <div *ngIf="atmSubmitted && transactionF.NoOfTransactions.errors?.required"
+                        class="alert alert-danger">
+                        Transactions is Required
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12 text-right">
+                      <button type="button" class="btn btn-md btn-primary" (click)="atmCancel()">Cancel</button>
+                      <button type="button" class="btn btn-md btn-primary ml-3" (click)="editOrSaveATM()">Save</button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </ng-template>
+          </ngb-panel>
+          <ngb-panel id="salespanel-4">
+            <ng-template ngbPanelTitle>
+              <div class="row font-weight-bold promotions-panel">
+                <div class="col-md-6 p-0">
+                  <h4 class="font-weight-bold">Bank Deposit :
+                    <strong> {{totalBankDepositFDispaly |currency}}
+                    </strong>
+                  </h4>
+                </div>
+                <div class="col-md-6 p-0" *ngIf="isLotteryBankAvailable">
+                  <h4 class="font-weight-bold">Lottery Deposit :
+                    <strong> {{lotteryBankDeposit |currency}}
+                    </strong>
+                  </h4>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template ngbPanelContent>
+              <div class="card-body p-1">
+                <div class="row">
+                  <div class="col-md-12 text-right">
+                    <button type="button" class="btn btn-md btn-primary ml-3" (click)="addNewBank()">Add New</button>
+                  </div>
+                  <div class="col-sm-12 mt-2" *ngIf="availableBanks.length > 0">
+                    <app-editable-grid [editGridOptions]="bankGridOptions" (gridReady)="bankOnGridReady($event)"
+                      (save)="saveOrUpdateBank($event,true)" (edit)="saveOrUpdateBank($event,false)"
+                      (delete)="deleteBank($event)" (cellValueChanged)="onCellValueChangedBank($event)">
+                    </app-editable-grid>
+                  </div>
+                </div>
+              </div>
+              <!-- <div *ngIf="availableBanks.length > 0">
+                <div class="row mt-3">
+                  <div class="col-sm-3 pl-2 pr-2" *ngFor="let bank of availableBanks">
+                    <label class="form-group has-float-label ">
+                      <div class="input-icon">
+                        <input money type="text" class="form-control  has-float-label currency"
+                          (keydown)="depositKeyDown(bank.BankAccountTypeID)"
+                          (keyup)="splitAmountChange($event,bank.BankAccountTypeID, false)" [(ngModel)]="bank.Amount"
+                          placeholder="Amount" maxlength="250">
+                        <i>$</i>
+                      </div>
+                      <span> {{bank.BankNickName}}:</span>
+                    </label>
+                    <div class="form-check" *ngIf="bank.BankAccountTypeID===5">
+                      <input (change)="splitAmountChange($event,bank.BankAccountTypeName, false)" type="checkbox"
+                        class="form-check-input" id="atmIsCheck" [(ngModel)]="bank.IsCheck">
+                      <label class="form-check-label" for="atmIsCheck"> ATM Check</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mb-2">
+                  <div class="col-md-12 text-right">
+                    <button type="button" class="btn btn-md btn-primary" (click)="depositCancel()">Cancel</button>
+                    <button type="button" class="btn btn-md btn-primary ml-3" (click)="saveSplitDeposit()">Save</button>
+                  </div>
+                </div>
+              </div> -->
+            </ng-template>
+          </ngb-panel>
+          <ngb-panel id="salespanel-1">
+            <ng-template ngbPanelTitle>
+              <div class="row font-weight-bold promotions-panel">
+                <div class="col-md-12 p-0">
+                  <h4 class="font-weight-bold">Department Sales : {{deprttotalAmount |currency}}</h4>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template ngbPanelContent>
+              <app-expandable-grid #dayReconGrid [expandableGridOptions]="deptDetailgridOptions"
+                [rowData]="deptDetailrowData" (gridReady)="deptOnGridReady($event)"
+                (cellValueChanged)="onCellValueChanged($event)">
+              </app-expandable-grid>
+            </ng-template>
+          </ngb-panel>
+          <ngb-panel id="salespanel-2">
+            <ng-template ngbPanelTitle>
+              <div class="row font-weight-bold promotions-panel">
+                <div class="col-md-12 p-0">
+                  <h4 class="font-weight-bold">Promotions</h4>
+                </div>
+                <div class="col-md-3 p-0">Txn Count: {{transcationCount}}</div>
+                <div class="col-md-3 p-0">Total Discount: {{totalDiscount|currency}}</div>
+                <div class="col-md-3 p-0">Sales Qty: {{totalSalesQty}}</div>
+                <div class="col-md-3 p-0">Sales Amount: {{totalSalesAmount|currency}}</div>
+              </div>
+            </ng-template>
+            <ng-template ngbPanelContent>
+              <app-expandable-grid [rowData]="promotionsRowData" [expandableGridOptions]="promotionsGridOptions"
+                (gridReady)="onPromotionsGridReady($event)">
+              </app-expandable-grid>
+            </ng-template>
+          </ngb-panel>
+          <ngb-panel id="salespanel-8">
+            <ng-template ngbPanelTitle>
+              <div class="row font-weight-bold promotions-panel">
+                <div class="col-md-12 p-0">
+                  <h4 class="font-weight-bold">Category Report</h4>
+                </div>
+                <div class="col-md-6 p-0">Sales : {{totalCategorySales|currency}}</div>
+                <div class="col-md-6 p-0">Count : {{totalCategoryCount|number}}</div>
+              </div>
+            </ng-template>
+            <ng-template ngbPanelContent>
+              <app-cstore-grid [rowData]="categoryCardsRowData" [cStoreGridOptions]="categoryGridOptions"
+                (gridReady)="onCategoryGridReady($event)">
+              </app-cstore-grid>
+            </ng-template>
+          </ngb-panel>
+        </ngb-accordion>
+      </div>
+    </div>
+    <!-- <div class="mt-3">
+      <button type="button" class="btn btn-primary" (click)="backToCalendar()"> Back to Calendar </button>
+    </div> -->
+  </div>
+</div>
+
+<div id="overlay" (click)="closeSideContainer()"></div>
+<div id="addContainer" [ngClass]="addContainer">
+  <div class="card" *ngIf="showAddPurchases">
+    <div class="card-header pt-2 pb-2 bg-white">
+      <div class="col-md-12 p-0">
+        <div class="form-inline mt-2">
+          <!-- <div class="custom-control custom-radio mr-3">
+            <input type="radio" class="custom-control-input" id="addPurchase" [(ngModel)]="purchaseType"
+              value="addPurchase" (change)="purchaseTypeChange($event)" />
+            <label class="custom-control-label padding-right-10 text-dark ft-16" for="addPurchase">Add Purchases</label>
+          </div>
+          <div class="custom-control custom-radio mr-3">
+            <input type="radio" class="custom-control-input" id="importPurchase" [(ngModel)]="purchaseType"
+              value="importPurchase" (change)="purchaseTypeChange($event)" />
+            <label class="custom-control-label padding-right-10 text-dark ft-16" for="importPurchase">Import
+              Purchases</label>
+          </div> -->
+          <label class="padding-right-10 text-dark ft-16" for="importPurchase">Import
+            Purchases</label>
+          <div class="close-purchase">
+            <a href="JavaScript:void(0);" class="closebtn" (click)="closePurchaseSideContainer();">&times;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <form [formGroup]="addPurchasesForm" novalidate>
+      <div class="card-body" *ngIf="showAddPurchase">
+        <div class="row">
+          <label class="form-group has-float-label col-sm-6">
+            <ng-select [items]="vendorList" [hideSelected]="true" [closeOnSelect]="true" bindLabel="vendorName"
+              bindValue="vendorID" placeholder="Select Vendor" (change)="getPaymentSource($event)"
+              formControlName="vendorid">
+            </ng-select>
+            <div *ngIf="addPurchasesSubmitted && purchasesForm.vendorid.errors?.required" class="alert alert-danger">
+              Vendor Selection Required
+            </div>
+            <span>Vendor</span>
+          </label>
+          <label class="col-sm-6 has-float-label">
+            <app-datepicker (dateChange)="dateChange($event,'dob')" [inputDate]="purchaseInvDate"
+              name="purchaseInvDate">
+            </app-datepicker>
+            <div *ngIf="addPurchasesSubmitted && purchasesForm.invoicedate.errors?.required" class="alert alert-danger">
+              Invoice Date Required
+            </div>
+            <span> Invoice Date</span>
+          </label>
+        </div>
+        <div class="row">
+          <label class="has-float-label col-sm-6">
+            <input type="text" class="form-control" placeholder="Invoice Number" formControlName="invoiceno"
+              maxlength="250">
+            <div *ngIf="addPurchasesSubmitted && purchasesForm.invoiceno.errors?.required" class="alert alert-danger">
+              Invoice Number Required
+            </div>
+            <span>Invoice Number</span>
+          </label>
+          <label class="has-float-label col-sm-6">
+            <input type="number" class="form-control" placeholder="Invoice Amount($)" formControlName="invoiceAmount"
+              (keyup)="invoiceAmountChanges($event)">
+            <div *ngIf="addPurchasesSubmitted && purchasesForm.invoiceAmount.errors?.required"
+              class="alert alert-danger">
+              Invoice Amount Required
+            </div>
+            <span>Invoice Amount($)</span>
+          </label>
+        </div>
+
+        <div class="row mt-3">
+          <label class="form-group has-float-label col-sm-6">
+            <ng-select [items]="paymentSourceList" [hideSelected]="true" [closeOnSelect]="true" bindLabel="bankNickName"
+              bindValue="paymentSourceID" placeholder="Payment Source" (change)="getMethodOfpaymentByPaymentSrc($event)"
+              formControlName="paymentSourceID">
+            </ng-select>
+            <div *ngIf="addPurchasesSubmitted && purchasesForm.paymentSourceID.errors?.required"
+              class="alert alert-danger">
+              Payment Source Selection Required
+            </div>
+            <span>Payment Source</span>
+          </label>
+          <label class="form-group has-float-label col-sm-6">
+            <ng-select [items]="filteredMOPList" [hideSelected]="true" [closeOnSelect]="true"
+              bindLabel="methodOfPaymentDescription" bindValue="methodOfPaymentID" placeholder="Payment Method"
+              formControlName="methodOfPaymentId">
+            </ng-select>
+            <div *ngIf="addPurchasesSubmitted && purchasesForm.methodOfPaymentId.errors?.required"
+              class="alert alert-danger">
+              Payment Method Selection Required
+            </div>
+            <span>Payment Method</span>
+          </label>
+        </div>
+        <div class="row mt-3">
+          <div class="col-sm-6">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" formControlName="sameAsInv">
+              <label class="form-check-label" for="sameAsInv">
+                Same As Invoice Amount
+              </label>
+            </div>
+          </div>
+          <label class="has-float-label col-sm-6">
+            <input type="number" class="form-control" placeholder="Paid Amount" formControlName="invoicePaymentAmount">
+            <div *ngIf="addPurchasesSubmitted && purchasesForm.invoicePaymentAmount.errors?.required"
+              class="alert alert-danger">
+              Paid Amount Required
+            </div>
+            <span>Paid Amount</span>
+          </label>
+        </div>
+        <div class="row mt-3">
+          <label class="has-float-label col-sm-12">
+            <input type="text" class="form-control" placeholder="Memo" name="memo" maxlength="250"
+              formControlName="memo">
+            <span>Memo</span>
+          </label>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="mb-1">
+              <label style="font-size:15px;">Invoice Image</label>
+              <span class="col-md-4">
+                <label class="btn1 btn-xs">
+                  <span style="display: inline-block ml-4">
+                    <i class="fa fa-upload" style="font-size: 22px;"></i>
+                    <input style="display:none" name="invoiceImage" type="file" accept="image/jpeg, image/png,image/jpg"
+                      class="form-control-file" (change)="uploadInvoiceImage(file.files)" #file>
+                  </span>
+                </label>
+              </span>
+              <span class="image-card mt-1 form-group" *ngIf="invoiceImageURL">
+                <i class="fa fa-close delete" (click)="deleteInvoiceImage()"></i>
+                <img [src]="invoiceImageURL" class="form-control" name="invoiceImageURL" class="image">
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6"></div>
+          <div class="col-md-6 text-right">
+            <button type="button" class="btn btn-md btn-primary" (click)="closePurchaseSideContainer()">Cancel</button>
+            <button type="button" class="btn btn-md btn-primary ml-3" (click)="savePurchases()">Save</button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="card-body p-3" *ngIf="showImportPurchase">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <label class="padding-right-10 text-dark ft-16" for="importPurchase">Vendor Invoices</label>
+        </div>
+        <div class="col-sm-3 text-right">
+          <button type="button" *ngIf="importPurchasesRowData?.length > 0" class="btn btn-md btn-primary ml-2"
+            (click)="updatePayment()">Import</button>
+        </div>
+        <div class="col-sm-3">
+          <input type="text" class="form-control" placeholder="Filter" [(ngModel)]="searchPurchases" maxlength="250" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <app-cstore-grid [rowData]="importPurchasesRowData" [textFilter]="searchPurchases"
+            [cStoreGridOptions]="importPurchasesGridOptions" (gridReady)="onImportPurchasesGridReady($event)"
+            (rowSelected)="onRowSelected($event)">
+          </app-cstore-grid>
+        </div>
+      </div>
+      <div class="row mb-2 mt-3">
+        <div class="col-sm-6">
+          <label class="padding-right-10 text-dark ft-16" for="importPurchase">Fuel Invoices</label>
+        </div>
+        <div class="col-sm-3 text-right">
+          <button type="button" *ngIf="importFuelPurchasesRowData?.length > 0" class="btn btn-md btn-primary ml-2"
+            (click)="updateFuelPayment()">Import</button>
+        </div>
+        <div class="col-sm-3">
+          <input type="text" class="form-control" placeholder="Filter" [(ngModel)]="searchFuelPurchases"
+            maxlength="250" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <app-cstore-grid [rowData]="importFuelPurchasesRowData" [textFilter]="searchFuelPurchases"
+            [cStoreGridOptions]="importFuelPurchasesGridOptions" (gridReady)="onImportFuelPurchasesGridReady($event)"
+            (rowSelected)="onFuelRowSelected($event)">
+          </app-cstore-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card" *ngIf="showAddIncExp">
+    <form [formGroup]="addIncomeForm" novalidate>
+      <div class="card-header pt-2 pb-2 bg-white">
+        <div class="col-md-12 p-0">
+          <label class="mt-1 mb-1">
+            <span class="font-weight-bold" style="color: black;">Add {{isExpense?'Expense':'Income'}}</span>
+          </label>
+          <a href="JavaScript:void(0);" class="closebtn" (click)="closeSideContainer();deleteImage()">&times;</a>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <label class="form-group has-float-label col-sm-6">
+            <ng-select [items]="vendorList" [hideSelected]="true" [closeOnSelect]="true" bindLabel="vendorName"
+              bindValue="vendorID" placeholder="Payment Acc" (change)="getPaymentSource($event)"
+              formControlName="VendorID">
+            </ng-select>
+            <div *ngIf="addIncomeFormSubmitted && incomeForm.VendorID.errors?.required" class="alert alert-danger">
+              Payment Acc Selection Required
+            </div>
+            <span>Payment Acc</span>
+          </label>
+          <label class="has-float-label col-sm-6">
+            <div class="input-icon">
+              <input decimalOnly type="text" class="form-control  has-float-label currency" placeholder="Amount"
+                formControlName="Amount" maxlength="250" (focusout)="onAmountFocusOut($event)">
+              <i>$</i>
+            </div>
+            <div *ngIf="addIncomeFormSubmitted && incomeForm.VendorID.errors?.required" class="alert alert-danger">
+              Amount Required
+            </div>
+            <span>Amount</span>
+          </label>
+        </div>
+        <div class="row mt-3">
+          <label class="form-group has-float-label col-sm-6">
+            <ng-select [items]="paymentSourceList" [hideSelected]="true" [closeOnSelect]="true" bindLabel="bankNickName"
+              bindValue="paymentSourceID" placeholder="Payment Source"
+              (change)="getMethodOfpaymentByPaymentSrcIncome($event)" formControlName="paymentSourceID">
+            </ng-select>
+            <div *ngIf="addIncomeFormSubmitted && incomeForm.paymentSourceID.errors?.required"
+              class="alert alert-danger">
+              Payment Source Selection Required
+            </div>
+            <span>Payment Source</span>
+          </label>
+          <label class="form-group has-float-label col-sm-3">
+            <ng-select [items]="filteredMOPList" [hideSelected]="true" [closeOnSelect]="true"
+              bindLabel="methodOfPaymentDescription" bindValue="methodOfPaymentID" placeholder="Payment Method"
+              formControlName="methodOfPaymentId" (change)="paymentMethodChange($event)">
+            </ng-select>
+            <div *ngIf="addIncomeFormSubmitted && incomeForm.methodOfPaymentId.errors?.required"
+              class="alert alert-danger">
+              Payment Method Selection Required
+            </div>
+            <span>Payment Method</span>
+          </label>
+          <label class="has-float-label col-sm-3" *ngIf="showSaveIncomeCheckNum">
+            <input type="text" class="form-control" placeholder="Check Number" formControlName="CheckNumber"
+              maxlength="250">
+            <span>Check Number</span>
+          </label>
+        </div>
+        <div class="row mt-3">
+          <label class="has-float-label col-sm-6">
+            <textarea formControlName="Notes" class="form-control" rows="4"></textarea>
+            <!-- <input type="text" class="form-control" placeholder="Memo" formControlName="Notes" maxlength="250"> -->
+            <span>Memo</span>
+          </label>
+          <label class="form-group has-float-label col-sm-6">
+            <!-- <ng-select [items]="chartOfAccountCategories" [closeOnSelect]="true" [hideSelected]="true"
+              bindLabel="chartOfAccountCategoryName" placeholder="Select Category" bindValue="chartOfAccountCategoryID"
+              formControlName="ChartOfAccountCategoryID">
+            </ng-select>
+            <div *ngIf="addIncomeFormSubmitted && incomeForm.ChartOfAccountCategoryID.errors?.required"
+              class="alert alert-danger">
+              Category Selection Required
+            </div>
+            <span>Category</span> -->
+            <h5>{{selectedChartOfCatc}}</h5>
+          </label>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-md-6">
+            <div class="mb-1">
+              <!-- <label style="font-size:15px;">Document Upload</label> -->
+              <span class="col-md-4">
+                <label class="btn1 btn-xs">
+                  <span style="display: inline-block ml-4">
+                    <!-- <i class="fa fa-upload" style="font-size: 22px;"></i> -->
+                    <input name="incomeDocumentFiles" type="file" multiple="multiple" #fileInput
+                      accept="image/jpeg, image/png,image/jpg" class="form-control-file"
+                      (change)="uploadIncomeDocuments($event)" (click)="deleteImage()">
+                  </span>
+                </label>
+              </span>
+              <span class="image-card mt-1 form-group" *ngIf="invoiceImageURL">
+                <i class="fa fa-close delete" (click)="deleteInvoiceImage()"></i>
+                <img [src]="invoiceImageURL" class="form-control" name="invoiceImageURL" class="image">
+              </span>
+            </div>
+          </div>
+          <div class="col-md-6 text-right">
+            <button type="button" class="btn btn-md btn-primary" (click)="closeSideContainer()">Cancel</button>
+            <button type="button" class="btn btn-md btn-primary ml-3" (click)="saveIncome()">Save</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<ng-template #viewfilemodal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{fileName}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <img src="{{fileData}}" />
+  </div>
+</ng-template>

@@ -1,0 +1,8 @@
+<div class="expansion-body no-gutters">
+    <div *ngIf="isShow" class="col-12 linked-items">
+        <app-adv-pagination-grid [agGridTheme]="'inline-edit'" (gridReady)="onLinkedGridReady($event)" [rowData]="linkedItemsRowData"
+            [paginationGridOptions]="linkedItemsGridOptions" (cancel)="onCancel($event)"
+            (delete)="deleteLinkedAction($event)" (edit)="onEdit($event)" (save)="saveLocalLinkedItem($event)">
+        </app-adv-pagination-grid>
+    </div>
+</div>

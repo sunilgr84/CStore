@@ -1,0 +1,96 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title ml-3"><strong>Return Pack</strong> </h4>
+    <form #returnPackForm="ngForm" novalidate>
+
+      <div class="row mt-3">
+        <div class="col-sm-6">
+          <div class="card" style="height: 350px;">
+            <div class="card-body">
+              <div class="row mt-3">
+                <label class="form-group has-float-label col-sm-12"
+                  *ngIf="storeLocationList && storeLocationList.length!==1">
+                  <select class="form-control" [(ngModel)]="returnPack.storeLocationID" #storeLocationID="ngModel"
+                    name="storeLocationID" (change)="selectActivePack(returnPack.storeLocationID)" required>
+                    <option value="">--Select Store Location--</option>
+                    <option *ngFor="let store of storeLocationList" [value]="store.storeLocationID">
+                      {{store.storeName}}</option>
+                  </select>
+
+                  <div *ngIf="submitted && storeLocationID.errors?.required" class="alert alert-danger">
+                    Store Location in required
+                  </div>
+                  <span>Store Location</span>
+                </label>
+                <label class="form-group has-float-label col-sm-6"
+                  *ngIf="storeLocationList && storeLocationList.length===1">
+                  <input readonly type="text" class="form-control" [value]="storeLocationList[0].storeName">
+                  <span>Store Location</span>
+                </label>
+
+              </div>
+              <div class="row mt-3">
+                <label class="form-group has-float-label col-sm-12">
+                  <ng-select [items]="lotteryPackList" [selectOnTab]="true" bindLabel="packNumber"
+                    bindValue="packNumber" [(ngModel)]="returnPack.packNo" name="packNumber" #packNumber="ngModel"
+                    labelForId="packNumber" placeholder="Select Pack Number" required>
+                  </ng-select>
+                  <img src="assets/images/small-spinner.gif" *ngIf="isPackNumberLoading">
+                  <div *ngIf="submitted && packNumber.errors?.required" class="alert alert-danger">
+                    Pack Number in required
+                  </div>
+                  <span>Pack Number</span>
+                </label>
+              </div>
+              <div class=" row mt-3">
+                <label class="form-group has-float-label col-sm-12">
+                  <select class="form-control" [(ngModel)]="returnPack.returnReason" name="returnReason"
+                    #returnReason="ngModel" required>
+                    <option value="">--Select Return Reason--</option>
+                    <option *ngFor="let store of packReturnReasonList" [value]="store.returnReasonId">
+                      {{store.returnReason}}</option>
+                  </select>
+                  <img src="assets/images/small-spinner.gif" *ngIf="isReturnReasonLoading">
+                  <div *ngIf="submitted && returnReason.errors?.required" class="alert alert-danger">
+                    Return Reason in required
+                  </div>
+                  <span>Return Reason</span>
+                </label>
+              </div>
+              <div class=" row mt-3">
+                <div class="col-sm-12">
+                  <button type="button" class="btn  btn-md btn-primary mr-3" (click)="reset()">
+                    Reset</button>
+                  <button type="submit" class="btn btn-md btn-primary" (click)="updateReturnPack(returnPackForm)">
+                    Return Pack</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="card text-center" style="height: 350px;">
+            <div class="card-body">
+              <h5 class="card-title">Inventory Detail</h5>
+              <div class="row justify-content-center align-items-center mt-4">
+                <div class="col-sm-5">
+                  <div class="btn btn-primary returnedPackT">
+                    <h4 class="mt-3">Returned Pack Tickets</h4>
+                    <h2></h2>
+                  </div>
+                </div>
+                <div class="col-sm-5">
+                  <div class="btn btn-primary  returnedPackV">
+                    <h4 class="mt-3"> Returned Pack Value</h4>
+                    <h2></h2>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>

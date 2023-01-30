@@ -1,0 +1,24 @@
+<div class="row justify-content-end margin-bottom-5">
+  <div class="col-sm-3">
+    <div class="inner-addon right-addon" style="width: 230px; float: right;">
+      <span>
+        <i class="fa fa-search card-title" aria-hidden="true"></i>
+      </span>
+      <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+        placeholder="Filter Search" [(ngModel)]="filterText" (input)="onFilterTextBoxChanged()" name="filterText">
+    </div>
+  </div>
+  <div class="col-sm-3" style="padding: initial;">
+    <button type="button" class="btn btn-md btn-primary mr-2" (click)="generatedPDfExcel('pdf')">Open
+      PDF</button>
+    <button type="button" class="btn-md btn btn-primary" (click)="generatedPDfExcel('excel')">Excel
+      Export</button>
+  </div>
+</div>
+<ag-grid-angular #expandableGrid style="width: 100%;" [ngStyle]="{ height: gridHeight }" id="myGrid" [rowData]="rowData"
+  class="ag-theme-balham" [columnDefs]="columnDefs" [gridOptions]="gridOptions"[enableSorting]="enableSorting"
+  [enableColResize]="true" [enableRangeSelection]="true" [masterDetail]="true" [rowSelection]="rowSelection"
+  [defaultColDef]="defaultColDef" [detailRowHeight]="detailRowHeight" [suppressContextMenu]="suppressContextMenu"
+  (gridReady)="onGridReady($event)" [groupUseEntireRow]="false" [groupRowAggNodes]="groupRowAggNodes">
+</ag-grid-angular>
+<!-- [groupUseEntireRow]="true" [groupIncludeFooter]="true" [sideBar]="true"  [autoGroupColumnDef]="autoGroupColumnDef" -->

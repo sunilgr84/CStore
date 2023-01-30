@@ -1,0 +1,1007 @@
+<!-- <app-page-header [heading]="'Day Recon'" [icon]="'fa-edit'"></app-page-header> -->
+<div class="card " *ngIf="isShowCalender">
+  <div class="card-body">
+    <div>
+
+      <!-- <div class="col-sm-3">
+        <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+      </div> -->
+      <div class="row mb-3">
+        <div class="col-sm-5">
+          <div style="width:100%;text-align: center;">
+            <span style="display: inline-flex;; text-align: center"> <button class="btn btn-cstorebo mr-3"
+                mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate"
+                (viewDateChange)="closeOpenMonthViewDay();decrement()">
+                <i class="fa fa-caret-left" aria-hidden="true"></i></button>
+              <!-- <h3> {{currentDate | date :'dd'}} {{currentDate | date :'MMMM'}} {{currentDate | date :'yyyy'}}</h3> -->
+              <h3 style="min-width: 202px;"> {{currentDate | date :'dd'}}
+                {{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+              <button class="ml-3 btn btn-cstorebo" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate"
+                (viewDateChange)="closeOpenMonthViewDay();increment()" [disabled]="nextBtnDisabled"> <i
+                  class="fa fa-caret-right" aria-hidden="true"></i></button>
+            </span>
+          </div>
+        </div>
+        <!-- <h3> {{currentDate | date :'longDate'}}</h3> -->
+        <div class="col-sm-6 row justify-content-center">
+          <span class="mr-2 gray"> {{currentDateDecTwoMonth | date :'MMMM'}}</span>
+          <span class="mr-2 gray"> {{currentDateDecOneMonth | date :'MMMM'}}</span>
+          <span class="mr-2" style="font-size: 2em; margin-top: -.5em;"> <strong> {{currentDate | date :'MMMM'}}
+            </strong> </span>
+          <span class="mr-2 gray"> {{currentDateIncOneMonth | date :'MMMM'}}</span>
+          <span class="mr-2 gray"> {{currentDateIncTwoMonth | date :'MMMM'}}</span>
+        </div>
+        <div class="col-sm-1">
+          <i class="fa fa-cog showSettings-icon" *ngIf="showSettings" (click)="openSalesTotalMgmt()"></i>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-5 day-recons" style="border-right: inset;">
+          <mwl-calendar-month-view [viewDate]="viewDate" [refresh]="refresh" [activeDayIsOpen]="activeDayIsOpen"
+            (dayClicked)="dayClicked($event.day)" (beforeViewRender)="beforeMonthViewRender($event)"
+            (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
+          </mwl-calendar-month-view>
+          <div class="row justify-content-center mt-2">
+            <button class="btn btn-cstorebo" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate"
+              (viewDateChange)="decrement()">
+              <strong> <i class="fa fa-caret-left" aria-hidden="true"></i></strong>
+            </button>
+            <button class="ml-3 btn btn-cstorebo" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate"
+              (viewDateChange)="increment()" [disabled]="nextBtnDisabled">
+              <strong> <i class="fa fa-caret-right" aria-hidden="true"></i></strong>
+            </button>
+          </div>
+
+          <div class="row mt-2 justify-content-center">
+            <div>
+              <i class="fa fa-circle" style="color: rgb(0, 153, 255)" aria-hidden="true"></i>
+              <label class="ml-2">Reconciled</label>
+            </div>
+            <div class="ml-3">
+              <i class="fa fa-circle" style="color: green" aria-hidden="true"></i>
+              <label class="ml-2">Non-Reconciled</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-7">
+
+          <div class="row">
+            <div class="col-sm-6">
+              <label class="form-group has-float-label col-sm-12"
+                *ngIf="storeLocationList && storeLocationList.length>1;else singleStore">
+                <ng-select [items]="storeLocationList" bindLabel="storeName" [selectOnTab]="true"
+                  bindValue="storeLocationID" labelForId="storeLocationID" [(ngModel)]="storeLocationId"
+                  placeholder="Select Store Location" (change)="getDayReconData()">
+                </ng-select>
+                <span> Store Location </span>
+              </label>
+              <ng-template #singleStore>
+                <label class="form-group has-float-label col-sm-12"
+                  *ngIf="storeLocationList && storeLocationList.length===1">
+                  <input type="text" class="form-control" id="storeName" [(ngModel)]="storeLocationList[0].storeName"
+                    name="storeName" placeholder="Store Name" readonly>
+                  <span> Store Location </span>
+                </label>
+              </ng-template>
+              <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+            </div>
+            <div class="col-sm-6">
+              <label class="form-group has-float-label col-sm-12">
+                <ng-select [items]="shiftList" bindLabel="name" [selectOnTab]="true" labelForId="value"
+                  placeholder="Select Period" [(ngModel)]="shiftWiseValue" (change)="getDayReconData()">
+                </ng-select>
+                <span> Period </span>
+              </label>
+            </div>
+          </div>
+          <div *ngIf="isResponse && isDayRecondData" class="col-sm-12 mt-1 mb-3" style="border-top: outset"></div>
+
+          <div class="row" *ngIf="isResponse  && isDayRecondData">
+            <div class="col-sm-1 btn">
+              <i class=" btn btn-cstorebo mt-2 fa fa-chevron-left" aria-hidden="true"></i>
+            </div>
+            <div class="row col-sm-10 justify-content-center" *ngIf="dayReconData && dayReconData.length !== 1">
+              <div class="card col-sm-4 mr-1" *ngFor="let dayReconObj of dayReconData;let i = index"
+                (click)="movementHeader(dayReconObj,i)" style="background-color: #3C83F9; height: max-content;"
+                [id]="dayReconObj.movementHeaderData.movementHeaderID+i">
+                <div class="mt-1 mb-1">
+                  <div class="row ">
+                    <div class="col-sm-4" style="padding: initial;border-right: inset">
+                      <label class="reduce-font row justify-content-center"> Open</label>
+                      <h3 class="reduce-font row justify-content-center"> {{dayReconObj.movementHeaderData.openingTime
+                        | timeFormat}}</h3>
+                    </div>
+                    <div class="col-sm-4" style="padding: initial; border-right: inset">
+                      <label class="reduce-font row justify-content-center"> Close</label>
+                      <h3 class="reduce-font row justify-content-center"> {{dayReconObj.movementHeaderData.closingTime
+                        | timeFormat}}</h3>
+                    </div>
+                    <div class="col-sm-4" style="padding: initial">
+                      <label class="reduce-font row justify-content-center"> Batch No</label>
+                      <h3 class="reduce-font row justify-content-center"> {{dayReconObj.movementHeaderData.batchNo}}
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row col-sm-10 justify-content-center" *ngIf="dayReconData && dayReconData.length === 1">
+              <div class="card col-sm-4 mr-1" style="background-color: #26AEF9; height: max-content;">
+                <div class="mt-1 mb-1">
+                  <div class="row ">
+                    <div class="col-sm-4" style="padding: initial;border-right: inset">
+                      <label class="reduce-font row justify-content-center"> Open</label>
+                      <h3 class="reduce-font row justify-content-center">
+                        {{dayReconData[0].movementHeaderData.openingTime | timeFormat}}</h3>
+                    </div>
+                    <div class="col-sm-4" style="padding: initial; border-right: inset">
+                      <label class="reduce-font row justify-content-center"> Close</label>
+                      <h3 class="reduce-font row justify-content-center">
+                        {{dayReconData[0].movementHeaderData.closingTime | timeFormat}}</h3>
+                    </div>
+                    <div class="col-sm-4" style="padding: initial">
+                      <label class="reduce-font row justify-content-center"> Batch No</label>
+                      <h3 class="reduce-font row justify-content-center">
+                        {{dayReconData[0].movementHeaderData.batchNo}}</h3>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- <div class="card col-sm-4" *ngFor="let dayReconObj of dayReconData" (click)="movementHeader(dayReconObj)"
+            style="background-color: #8a95f8">
+            <div class="mt-3 mb-3">
+              <div class="row">
+                <div class="col-sm-4" style="border-right: inset">
+                  <span class="row justify-content-center"> Open</span>
+                  <h4 class="row justify-content-center"> {{dayReconObj.movementHeaderData.openingTime | timeFormat
+                    }}</h4>
+                </div>
+                <div class="col-sm-4" style="border-right: inset">
+                  <span class="row justify-content-center"> Close</span>
+                  <h4 class="row justify-content-center"> {{dayReconObj.movementHeaderData.closingTime | timeFormat}}</h4>
+                </div>
+                <div class="col-sm-4">
+                  <span class="row justify-content-center"> Batch No</span>
+                  <h4 class="row justify-content-center"> {{dayReconObj.movementHeaderData.batchNo}}</h4>
+                </div>
+              </div>
+            </div>
+          </div> -->
+
+            <div class="col-sm-1 btn">
+              <i class=" btn btn-cstorebo mt-2 fa fa-chevron-right" aria-hidden="true"></i>
+            </div>
+          </div>
+          <div class="col-sm-12 mt-3 mb-3" style="border-top: outset"></div>
+          <div class="row justify-content-center mb-3  mt-3" [hidden]="true">
+            <div class="col-sm-4">
+              <div class="col-sm-12 btn btn-primary monthSales">
+                <h5 class="mt-3"> Current Month</h5>
+                <h5 class="row justify-content-center"> Sales</h5>
+                <h2> $ {{'00,000'}}</h2>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="col-sm-12 btn btn-primary monthGallons">
+                <h5 class="mt-3"> Current Month </h5>
+                <h5 class="row justify-content-center"> Gallons</h5>
+                <h2> {{'00,000'}}</h2>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="col-sm-12 btn btn-primary monthFuelSales">
+                <h5 class="mt-3"> Current Month</h5>
+                <h5 class="row justify-content-center">Fuel Sales $</h5>
+                <h2> $ {{'00,000'}}</h2>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="isResponse && isDayRecondData && isMovementHeader ">
+            <table class="table" style="width:100%">
+              <thead>
+                <tr>
+                  <th scope="col" style="border-right: none">Sales Discription</th>
+                  <th scope="col" style="border-left: none">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- <tr style="background-color: #26AEF9" *ngFor="let deptSalesObj of  departmentSalesTypeobject">
+                  <td style="border-right: none">{{deptSalesObj.departmentTypeName}} </td>
+                  <td style="border-left: none">$ {{deptSalesObj.totalAmount}}</td>
+                </tr> -->
+
+
+                <tr *ngFor="let deptSalesObj of  departmentSalesTypeobject">
+                  <td style="border-right: none" [style.background]="getColor(deptSalesObj.departmentTypeName)">
+                    {{deptSalesObj.departmentTypeName}}
+                  </td>
+                  <td style="border-left: none" [style.background]="getColor(deptSalesObj.departmentTypeName)">$
+                    {{deptSalesObj.totalAmount | number:'1.2-2' }}</td>
+                </tr>
+
+                <!-- <tr class="bg-success">
+                <td>Total POS Sales</td>
+                <td>$ 00,000</td>
+              </tr>
+              <tr class="bg-success">
+                <td>Short Over</td>
+                <td>$ 00,000</td>
+              </tr> -->
+
+              </tbody>
+            </table>
+          </div>
+
+          <div class="row mt-3" *ngIf="isResponse && isDayRecondData && isMovementHeader ">
+            <div class="col-sm-6">
+              <table class="table" style="width:100%">
+                <tbody>
+                  <tr>
+                    <th colspan="3" scope="col">Critical Stats</th>
+                  </tr>
+                  <tr>
+                    <th style="border-right: none">Name</th>
+                    <th style="border-right: none;border-left: none">Value</th>
+                    <th style="border-left: none">Count</th>
+                  </tr>
+                  <tr *ngFor="let criticalStatsObj of criticalStats">
+                    <th style="border-right: none">{{criticalStatsObj.statName}}</th>
+                    <td style="border-right: none;border-left: none"> $ {{criticalStatsObj.amount | number:'1.2-2' }}
+                    </td>
+                    <td style="border-left: none">{{criticalStatsObj.countValue}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="col-sm-6">
+              <table style="width:100%">
+                <tbody>
+                  <tr *ngFor="let posPayInPayout of posPayInPayouts">
+                    <th>{{posPayInPayout.miscellaneousSummaryCode}}</th>
+                    <td> $ {{posPayInPayout.amount.toFixed(2)}}</td>
+                  </tr>
+                  <!-- <tr>
+                    <th style="border-right: none">Total Pay</th>
+                    <th style="border-right: none;border-left: none">Day Recon</th>
+                    <th style="border-left: none">POS</th>
+                  </tr> -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="mt-3" *ngIf="isResponse && !isDayRecondData">
+            <div class="row justify-content-center">
+              <h2> <b> No Data to Display... </b></h2>
+            </div>
+          </div>
+
+          <div class="mt-3 row justify-content-center" *ngIf="isResponse && isDayRecondData && !isMovementHeader">
+            <h2> <b> Select one of the period </b> </h2>
+          </div>
+          <div class="mt-3" *ngIf="isResponse && isDayRecondData && isMovementHeader">
+            <button [hidden]="true" type="button" class="btn btn-primary mr-3" (click)="makeEntries()"> Make Entries
+            </button>
+            <button type="button" class="btn btn-primary" (click)="dayReconDetails()"> Details </button>
+          </div>
+        </div>
+      </div>
+      <br />
+    </div>
+  </div>
+</div>
+<div class="card mt-3" *ngIf="isDailyEntryData">
+  <div class="card-body">
+    <form [formGroup]="entriesForm">
+      <!-- <form> -->
+      <div>
+        <h5> <strong> {{currentDate | date :'dd'}}
+            {{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</strong> </h5>
+      </div>
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="col-sm-12" style="padding-right: initial">
+            <div class="row col-sm-12 justify-content-center mb-3" style="background-color: blue">
+              <span style="color: white">Income</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-8" formGroupName="posdailyPayinobject">
+              <div class="row">
+                <div class="col-sm-6">
+                  <label> Taxable Sales</label>
+                </div>
+                <!-- [ngStyle]="{'border':'1px solid red'}" -->
+                <label class="has-float-label form-group col-sm-6">
+                  <input type="text" [ngStyle]="{'border': getDailyColor('taxableSales')}" readonly class="form-control"
+                    formControlName="taxableSales" placeholder="POS Daily">
+                  <span>POS Daily</span>
+                </label>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <label>Non Taxable Sales</label>
+                </div>
+                <label class="has-float-label form-group col-sm-6">
+                  <input type="text" readonly [ngStyle]="{'border': getDailyColor('nonTaxableSales')}"
+                    formControlName="nonTaxableSales" class="form-control" placeholder="POS Daily">
+                  <span>POS Daily</span>
+                </label>
+
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <label> Sales Tax</label>
+                </div>
+                <label class="has-float-label form-group col-sm-6">
+                  <input type="text" readonly class="form-control" [ngStyle]="{'border': getDailyColor('salesTax')}"
+                    formControlName="salesTax" placeholder="POS Daily">
+                  <span>POS Daily</span>
+                </label>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <label> Total Grocery Sales</label>
+                </div>
+                <label class="has-float-label form-group col-sm-5">
+                  <input type="text" readonly class="form-control"
+                    [ngStyle]="{'border': getDailyColor('totalGrocerySales')}" formControlName="totalGrocerySales"
+                    placeholder="POS Daily">
+                  <span>POS Daily</span>
+                </label>
+                <div class="col-sm-1 mt-1" (click)="details()">
+                  <span> <i class="fa fa-info-circle" aria-hidden="true"></i></span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <label>Cash Card Jobber</label>
+                </div>
+                <label class="has-float-label form-group col-sm-6">
+                  <input type="text" readonly class="form-control" formControlName="cashCardJobber"
+                    placeholder="POS Daily" [ngStyle]="{'border': getDailyColor('cashCardJobber')}">
+                  <span>POS Daily</span>
+                </label>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <label>Cash Card Non Jobber</label>
+                </div>
+                <label class="has-float-label form-group col-sm-6">
+                  <input type="text" readonly class="form-control" formControlName="cashCardNonJobber"
+                    placeholder="POS Daily" [ngStyle]="{'border': getDailyColor('cashCardNonJobber')}">
+                  <span>POS Daily</span>
+                </label>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <label>Instant Ticket Sales</label>
+                </div>
+                <label class="has-float-label form-group col-sm-6">
+                  <input type="text" readonly class="form-control" formControlName="instantTicketSales"
+                    placeholder="POS Daily" [ngStyle]="{'border': getDailyColor('instantTicketSales')}">
+                  <span>POS Daily</span>
+                </label>
+              </div>
+
+
+              <div class="row">
+                <div class="col-sm-6">
+                  <label>Other Income</label>
+                </div>
+                <label class="has-float-label form-group col-sm-4">
+                  <input type="text" readonly class="form-control" formControlName="otherIncome" placeholder="POS Daily"
+                    [ngStyle]="{'border': getDailyColor('otherIncome')}">
+                  <span>POS Daily</span>
+                </label>
+                <div>
+                  <button type="button" class="btn btn-cstorebo" (click)="addExpenses('Income')">
+                    <i class="fa fa-plus" aria-hidden="true"></i> </button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <label>Money From Bank</label>
+                </div>
+                <label class="has-float-label form-group col-sm-6">
+                  <input type="text" readonly class="form-control" formControlName="moneyFromBank"
+                    placeholder="POS Daily" [ngStyle]="{'border': getDailyColor('moneyFromBank')}">
+                  <span>POS Daily</span>
+                </label>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <label> Fuel Amount</label>
+                </div>
+                <label class="has-float-label form-group col-sm-6">
+                  <input type="text" readonly class="form-control" formControlName="fuelAmount" placeholder="POS Daily"
+                    [ngStyle]="{'border': getDailyColor('fuelAmount')}">
+                  <span>POS Daily</span>
+                </label>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <label>Daily Loan Account Receivable</label>
+                </div>
+                <label class="has-float-label form-group col-sm-6">
+                  <input type="text" readonly class="form-control" formControlName="dailyLoanAccountReceivable"
+                    placeholder="POS Daily" [ngStyle]="{'border': getDailyColor('dailyLoanAccountReceivable')}">
+                  <span>POS Daily</span>
+                </label>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <label>Money Transfer</label>
+                </div>
+                <label class="has-float-label form-group col-sm-6">
+                  <input type="text" readonly class="form-control" formControlName="moneyTransfer"
+                    placeholder="POS Daily" [ngStyle]="{'border': getDailyColor('moneyTransfer')}">
+                  <span>POS Daily</span>
+                </label>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <label>Money Transfer Fee</label>
+                </div>
+                <label class="has-float-label form-group col-sm-6">
+                  <input type="text" readonly class="form-control" formControlName="moneyTransferFee"
+                    placeholder="POS Daily" [ngStyle]="{'border': getDailyColor('moneyTransferFee')}">
+                  <span>POS Daily</span>
+                </label>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <label>Money Order</label>
+                </div>
+                <label class="has-float-label form-group col-sm-6">
+                  <input type="text" readonly class="form-control" formControlName="moneyOrder" placeholder="POS Daily"
+                    [ngStyle]="{'border': getDailyColor('moneyOrder')}">
+                  <span>POS Daily</span>
+                </label>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <label>Money Order Fee</label>
+                </div>
+                <label class="has-float-label form-group col-sm-6">
+                  <input type="text" readonly class="form-control" formControlName="moneyOrderFee"
+                    placeholder="POS Daily" [ngStyle]="{'border': getDailyColor('moneyOrderFee')}">
+                  <span>POS Daily</span>
+                </label>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <label>Lottery Sales</label>
+                </div>
+                <label class="has-float-label form-group col-sm-6">
+                  <input type="text" readonly class="form-control" formControlName="lotterySales"
+                    placeholder="POS Daily" [ngStyle]="{'border': getDailyColor('lotterySales')}">
+                  <span>POS Daily</span>
+                </label>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <label>Lotto</label>
+                </div>
+                <label class="has-float-label form-group col-sm-6">
+                  <input type="text" readonly class="form-control" formControlName="lotto" placeholder="POS Daily"
+                    [ngStyle]="{'border': getDailyColor('lotto')}">
+                  <span>POS Daily</span>
+                </label>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <label><strong>Total In</strong></label>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-sm-4" formGroupName="dayReconPayIN">
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control currency" formControlName="taxableSales"
+                    placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayReconPayINValues.get('taxableSales').value">$</i>
+              </div>
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="nonTaxableSales"
+                    placeholder="Daily">
+                  <span>Daily</span>
+                </label> <i *ngIf="dayReconPayINValues.get('nonTaxableSales').value">$</i>
+              </div>
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="salesTax" placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayReconPayINValues.get('salesTax').value">$</i>
+              </div>
+              <!-- <div></div> -->
+
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="totalGrocerySales"
+                    placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayReconPayINValues.get('totalGrocerySales').value">$</i>
+              </div>
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="cashCardJobber"
+                    placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayReconPayINValues.get('cashCardJobber').value">$</i>
+              </div>
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="cashCardNonJobber"
+                    placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayReconPayINValues.get('cashCardNonJobber').value">$</i>
+              </div>
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="instantTicketSales"
+                    placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayReconPayINValues.get('instantTicketSales').value">$</i>
+              </div>
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="otherIncome" placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayReconPayINValues.get('otherIncome').value">$</i>
+              </div>
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="moneyFromBank"
+                    placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayReconPayINValues.get('moneyFromBank').value">$</i>
+              </div>
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="fuelAmount" placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayReconPayINValues.get('fuelAmount').value">$</i>
+              </div>
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="dailyLoanAccountReceivable"
+                    placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayReconPayINValues.get('dailyLoanAccountReceivable').value">$</i>
+              </div>
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="moneyTransfer"
+                    placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayReconPayINValues.get('moneyTransfer').value">$</i>
+              </div>
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="moneyTransferFee"
+                    placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayReconPayINValues.get('moneyTransferFee').value">$</i>
+              </div>
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="moneyOrder" placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayReconPayINValues.get('moneyOrder').value">$</i>
+              </div>
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="moneyOrderFee"
+                    placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayReconPayINValues.get('moneyOrderFee').value">$</i>
+              </div>
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="lotterySales"
+                    placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayReconPayINValues.get('lotterySales').value">$</i>
+              </div>
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="lotto" placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayReconPayINValues.get('lotto').value">$</i>
+              </div>
+              <div class="input-icon">
+                <div class="col-sm-12 ">
+                  <input type="text" readonly decimalOnly formControlName="totalIn" class="form-control"
+                    placeholder="Total In">
+                </div>
+                <i *ngIf="dayReconPayINValues.get('totalIn').value">$</i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6">
+          <div class="col-sm-12 mb-3" style="padding-right: initial">
+            <div class="row col-sm-12 justify-content-center" style="background-color: orangered">
+              <span style="color: white">Expense</span>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-8" formGroupName="posdailypayoutobject">
+
+              <div class="row">
+                <div class="col-sm-6">
+                  <label> Deposit</label>
+                </div>
+                <label class="form-group has-float-label col-sm-6">
+                  <input type="text" readonly class="form-control" formControlName="deposit" placeholder="POS Daily"
+                    [ngStyle]="{'border': getDailyOutColor('deposit')}">
+                  <span>POS Daily</span>
+                </label>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-6">
+                  <label> Credit Card Non Jobber</label>
+                </div>
+                <label class="form-group has-float-label col-sm-6">
+                  <input type="text" readonly class="form-control" formControlName="creditCardNonJobber"
+                    placeholder="POS Daily" [ngStyle]="{'border': getDailyOutColor('creditCardNonJobber')}">
+                  <span>POS Daily</span>
+                </label>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-6">
+                  <label> Food Stamps</label>
+                </div>
+                <label class="form-group has-float-label col-sm-6">
+                  <input type="text" readonly class="form-control" formControlName="foodStamps" placeholder="POS Daily"
+                    [ngStyle]="{'border': getDailyOutColor('foodStamps')}">
+                  <span>POS Daily</span>
+                </label>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-6">
+                  <label> Credit Card Jobber</label>
+                </div>
+                <label class="form-group has-float-label col-sm-6">
+                  <input type="text" readonly class="form-control" formControlName="creditCardJobber"
+                    placeholder="POS Daily" [ngStyle]="{'border': getDailyOutColor('creditCardJobber')}">
+                  <span>POS Daily</span>
+                </label>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-6">
+                  <label> Cash Purchase</label>
+                </div>
+                <label class="form-group has-float-label col-sm-6">
+                  <input type="text" readonly class="form-control" formControlName="cashPurchase"
+                    placeholder="POS Daily" [ngStyle]="{'border': getDailyOutColor('cashPurchase')}">
+                  <span>POS Daily</span>
+                </label>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-6">
+                  <label> Daily Loan Charge Account</label>
+                </div>
+                <label class="form-group has-float-label col-sm-6">
+                  <input type="text" readonly class="form-control" formControlName="dailyLoanChargeAccount"
+                    placeholder="POS Daily" [ngStyle]="{'border': getDailyOutColor('dailyLoanChargeAccount')}">
+                  <span>POS Daily</span>
+                </label>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-6">
+                  <label> Withdrawal</label>
+                </div>
+                <label class="form-group has-float-label col-sm-6">
+                  <input type="text" readonly class="form-control" formControlName="withdrawal" placeholder="POS Daily"
+                    [ngStyle]="{'border': getDailyOutColor('withdrawal')}">
+                  <span>POS Daily</span>
+                </label>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-6">
+                  <label> Expenses</label>
+                </div>
+                <label class="form-group has-float-label col-sm-4">
+                  <input type="text" readonly class="form-control" formControlName="expenses" placeholder="POS Daily"
+                    [ngStyle]="{'border': getDailyOutColor('expenses')}">
+                  <span>POS Daily</span>
+                </label>
+                <div class="">
+                  <button type="button" class="btn btn-cstorebo mr-1" (click)="addExpenses('Expenses')">
+                    <i class="fa fa-plus" aria-hidden="true"></i></button>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-6">
+                  <label> ATM</label>
+                </div>
+                <label class="form-group has-float-label col-sm-6">
+                  <input type="text" readonly class="form-control" formControlName="atm" placeholder="POS Daily"
+                    [ngStyle]="{'border': getDailyOutColor('atm')}">
+                  <span>POS Daily</span>
+                </label>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-6">
+                  <label> Lotto Cashes</label>
+                </div>
+                <label class="form-group has-float-label col-sm-6">
+                  <input type="text" readonly class="form-control" formControlName="lottoCashes" placeholder="POS Daily"
+                    [ngStyle]="{'border': getDailyOutColor('lottoCashes')}">
+                  <span>POS Daily</span>
+                </label>
+              </div>
+
+
+              <div class="row">
+                <div class="col-sm-6">
+                  <label> Scratch Off Cashes</label>
+                </div>
+                <label class="form-group has-float-label col-sm-6">
+                  <input type="text" readonly class="form-control" formControlName="scratchOffCashes"
+                    placeholder="POS Daily" [ngStyle]="{'border': getDailyOutColor('scratchOffCashes')}">
+                  <span>POS Daily</span>
+                </label>
+              </div>
+
+
+              <div class="row">
+                <div class="col-sm-6">
+                  <label> Daily Closing Cash</label>
+                </div>
+                <label class="form-group has-float-label col-sm-6">
+                  <input type="text" readonly class="form-control" formControlName="dailyClosingCash"
+                    placeholder="POS Daily" [ngStyle]="{'border': getDailyOutColor('dailyClosingCash')}">
+                  <span>POS Daily</span>
+                </label>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-6">
+                  <label> Daily Closing Check</label>
+                </div>
+                <label class="form-group has-float-label col-sm-6">
+                  <input type="text" readonly class="form-control" formControlName="dailyClosingCheck"
+                    placeholder="POS Daily" [ngStyle]="{'border': getDailyOutColor('dailyClosingCheck')}">
+                  <span>POS Daily</span>
+                </label>
+              </div>
+              <div class="row mb-3">
+                <div class="col-sm-6">
+                  <label> <strong>Total Out</strong> </label>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-sm-6">
+                  <label> <strong>Over Short</strong> </label>
+                </div>
+              </div>
+              <div class="row mb-3" [hidden]="true">
+                <div class="col-sm-6">
+                  <label> <strong>Sales vs Purchase (%)</strong> </label>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-4" formGroupName="dayreconPayOut">
+
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="deposit" placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayreconPayOutValues.get('deposit').value">$</i>
+              </div>
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="creditCardNonJobber"
+                    placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayreconPayOutValues.get('creditCardNonJobber').value">$</i>
+              </div>
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="foodStamps" placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayreconPayOutValues.get('foodStamps').value">$</i>
+              </div>
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="creditCardJobber"
+                    placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayreconPayOutValues.get('creditCardJobber').value">$</i>
+              </div>
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="cashPurchase"
+                    placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayreconPayOutValues.get('cashPurchase').value">$</i>
+              </div>
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="dailyLoanChargeAccount"
+                    placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayreconPayOutValues.get('dailyLoanChargeAccount').value">$</i>
+              </div>
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="withdrawal" placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayreconPayOutValues.get('withdrawal').value">$</i>
+              </div>
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="expenses" placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayreconPayOutValues.get('expenses').value">$</i>
+              </div>
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="atm" placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayreconPayOutValues.get('atm').value">$</i>
+              </div>
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="lottoCashes" placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayreconPayOutValues.get('lottoCashes').value">$</i>
+              </div>
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="scratchOffCashes"
+                    placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayreconPayOutValues.get('scratchOffCashes').value">$</i>
+              </div>
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="dailyClosingCash"
+                    placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayreconPayOutValues.get('dailyClosingCash').value">$</i>
+              </div>
+              <div class="input-icon">
+                <label class="has-float-label form-group col-sm-12">
+                  <input type="text" decimalOnly class="form-control" formControlName="dailyClosingCheck"
+                    placeholder="Daily">
+                  <span>Daily</span>
+                </label>
+                <i *ngIf="dayreconPayOutValues.get('dailyClosingCheck').value">$</i>
+              </div>
+              <div class="input-icon">
+                <div class="col-sm-12 mb-3">
+                  <input type="text" readonly formControlName="totalOut" decimalOnly class="form-control"
+                    placeholder="Total Out">
+                </div>
+                <i *ngIf="dayreconPayOutValues.get('totalOut').value">$</i>
+              </div>
+              <div class="input-icon">
+                <div class="col-sm-12 mb-3">
+                  <input type="text" style="color: white" [style.background]="shortOverBackgroundColor" readonly
+                    decimalOnly formControlName="overShort" class="form-control" placeholder="Over Short">
+                </div>
+                <i *ngIf="dayreconPayOutValues.get('overShort').value">$</i>
+              </div>
+            </div>
+            <div [hidden]="true" class="col-sm-12">
+              <!-- <textarea class="form-control" name="" id="" cols="70" rows="10" placeholder="Notes"> -->
+              <textarea class="form-control" name="" id="" rows="7" placeholder="Notes">
+          </textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div class="mt-3">
+      <button class="btn btn-md btn-primary mr-3" (click)="saveEntries()"> Save Entries</button>
+      <button class="btn btn-md btn-primary mr-3" (click)="back()"> Back To Calender</button>
+    </div>
+  </div>
+
+  <!-- </div> -->
+</div>
+
+<div *ngIf="isShowDetails" class="card">
+  <div class="card-body">
+
+    <div>
+      <app-expandable-grid #dayReconGrid [expandableGridOptions]="gridOptions" [rowData]="rowData"
+        (gridReady)="onGridReady($event)" [gridHeight]="'410px'">
+      </app-expandable-grid>
+    </div>
+    <div class="mt-2">
+      <button class="btn btn-primary" (click)="backToList()"> Back To List </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #modalContent let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">Event action occurred</h5>
+    <button type="button" class="close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div>
+      Action:
+      <pre>{{ modalData?.action }}</pre>
+    </div>
+    <div>
+      Event:
+      <pre>{{ modalData?.event | json }}</pre>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="close()">
+      OK
+    </button>
+  </div>
+</ng-template>
+
+<div *ngIf="isShowExpenses">
+  <app-expenses-details [storeLocationID]="storeLocationId" [currentDate]="currentDate"
+    [inputStatusString]="inputStatusString"
+    [movementHeaderID]="selectedMomentHeader.movementHeaderData.movementHeaderID"
+    (backToDayReconList)="backToDayReconList($event)">
+  </app-expenses-details>
+</div>
+
+<div *ngIf="isDayDetail">
+  <app-day-details [storeLocationID]="storeLocationId" [shiftWiseValue]="shiftWiseValue"
+    [movementHeaderID]="selectedMomentHeader.movementHeaderData.movementHeaderID"
+    [movementHeaderDetails]="selectedMomentHeader.movementHeaderData"
+    (backToDayReconList)="back($event)" [dayReconData]="dayReconInfoData">
+  </app-day-details>
+
+</div>

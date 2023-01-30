@@ -1,0 +1,203 @@
+.card {
+  border-radius: 0.25rem !important;
+  box-shadow: none !important;
+}
+.card .card-header {
+  background: #eff2f8;
+  padding: 10px;
+}
+.card:hover {
+  box-shadow: none !important;
+}
+.card-header {
+  display: flex;
+  color: #212529 !important;
+}
+.card-header .left {
+  width: 50%;
+  margin-right: auto;
+}
+.card-header .right {
+  margin-left: auto;
+}
+
+.card-header-part-right {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 20px;
+}
+.card-footer {
+  display: flex;
+  padding: 10px;
+  background: #f9f9f9;
+  border-top: 1px solid #cfdbe3;
+}
+.card-footer .right {
+  margin-left: auto;
+}
+
+.fixed {
+  background-color: #43a6ec;
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  padding: 10px 10px 0px 10px;
+  z-index: 98;
+}
+.body {
+  padding: 5px 5px 5px 5px;
+}
+.card-header-h5 {
+  padding: 1rem 1rem 0rem 1.25rem;
+  margin-bottom: 0px;
+}
+
+::ng-deep .inv-date-picker {
+  app-datepicker {
+    .input-group {
+      .mat-form-field-appearance-legacy .mat-form-field-wrapper {
+        padding-bottom: 0px;
+      }
+      .mat-form-field-flex {
+        border-radius: 4px !important;
+        .mat-form-field-infix {
+          .mat-input-element {
+            border-radius: 0.25rem !important;
+          }
+        }
+      }
+    }
+  }
+}
+::ng-deep .inv-date-picker {
+  mat-form-field {
+      .mat-form-field-wrapper {
+          .mat-form-field-underline {
+              bottom: 0 !important;
+              display: none;
+          }
+      }
+  }
+}
+.topdiv {
+  position: absolute;
+  width: 98.6%;
+  height: 99.5%;
+  background: white;
+  z-index: 96;
+  opacity: 0.7;
+  display: table;
+}
+.content {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+.diffAmount {
+  color: red;
+}
+
+.label {
+  font-size: 0.9rem !important;
+}
+.btn {
+  font-size: 0.9rem !important;
+}
+.fa {
+  font-size: 0.9rem !important;
+}
+.action-color {
+  color: #f9bc70;
+}
+.btn-action {
+  box-shadow: 0px 5px 16px 0px rgba(0, 0, 0, 0.1);
+  background-color: #f9bc70;
+  color: white;
+}
+.btn-primary {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+  border: 1px solid transparent !important;
+  border-radius: 0.25rem !important;
+}
+
+.input-group > .form-control {
+  border-right: none;
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.form-control {
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #e2e5ec;
+  border-radius: 4px !important;
+  -webkit-transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+  transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+}
+
+.input-group > .input-group-append {
+  border-left: none;
+  cursor: pointer;
+}
+
+.input-group .input-group-text {
+  line-height: 0;
+}
+.input-group-text {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0.55rem 1rem;
+  margin-bottom: 0;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #74788d;
+  text-align: center;
+  white-space: nowrap;
+  background-color: #fff;
+  border: 1px solid #e2e5ec;
+  border-radius: 4px;
+}
+.form-control:active,
+.form-control:focus {
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+.form-control:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: #669cf7;
+  outline: 0;
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(88, 103, 221, 0.25);
+  box-shadow: 0 0 0 0.2rem rgba(88, 103, 221, 0.25);
+}
+.form-group .form-text {
+  font-size: 0.9rem;
+}
+
+.form-group > label {
+  display: block !important;
+}
+
+.fa12 {
+  font-size: 1.2rem !important;
+}
+
+.has-float-label label,
+.has-float-label > span {
+  left: 0rem;
+}
+
+.input-icon > i {
+  width: 16px;
+}

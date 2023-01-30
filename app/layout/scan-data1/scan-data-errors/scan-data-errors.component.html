@@ -1,0 +1,37 @@
+<!-- <p *ngFor="let error of errors">
+  <ngb-alert [type]="error.status==='Posted'? 'success':'danger'" [dismissible]="true" (close)="closeAlert(error)">
+    <div class="row">
+      <div class="col">
+        {{ error.companyName }} submittedOn: {{ error.submittedOn }} Status: {{ error.status }}
+      </div>
+       <div class="col">
+        <div class="row">
+          <div class="col">
+            <a [href]="'http://104.239.143.92:5007/' + error.file" download="file.txt"
+            placement="top" ngbTooltip="Download File"
+            > <i class="fa fa-arrow-circle-down" aria-hidden="true"></i>
+            </a>
+          </div>
+          <div class="col">
+            <a  *ngIf="error.status === 'Failed'" href="javascript:void(0)" (click)="retryScanDataLog(error.id)">   Retry</a>
+          </div>
+        </div>
+       </div>
+    </div>
+  </ngb-alert>
+</p> -->
+
+
+<p *ngFor="let error of errors">
+  <ngb-alert [type]="error.status==='Posted'? 'success':'danger'" [dismissible]="true" (close)="closeAlert(error)">
+    {{ error.companyName }} submittedOn: {{ error.submittedOn }} Status: {{ error.status }}
+    <span *ngIf="false" class="marg-icon my-error-icons" (click)="getScanDataFile(error.id, error.storeName)"
+    placement="top" ngbTooltip="Download File"
+    > <i class="fa fa-arrow-circle-down" aria-hidden="true"></i>
+    </span>
+    <span *ngIf="error.status === 'Failed'" class="my-error-icons"
+    placement="top" ngbTooltip="Retry File Submission"
+      (click)="retryScanDataLog(error.id)"><i class="fa fa-repeat" aria-hidden="true"></i>
+    </span>
+  </ngb-alert>
+</p>

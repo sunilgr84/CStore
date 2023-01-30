@@ -1,0 +1,31 @@
+<!-- isSearchTextBoxRequired -->
+<div class="row justify-content-end margin-bottom-5" *ngIf="false">
+  <div class="col-sm-3">
+    <div class="input-group">
+      <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+        placeholder="Filter text..." [(ngModel)]="filterText" name="filterText" (keydown)="onFilterTextBoxChanged()">
+      <div class="input-group-append">
+        <span class="input-group-text" id="inputGroup-sizing-default" (click)="onFilterTextBoxChanged()"><i
+            class="fa fa-search" aria-hidden="true"></i></span>
+      </div>
+    </div>
+  </div>
+</div>
+<ag-grid-angular #expandableGrid style="width: 100%;" [ngStyle]="{ height: gridHeight }" id="myGrid" [rowData]="rowData"
+  class="ag-theme-balham" [columnDefs]="columnDefs" [gridOptions]="gridOptions" [enableSorting]="true"
+  [masterDetail]="true" [defaultColDef]="defaultColDef" [frameworkComponents]="frameworkComponents"
+  [detailRowHeight]="detailRowHeight" [suppressContextMenu]="suppressContextMenu"
+  [detailCellRenderer]="detailCellRenderer" (rowEditingStarted)="onRowEditingStarted($event)"
+  (rowEditingStopped)="onRowEditingStopped($event)" (cellValueChanged)="onCellChanged($event)" [editType]="editType"
+  (gridReady)="onGridReady($event)" [getRowNodeId]="getRowNodeId" [groupUseEntireRow]="true">
+</ag-grid-angular>
+<!-- 
+<div *ngIf="expandableGridOptions.pagination">
+        <ngb-pagination  class="d-flex justify-content-center"  
+        [collectionSize]="totalPageCount" 
+        [maxSize]="10" [rotate]="true"
+        [(page)]="currentPage" 
+        (pageChange)="pageSizeChanged($event)"
+        [boundaryLinks]="true">
+      </ngb-pagination>
+    </div> -->

@@ -1,0 +1,17 @@
+<div [@routerTransition]>
+    <ngb-tabset #tabs="ngbTabset" type="pills" (tabChange)="tabChange($event)" [activeId]="activeId">
+        <ngb-tab id="from-pos" title="From POS">
+                <ng-template ngbTabContent>
+                        <app-from-pos>
+                </app-from-pos>
+                    </ng-template>
+        </ngb-tab>
+        <ngb-tab id="to-pos" title="To POS" >
+                <ng-template ngbTabContent>
+                        <app-to-pos>
+                </app-to-pos>
+                    </ng-template>
+        </ngb-tab>
+    </ngb-tabset>
+    <br/>
+</div>

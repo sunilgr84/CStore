@@ -1,0 +1,122 @@
+<nav class="navbar navbar-expand-lg fixed-top">
+    <a class="navbar-brand" href="#">
+        <img src="assets/images/360_logo_new.png" class="user-avatar" />
+    </a>
+    <div class="v-border  weather-info" *ngIf="isWeatherShow">
+        <h5 class="weather-widget__temperature row justify-content-center">
+            <img class="weather-widget__img" [src]="icon" alt="{{weatherInfo && weatherInfo.name}}" width="40"
+                height="40">
+        </h5>
+        <h5> <span class="city_name">{{weatherInfo && weatherInfo.name}}</span> |
+            <!-- <small class="city_name">{{weatherInfo && weatherInfo.name}}</small> &nbsp; | -->
+            <span class="weather_count"> {{tempereture && tempereture.temp}} {{unit}} </span></h5>
+    </div>
+    <span class="ml-3 mt-3">
+        <h6>{{userInfo.firstName ? 'Hi '+userInfo.firstName+',' : 'Hi,'}}&nbsp;{{currentTimeMsg}}</h6>
+        <!-- {{userInfo && userInfo.userName | titlecase }} -->
+    </span>
+    <button class="navbar-toggler" type="button" (click)="toggleSidebar()">
+        <i class="fa fa-bars text-muted" aria-hidden="true"></i>
+    </button>
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ml-auto">
+            <!-- <li class="nav-item dropdown" ngbDropdown *ngIf="userInfo?.companyId">
+                <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
+                    {{userInfo.companyName}} <b class="caret"></b>
+                </a>
+                <div class="dropdown-menu-right" ngbDropdownMenu>
+                    <a class="dropdown-item" (click)="companyPopup()">
+                        {{ 'Change Company' }}
+                    </a>
+                </div>
+                <span>
+                    <img [src]="brandImage" class="brandImg" alt="brand" style="width:15%;" />
+                </span>
+            </li> -->
+            <span *ngIf="isBrandImg">
+                <img [src]="brandImage" class="brand-images" alt="brand" />
+            </span>
+
+          
+            <li class="nav-item dropdown" *ngIf="userInfo?.companyId">
+                <div *ngIf="!isLoading">
+                    <div id="header-company" style="min-width:190px;max-width: 270px;"
+                        *ngIf="companyList.length>1;else singleCompany">
+                        <ng-select [items]="companyList" bindLabel="companyDetailName" autofocus bindValue="companyID"
+                            [(ngModel)]="selectedCompanyId" (change)="companyChange($event)">
+                            <ng-template ng-option-tmp let-item="item">
+                                <div placement="left" ngbTooltip="{{item.companyDetailName}}" container="body" tooltipClass="tooltip-custom-bggreen">
+                                    {{item.companyDetailName}}</div>
+                            </ng-template>
+                        </ng-select>
+                    </div>
+                    <ng-template #singleCompany>
+                        <div class="single-company">
+                            <span> {{companyList && companyList[0] &&  companyList[0].companyDetailName}}</span>
+                        </div>
+                    </ng-template>
+                </div>
+
+                <div *ngIf="isLoading">
+                    <img src="assets/images/small-spinner.gif">
+                </div>
+            </li>
+            <li class="nav-item dropdown notification" ngbDropdown >
+                <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
+                    <i class="fa fa-bell"></i> <b class="caret"></b><span class="sr-only">(current)</span>
+                    <span class="badge badge-danger" *ngIf="noOfItemsInPushToPOSList.length!==0" >{{noOfItemsInPushToPOSList?.length || '0' }} </span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right scrollbar" ngbDropdownMenu>
+                    <div class="dropdown-item" *ngIf="noOfItemsInPushToPOSList.length ===0">
+                        <p class="pt-2">No new notifications to show</p>
+                    </div>
+                    <div *ngFor="let itemsObj of noOfItemsInPushToPOSList" class="dropdown-item">
+                        <div class="row">
+                                <div class="col-sm-1 mt-2">
+                                        <i *ngIf="itemsObj.NotificationSeverityID === 4" class="fa fa-exclamation-triangle" style="color:red" aria-hidden="true"></i>
+                                </div>
+                            <div class="col-sm-7" style=" overflow-wrap: break-word; " [ngStyle]="{'font-weight': !itemsObj.markAsRead ? 'bold' : 'normal'}"> 
+                                <span *ngIf="itemsObj.NotificationSeverityID != 2"> {{itemsObj.StoreName}}
+                                    {{ 'have'}} {{itemsObj.errorCount }} <br>{{'item(s) in error' }}
+                                </span>
+                                <span *ngIf="itemsObj.NotificationSeverityID === 2"> Successfully pushed {{itemsObj.TotalCount }} 
+                                    <br>to {{itemsObj.StoreName}}
+                                    </span>
+                            </div>
+                            <div class="col-sm-2 mr-3" style="float: right;">
+                                <button class="btn btn-cstorebo" type="button"
+                                    (click)="showPOSData(itemsObj.StoreLocationID)">Show</button>
+                            </div>
+                            <div class="col-sm-1 mt-2">
+                                    <i style="font-size: 18px;" *ngIf="!itemsObj.markAsRead" (click) = "markAsRead(itemsObj.NotificationID)" class="fa fa-check" aria-hidden="true" title="Mark as read" ></i>
+                                    <i style="font-size: 18px; color: #53bcff; text-shadow: 0 0 1px;" *ngIf="itemsObj.markAsRead" (click) = "markAsRead(itemsObj.NotificationID)" class="fa fa-check-circle" aria-hidden="true" ></i>
+                            </div>
+                            <!-- <div class="col-sm-3" style="float: right;">
+                                <button class="btn btn-cstorebo" type="button"
+                                    (click)="pushToPOS(itemsObj.slid)">Sync
+                                    Now</button>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item dropdown" ngbDropdown>
+                <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
+                    <i class="fa fa-user"></i> {{userInfo.userName ? (userInfo.userName | titlecase) : 'Guest'}} <b
+                        class="caret"></b>
+                </a>
+                <div class="dropdown-menu-right" ngbDropdownMenu>
+                    <label class="dropdown-item id-label">Id : {{pad(userInfo.companyId.toString(),4)}}</label>
+                    <a class="dropdown-item" [routerLink]="['/user-management']">
+                        <i class="fa fa-fw fa-user"></i> {{ 'Profile' }}
+                    </a>
+                    <a class="dropdown-item" [routerLink]="['/login']" (click)="onLoggedout()">
+                        <i class="fa fa-fw fa-power-off"></i> {{ 'Log Out' }}
+                    </a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+<button *ngIf="isShowScrollToTop" class="scrollTopBtn" title="Go to top" (click)="gotoTop()"><i
+        class="fa fa-arrow-up"></i></button>

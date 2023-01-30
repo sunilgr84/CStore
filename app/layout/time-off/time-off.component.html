@@ -1,0 +1,145 @@
+<div [@routerTransition]>
+  <div class="card">
+    <div class="card-body" *ngIf=isEdit>
+      <!-- Add Time off Detail -->
+      <div class="card-body">
+        <div class="mb-3">
+          <h5 class="card-title">{{title}}</h5>
+        </div>
+        <form [formGroup]="timeOffDetailForm">
+          <div class="row">
+            <div class="col-sm-6">
+              <label class="form-group has-float-label col-sm-12">
+                <input type="text" class="form-control " formControlName="reason" placeholder="Enter Reason" id="reason"
+                  name="reason" required
+                  [ngClass]="{ 'is-invalid': submitted && timeOffDetailForm.get('reason').invalid }">
+                <div *ngIf="submitted && timeOffDetailForm.get('reason').invalid" class="alert alert-danger">
+                  Reason is required
+                </div>
+                <span for="reason">Reason</span>
+              </label>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-group has-float-label">
+                <app-datepicker [inputDate]="startDate" name="startDate" id="startDate"
+                  (dateChange)="dateChangeStartDate($event)" required>
+                </app-datepicker>
+                <div *ngIf="submitted && timeOffDetailForm.get('startDate').invalid" class="alert alert-danger">
+                  StartDate is required
+                </div>
+                <span> Start Date</span>
+              </label>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-group has-float-label">
+                <app-datepicker [inputDate]="endDate" name="endDate" id="endDate"
+                  (dateChange)="dateChangeEndDate($event)" required>
+                </app-datepicker>
+                <div *ngIf="submitted && timeOffDetailForm.get('endDate').invalid" class="alert alert-danger">
+                  EndDate is required
+                </div>
+                <span> End Date</span>
+              </label>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-group has-float-label col-sm-12">
+                <input type="text" class="form-control " formControlName="totalHours" placeholder="Enter Total Hours"
+                  id="totalHours" name="totalHours" required
+                  [ngClass]="{ 'is-invalid': submitted && timeOffDetailForm.get('totalHours').invalid }">
+                <!-- <div class="col-md-3 col-sm-3">Gallons</div> -->
+                <div *ngIf="submitted && timeOffDetailForm.get('totalHours').invalid" class="alert alert-danger">
+                  Total hours is required
+                </div>
+                <span for="totalHours">Total Hours</span>
+              </label>
+            </div>
+            <div class="col-sm-6 " *ngIf="timeOffId === 0">
+              <label class="form-group has-float-label col-sm-12">
+                <select id="status" class="form-control" name="status" formControlName="status">
+                  <option [value]="0" selected>Pending</option>
+                </select>
+                <span for="status">Select Status</span>
+              </label>
+            </div>
+            <div class="col-sm-6 " *ngIf="timeOffId !== 0">
+              <label class="form-group has-float-label col-sm-12">
+                <select id="status" class="form-control" name="status" formControlName="status">
+                  <option value="">--Select Status-- </option>
+                  <option value="0">Pending</option>
+                  <option value="1">Approve</option>
+                  <option value="2">Reject</option>
+                </select>
+                <span for="status">Select Status</span>
+              </label>
+            </div>
+            <div class="col-sm-6">
+              <button type="button" class="btn btn-md btn-primary mr-3" (click)="resetTimeOffDetails()">
+                Reset</button>
+              <button type="button" class="btn btn-md btn-primary mr-3" [disabled]="!timeOffDetailForm.valid"
+                (click)="saveTimeOff()">
+                Save</button>
+
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <br><br><br><br><br>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-sm-6 pl-6 pr-6">
+          <label class="form-group has-float-label ">
+            <ng-select [items]="storeLocationList" bindLabel="storeName" [(ngModel)]="storeLocationID"
+              bindValue="storeLocationID" placeholder="Store Location" (change)="bindStoreLocationId()"></ng-select>
+            <span> Store Location</span>
+          </label>
+          <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="margin-bottom-5 col-sm-4">
+            <button type="button" class="btn btn-md btn-cstorebo" (click)="addTimeOff()">
+              <i class="fa fa-plus"></i> Add Time Off</button>
+          </div>
+          <div class="row justify-content-end margin-bottom-5 col-sm-8">
+
+            <div class="inner-addon right-addon">
+              <span>
+                <i class="fa fa-search card-title" aria-hidden="true"></i>
+              </span>
+              <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+                placeholder="Filter Search" [(ngModel)]="filterText" name="filterText">
+            </div>
+          </div>
+        </div>
+        <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+          [textFilter]="filterText" (edit)="editAction($event)"  (delete)="delete($event)"></app-cstore-grid>
+      </div>
+    </div>
+
+    <br><br><br><br>
+    <div class="card-body">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="margin-bottom-5 col-sm-4">
+          </div>
+          <div class="row justify-content-end margin-bottom-5 col-sm-8">
+            <div class="inner-addon right-addon">
+              <span>
+                <i class="fa fa-search card-title" aria-hidden="true"></i>
+              </span>
+              <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+                placeholder="Filter Search" [(ngModel)]="filterTextByRole" name="filterTextByRole">
+            </div>
+          </div>
+        </div>
+        <app-cstore-grid [rowData]="rowDataByRole" [cStoreGridOptions]="gridOptionsByRole"
+          (gridReady)="onGridReadyByGrid($event)" [textFilter]="filterTextByRole" (approve)="approveAction($event)"
+          (reject)="rejectAction($event)"></app-cstore-grid>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,274 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "bootstrap/bootstrap";
+//@import "~node_modules/bootstrap/scss/bootstrap";
+@import "spinner";
+@import "utils";
+@import "rtl";
+@import "responsive";
+@import "custom";
+@import "mixins";
+@import "text";
+@import "button";
+@import "fonts/flaticon.css";
+@import "fonts/fonticon.css";
+@import "dialog";
+@import "cg-grid";
+@import "~ag-grid-community/dist/styles/ag-grid.css";
+@import "~ag-grid-community/dist/styles/ag-theme-balham.css";
+@import "~ag-grid-community/dist/styles/ag-theme-material.css";
+// regular style toast
+@import "~ngx-toastr/toastr.css";
+// bootstrap style toast
+// or import a bootstrap 4 alert styled design (SASS ONLY)
+// should be after your bootstrap imports, it uses bs4 variables, mixins, functions
+@import "~ngx-toastr/toastr-bs4-alert";
+@import "~@ng-select/ng-select/themes/default.theme.css";
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import "~angular-calendar/css/angular-calendar.css";
+@import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
+@import "~angular-sidebar-menu/themes/admin-lte.scss";
+// ============================ float lable ==============================================================
+.has-float-label {
+    display: block;
+    position: relative;
+}
+
+.has-float-label label,
+.has-float-label > span {
+    position: absolute;
+    cursor: text;
+    font-size: 90%;
+    opacity: 1;
+    -webkit-transition: all 0.2s;
+    transition: all 0.2s;
+    top: -0.5em;
+    left: 1.75rem;
+    z-index: auto;
+    line-height: 1;
+    padding: 0 3px;
+    background-color: #fff;
+}
+
+.has-float-label label::after,
+.has-float-label > span::after {
+    content: " ";
+    display: block;
+    position: absolute;
+    background: #fff;
+    height: 2px;
+    top: 50%;
+    left: -0.2em;
+    right: -0.2em;
+    z-index: -1;
+}
+
+.has-float-label .form-control::-webkit-input-placeholder {
+    opacity: 1;
+    -webkit-transition: all 0.2s;
+    transition: all 0.2s;
+}
+
+.has-float-label .form-control:placeholder-shown:not(:focus)::-webkit-input-placeholder {
+    opacity: 0;
+}
+
+// firefox placeholder
+.has-float-label .form-control::-moz-placeholder {
+    opacity: 1;
+    -webkit-transition: all 0.2s;
+    transition: all 0.2s;
+}
+.has-float-label .form-control:placeholder-shown:not(:focus)::-moz-placeholder {
+    opacity: 0;
+}
+
+// .has-float-label .form-control:placeholder-shown:not(:focus)+* {
+//     font-size: 120%;
+//     opacity: .5;
+//     top: .5em;
+// }
+.was-validated .form-control:invalid,
+.form-control.is-invalid {
+    background-image: none !important;
+}
+
+.form-control:focus::-webkit-input-placeholder {
+    color: transparent;
+}
+.form-control:focus::-moz-placeholder {
+    color: transparent;
+}
+.form-control:-moz-placeholder {
+    color: transparent;
+}
+
+.input-group .has-float-label {
+    display: table-cell;
+}
+
+.input-group .has-float-label .form-control {
+    border-radius: 0.25rem;
+}
+
+.input-group .has-float-label:not(:last-child),
+.input-group .has-float-label:not(:last-child) .form-control {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    border-right: 0;
+}
+
+.input-group .has-float-label:not(:first-child),
+.input-group .has-float-label:not(:first-child) .form-control {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+}
+
+// ================================================= End ================================================================
+.ag-theme-balham {
+    font: 400 12px "Roboto", sans-serif !important;
+}
+.ag-theme-balham-decrease {
+    font: 400 10px "Roboto", sans-serif !important;
+}
+@media print {
+    .breadcrumb {
+        display: none !important;
+    }
+}
+
+#toast-container > div {
+    opacity: 1;
+}
+
+.multiselect-dropdown .dropdown-btn .dropdown-down {
+    border-top: 5px solid #adadad !important;
+    border-left: 5px solid transparent !important;
+    border-right: 5px solid transparent !important;
+}
+
+.multiselect-dropdown .dropdown-btn .dropdown-up {
+    border-bottom: 5px solid #adadad !important;
+    border-left: 5px solid transparent !important;
+    border-right: 5px solid transparent !important;
+}
+
+.custom-header-title {
+    background: #007bff42;
+    padding: 5px;
+}
+
+.input-icon {
+    position: relative;
+}
+
+.input-icon > i {
+    position: absolute;
+    display: block;
+    transform: translate(0, -50%);
+    top: 50%;
+    pointer-events: none;
+    width: 25px;
+    text-align: center;
+    font-style: normal;
+}
+
+app-manage-items {
+    .input-icon > i {
+        width: 12px;
+        font-size: 0.75rem;
+    }
+}
+
+.input-icon > input {
+    padding-left: 15px;
+    padding-right: 0;
+}
+
+.input-icon-right > i {
+    right: 0;
+}
+
+.input-icon-right > input {
+    padding-left: 0;
+    padding-right: 25px;
+    text-align: right;
+}
+
+.ng-valid[required],
+.ng-valid.required {
+    border-left: 5px solid #42a948;
+    border-radius: 8px;
+    /* green */
+}
+
+.ng-invalid:not(form) {
+    border-left: 5px solid #a94442;
+    border-radius: 8px;
+    /* red */
+}
+
+.ng-select.ng-invalid:not(form) {
+    border-left: none !important;
+    border-radius: 0;
+}
+
+.ng-select.ng-valid[required],
+.ng-select.ng-valid.required {
+    border-left: none !important;
+    border-radius: 0;
+    /* green */
+}
+
+.ng-select.ng-invalid {
+    .ng-select-container {
+        border-left: 5px solid #a94442 !important;
+        border-radius: 8px;
+    }
+}
+
+.ng-select.ng-valid[required],
+.ng-select.ng-valid.required {
+    .ng-select-container {
+        border-left: 5px solid #42a948 !important;
+        border-radius: 8px;
+        /* green */
+    }
+}
+
+.collapse.ng-invalid:not(form) {
+    border-left: none;
+}
+
+.btn-custom {
+    // margin-right: 5px;
+    border-radius: 50%;
+}
+.ag-theme-material .ag-header {
+    color: black !important;
+    background-color: #19b5fe !important;
+}
+.ag-theme-material .ag-paging-panel {
+    color: black !important;
+    font-weight: bold;
+}
+.div-header {
+    display: table;
+    padding: 4px !important;
+    height: 100%;
+}
+.span-header {
+    display: table-cell;
+    vertical-align: middle;
+    padding-top: 2px !important;
+}
+.ag-theme-material .ag-paging-panel > span {
+    margin-right: 40px;
+}
+.ag-theme-material .ag-paging-panel > span {
+    margin-left: 10px;
+}
+
+.ag-theme-material {
+    font: 400 13px "Segoe UI", sans-serif;
+}

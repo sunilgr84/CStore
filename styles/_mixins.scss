@@ -1,0 +1,300 @@
+//These are collection of useful mixins found on web
+
+// * * * * *
+// Responsive mixin
+// Logic of the mixin
+@mixin mq(
+  $from: false,
+  $to: false,
+  $and: false,
+  $media-feature: width,
+  $media-type: all,
+  $bp: $grid_breakpoints
+) {
+  $min-width: 0;
+  $max-width: 0;
+  $media-query: ""; // From: this breakpoint (inclusive)
+  @if $from {
+    @if type-of($from) ==number {
+      $min-width: $from;
+    } @else {
+      $min-width: map_get($bp, $from);
+    }
+  } // Until: that breakpoint (exclusive)
+  @if $to {
+    @if type-of($to) ==number {
+      $max-width: $to;
+    } @else {
+      //$negative: if($em-media-queries, 0.01em, 1px);
+      $max-width: map_get($bp, $to) - 1px;
+    }
+  }
+
+  @if $media-feature {
+    @if $min-width !=0 {
+      $media-query: "#{$media-query} and (min-#{$media-feature}: #{$min-width})";
+    }
+    @if $max-width !=0 {
+      $media-query: "#{$media-query} and (max-#{$media-feature}: #{$max-width})";
+    }
+  }
+
+  @if $and {
+    $media-query: "#{$media-query} and #{$and}";
+  } // Remove unnecessary media query prefix 'all and '
+  @if ($media-type== "all" and $media-query != "") {
+    $media-type: "";
+    $media-query: str-slice(unquote($media-query), 6);
+  }
+
+  @media #{$media-type + $media-query} {
+    @content;
+  }
+}
+
+// Examples of implementation
+//
+//div{
+//    @include mq($from: xs) {
+//        background-color: darkmagenta;
+//   }
+//    @include mq($to: sm) {
+//        background-color: darkmagenta;
+//    }
+//    @include mq(xs, sm) {
+//        background-color: darkmagenta;
+//    }
+//    @include mq($from: sm, $and: '(orientation: landscape)') {
+//        background-color: darkmagenta;
+//    }
+//    @include mq(md, $media-type: screen) {
+//        background-color: darkmagenta;
+//    }
+//
+//    *** Advanced use
+//    $custom-breakpoints: (L: 900px, XL: 1200px);
+//    @include mq(L, $bp: $custom-breakpoints) {
+//        background-color: lightgreen;
+//    }
+//}
+//
+// * * * * *
+
+// For placeholder customization supports for different browsers
+@mixin placeholder {
+  &.placeholder {
+    @content;
+  }
+  &:-moz-placeholder {
+    @content;
+  }
+  &::-moz-placeholder {
+    @content;
+  }
+  &:-ms-input-placeholder {
+    @content;
+  }
+  &::-webkit-input-placeholder {
+    @content;
+  }
+}
+
+//Implementation
+//input,textarea{
+//    @include placeholder {
+//        background-color: black;
+//        color: white;
+//    }
+//}
+//or simply
+//@include placeholder{
+//    background-color: black;
+//    color: white;
+//}
+//this will generate a class with name placeholder which can be used to apply on input fields
+//
+
+// to avoid z-index issue
+@function z($name) {
+  @if index($z_indexes, $name) {
+    @return (length($z_indexes) - index($z_indexes, $name)) + 1;
+  } @else {
+    @warn 'There is no item "#{$name}" in this list; choose one of: #{$z_indexes}';
+    @return null;
+  }
+}
+
+//Implementation
+//.modal-popup{
+//    z-index: z('modal');
+//}
+//.header{
+//    z-index: z('site-header');
+//}
+//
+
+// to truncate text by providing max-width
+@mixin text_truncate() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+//Implementation
+//span {
+//  max-width: 100pxl
+//    @include text_truncate();
+//}
+//
+
+//
+// Bootstrap4 - Grid system
+// https://getbootstrap.com/
+//
+// Generate semantic grid columns with these mixins.
+
+@mixin make_container() {
+  width: 100%;
+  padding-right: ($grid_gutter_width / 2);
+  padding-left: ($grid_gutter_width / 2);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+// For each breakpoint, define the maximum width of the container in a media query
+@mixin make_container_max-widths(
+  $max_widths: $container_max_widths,
+  $breakpoints: $grid_breakpoints
+) {
+  @each $breakpoint, $container_max_width in $max_widths {
+    @include mq($breakpoint) {
+      max-width: $container_max_width;
+    }
+  }
+}
+
+@mixin make_row() {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: ($grid_gutter_width / -2);
+  margin-left: ($grid_gutter_width / -2);
+}
+
+@mixin make_col_ready() {
+  position: relative;
+  // Prevent columns from becoming too narrow when at smaller grid tiers by
+  // always setting `width: 100%;`. This works because we use `flex` values
+  // later on to override this initial width.
+  width: 100%;
+  min-height: 1px; // Prevent collapsing
+  padding-right: ($grid_gutter_width / 2);
+  padding-left: ($grid_gutter_width / 2);
+}
+
+@mixin make_col($size, $columns: $grid_columns) {
+  flex: 0 0 percentage($size / $columns);
+  // Add a `max-width` to ensure content within each column does not blow out
+  // the width of the column. Applies to IE10+ and Firefox. Chrome and Safari
+  // do not appear to require this.
+  max-width: percentage($size / $columns);
+}
+
+@mixin make_col_offset($size, $columns: $grid_columns) {
+  $num: $size / $columns;
+  margin-left: if($num == 0, 0, percentage($num));
+}
+//
+
+// Returns a blank string if smallest breakpoint, otherwise returns the name with a dash infront.
+// Useful for making responsive utilities.
+//
+//    >> breakpoint-infix(xs, (xs: 0, sm: 576px, md: 768px, lg: 992px, xl: 1200px))
+//    ""  (Returns a blank string)
+//    >> breakpoint-infix(sm, (xs: 0, sm: 576px, md: 768px, lg: 992px, xl: 1200px))
+//    "-sm"
+@function breakpoint_infix($name, $breakpoints: $grid_breakpoints) {
+  $min: map-get($breakpoints, $name);
+  @return if($min == 0, "", "-#{$name}");
+}
+
+// Framework grid generation
+//
+// Used only by Bootstrap to generate the correct number of grid classes given
+// any value of `$grid-columns`.
+
+@mixin make_grid_columns(
+  $prefix: 'col',
+  $columns: $grid_columns,
+  $gutter: $grid_gutter_width,
+  $breakpoints: $grid_breakpoints
+) {
+  // Common properties for all breakpoints
+  %grid-column {
+    position: relative;
+    width: 100%;
+    min-height: 1px; // Prevent columns from collapsing when empty
+    padding-right: #{$gutter/2};
+    padding-left: #{$gutter/2};
+  }
+
+  @each $breakpoint in map-keys($breakpoints) {
+    $infix: breakpoint_infix($breakpoint, $breakpoints);
+
+    // Allow columns to stretch full width below their breakpoints
+    @for $i from 1 through $columns {
+      .#{$prefix}#{$infix}-#{$i} {
+        @extend %grid-column;
+      }
+    }
+    .#{$prefix}#{$infix},
+    .#{$prefix}#{$infix}-auto {
+      @extend %grid-column;
+    }
+
+    @include mq($breakpoint) {
+      // @include media-breakpoint-up($breakpoint, $breakpoints) {
+      // Provide basic `.col-{bp}` classes for equal-width flexbox columns
+      .#{$prefix}#{$infix} {
+        flex-basis: 0;
+        flex-grow: 1;
+        max-width: 100%;
+      }
+      .#{$prefix}#{$infix}-auto {
+        flex: 0 0 auto;
+        width: auto;
+        max-width: none; // Reset earlier grid tiers
+      }
+
+      @for $i from 1 through $columns {
+        .#{$prefix}#{$infix}-#{$i} {
+          @include make_col($i, $columns);
+        }
+      }
+
+      .order#{$infix}-first {
+        order: -1;
+      }
+
+      .order#{$infix}-last {
+        order: $columns + 1;
+      }
+
+      @for $i from 0 through $columns {
+        .order#{$infix}-#{$i} {
+          order: $i;
+        }
+      }
+
+      // `$columns - 1` because offsetting by the width of an entire row isn't possible
+      @for $i from 0 through ($columns - 1) {
+        @if not($infix == "" and $i == 0) {
+          // Avoid emitting useless .offset-0
+          .offset#{$infix}-#{$i} {
+            @include make_col_offset($i, $columns);
+          }
+        }
+      }
+    }
+  }
+}
+//

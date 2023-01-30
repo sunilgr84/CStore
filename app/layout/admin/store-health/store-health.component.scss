@@ -1,0 +1,101 @@
+$dashboard-card-bg-color: #ffffff;
+$dashboard-card-color: #000000;
+
+.ref-edit-icon {
+  display: none;
+}
+
+.card-div:hover .ref-edit-icon {
+  position: absolute;
+  left: 74%;
+  display: block;
+  z-index: 1;
+
+  @media (min-width: 420px) and (max-width: 576px) {
+    left: 83%;
+  }
+
+  @media (min-width: 1440px) {
+    left: 84%;
+  }
+}
+
+.font-color {
+  color: #ffffff;
+  font-weight: unset;
+}
+
+.border-botton {
+  border-bottom: 1px solid;
+}
+
+#dashbaoard-card {
+  .card {
+    background: $dashboard-card-bg-color;
+    // margin-left: 1.5em;
+    min-width: 18em;
+    border: none;
+
+    .card-body {
+      padding: 1em 1.25rem !important;
+
+      h5 {
+        color: #ffffff;
+        text-align: center;
+      }
+
+      .list-group-item {
+        background-color: transparent;
+        color: $dashboard-card-color;
+        // border-bottom: 1px solid !important;
+        padding: 0.6em 0;
+
+        .currency-format {
+          float: right;
+          text-align: right;
+        }
+      }
+
+      .list-group-item:last-child {
+        border-bottom: none !important;
+      }
+    }
+  }
+
+  .widgets-list {
+    padding-left: 1em 1.25rem !important;
+    padding-right: 1em 1.25rem !important;
+    padding-bottom: 1em 1.25rem !important;
+    padding-top: 0 !important;
+  }
+
+  .widget-scrollbar {
+    position: relative;
+    height: 200px;
+    overflow: auto;
+  }
+
+  .table-wrapper-scroll-y {
+    display: block;
+  }
+
+  .data-not-available {
+    text-align-last: center;
+    margin-top: 50px;
+  }
+
+  .card-body div h5 {
+    position: absolute;
+    // background-image: linear-gradient(rgb(23, 47, 254), cyan);
+    background-image: linear-gradient(#007bff, #19b5fe80);
+    width: 100%;
+    top: 0px;
+    left: 0px;
+    padding: 6px;
+    border-radius: 15px 15px 0 0;
+  }
+}
+
+table tbody tr td {
+  font-size: 11px;
+}

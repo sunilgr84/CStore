@@ -1,0 +1,12 @@
+button:focus {
+  outline: 0px;
+}
+
+.modal-body {
+  overflow-y: auto;
+  max-height: 450px;
+}
+
+.modal-dialog {
+  width: 600px !important;
+}

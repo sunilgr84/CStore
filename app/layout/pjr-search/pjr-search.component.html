@@ -1,0 +1,429 @@
+<div style="min-height: 350px">
+  <div class="card mb-1">
+    <div class="card-body search-card">
+      <form [formGroup]="pjrSearchForm">
+        <!-- <h5 class="card-title">PJR Search </h5> -->
+        <div class="row mt-1">
+          <label class="form-group has-float-label col-sm-2"
+            *ngIf="(storeLocationList && storeLocationList.length>1);else singleStore">
+            <ng-select [items]="storeLocationList" [selectOnTab]="true" bindLabel="storeName"
+              bindValue="storeLocationID" labelForId="storeLocationID" formControlName="storeLocationId"
+              placeholder="Store Location" (change)="onStoreSelection($event)">
+            </ng-select>
+            <span>Store Location</span>
+          </label>
+          <ng-template #singleStore>
+            <label class="form-group has-float-label col-sm-2"
+              *ngIf="storeLocationList && storeLocationList.length===1">
+              <input type="text" class="form-control" id="storeName" [value]="storeLocationList[0].storeName"
+                name="storeName" placeholder="Store Name" readonly>
+              <span> Store Location </span>
+            </label>
+          </ng-template>
+          <label class="m-2" for="basic-switch">Calendar Date</label>
+          <mat-slide-toggle class="m-2" formControlName="dateType" (change)="onDateTypeChange($event)">
+          </mat-slide-toggle>
+          <label class="m-2" for="basic-switch">Business Date</label>
+          <label class="form-group has-float-label col-sm-4" *ngIf="showCalendarDate">
+            <app-datetimerangepicker [openPopover]="openPopover" [selectedDateTimeRange]="selectedDateTimeRange"
+              (dateTimeRangeSelected)="dateTimeRangeChange($event)"></app-datetimerangepicker>
+            <!-- <app-daterangepicker [openPopover]="openPopover" [selectedDateRange]="selectedDateRange"
+              (dateRangeSelecetd)="dateRangeChange($event)">
+            </app-daterangepicker> -->
+            <span> Select Date Range</span>
+          </label>
+          <label class="form-group has-float-label col-sm-4" *ngIf="showBusinessDate">
+            <ng-select #BusinessDates [items]="businessDatesList" [selectOnTab]="true" bindLabel="businessDate"
+              bindValue="businessDate" formControlName="businessDate" placeholder="Business Date">
+            </ng-select>
+            <span>Business Date</span>
+          </label>
+          <label class="has-float-label col-sm-2">
+            <input type="text" class="form-control input-height" id="freeText" formControlName="freeText"
+              placeholder="Free Text" (keyup.enter)="search()">
+            <span>Free Text</span>
+          </label>
+          <div class="col-sm-1">
+            <button type="button" class="btn btn-md btn-cstorebo w-100" (click)="search()">
+              Go</button>
+          </div>
+        </div>
+
+        <div class="row" style="display: none;">
+          <div class="col-sm-3 offset-sm-3">
+            <h5 *ngIf="totalDocumentCount > 0"><strong style="color: green">{{totalDocumentCount}} Records
+                Found!</strong>
+            </h5>
+            <h5 *ngIf="totalDocumentCount === 0"><strong style="color: green">No Records Found!</strong></h5>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="row" *ngIf="showSalesTotals">
+    <div class="col-md-12 text-right">
+      <div class="m-2">
+        <div class=" badge records-badge">
+          <h4 class="badge-content">{{totalDocumentCount}}</h4> Transactions
+        </div>
+
+        <div class="ml-3 badge sales-total-badge">
+          <h4 class="badge-content">${{salesTotals.total_sales.total_sales.value.toFixed(2)}}</h4>Total Sales
+        </div>
+
+        <div class="ml-3 badge mix-match-badge cursor-pointer" (click)="onClickFuelSales()">
+          <h4 class="badge-content">${{salesTotals.fuel_sales.total_sales.value.toFixed(2)}}</h4>Fuel Sales
+        </div>
+        <div class="badge records-badge-middle">
+          <h4 class="badge-content">
+            {{salesTotals.fuel_sales.total_sales_quantity?salesTotals.fuel_sales.total_sales_quantity.value.toFixed(0):0}}
+          </h4>Gallons
+        </div>
+
+        <div class="ml-3 badge expiring-badge cursor-pointer" (click)="onClickInsideSales()">
+          <h4 class="badge-content">${{salesTotals.inside_sales.total_sales.value.toFixed(2)}}</h4> Merchandise Sales
+        </div>
+        <div class="badge records-badge-end">
+          <h4 class="badge-content">
+            {{salesTotals.inside_sales.total_sales_quantity?salesTotals.inside_sales.total_sales_quantity.value:0}}</h4>
+          Quantity
+        </div>
+
+        <div *ngIf="showPromotionalSalesTotals" class="ml-3 badge expiring-badge cursor-pointer bg-warning"
+          (click)="onClickPromotionSales()">
+          <h4 class="badge-content">${{promotionalSales.toFixed(2)}}</h4> Promotion Sales
+        </div>
+        <div *ngIf="showPromotionalSalesTotals" class="badge records-badge-end">
+          <h4 class="badge-content">
+            {{promotionalSalesQty?promotionalSalesQty.toFixed(2):0}}</h4>
+          Quantity
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12 mt-1" *ngIf="showNoRowsMessage&&!isRowData&&!isPanelData">
+      <div class="bg-secondary text-light">
+        <h5 class="text-center p-2">No Records Found!</h5>
+      </div>
+    </div>
+    <div class="col-sm-2 pr-0 max-width-14">
+      <div class="card" *ngIf="isPanelData">
+        <div class="card-body pt-4 pr-3 pl-3 pb-4">
+          <!-- <div> -->
+          <!-- <button type="button" class="btn mw-auto mb-3 btn-primary" (click)="clearFilters()">
+              Clear
+            </button> -->
+          <!-- <button type="button" class="btn mw-auto mb-3 btn-primary float-right" (click)="applyFilters()">
+              Apply
+            </button> -->
+          <!-- </div> -->
+          <div class="line" *ngIf="eventTypeList.length>0">
+            <div>
+              <h6 class="cursor-pointer" (click)="isEventCollapsed = !isEventCollapsed"
+                [attr.aria-expanded]="!isEventCollapsed" aria-controls="eventCollapsed"> <strong> Event Types </strong>
+                <span class="float-right">
+                  <i class="fa fa-angle-down"></i>
+                </span>
+              </h6>
+            </div>
+            <div id="eventCollapsed" [ngbCollapse]="isEventCollapsed" class="custom-control custom-checkbox mb-1"
+              *ngFor="let item of eventTypeList">
+              <input type="checkbox" class="custom-control-input" [checked]="item.isChecked"
+                id="{{item.key+''+item.doc_count}}" name="{{item.key+''+item.doc_count}}"
+                (change)="item.isChecked=$event.target.checked;getPJRSearchRecordByEventType()">
+              <!-- (change)="item.isChecked=$event.target.checked;" -->
+              <label class="custom-control-label" for="{{item.key+''+item.doc_count}}">
+                {{item.key}} ( {{item.doc_count}} )</label>
+            </div>
+          </div>
+          <div class="line mt-2" *ngIf="departmentList.length>0">
+            <div>
+              <h6 class="cursor-pointer" (click)="isDeptCollapsed = !isDeptCollapsed"
+                [attr.aria-expanded]="!isDeptCollapsed" aria-controls="deptCollapsed"> <strong> Department </strong>
+                <span class="float-right">
+                  <i class="fa fa-angle-down"></i>
+                </span>
+              </h6>
+            </div>
+            <div id="deptCollapsed" [ngbCollapse]="isDeptCollapsed" class="custom-control custom-checkbox mb-1"
+              *ngFor="let item of departmentList">
+              <input type="checkbox" class="custom-control-input" [checked]="item.isChecked"
+                id="{{item.key+''+item.doc_count}}" name="{{item.key+''+item.doc_count}}"
+                (change)="item.isChecked=$event.target.checked;getPJRSearchRecordByDept()">
+              <!-- (change)="item.isChecked=$event.target.checked;"> -->
+              <label class="custom-control-label" for="{{item.key+''+item.doc_count}}">{{item.key}} (
+                {{item.doc_count}})
+              </label>
+            </div>
+          </div>
+          <div class="line mt-2" *ngIf="cashiersList.length>0">
+            <div>
+              <h6 class="cursor-pointer" (click)="isCashierCollapsed = !isCashierCollapsed"
+                [attr.aria-expanded]="!isCashierCollapsed" aria-controls="cashierCollapsed"> <strong> Cashiers </strong>
+                <span class="float-right">
+                  <i class="fa fa-angle-down"></i>
+                </span>
+              </h6>
+            </div>
+            <div id="cashierCollapsed" [ngbCollapse]="isCashierCollapsed" class="custom-control custom-checkbox mb-1"
+              *ngFor="let item of cashiersList">
+              <input type="checkbox" class="custom-control-input" [checked]="item.isChecked"
+                id="{{item.key+''+item.doc_count}}" name="{{item.key+''+item.doc_count}}"
+                (change)="item.isChecked=$event.target.checked;getPJRSearchRecordByCashier()">
+              <!-- (change)="item.isChecked=$event.target.checked;" -->
+              <label class="custom-control-label" for="{{item.key+''+item.doc_count}}">{{item.keys}} (
+                {{item.doc_count}}
+                )</label>
+            </div>
+          </div>
+          <div class="line mt-2" *ngIf="voidTransactionsList.length>0">
+            <div>
+              <h6 class="cursor-pointer" (click)="isVoidCollapsed = !isVoidCollapsed"
+                [attr.aria-expanded]="!isVoidCollapsed" aria-controls="voidCollapsed"> <strong> Void Transaction
+                </strong>
+                <span class="float-right">
+                  <i class="fa fa-angle-down"></i>
+                </span>
+              </h6>
+            </div>
+            <div id="voidCollapsed" [ngbCollapse]="isVoidCollapsed" class="custom-control custom-checkbox mb-1"
+              *ngFor="let item of voidTransactionsList">
+              <input type="checkbox" class="custom-control-input" [checked]="item.isChecked"
+                id="{{item.key+''+item.doc_count}}" name="{{item.key+''+item.doc_count}}"
+                (change)="item.isChecked=$event.target.checked;getPJRSearchRecordByVoidTransaction()">
+              <!-- (change)="item.isChecked=$event.target.checked;" -->
+              <label class="custom-control-label" for="{{item.key+''+item.doc_count}}">{{item.keys}} (
+                {{item.doc_count}}
+                )</label>
+            </div>
+          </div>
+          <div class="line mt-2" *ngIf="transactionStatusList.length>0">
+            <div>
+              <h6 class="cursor-pointer" (click)="isTStatusCollapsed = !isTStatusCollapsed"
+                [attr.aria-expanded]="!isTStatusCollapsed" aria-controls="tStatusCollapsed">
+                <strong> Transaction Status </strong>
+                <span class="float-right">
+                  <i class="fa fa-angle-down"></i>
+                </span>
+              </h6>
+            </div>
+            <div id="tStatusCollapsed" [ngbCollapse]="isTStatusCollapsed" class="custom-control custom-checkbox mb-1"
+              *ngFor="let item of transactionStatusList">
+              <input type="checkbox" class="custom-control-input" [checked]="item.isChecked"
+                id="{{item.key+''+item.doc_count}}" name="{{item.key+''+item.doc_count}}"
+                (change)="item.isChecked=$event.target.checked;getPJRSearchRecordByTransactionStatus()">
+              <!-- (change)="item.isChecked=$event.target.checked;" -->
+              <label class="custom-control-label" for="{{item.key+''+item.doc_count}}">
+                {{item.key}} ( {{item.doc_count}} )</label>
+            </div>
+          </div>
+          <div class="line mt-2" *ngIf="saleWithList.length>0">
+            <div>
+              <h6 class="cursor-pointer" (click)="isSaleWithCollapsed = !isSaleWithCollapsed"
+                [attr.aria-expanded]="!isSaleWithCollapsed" aria-controls="saleWithCollapsed"> <strong> Sale With
+                </strong>
+                <span class="float-right">
+                  <i class="fa fa-angle-down"></i>
+                </span>
+              </h6>
+            </div>
+            <div id="saleWithCollapsed" [ngbCollapse]="isSaleWithCollapsed" class="custom-control custom-checkbox mb-1"
+              *ngFor="let item of saleWithList">
+              <input type="checkbox" class="custom-control-input" [checked]="item.isChecked"
+                id="{{item.key+''+item.doc_count}}" name="{{item.key+''+item.doc_count}}"
+                (change)="item.isChecked=$event.target.checked;getPJRSearchRecordBySaleWith()">
+              <!-- (change)="item.isChecked=$event.target.checked;" -->
+              <label class="custom-control-label" for="{{item.key+''+item.doc_count}}">
+                {{item.keys}} ( {{item.doc_count}} )</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-10 mb-5">
+      <div class="row">
+        <div class="col-sm-12 col-xs-12 com-md-12">
+          <!-- <app-chart-range-selector (chartRangeSelected)="chartRangeSelected($event)"
+            [lineChartItemLabels]="lineChartItemLabels" [lineChartItemData]="lineChartItemData">
+          </app-chart-range-selector> -->
+          <app-line-chart-range-selector (chartRangeSelected)="chartRangeSelected($event)"
+            [lineChartItemLabels]="lineChartItemLabels" [lineChartItemData]="lineChartItemData"
+            [lineChartItemLabelsWithDates]="lineChartItemLabelsWithDates">
+          </app-line-chart-range-selector>
+        </div>
+        <!-- <div [ngClass]="(!isSalesDetail) ?'col-sm-12 col-xs-12 com-md-12':'col-sm-6 col-xs-6 com-md-6 pr-0'" -->
+        <div class="col-sm-6 col-xs-6 com-md-6 pr-0" *ngIf="isRowData">
+          <app-pagination-grid [rowData]="rowData" [paginationGridOptions]="gridOptions"
+            (gridReady)="onGridReady($event)" (rowSelected)="rowSelected($event)">
+          </app-pagination-grid>
+        </div>
+        <div class="col-sm-6 col-xs-6 com-md-6">
+          <div class="card" *ngIf="selectedRowData">
+            <div class="card-body">
+              <div class="row">
+                <span class="text-right btn-close" *ngIf="isSalesDetail">
+                  <button class="btn p-0" (click)="deSelect()"><i class="fa fa-times"></i></button>
+                </span>
+              </div>
+              <!-- <div class="row mt-4">
+                <h6 class="col-md-12 text-right font-weight-bold">{{selectedRowData.events.TransactionID}}</h6>
+              </div> -->
+              <div class="row mt-3">
+                <h5 class="w-100 text-center"> <strong>{{selectedRowData.storeName}}</strong>
+                </h5>
+                <div class="text-txnid">{{selectedRowData.events.TransactionID}}</div>
+                <!-- <h5 class="w-100 text-center">{{selectedRowData.event}}</h5> -->
+              </div>
+              <div class="row">
+                <div class="col-sm-8">
+                  <!-- <div>
+                    <label>TransactionID: {{selectedRowData.events.TransactionID}}</label>
+                  </div> -->
+                  <div>
+                    <label><span class="font-weight-bold">Cashier:&nbsp;&nbsp;</span>
+                      {{selectedRowData.events.CashierID}}&nbsp;&nbsp;
+                      @<span class="float-right">{{selectedRowData.events.RegisterID}}</span></label>
+                  </div>
+                </div>
+                <div class="col-sm-4 justify-content-end">
+                  <div>
+                    <label>{{selectedRowData.date}} &nbsp;&nbsp; {{selectedRowData.time}}</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <table class="table mb-0">
+                    <tbody>
+                      <tr *ngFor="let obj of salesTableDescData">
+                        <td>
+                          <div> {{obj.Description}} <span class="badge badge-yellow event-badge">No Scan</span></div>
+                          <div class="item-desc"> {{obj.MerchandiseCode}} @ {{obj.DepartmentName}}</div>
+                        </td>
+                        <td class="text-right">
+                          <span class="item-desc">{{obj.SalesQuantity}} &nbsp;@&nbsp;&nbsp;</span>
+                          ${{obj.RegularSellPrice.toFixed(2)}}</td>
+                      </tr>
+                      <tr *ngFor="let itemObj of itemLineData">
+                        <td>
+                          <div> {{itemObj.Description}} </div>
+                          <div class="item-desc"> {{itemObj.ItemCode.POSCode}} @ {{itemObj.DepartmentName}}</div>
+                        </td>
+                        <td class="text-right">
+                          <div><span class="item-desc">{{itemObj.SalesQuantity}} &nbsp;@&nbsp;&nbsp;</span>
+                            ${{itemObj.RegularSellPrice.toFixed(2)}}</div>
+                          <div *ngIf="itemObj.ItemTax" class="item-desc">Taxable</div>
+                        </td>
+                      </tr>
+                      <tr *ngFor="let fuelLineObj of fuelLineData">
+                        <td>
+                          <div> {{fuelLineObj.Description}}
+                            <img src="assets/images/fuel.svg" class="itemlines-avatar" /></div>
+                          <!-- <div class="item-desc"> {{fuelLineObj.ItemCode.POSCode}} @ {{itemObj.DepartmentName}}</div> -->
+                        </td>
+                        <td class="text-right">
+                          <span class="item-desc">{{fuelLineObj.SalesQuantity}} &nbsp;@&nbsp;&nbsp;</span>
+                          ${{fuelLineObj.ActualSalesPrice.toFixed(2)}}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="row border-top">
+                <div class="col-sm-12">
+                  <table class="table table-borderless mb-0">
+                    <tbody>
+                      <tr class="font-weight-bold">
+                        <td class="text-right w-75">Sub Total</td>
+                        <td class="text-right">
+                          ${{selectedRowData.events.TransactionSummary.TransactionTotalGrossAmount}}</td>
+                      </tr>
+                      <tr class="font-weight-bold">
+                        <td class="text-right">Tax</td>
+                        <td class="text-right">
+                          ${{selectedRowData.events.TransactionSummary.TransactionTotalTaxNetAmount}}</td>
+                      </tr>
+                      <tr class="font-weight-bold">
+                        <td>
+                          <span class="text-left">Payment Method -
+                            {{tenderInfoData[0].Tender.TenderCode}}\{{tenderInfoData[0].Tender.TenderSubCode}}
+                          </span>
+                          <span class="float-right">Total</span>
+                        </td>
+                        <td class="text-right">${{selectedRowData.events.TransactionSummary.TransactionTotalNetAmount}}
+                        </td>
+                      </tr>
+                      <!-- <tr class="font-weight-bold">
+                        <td class="text-right">Tender Amount</td>
+                        <td class="text-right">${{tenderInfoData[0].TenderAmount}}</td>
+                      </tr>
+                      <tr class="font-weight-bold">
+                        <td class="text-right">
+                          {{selectedRowData.events.TransactionSummary.TransactionTotalGrandAmount._direction}}</td>
+                        <td class="text-right">
+                          ${{selectedRowData.events.TransactionSummary.TransactionTotalGrandAmount._text}}</td>
+                      </tr>
+                      <tr>
+                        <td>Payment Method -
+                          {{tenderInfoData[0].Tender.TenderCode}}\{{tenderInfoData[0].Tender.TenderSubCode}}</td>
+                        <td class="text-right"></td>
+                      </tr> -->
+                    </tbody>
+                  </table>
+                </div>
+                <!-- <div class="col-sm-5 mt-3"> -->
+                <!-- <div> <label>Paid
+                      By-{{tenderInfoData[0].Tender.TenderCode}}\{{tenderInfoData[0].Tender.TenderSubCode}}
+                    </label> </div> -->
+                <!-- <div>
+                      <label> Tender Amount: ${{tenderInfoData[0].TenderAmount}} </label>
+                    </div> -->
+                <!-- <div>
+                    <label>Gross: ${{selectedRowData.events.TransactionSummary.TransactionTotalGrossAmount}} </label>
+                  </div> -->
+                <!-- <div>
+                    <label>Tax: ${{selectedRowData.events.TransactionSummary.TransactionTotalTaxNetAmount}}</label>
+                  </div> -->
+                <!-- <div>
+                    <label> Exempt: </label>
+                  </div> -->
+                <!-- <div>
+                    <label> Net: ${{selectedRowData.events.TransactionSummary.TransactionTotalNetAmount}}</label>
+                  </div> -->
+                <!-- </div> -->
+                <!-- <div class="col-sm-7 mt-3"> -->
+                <!-- <table class="table">
+                    <thead class="thead-light">
+                      <tr>
+                        <th scope="col">Tax Level</th>
+                        <th scope="col">Taxable Sales</th>
+                        <th scope="col">Tax Collected</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let taxDetailObj of transactionTaxDetailList">
+                        <th> {{taxDetailObj.TaxLevelID}} </th>
+                        <td>${{taxDetailObj.TaxableSalesAmount}} </td>
+                        <td>${{taxDetailObj.TaxCollectedAmount}}</td>
+                      </tr>
+                    </tbody>
+                  </table> -->
+                <!-- <div>
+                    <label
+                      class="mr-3">{{selectedRowData.events.TransactionSummary.TransactionTotalGrandAmount._direction}}:
+                    </label>
+                    <label>${{selectedRowData.events.TransactionSummary.TransactionTotalGrandAmount._text}} </label>
+                  </div> -->
+                <!-- </div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,62 @@
+<app-page-header [heading]="'Manufacturer'" [icon]="'fa-bar-chart-o'"></app-page-header>
+<div [@routerTransition]>
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <h5 class="card-title col-sm-12">Manufacturer
+          <button *ngIf="!showForm" type="button" class="btn btn-md btn-cstorebo float-right" (click)="onAddManf()">
+            <i class="fa fa-plus" aria-hidden="true"></i> Add New</button>
+        </h5>
+      </div>
+      <form novalidate [formGroup]="manufacturerForm" (ngSubmit)="saveOrUpdateManufacturer()">
+        <div class="row" *ngIf="showForm">
+          <div class="col-sm-3 pl-2 pr-2">
+            <label class="form-group has-float-label mb-1">
+              <input type="text" class="form-control" formControlName="manufacturerName" placeholder="Manufacturer Name"
+                name="manufacturerName" id="manufacturerName">
+              <span> Manufacturer Name</span>
+            </label>
+            <div *ngIf="submitted && manufacturerFormControls.manufacturerName.errors?.required"
+              class="alert alert-danger">
+              Manufacturer Name is required
+            </div>
+          </div>
+          <div class="col-sm-3 pl-2 pr-2">
+            <div class="input-icon">
+              <label class="form-group has-float-label mb-1">
+                <input type="text" class="form-control" formControlName="primaryWebsite" name="primaryWebsite"
+                  (input)="isValidUrl()" placeholder="Primary Website" id="primaryWebsite">
+                <span> Primary Website</span>
+              </label>
+              <div *ngIf="submitted && manufacturerFormControls.primaryWebsite.errors?.required"
+                class="alert alert-danger">
+                Primary Website is required
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4 pl-2 pr-2">
+            <button type="submit" class="btn btn-md btn-primary ml-3">
+              {{isEdit?'Update':'Save'}} </button>
+            <button type="button" (click)="onClearAddManf()" class="btn btn-md btn-primary ml-3">
+              Cancel </button>
+          </div>
+        </div>
+      </form>
+      <div class="row">
+        <div class="row justify-content-end  mb-3 col-sm-12" style="padding: initial">
+          <div class="inner-addon right-addon">
+            <span> <i class="fa fa-search card-title" aria-hidden="true"></i> </span>
+            <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+              placeholder="Filter Search" [(ngModel)]="filterText" (input)="onSearchTextBoxChanged()" name="filterText">
+          </div>
+        </div>
+
+        <div class="col-sm-12 mb-3">
+          <app-pagination-grid [paginationGridOptions]="manufacturerGridOptions" (edit)="manufacturerEdit($event)"
+            (delete)="manufacturerDelete($event)" (gridReady)="onReady($event)">
+          </app-pagination-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

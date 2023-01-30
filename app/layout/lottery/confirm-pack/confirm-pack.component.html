@@ -1,0 +1,316 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title ml-3"><strong>Confirm Pack</strong> </h4>
+    <div class="mt-3">
+      <form [formGroup]="confirmPackForm" novalidate>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="card">
+              <div class="card-body">
+                <div class="row mt-3">
+                  <label class="form-group has-float-label col-sm-12">
+                    <select class="form-control" id="storeLocationID" name="storeLocationID"
+                      *ngIf="storeLocationList.length!==1" formControlName="storeLocationID"
+                      (change)="getLotteryGameByDrop()" required>
+                      <option value="">--Select Store Location--</option>
+                      <option *ngFor="let store of storeLocationList" [value]="store.storeLocationID">
+                        {{store.storeName}}</option>
+                    </select>
+                    <input readonly type="text" *ngIf="storeLocationList.length===1" class="form-control"
+                      [value]="storeLocationList[0].storeName">
+                    <div *ngIf="submitted && confirm.storeLocationID.errors?.required" class="alert alert-danger">
+                      Store Location in required
+                    </div>
+                    <span>Store Location</span>
+                  </label>
+                  <!-- <div class="col-sm-12" *ngIf="storeLocationList.length===1">
+                    <h5 class="ml-5"> <strong> {{storeLocationList && storeLocationList[0].storeName}}
+                        </strong>
+                    </h5>
+                  </div> -->
+                </div>
+                <div class="row">
+                  <div class="col-sm-12 ">
+                    <label class="m-2" for="basic-switch">Manual</label>
+                    <mat-slide-toggle class="m-2" formControlName="isConfirmScan" (change)="onScanTypeChange($event)">
+                    </mat-slide-toggle>
+                    <label class="m-2" for="basic-switch">Batch Scan</label>
+                  </div>
+                </div>
+                <div class="row mt-3">
+                  <label class="has-float-label col-sm-6">
+                    <app-datepicker name="confirmationDate" id="confirmationDate" (dateChange)="dateChange($event)"
+                      [inputDate]="inputConfirmationDate">
+                    </app-datepicker>
+                    <span>Confirmation Date</span>
+                  </label>
+                  <label class="has-float-label col-sm-6">
+                    <input type="text" class="form-control" placeholder="Invoice Number" name="invoiceReferenecNo"
+                      formControlName="invoiceReferenecNo" maxlength="250">
+                    <div *ngIf="submitted && confirm.invoiceReferenecNo.errors?.pattern" class="alert alert-danger">
+                      Invoice Number is not valid
+                    </div>
+                    <span>Invoice Number</span>
+                  </label>
+                </div>
+                <div class="row" *ngIf="!batchScanFlag">
+                  <label class="form-group has-float-label col-sm-6">
+                    <ng-select #lotteryGameNo [items]="lotteryGameList" [selectOnTab]="true" bindLabel="gameLabel"
+                      bindValue="gameNo" labelForId="lotteryGameNo" placeholder="Select Game Number"
+                      formControlName="lotteryGameNo" required>
+                    </ng-select>
+                    <img src="assets/images/small-spinner.gif" *ngIf="isGameNumberLoading">
+                    <div *ngIf="submitted && confirm.lotteryGameNo.errors?.required" class="alert alert-danger">
+                      Game Number is required
+                    </div>
+                    <span>Game Number </span>
+                  </label>
+                  <label class="form-group has-float-label col-sm-6">
+                    <input numbersOnly type="text" class="form-control" placeholder="Pack Number" name="packNo"
+                      formControlName="packNo" [minLength]="packNoLength" [maxLength]="packNoMaxLength" required>
+                    <div *ngIf="submitted && confirm.packNo.errors?.required" class="alert alert-danger">
+                      Pack Number is required
+                    </div>
+                    <div *ngIf="submitted && confirm.packNo.errors?.minlength" class="alert alert-danger">
+                      Pack number must be {{packNoLength}} digit.
+                    </div>
+                    <div *ngIf="submitted && confirm.packNo.errors?.maxlength" class="alert alert-danger">
+                      Pack number must be {{packNoMaxLength}} digit.
+                    </div>
+                    <span> Pack Number </span>
+                  </label>
+                </div>
+                <div class="row" *ngIf="!batchScanFlag">
+                  <div class="col-sm-12 text-right">
+                    <button type="button" class="btn  btn-md btn-primary mr-3" (click)="reset(false)">
+                      Reset</button>
+                    <button type="button" class="btn btn-md btn-primary" (click)="onSubmit()">
+                      Confirm Pack</button>
+                    <!-- <button type="button" class="btn btn-md btn-primary"
+                      [disabled]="!confirmPackForm.value.storeLocationID" (click)="batchScanMode(content)">
+                      Batch Scan Mode</button> -->
+                  </div>
+                </div>
+                <div class="row" *ngIf="batchScanFlag">
+                  <label class="has-float-label col-sm-12">
+                    <!-- <input numbersOnly type="text" min="0" maxlength="24" [autofocus]="true" class="form-control"
+                      placeholder="Scan Bar Code" name="scanBarcode" formControlName="scanBarcode" #barcodeScan
+                      (keyup)="getGamePackNoByScanBarcode()"> -->
+                    <!-- <div *ngIf="submitted && confirm.scanBarcode.errors?.required" class="alert alert-danger"> -->
+                    <input numbersOnly type="text" min="0" maxlength="24" [autofocus]="true" class="form-control"
+                      placeholder="Scan Barcode" name="barcodeScanBatch" formControlName="barcodeScanBatch" #batchScan
+                      (keyup.enter)="onScanBatch()">
+                    <div *ngIf="submitted && confirm.barcodeScanBatch.errors?.required" class="alert alert-danger">
+                      Scan Barcode is required
+                    </div>
+                    <span>Scan Bar Code</span>
+                  </label>
+                </div>
+                <div class="row" *ngIf="batchScanFlag">
+                  <div class="col-sm-12">
+                    <app-cstore-grid [rowData]="batchRowData" [cStoreGridOptions]="batchGridOptions"
+                      [gridHeight]="'200px'" [textFilter]="filterText" (gridReady)="onBatchReady($event)">
+                    </app-cstore-grid>
+                  </div>
+                </div>
+                <div class="row mt-3" *ngIf="batchScanFlag">
+                  <div class="col-sm-12 text-right">
+                    <button type="button" class="btn btn-md btn-primary" (click)="onBulkUpdate()">Save</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6" *ngIf="false">
+            <div class="card text-center">
+
+              <div class="card-body">
+                <h5 class="card-title">Inventory Detail</h5>
+                <div class="row justify-content-center mb-3  mt-3">
+                  <div class="col-sm-5">
+                    <div class="btn btn-primary totalConfirmation">
+                      <h4 class="mt-3">Confirmed Books </h4>
+                      <h2>{{inventoryDetail.totalConfirmation}}</h2>
+                    </div>
+                  </div>
+                  <div class="col-sm-5">
+                    <div class="btn btn-primary  totalActivation">
+                      <h4 class="mt-3">Activated Books</h4>
+                      <h2>{{inventoryDetail.totalActivation}}</h2>
+                    </div>
+                  </div>
+                </div>
+                <div class="row justify-content-center align-items-center mb-3">
+                  <div class="col-sm-5">
+                    <div class="btn btn-primary  todayConfirmation">
+                      <h4 class="mt-3">Confirmed Today</h4>
+                      <h2>{{inventoryDetail.todayConfirmation}}</h2>
+                    </div>
+                  </div>
+                  <div class="col-sm-5">
+                    <div class="btn btn-primary  todayActivation">
+                      <h4 class="mt-3"> Activated Today</h4>
+                      <h2>{{inventoryDetail.todayActivation}}</h2>
+                    </div>
+                  </div>
+                </div>
+                <!-- <div class="col-sm-8 btn btn-info margin-bottom-5">
+              <label class="col-form-label">Confirmed Today: {{inventoryDetail.todayConfirmation}}</label>
+            </div>
+            <div class="col-sm-8 btn btn-success">
+              <label class="col-form-label">Activated Today: {{inventoryDetail.todayActivation}}</label>
+            </div> -->
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="card ">
+              <div class="spinnerDiv">
+                <ngx-spinner name="sp1" [fullScreen]="false" type="ball-spin-clockwise" size="medium">
+                </ngx-spinner>
+              </div>
+              <div class="card-body">
+                <h5 class="card-title text-center">Inventory Detail <i (click)="onRefreshInventoryGrid()"
+                    class="fa fa-refresh float-right cursor-pointer"></i></h5>
+                <div class="row justify-content-center mb-3 mt-3">
+                  <!-- <ngx-spinner [name]="inventorySpinner" [fullScreen]="false" type="ball-atom" size="medium">
+                    <p class="loading">Please wait...</p>
+                  </ngx-spinner> -->
+                  <div class="col-sm-6">
+                    <div class="btn btn-primary todayActivation">
+                      <h5 class="mt-2">Year</h5>
+                      <h6 class="text-left">Confirmed Books : {{inventoryDetail.confirmedLotteryPacksForYear}} Qty
+                      </h6>
+                      <h6 class="text-left">Confirmed Books : {{inventoryDetail.confirmedPacksValueForYear |currency}}
+                      </h6>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="btn btn-primary totalConfirmation">
+                      <h5 class="mt-2"> Month</h5>
+                      <h6 class="text-left">Confirmed Books : {{inventoryDetail.confirmedLotteryPacksForMonth }} Qty
+                      </h6>
+                      <h6 class="text-left">Confirmed Books : {{inventoryDetail.lotteryPackValueForMonth  | currency }}
+                      </h6>
+                    </div>
+                  </div>
+                </div>
+                <div class="row  align-items-center mb-3">
+                  <div class="col-sm-6">
+                    <div class="btn btn-primary  totalActivation">
+                      <h5 class="mt-2">Week</h5>
+                      <h6 class="text-left">Confirmed Books : {{inventoryDetail.confirmedLotteryPacksForWeek}} Qty
+                      </h6>
+                      <h6 class="text-left">Confirmed Books : {{inventoryDetail.lotteryPackValueForWeek | currency }}
+                      </h6>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="btn btn-primary  todayConfirmation">
+                      <h5 class="mt-2">Today</h5>
+                      <h6 class="text-left">Confirmed Books : {{inventoryDetail.confirmedLotteryPacksForDay}} Qty
+                      </h6>
+                      <h6 class="text-left">Confirmed Books : {{ inventoryDetail.confirmedPacksValueForDay  |currency}}
+                      </h6>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </form>
+      <div class="row justify-content-end mt-3" *ngIf="showGrid">
+        <div class="col-sm-3">
+          <div class="inner-addon right-addon">
+            <span>
+              <i class="fa fa-search card-title" aria-hidden="true"></i>
+            </span>
+            <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+              placeholder="Filter Search" [(ngModel)]="filterText" name="filterText">
+          </div>
+        </div>
+        <div class="col-sm-12 mt-3">
+          <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" [gridHeight]="'200px'"
+            [textFilter]="filterText" (gridReady)="onReady($event)">
+          </app-cstore-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title card-title" id="modal-basic-title"> {{'Bulk Update'}} </h4>
+    <button type="button" class="close" aria-label="Close" id="bulkUpdateClose" (click)="BatchModeClose()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!-- <form [formGroup]="addAccoutingForm"> modal.dismiss('Cross click') -->
+    <div class="col-sm-12">
+      <div class="row">
+        <label class="has-float-label col-sm-6">
+          <app-datepicker name="bulkUpdateConfirmDate" id="bulkUpdateConfirmDate" (dateChange)="dateChange($event)"
+            [inputDate]="inputConfirmationDate">
+          </app-datepicker>
+          <span>Confirmation Date</span>
+        </label>
+
+        <label class="has-float-label col-sm-6">
+          <input type="text" class="form-control" placeholder="Invoice Number" name="invoiceReferenecNo" maxlength="250"
+            [(ngModel)]="invoiceNumber">
+          <span>Invoice Number</span>
+        </label>
+        <label class="col-sm-6">
+          <!-- class="input" -->
+          <input numbersOnly type="text" min="0" maxlength="20" [autofocus]="true" name="barcodeScanBatch"
+            [(ngModel)]="barcodeScanBatch" #batchScan (keyup.enter)="onScanBatch()">
+        </label>
+      </div>
+      <div>
+        <app-cstore-grid [rowData]="batchRowData" [cStoreGridOptions]="batchGridOptions" [gridHeight]="'200px'"
+          [textFilter]="filterText" (gridReady)="onBatchReady($event)">
+        </app-cstore-grid>
+      </div>
+      <div class="row mt-3 justify-content-end">
+        <button class="btn btn-md btn-primary mr-3" (click)="onBulkUpdate()">Save</button>
+      </div>
+    </div>
+    <!-- </form> -->
+  </div>
+</ng-template>
+
+<ng-template #confirmLotterys let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title card-title" id="modal-basic-title"> {{'Confirm'}} </h4>
+    <button type="button" class="close" aria-label="Close" id="confirmationClose"
+      (click)="modal.dismiss('Cross click')"> <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="col-sm-12">
+      <div class="row">
+        <label class="has-float-label col-sm-6">
+          <input type="text" readonly class="form-control" placeholder="Game Number" [(ngModel)]="gameNumber"
+            name="gameNumber" maxlength="250">
+          <span>Game Number</span>
+        </label>
+
+        <label class="has-float-label col-sm-6">
+          <input type="text" readonly class="form-control" placeholder="Pack Number" [(ngModel)]="packNumber"
+            name="packNumber" maxlength="250">
+          <span>Pack Number</span>
+        </label>
+      </div>
+      <div class="row justify-content-end mt-3">
+        <button class="btn btn-md btn-primary mr-3" (click)="modal.dismiss('ok')">Ok </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

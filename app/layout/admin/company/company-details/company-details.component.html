@@ -1,0 +1,186 @@
+<form class="company-details" #companyForm="ngForm" (ngSubmit)="onSubmit(companyForm)">
+  <div class="mt-4">
+    <div class="row">
+      <div class="col-sm-9">
+        <div class="row col-sm-12">
+          <label class="form-group has-float-label col-sm-12">
+            <input type="text" class="form-control" id="companyName" required [(ngModel)]="company.companyName"
+              name="companyName" placeholder="Company Name" (blur)="checkCompanyNameExists(company.companyName)"
+              minlength="3" maxlength="520" #companyName="ngModel" [disabled]="isCompanyEditMode">
+            <div *ngIf="submitted && companyName.errors?.required" class="alert alert-danger">
+              Company name is required
+            </div>
+            <div *ngIf="isCompanyNameExit && !isCompanyEditMode" class="alert alert-danger">
+              Company name is exist
+            </div>
+            <span>Company Name</span>
+          </label>
+        </div>
+        <div class="row col-sm-12">
+          <label class="form-group has-float-label col-sm-12">
+            <input type="text" class="form-control" id="companyAddressLine1" [(ngModel)]="company.companyAddressLine1"
+              name="companyAddressLine1" placeholder="Address" minlength="3" maxlength="520"
+              #companyAddressLine1="ngModel" ngx-google-places-autocomplete #placesRef="ngx-places" [options]="options"
+              (onAddressChange)="handleAddressChange($event)" required>
+            <!-- #companyAddressLine1="ngModel" (blur)="getAddress(company.companyAddressLine1)" -->
+            <!-- (keyup)="autCompleteAddress(company.companyAddressLine1)" getAddress(company.companyAddressLine1) -->
+            <div *ngIf="submitted && companyAddressLine1.errors?.required" class="alert alert-danger">
+              Company address line 1 is required
+            </div>
+            <span for="companyAddressLine1">Address</span>
+          </label>
+        </div>
+        <!-- <div class="row col-sm-9">
+              <div class="form-group col-sm-12">
+                <label for="companyAddressLine2">Company Address Line 2</label>
+                <input type="text" class="form-control" id="companyAddressLine2" [(ngModel)]="company.companyAddressLine2"
+                  name="companyAddressLine2" placeholder="Address" minlength="3" maxlength="520" #companyAddressLine2="ngModel">
+              </div>
+            </div> -->
+        <div class="row col-sm-12">
+          <label class="form-group has-float-label col-sm-4">
+            <input type="text" class="form-control" id="city" [(ngModel)]="company.city" name="city" placeholder="City"
+              minlength="3" maxlength="100" #city="ngModel">
+            <span for="city">City</span>
+          </label>
+          <label class="form-group has-float-label col-sm-4">
+            <div>
+              <!-- (change)="onCountyChange(company.countyCode)" -->
+              <select placeholder="County" id="countyCode" class="form-control" [(ngModel)]="company.countyCode"
+                name="countyCode" #countyCode="ngModel" required>
+                <option value="">County</option>
+                <option *ngFor="let item of countyFilterList" [value]="item.countyCode">{{item.countyName}}</option>
+              </select>
+              <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+            </div>
+            <div *ngIf="submitted && countyCode.errors?.required" class="alert alert-danger">
+              County is required
+            </div>
+            <span for="countyCode">County</span>
+          </label>
+          <label class="form-group has-float-label col-sm-4">
+            <div>
+              <select placeholder="select State" id="stateCode" [(ngModel)]="company.stateCode" name="stateCode"
+                class="form-control" #stateCode="ngModel" required (change)="onStaeChange()">
+                <option value="">State</option>
+                <option *ngFor="let item of stateList" [value]="item.stateCode">{{item.stateName}}</option>
+              </select>
+              <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+            </div>
+            <div *ngIf="submitted && stateCode.errors?.required" class="alert alert-danger">
+              State is required
+            </div>
+            <span for="stateCode">State</span>
+          </label>
+        </div>
+        <div class="row col-sm-12">
+          <label class="form-group has-float-label col-sm-4">
+            <input numbersOnly type="text" class="form-control" id="zipCode" [(ngModel)]="company.zipCode"
+              name="zipCode" placeholder="ZIP Code" minlength="5" maxlength="5" #zipCode="ngModel"
+              (change)="zipCodeChanged(company.zipCode)" required>
+            <div *ngIf="submitted && zipCode.errors?.required" class="alert alert-danger">
+              Zip Code is required
+            </div>
+            <div *ngIf="zipCode.errors?.minlength" class="alert alert-danger">
+              Zip Code must be 5 digit.
+            </div>
+            <span for="zipCode">Zip Code</span>
+          </label>
+          <label class="form-group has-float-label col-sm-4">
+            <input type="text" class="form-control" id="companyContact" [(ngModel)]="company.companyTaxID"
+              name="companyTaxID" placeholder="Company Contact" minlength="3" maxlength="45" #companyTaxID="ngModel"
+              required>
+            <div *ngIf="submitted && companyTaxID.errors?.required" class="alert alert-danger">
+              Company Contact is required
+            </div>
+            <span for="companyContact">Company Contact</span>
+          </label>
+          <label class="form-group has-float-label col-sm-4">
+            <input numbersOnly type="text" class="form-control" id="phoneNo" required [(ngModel)]="company.phoneNo"
+              name="phoneNo" (blur)="formatPhoneNumber(company.phoneNo)" minlength="10" maxlength="20"
+              placeholder="Phone Number" #phoneNo="ngModel" pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$">
+            <div *ngIf="submitted && phoneNo.errors?.required" class="alert alert-danger">
+              Phone number is required
+            </div>
+            <div *ngIf="submitted && phoneNo.errors?.minlength" class="alert alert-danger">
+              Phone number must be 10 digit.
+            </div>
+            <div *ngIf="submitted && phoneNo.errors?.pattern" class="alert alert-danger">
+              Phone number is not valid
+            </div>
+            <span for="phoneNo">Phone Number</span>
+          </label>
+        </div>
+
+        <div class="row col-sm-12">
+          <label class="form-group has-float-label col-sm-4">
+            <input type="email" class="form-control" id="e_Mail" required [(ngModel)]="company.e_Mail" name="e_Mail"
+              placeholder="Email" minlength="3" maxlength="520" #e_Mail="ngModel"
+              pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
+            <div *ngIf="submitted && e_Mail.errors?.required" class="alert alert-danger">
+              Email is required
+            </div>
+            <div *ngIf="submitted && e_Mail.errors?.pattern" class="alert alert-danger">
+              Email is invalid
+            </div>
+            <span for="e_Mail">Email</span>
+          </label>
+          <label class="form-group has-float-label col-sm-4">
+            <select placeholder="Active" id="isActive" [(ngModel)]="company.isActive" name="isActive"
+              class="form-control" #isActive="ngModel">
+              <option *ngFor="let item of activeList" [value]="item.value">{{item.name}}</option>
+            </select>
+            <span for="isActive">Active</span>
+          </label>
+
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="mb-1">
+          <label style="font-size:15px;">Company Logo</label>
+          <span class="col-md-4" *ngIf="!companyLogoURL">
+            <label class="btn1 btn-xs">
+              <span style="display: inline-block ml-4">
+                <i class="fa fa-upload" style="font-size: 22px;"></i>
+                <input type="file" style="display:none" accept="image/jpeg, image/png,image/jpg"
+                  class="custom-file-input" name="companyLogo" (change)="upload($event)" (click)="deleteImage()" #file>
+              </span>
+            </label>
+          </span>
+        </div>
+        <div class="image-card mt-1 form-group" *ngIf="companyLogoURL">
+          <i class="fa fa-close delete" (click)="deleteImage()"></i>
+          <img [src]="companyLogoURL" class="form-control" name="companyLogoURL" class="image">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-9 justify-content-between">
+        <div class="col-sm-12">
+          <div *ngIf="!isUpdateCompany">
+            <button type="reset" class="btn btn-md btn-primary mr-3" (click)="reset()">
+              Reset</button>
+            <button type="submit" class="btn btn-md btn-primary mr-3">Save</button>
+            <button type="button" class="btn btn-md btn-cstorebo mr-3" (click)="onNavigateBank()"> Add Bank</button>
+            <button type="button" *ngIf="userInfo && userInfo.roleName ===roleName" class="btn btn-md btn-cstorebo"
+              class="btn btn-md btn-cstorebo mr-2" (click)="backToList()">
+              Back To Company List </button>
+          </div>
+          <div *ngIf="isUpdateCompany">
+            <button type="button" class="btn btn-md btn-primary mr-3" (click)="updateCompDetails(companyForm)">
+              Update
+            </button>
+            <button type="button" class="btn btn-md btn-cstorebo mr-3" (click)="onNavigateBank()">
+              Add Bank
+            </button>
+            <button type="button" *ngIf="userInfo && userInfo.roleName ===roleName" class="btn btn-md btn-cstorebo"
+              (click)="backToList()">
+              Back To Company List </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

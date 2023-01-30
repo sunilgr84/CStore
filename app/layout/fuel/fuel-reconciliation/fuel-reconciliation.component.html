@@ -1,0 +1,200 @@
+<div>
+  <app-page-header [heading]="'Fuel Reconciliation'" [icon]="'fa-edit'"></app-page-header>
+
+  <!--  ==============  Search Fuel Reconciliation ===================== -->
+  <div *ngIf="!isShowAddFuelReconciliation">
+    <div class="card">
+      <div class="card-body">
+        <div class="card-title col-sm-12 mb-3">
+          <h5>Fuel Reconciliation</h5>
+        </div>
+        <form [formGroup]="searchFuelReconciliationForm">
+          <div class="row">
+            <div class="col-sm-4">
+              <label class="col-sm-12 form-group has-float-label">
+                <div class="" *ngIf="storeLocationList && storeLocationList.length!==1">
+                  <ng-select [items]="storeLocationList" [selectOnTab]="true" bindLabel="storeName" bindValue="storeLocationID"
+                    labelForId="storeLocationID" placeholder="Store Location" formControlName="storeLocationID"
+                    required>
+                  </ng-select>
+                </div>
+                <input readonly type="text" *ngIf="storeLocationList && storeLocationList.length===1" class="form-control"
+                  [value]="storeLocationList[0].storeName">
+                <div *ngIf="submited && searchFuelReconciliationForm.controls.storeLocationID.errors?.required" class="alert alert-danger">
+                  Store location is required
+                </div>
+                <span> Store Location</span>
+                <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+              </label>
+            </div>
+            <div class="col-sm-4">
+              <label class="form-group has-float-label">
+                <app-daterangepicker [selectedDateRange]="selectedDateRange" (dateRangeSelecetd)="dateRangeChange($event)">
+                </app-daterangepicker>
+                <span> Select Date Range</span>
+              </label>
+            </div>
+            <div class="col-sm-4">
+              <button class="btn btn-md btn-primary" (click)="searchFuelReconciliation()">
+                Search </button>
+            </div>
+          </div>
+        
+        </form>
+
+
+        <div class=" mt-3 row">
+          <div class="col-sm-4">
+            <div class="col-sm-12">
+              <button class="btn btn-md btn-primary" (click)="addNewFuelReconciliation()">
+                Add New</button>
+            </div>
+          </div>
+          <div class="row justify-content-end margin-bottom-5 col-sm-8">
+            <div class="inner-addon right-addon">
+              <span> <i class="fa fa-search card-title" aria-hidden="true"></i> </span>
+              <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+                placeholder="Filter Search" [(ngModel)]="filterText" name="filterText">
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-12">
+          <app-cstore-grid [rowData]="rowData" (gridReady)="gridReady($event)" [cStoreGridOptions]="gridOptions" (edit)="editFuelReconciliation($event)"
+            [textFilter]="filterText" (delete)="deleteFR($event)">
+          </app-cstore-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- =================  Fuel Reconciliation   ==================== -->
+  <div class="card" *ngIf="isShowAddFuelReconciliation">
+    <!-- <div class="card-header"> Fuel Reconciliation</div> -->
+    <div class="card-body" style="min-height: 270px">
+      <div class="">
+        <form [formGroup]="addFuelReconciliationForm">
+          <div>
+            <div class="card-title col-sm-12 mb-3">
+              <h5> {{ isEdit ? 'Update Fuel Reconciliation' : 'Add new Fuel Reconciliation' }} </h5>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-4">
+                <label class="col-sm-12 form-group has-float-label">
+                  <div class="col-sm-12" style="padding: initial;" *ngIf="storeLocationList && storeLocationList.length!==1">
+                    <ng-select [items]="storeLocationList" [selectOnTab]="true" bindLabel="storeName" bindValue="storeLocationID"
+                      labelForId="storeLocationID" required placeholder="Store Location" formControlName="storeLocationID">
+                    </ng-select>
+                  </div>
+                  <input readonly type="text" *ngIf="storeLocationList && storeLocationList.length===1" class="form-control"
+                    [value]="storeLocationList[0].storeName">
+                  <div *ngIf="isAddSubmited && addFuelReconciliationForm.controls.storeLocationID.errors?.required"
+                    class="alert alert-danger">
+                    Store location is required
+                  </div>
+                  <span> Store Location</span>
+                  <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+                </label>
+              </div>
+              <div class="col-sm-3">
+                <label class="col-sm-12 form-group has-float-label">
+                  <input type="text" class="form-control col-sm-12" formControlName="batchNumber" placeholder="Batch Number">
+                  <span> Batch Number</span>
+                </label>
+              </div>
+              <div class="col-sm-3">
+                <label class="col-sm-12 form-group has-float-label">
+                  <app-datepicker name="beginDate" id="beginDate" [inputDate]="_settlementDate" (dateChange)="dateChange($event)"></app-datepicker>
+                  <span> Date</span>
+                </label>
+              </div>
+            </div>
+            <div class="col-sm-12">
+              <button class="btn btn-md btn-primary mr-3" (click)="resetAddFRForm()">
+                Reset</button>
+              <button class="btn btn-md btn-primary mr-3" (click)="addFuelReconciliation()">
+                {{ isEdit ? ' Update': ' Save' }}</button>
+              <button class="btn btn-md btn-primary mr-3" (click)="editOrSaveCloseFR()">
+                {{ isEdit ? ' Update': ' Save' }} & Close</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="col-sm-12 mt-3" *ngIf="isEdit">
+        <span (click)="addNetworkBatch(networkBatch)"><i class="fa fa-plus"></i> Network Batch </span>
+        <div>
+          <app-cstore-grid [rowData]="networkBatchRowData" (gridReady)="networkBatchGridReady($event)"
+            [cStoreGridOptions]="networkBatchGridOptions" (delete)="deleteNetworkSummeryBatch($event)">
+          </app-cstore-grid>
+        </div>
+      </div>
+
+      <div class="row col-sm-12 mt-3" *ngIf="isEdit">
+        <div class="col-sm-6 ">
+          <span (click)="addFuelInvoice(fuelInvoice)"><i class="fa fa-plus"></i> Fuel Invoice </span>
+          <div>
+            <app-cstore-grid [rowData]="fuelInvoiceRowData" (gridReady)="fuelInvoiceGridReady($event)"
+              [cStoreGridOptions]="fuelInvoicechGridOptions" (delete)="deleteFuelInvoice($event)">
+            </app-cstore-grid>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <span (click)="onInsertRowAt()"><i class="fa fa-plus"></i> Other Charges </span>
+          <div>
+            <app-editable-grid [rowData]="otherChargesRowData" [editGridOptions]="otherChargesGridOptions" (delete)="otherChargesDelete($event)"
+              (save)="otherChargesSave($event)" (gridReady)="otherChargesGridReady($event)">
+            </app-editable-grid>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="card-footer">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-md btn-primary" (click)="backToList()">Back To List</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #fuelInvoice let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Edit Fuel Invoice</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span> </button>
+  </div>
+  <div class="">
+    <div class="card-body">
+      <div class="mb-3">
+        <button class="btn btn-md btn-primary" (click)="saveFuelInvoice()"> Update</button>
+      </div>
+      <div>
+        <app-cstore-grid [rowData]="editFuelInvoiceRowData" (gridReady)="fuelInvoiceGridReady($event)"
+          [cStoreGridOptions]="editFuelInvoicechGridOptions" (rowSelected)="onRowSelected($event)">
+        </app-cstore-grid>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #networkBatch let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Edit Network Batch</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span> </button>
+  </div>
+  <div class="">
+    <div class="card-body">
+      <div class="mb-3">
+        <button class="btn btn-md btn-primary" (click)="saveNetworkBatch()"> Update</button>
+      </div>
+      <div>
+        <app-cstore-grid [rowData]="editNetworkBatchRowData" (gridReady)="fuelInvoiceGridReady($event)"
+          [cStoreGridOptions]="editNetworkBatchGridOptions" (rowSelected)="onNetworkBatchRowSelected($event)">
+        </app-cstore-grid>
+      </div>
+    </div>
+  </div>
+</ng-template>

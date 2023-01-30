@@ -1,0 +1,155 @@
+<div class="row" style="margin-top: 30px;">
+  <div class="col-sm-12 mt-2">
+    <ngb-tabset type="pills" [orientation]="currentOrientation">
+      <ngb-tab *ngFor="let accountTypes of chartAccountViewData?.chartAccountTypes"
+        title="{{accountTypes.chartOfAccountTypeName}} ({{accountTypes.noofAccounts}}) ">
+        <ng-template ngbTabContent>
+          <!-- <div class="accounting mt-3">
+            <div class="card mb-3" *ngFor="let accountCategorieslist of accountTypes?.chartOfAccountCategorieslist">
+              <div class="card-body table-responsive">
+                <h6 class="card-title"> {{accountCategorieslist.chartOfAccountCategoryName}}</h6>
+
+              </div>
+            </div>
+          </div> -->
+
+          <div class="main-content-wrap d-flex flex-column">
+            <!-- ============ Body content start ============= -->
+            <div class="main-content">
+              <section>
+                <div class="card">
+                  <div class="card-header">
+                    <div class="col-md-10"></div>
+                    <div class="col-md-2">
+                      <button class="btn btn-action float-right" (click)="openChartOfAccount(contentcat,accountTypes.chartOfAccountTypeID)"><i
+                          class="fa fa-plus"></i> Add New</button>
+                    </div>
+                  </div>
+                  <div class="card-body p-0">
+                    <div class="col-md-12 p-2 mix-match-accordian"
+                      *ngIf="accountTypes &&accountTypes.chartOfAccountCategorieslist && accountTypes.chartOfAccountCategorieslist.length > 0">
+                      <ngb-accordion [closeOthers]="true" (panelChange)="toggleAccordian($event)">
+                        <!-- activeIds="{{activePanelIds}}" -->
+                        <ngb-panel *ngFor="let accountCategorieslist of accountTypes?.chartOfAccountCategorieslist"
+                          id="{{accountCategorieslist.chartOfAccountCategoryID}}">
+                          <ng-template ngbPanelHeader>
+                            <div class="d-block">
+                              <label class="mt-1 mb-1" (click)="toggleAccordian($event)">
+                                <i class="fa fa-folder blue-folder-color"></i>
+                                <span class="font-weight-bold ml-1">
+                                  {{accountCategorieslist.chartOfAccountCategoryName}}</span>
+                              </label>
+                              <div class="float-right">
+                                <button class="btn light-blue-color pl-1 pr-1"
+                                  (click)="open(content,accountCategorieslist.chartOfAccountCategoryID)">
+                                  <i class="fa fa-plus"></i>
+                                </button>
+                                <button ngbPanelToggle class="btn btn-link p-0 ml-3"><i
+                                    class='fa {{ opened ? "fa-chevron-up" : "fa-chevron-down" }}'></i></button>
+                              </div>
+                            </div>
+                          </ng-template>
+                          <ng-template ngbPanelContent class="p-0">
+                            <table class="table">
+                              <tbody *ngFor="let accountDetails of accountCategorieslist?.vendor; let i=index">
+                                <tr *ngIf="i==0">
+                                  <th> <span>Account Name</span> </th>
+                                  <th> <span>Account Code </span> </th>
+                                  <th> <span class="right"> Action </span> </th>
+                                </tr>
+                                <tr>
+                                  <th scope="row" style="width: 35%">
+                                    <h6>{{accountDetails.vendorName}}</h6>
+                                  </th>
+                                  <td>
+                                    <span> {{accountDetails.vendorCode}} </span>
+                                  </td>
+                                  <td>
+                                    <span class="right">
+                                      <i class="fa fa-trash" (click)="delete(accountDetails.vendorID)">
+                                      </i>
+                                    </span>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                            <!-- <app-pagination-grid class="mixMatchDetail" [rowData]="childRowData"
+                              [paginationGridOptions]="childGridOptions" (gridReady)="onChildGridReady($event)"
+                              (save)="onBtStopEditing($event)" (delete)="deleteAction($event)"
+                              (cancel)="cancelAction($event)" (edit)="editAction($event)"
+                              (cellValueChanged)="onCellValueChanged($event)">
+                            </app-pagination-grid> -->
+                          </ng-template>
+                        </ngb-panel>
+                      </ngb-accordion>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </ng-template>
+      </ngb-tab>
+    </ngb-tabset>
+  </div>
+  <div class="col-sm-12 text-right mt-2">
+    <button type="button" class="btn btn-md btn-cstorebo" (click)="backToMainList()">
+      &nbsp; Back to Store List </button>
+  </div>
+</div>
+
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title card-title" id="modal-basic-title"> {{isEditMode ? title : title1}} </h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="addAccoutingForm">
+      <div class="row">
+        <div class="col-sm-12">
+          <label class="form-group has-float-label col-sm-12">
+            <ng-select [items]="accountTypeList" [hideSelected]="true" bindLabel="vendorName" bindValue="vendorID"
+              placeholder="Add an Account Name" formControlName="VendorID">
+            </ng-select>
+            <img src="assets/images/small-spinner.gif" *ngIf="isAccTypeLoading">
+            <span>Add an Account Name</span>
+          </label>
+        </div>
+        <div class="col-md-12 text-right">
+          <button class="btn btn-md btn-primary mr-3" (click)="reset()"> Reset</button>
+          <button class="btn btn-md btn-primary mr-3" (click)="save()">{{isEditMode? 'Update' : 'Save' }} </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #contentcat let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title card-title" id="modal-basic-title"> {{isChartOfAccountEditMode ? 'Edit Chart Of Account' : 'Add Chart Of Account'}} </h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="chartOfAccountForm">
+      <div class="row">
+        <div class="col-sm-12">
+          <label class="form-group has-float-label col-sm-12">
+            <input type="text" class="form-control " id="accountName" formControlName="chartOfAccountCategoryName"
+              placeholder="Add Chart Of Accounts Category" name="accountName" maxlength="250" required>
+            <span for="accountName">Add Chart Of Accounts Category</span>
+          </label>
+        </div>
+        <div class="col-md-12 text-right">
+          <button class="btn btn-md btn-primary mr-3" (click)="reset()"> Reset</button>
+          <button class="btn btn-md btn-primary mr-3" (click)="saveChartOfAccount()">{{isChartOfAccountEditMode? 'Update' : 'Save' }}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>

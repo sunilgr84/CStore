@@ -1,0 +1,51 @@
+<div class="row">
+  <div class="col-md-3">
+    <app-daterangepicker class="invoice-daterange" [selectedDateRange]="selectedDateRange"
+      (dateRangeSelecetd)="dateRangeChange($event)">
+    </app-daterangepicker>
+  </div>
+  <div class="col-md-4">
+    <button type="button" class="btn btn-md btn-primary ml-2 mw-80" (click)="getInvoiceDashDetails()">
+      Search</button>
+  </div>
+  <div class="col-md-5 text-right">
+    <div class="badge active-badge" [ngbTooltip]="status1" placement="bottom">
+      <h3>{{invoiceCounts.New}}</h3>
+      New
+    </div>
+    <ng-template #status1>{{invoiceCounts.New}}
+    </ng-template>
+
+    <div class="badge info-badge" [ngbTooltip]="status2" placement="bottom">
+      <h3>{{invoiceCounts.InProgress}}</h3>
+      In Progress
+    </div>
+    <ng-template #status2>{{invoiceCounts.InProgress}}
+    </ng-template>
+
+    <div class="badge warning-badge" [ngbTooltip]="status3" placement="bottom">
+      <h3>{{invoiceCounts.ReadyForReview}}</h3>
+      Ready For Review
+    </div>
+    <ng-template #status3>{{invoiceCounts.ReadyForReview}}
+    </ng-template>
+
+    <div class="badge danger-badge" [ngbTooltip]="status4" placement="bottom">
+      <h3>{{invoiceCounts.Completed}}</h3>
+      Completed
+    </div>
+    <ng-template #status4>{{invoiceCounts.Completed}}
+    </ng-template>
+  </div>
+  <div class="col-md-12 mt-2">
+    <app-pagination-grid [paginationGridOptions]="invoiceByStoreGridOptions"
+      (gridReady)="onInvoiceByStoreGridReady($event)">
+    </app-pagination-grid>
+  </div>
+
+  <div class="col-md-12 mt-2">
+    <app-pagination-grid [paginationGridOptions]="invoiceByUserGridOptions"
+      (gridReady)="onInvoiceByUserGridReady($event)">
+    </app-pagination-grid>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+<div class="card">
+  <div class="card-body">
+
+    <h5 class="card-title">Dashboard Setting</h5>
+
+    <div class="row mt-3">
+      <div class="col-sm-4">
+        <app-cstore-grid [rowData]="functionalRowData" [cStoreGridOptions]="functionalGridOptions"
+          (added)="addItem($event)" (gridReady)="onGridReady($event)"></app-cstore-grid>
+      </div>
+      <div class="col-sm-4 ">
+        <app-cstore-grid [rowData]="nonFunctionalRowData" [cStoreGridOptions]="nonFunctionalGridOptions"
+          (gridReady)="onNonFunGridReady($event)" [textFilter]="filterText" (delete)="deleteRecord($event)">
+        </app-cstore-grid>
+      </div>
+    </div>
+  </div>
+</div>

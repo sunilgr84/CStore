@@ -1,0 +1,64 @@
+<!-- <style>
+  
+td [input]:nth-child(1){
+  border:0px;
+}
+</style> -->
+<div *ngIf="isCreateForm">
+  <form (ngSubmit)="onSubmit()" [formGroup]="form" class="form-horizontal">
+   <!-- -->
+    <div class="card1 mb-2 col-sm-12" *ngFor="let field of fields">
+      <div class="card-body1">
+        <strong>{{field.storeFuelGradeName}}</strong>
+        <div class="row align-items-center">
+      
+          <div class="col-sm-12 text-center">
+            <table style="width:100%">
+              <thead>
+                <tr>
+                    <th *ngFor="let columns of tabledata.storeFuelMop.fuelPriceMOPName">{{tabledata}}
+                        {{columns}}
+                    </th>
+                </tr>
+            </thead>
+              <!-- <thead class="row">
+                <td class="col-md-4"  *ngFor="let headField of header">
+                  {{headField}}
+                </td>
+              </thead> -->
+              <!-- <tbody>
+                <tr class="row" *ngFor="let x of field.formatedArr">
+                   {{x|json}} -->
+                  <!-- <td [ngClass]="'col-md-' + 4" *ngFor="let row of x| keyvalue:originalOrder">
+                    <input *ngIf="row.value === 'null'" type="text" formControlName="price" [value]="row.value" style="border-radius: 5px;"> -->
+                   <!-- <input type="text" class="form-control" name="price" formControlName="xyzz"> -->
+                                    <!--  <label class="form-group has-float-label">
+                      <input type="number" class="form-control" name="price" formControlName="xyzz"
+                        placeholder="field.fuelPrices[0].fuelPriceMOPName">
+                      <span for="price">Price</span>
+                    </label> 
+                  </td>
+                </tr>
+              </tbody> -->
+            </table>
+           <!--  <label>
+              {{field.formatedArr|json}}
+            </label> -->
+          </div>
+          <div class="col-sm-0">
+           <!--  <label class="form-group has-float-label">
+              <input type="number" class="form-control" name="price" formControlName="xyzz"
+                placeholder="field.fuelPrices[0].fuelPriceMOPName">
+              <span for="price">Price</span>
+            </label> -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-md-6 offset-md-4">
+        <button type="submit" [disabled]="!form.valid" class="btn btn-primary" (click)="save(data)">Update</button>
+      </div>
+    </div>
+  </form>
+</div>

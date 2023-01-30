@@ -1,0 +1,137 @@
+<app-page-header [heading]="'Admin / Item References'" [icon]="'fa-bar-chart-o'"></app-page-header>
+<div class="row" *ngIf="!isShowHide">
+    <div class="col-sm-2">
+        <button type="button" class="btn btn-md btn-primary btnsub" (click)="addNew()"><i class="fa fa-plus"
+                aria-hidden="true"></i>Add More </button>
+    </div>
+    <div class="col-sm-12">
+        <div style="height: 100%; padding-top: 25px; box-sizing: border-box;">
+            <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (edit)="editAction($event)"
+                (gridReady)="onGridReady($event)"></app-cstore-grid>
+        </div>
+    </div>
+</div>
+<div *ngIf="isShowHide">
+    <ngb-tabset [destroyOnHide]="false">
+        <ngb-tab title="Item Reference">
+            <ng-template ngbTabContent>
+                <form #itemReferenceFrom="ngForm" novalidate>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="form-group  col-sm-3">
+                                    <label class="itemReference">UPC Code</label>
+                                    <input type="text" class="form-control" placeholder="UPC Code" required [(ngModel)]="itemReference.UPCCode"
+                                        name="UPCCode" minlength="5" maxlength="520" #UPCCode="ngModel">
+                                    <div [hidden]="UPCCode.valid || UPCCode.pristine" class="alert alert-danger">
+                                        UPC Code is required
+                                    </div>
+                                </div>
+                                <div class="form-group  col-sm-3">
+                                    <label class="itemReference">Department</label>
+                                    <select [(ngModel)]="itemReference.departmentId" class="form-control" name="departmentId"
+                                        required>
+                                        <option value="">--Select Department--</option>
+                                        <option *ngFor="let dep of DepartmentList" [value]="dep.departmentId">
+                                            {{ dep.department }} </option>
+                                    </select>
+                                </div>
+                                <div class="form-group  col-sm-3">
+                                    <label class="itemReference">Brand</label>
+                                    <select [(ngModel)]="itemReference.brandId" class="form-control" name="brandId"
+                                        required>
+                                        <option value="">--Select Brand--</option>
+                                        <option *ngFor="let brand of BrandList" [value]="brand.brandId">
+                                            {{ brand.BrandName }} </option>
+                                    </select>
+                                </div>
+                                <div class="form-group  col-sm-3">
+                                    <label class="itemReference">Units Of Measurement</label>
+                                    <select [(ngModel)]="itemReference.UOMId" class="form-control" name="UOMId"
+                                        required>
+                                        <option value="">--Select UOM--</option>
+                                        <option *ngFor="let uom of UOMList" [value]="uom.UOMId">
+                                            {{ uom.UOM }} </option>
+                                    </select>
+                                </div>
+                                <div class="form-group  col-sm-3">
+                                    <label class="itemReference">Description</label>
+                                    <input type="text" class="form-control" placeholder="UPC Code" [(ngModel)]="itemReference.Description"
+                                        name="Description" minlength="5" maxlength="520" #Description="ngModel">
+
+                                </div>
+                                <div class="form-group  col-sm-3">
+                                    <label class="itemReference">Unit In Case</label>
+                                    <input type="number" class="form-control" placeholder="Unit In Case" [(ngModel)]="itemReference.UnitInCase"
+                                        name="UnitInCase" minlength="5" maxlength="520" #UnitInCase="ngModel">
+                                </div>
+                                <div class="form-group  col-sm-3">
+                                    <label class="itemReference">Base Unit In Case</label>
+                                    <input type="number" class="form-control" placeholder="Base Unit In Case"
+                                        [(ngModel)]="itemReference.BaseUIC" name="BaseUIC" minlength="5" maxlength="520"
+                                        #BaseUIC="ngModel">
+                                </div>
+                                <div class="form-group  col-sm-3">
+                                    <label class="itemReference">Selling Unit</label>
+                                    <input type="number" class="form-control" placeholder="Selling Unit" [(ngModel)]="itemReference.SellingUnit"
+                                        name="SellingUnit" minlength="5" maxlength="520" #SellingUnit="ngModel">
+
+                                </div>
+                                <div class="form-group  col-sm-3">
+                                    <label class="itemReference">Group Name</label>
+                                    <select [(ngModel)]="itemReference.departmentId" class="form-control" name="groupId"
+                                        required>
+                                        <option value="">--Select Group Name--</option>
+                                        <option *ngFor="let grp of groupList" [value]="grp.groupId">
+                                            {{ grp.group }} </option>
+                                    </select>
+                                </div>
+                                <div class="form-group  col-sm-3">
+                                    <label class="itemReference">Multiplier POSCode</label>
+                                    <input type="text" class="form-control" placeholder="Multiplier POSCode"
+                                        [(ngModel)]="itemReference.MPOSCode" name="MPOSCode" minlength="5" maxlength="520"
+                                        #MPOSCode="ngModel">
+                                </div>
+                                <div class="form-group  col-sm-3">
+                                    <label class="itemReference">Multiplier Quantity</label>
+                                    <input type="number" class="form-control" placeholder="Multiplier Quantity"
+                                        [(ngModel)]="itemReference.MQuantity" name="MQuantity" minlength="5" maxlength="520"
+                                        #MQuantity="ngModel">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-md btn-success"><i class="fa fa-dot-circle-o"></i>
+                                Submit</button> &nbsp;
+                            <button type="reset" class="btn btn-md btn-danger" (click)="itemReferenceFrom.reset()"><i
+                                    class="fa fa-ban"></i>
+                                Reset</button>
+                        </div>
+                    </div>
+                </form>
+            </ng-template>
+        </ngb-tab>
+        <ngb-tab title="Sale Price">
+            <ng-template ngbTabContent>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6 mt-3">
+                                <app-editable-grid [rowData]="sellingPriceGridRowData" (delete)="deleteSellingPriceGridRow($event)"
+                                    (cellValueChanged)="onCellValueChanged($event)" [editGridOptions]="editGridOptions"
+                                    (gridReady)="onSellingPriceReady($event)"> </app-editable-grid>
+                            </div>
+                            <div class="col-sm-12">
+                                <small (click)="addRows()" style="cursor: pointer;"><i class="fa fa-plus"></i> Add More</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </ngb-tab>
+    </ngb-tabset>
+    <div class="col-sm-12 margin-top-5">
+        <button type="button" class="btn btn-md btn-primary" (click)="backToList()"><i class="fa fa-backward"></i> Back
+        </button>
+    </div>
+</div>

@@ -1,0 +1,51 @@
+<div class="card">
+  <app-page-header [heading]="'Competitor Pricing'" [icon]="'fa-edit'"></app-page-header>
+  <div class="card-body">
+    <div class="card-title col-sm-12">
+      <h5>Competitor Pricing</h5>
+    </div>
+    <div class="row mt-3">
+      <div class="col-sm-5">
+        <label class="col-sm-12 form-group has-float-label">
+          <div *ngIf="storeLocationList && storeLocationList.length!==1">
+            <ng-select [items]="storeLocationList" [selectOnTab]="true" bindLabel="storeName" bindValue="storeLocationID"
+              labelForId="id" placeholder="Store Location" [(ngModel)]="_storeLocationId" name="storeLocationID"
+              #storeLocationID="ngModel" (change)="selectStoreLocation()">
+            </ng-select>
+          </div>
+          <input readonly type="text" *ngIf="storeLocationList && storeLocationList.length===1" class="form-control"
+            [value]="storeLocationList[0].storeName">
+          <span>Store Location</span>
+          <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+        </label>
+      </div>
+      <div class="col-sm-3">
+        <label class="col-sm-12 form-group has-float-label">
+          <app-datepicker name="beginDate" id="beginDate" [inputDate]="_date" (dateChange)="dateChange($event)">
+          </app-datepicker>
+          <span> Date</span>
+        </label>
+      </div>
+    </div>
+    <div>
+      <div class="col-sm-8">
+        <app-cstore-grid [rowData]="competitorFuelRowData" (gridReady)="gridReady($event)" [cStoreGridOptions]="competitorGridOptions">
+        </app-cstore-grid>
+      </div>
+    </div>
+    <div>
+      <div class="row justify-content-end margin-bottom-5 col-sm-12" style="padding-right: initial">
+        <div class="inner-addon right-addon">
+          <span> <i class="fa fa-search card-title" aria-hidden="true"></i> </span>
+          <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+            placeholder="Filter Search" [(ngModel)]="filterText" name="filterText">
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <app-editable-grid [rowData]="editRowData" [editGridOptions]="editGridOptions" [gridHeight]="'400px'"
+          [textFilter]="filterText" (gridReady)="editGridReady($event)" (edit)="editAction($event)" (delete)="deleteAction($event)"></app-editable-grid>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,90 @@
+<div>
+  <app-page-header [heading]="'Scan Data Setup'" [icon]="'fa-edit'"></app-page-header>
+
+  <div class="card" *ngIf="isHideGrid">
+
+
+    <form [formGroup]="scanDataForm">
+      <div class="card-body">
+        <h5 class="card-title mb-2">{{isEditMode ? 'Update' :'Add'}} Scan Data Setup</h5>
+
+        <div class="row">
+          <div class="col-sm-2 mb-3">
+            <div class="custom-control custom-checkbox mr-2">
+              <input type="checkbox" class="custom-control-input" (change)="clickIsChainOfStores()" id="isChainOfStores"
+                formControlName="isChainOfStores">
+              <label class="custom-control-label" for="isChainOfStores">Is Chain Of Stores</label>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+
+          <label class="form-group has-float-label col-sm-4" *ngIf="!isChainOfStores">
+            <ng-select [items]="storeLocationList" [hideSelected]="true" bindLabel="storeName" bindValue="storeLocationID"
+              placeholder="Store Location" formControlName="storeLocationId">
+            </ng-select>
+            <span>Store Location</span>
+          </label>
+          <label class="form-group has-float-label col-sm-4">
+            <ng-select [items]="manufacturerList" [hideSelected]="true" bindLabel="manufacturerName" bindValue="manufacturerID"
+              placeholder="Manufacturer Name" formControlName="manufacturerId" required>
+            </ng-select>
+            <div *ngIf="submited && cdsValid.manufacturerId.errors?.required" class="alert alert-danger">
+              Manufacturer name is required
+            </div>
+            <span>Manufacturer Name</span>
+          </label>
+          <label class="form-group has-float-label col-sm-4">
+            <input type="text" placeholder="Account No." class="form-control" id="accountNo" formControlName="accountNumber">
+            <span>Account No</span>
+          </label>
+        </div>
+        <div class="row">
+
+          <label class="form-group has-float-label col-sm-4">
+            <ng-select [items]="submissiondDayList" [hideSelected]="true" bindLabel="submissiondDay" bindValue="value"
+              placeholder="Submission Day" formControlName="submissiondDay" required>
+            </ng-select>
+            <div *ngIf="submited && cdsValid.submissiondDay.errors?.required" class="alert alert-danger">
+              Submission day is required
+            </div>
+            <span>Submission Day</span>
+          </label>
+          <label class="form-group has-float-label col-sm-4">
+
+            <input type="text" placeholder="Notes" class="form-control" formControlName="note" id="notes">
+            <span for="notes">Notes</span>
+          </label>
+        </div>
+        <div class="row ml-2">
+          <button class="btn btn-md btn-primary mr-3" (click)="resetScanDataSetupForm()">
+            Reset </button>
+          <button class="btn btn-md btn-primary mr-3" (click)="saveScanDataSetup()">
+            {{ isEditMode ? 'Update' : 'Save'}}</button>
+          <button class="btn btn-md btn-primary mr-3" (click)="saveAndClose()">
+            {{ isEditMode ? 'Update' : 'Save'}} & Close</button>
+          <button class="btn btn-md btn-primary mr-3" (click)="isHideGrid=false">
+            Close </button>
+
+        </div>
+
+        <!-- <div class="justify-content-end row">
+          <button type="button" class="btn btn-md btn-primary" (click)="backToList()"><i
+              class="fa fa-fast-backward"></i>
+            Back To List</button>
+        </div> -->
+      </div>
+    </form>
+  </div>
+
+
+
+  <div class="mt-3" *ngIf="!isHideGrid">
+    <button class="btn btn-md btn-primary" (click)="addScanDataSetup()"><i class="fa fa-plus" aria-hidden="true"></i>
+      Add New</button>
+  </div>
+  <div style="margin-top:1rem;">
+    <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (gridReady)="onGridReady($event)" (edit)="edit($event)"
+      (delete)="delete($event)"></app-cstore-grid>
+  </div>
+</div>

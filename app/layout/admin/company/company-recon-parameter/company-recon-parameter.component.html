@@ -1,0 +1,23 @@
+<div class="col-sm-4 row mt-3">
+  <small (click)="addRows()" class="btn btn-md btn-primary btn-custom" style="cursor: pointer;"><i
+      class="fa fa-plus"></i></small>
+</div>
+<div class="row margin-top-5">
+  <div class="col-md-7">
+
+    <app-editable-grid [rowData]="rowData" (delete)="deleteRow($event)" [editGridOptions]="editGridOptions"
+      (gridReady)="onReady($event)" (save)="editAction($event)">
+    </app-editable-grid>
+
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-7 mt-3">
+    <button type="button" class="btn btn-md btn-primary" (click)="onNavigateUserManagement()">
+      User Management </button>
+    <button type="button" class="btn btn-md btn-danger ml-2" (click)="Reset()"> Reset </button>
+    <button type="button" *ngIf="userInfo && userInfo.roleName ===roleName" class="btn btn-md btn-primary ml-2"
+      (click)="showComapnyList()"> Back To Company List </button>
+  </div>
+
+</div>

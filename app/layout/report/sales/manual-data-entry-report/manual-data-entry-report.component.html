@@ -1,0 +1,24 @@
+<div class="card">
+  <div class="card-body">
+
+    <div class="row">
+
+      <div class="col-sm-4 row form-group">
+        <label class="col-sm-5" for="storeLocation">Store Location</label>
+        <ng-select class="col-sm-7" [items]="LocationList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+          bindLabel="storeName" placeholder="Store Location">
+        </ng-select>
+      </div>
+
+      <div class="row col-sm-4">
+        <label class="col-sm-5" for="date">Business Date</label>
+        <app-datepicker [isMaxDate]="true" class="col-sm-7" [inputDate]="inputDOB" name="inputDOB" id="inputDOB"></app-datepicker>
+      </div>
+
+      <div>
+        <button class="btn btn-md btn-primary">Open PDF</button>
+      </div>
+    </div>
+
+  </div>
+</div>

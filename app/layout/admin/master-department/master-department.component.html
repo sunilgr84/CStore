@@ -1,0 +1,96 @@
+<!-- <app-page-header [heading]="'Master Department'" [icon]="'fa-bar-chart-o'"></app-page-header>  {{title}} -->
+<div [@routerTransition]>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title col-sm-12 mb-4">
+            {{title}}
+            <button *ngIf="!showForm" type="button" class="btn btn-md btn-cstorebo float-right mb-1"
+              (click)="onAddDepartment()">
+              <i class="fa fa-plus" aria-hidden="true"></i> Add New</button>
+          </h5>
+
+          <form [formGroup]="departmentForm" novalidate>
+            <div class="col-sm-12 mt-3" *ngIf="showForm">
+              <div class="row">
+                <label class="form-group has-float-label col-sm-3">
+                  <!-- <div class="col-sm-5"> -->
+                  <input type="text" class="form-control" id="departmentName"
+                    formControlName="masterDepartmentDescription" placeholder="Department Name" required
+                    maxlength="250">
+                  <span for="departmentName">Department Description</span>
+                  <div *ngIf="submitted && depart.masterDepartmentDescription.errors?.required"
+                    class="alert alert-danger">
+                    Department Description is required
+                  </div>
+                  <div *ngIf="depart.masterDepartmentDescription.errors?.pattern" class="alert alert-danger">
+                    Only alphabets and numbers are allowed
+                  </div>
+                  <!-- </div> -->
+                </label>
+                <label #departmentType class="form-group has-float-label col-sm-3">
+                  <!-- <div class="col-sm-5"> -->
+                  <select class="form-control" id="departmentType" formControlName="departmentTypeID" required>
+                    <option value="">Select Department Type</option>
+                    <option *ngFor="let item of departmentTypeList" [value]="item.departmentTypeID">
+                      {{item.departmentTypeName}}</option>
+                  </select>
+                  <span for="departmentType">Department Type</span>
+                  <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+                  <div *ngIf="submitted && depart.departmentTypeID.errors?.required" class="alert alert-danger">
+                    Department type is required
+                  </div>
+                  <!-- </div> -->
+                </label>
+                <label #departmentProductCode class="form-group has-float-label col-sm-3">
+                  <!-- <div class="col-sm-5"> -->
+                  <select class="form-control" id="departmentProductCode" formControlName="naxProductCodeID" required>
+                    <option value="">Select Product Code</option>
+                    <option *ngFor="let item of departmentProductList" [value]="item.naxProductCodeID">
+                      {{item.productCode}} - {{item.productCodeDescription}}</option>
+                  </select>
+                  <span for="departmentProductCode">Product Code</span>
+                  <img src="assets/images/small-spinner.gif" *ngIf="isProductListLoading">
+                  <div *ngIf="submitted && depart.naxProductCodeID.errors?.required" class="alert alert-danger">
+                    Product Code is required
+                  </div>
+                  <!-- </div> -->
+                </label>
+                <div class="col-sm-2">
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="isFuelProduct"
+                      formControlName="isFuelProduct">
+                    <label class="custom-control-label" for="isFuelProduct">Is Fuel Product</label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 text-right mb-3 pr-0">
+                <button type="button" class="btn btn-md btn-primary mr-3" (click)="reset()">
+                  Cancel
+                </button>
+                <button type="button" class="btn btn-md btn-primary mr-3" (click)="editOrSave($event)">
+                  {{isEdit?'Update':'Save'}}</button>
+              </div>
+            </div>
+          </form>
+          <div class="row mb-2">
+            <div class="row justify-content-end  col-sm-12">
+              <div class="inner-addon right-addon">
+                <span> <i class="fa fa-search card-title" aria-hidden="true"></i> </span>
+                <input type="text" class="form-control" aria-label="Default"
+                  aria-describedby="inputGroup-sizing-default" placeholder="Filter Search" [(ngModel)]="filterText"
+                  name="filterText">
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 mb-3">
+            <app-cstore-grid #masterDepartmentGrid [cStoreGridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+              [textFilter]="filterText" (edit)="editAction($event); addUpdateDetails=true;"
+              (delete)="deleteAction($event)"></app-cstore-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

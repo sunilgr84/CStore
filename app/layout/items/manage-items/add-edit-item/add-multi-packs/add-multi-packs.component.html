@@ -1,0 +1,7 @@
+<div class="row multi-packs-child">
+    <app-adv-pagination-grid (gridReady)="onMultipacksEditGridReady($event)" [rowData]="multipacksIRowData"
+        [agGridTheme]="'inline-edit'" [paginationGridOptions]="multipacksIEditGridOptions"
+        (edit)="saveMultipacks($event)" (save)="saveMultipacks($event)" (cancel)="onCancel($event)"
+        (delete)="deleteMultipacks($event)" (suspend)="suspendAction($event)" (recover)="recoverAction($event)">
+    </app-adv-pagination-grid>
+</div>

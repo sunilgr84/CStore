@@ -1,0 +1,41 @@
+<app-dialog [isOpen]="isOpen" [ngClass]="{'dialog-open': isOpen}" [fullscreen]="true" class="dialog-aside-panel"
+  dialogLabel="Department Sales" (onClose)="onDialogClose($event)">
+  <app-dialog-header [headerTemplate]="dialogHeaderTemplate"></app-dialog-header>
+  <app-dialog-body>
+    <app-cstore-grid
+      *ngIf="showDetailsTable == 'true'"
+      class="my-3"
+      [rowData]="detailTableData"
+      [cStoreGridOptions]="gridDetailOptions"
+      (gridReady)="onGridReady($event)"
+      >
+    </app-cstore-grid>
+    <app-expandable-grid
+      #dayReconGrid
+      [expandableGridOptions]="deptDetailgridOptions"
+      [rowData]="deptDetailrowData"
+      (gridReady)="deptOnGridReady($event)">
+    </app-expandable-grid>
+  </app-dialog-body>
+</app-dialog>
+
+<ng-template #dialogHeaderTemplate>
+  <header class="dialog-header-container">
+    <div class="col">
+      <div class="dialog-title-wrapper">
+        <div class="dialog-title space-wrapper d-inline-flex">
+          <div class="mr-2">
+            <span>Department Sales:&nbsp;</span>
+            <span style="color: #C3C3C3">{{deprttotalAmount|currency}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-auto">
+      <button class="v-btn-icon" (click)="onDialogClose($event)">
+        <i class="flaticon-cancel"></i>
+      </button>
+    </div>
+  </header>
+</ng-template>

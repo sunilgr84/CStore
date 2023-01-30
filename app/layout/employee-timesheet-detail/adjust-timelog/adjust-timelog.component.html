@@ -1,0 +1,25 @@
+<div style="height: 300px;width: 550px;">
+  <div class="card-body">
+    <div class="modal-header mb-3">
+      <h5 class="card-title">Adjust Timelog</h5>
+      <button type="button" class="close" aria-label="Close" (click)="closeModal()"></button>
+      <span aria-hidden="true" style="margin-top: -9px;
+      margin-left: -3px;">&times;</span>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 mt-3">
+        <div *ngIf="rowdata.length > 0 ">
+          <div *ngFor="let item1 of rowdata">
+            <app-cstore-grid [rowData]="item1.listEmployeeTracking" [cStoreGridOptions]="adjustemployeeTimesheetDetail"
+              (gridReady)="onGridReady($event)" [textFilter]="filterText" (rejectEmployee)="rejectEmployeeAction($event)">
+            </app-cstore-grid>
+            <br>
+        </div>
+      </div>
+      <div class="col-sm-12 mt-3" *ngIf="rowdata.length === 0">
+        <h4 style="margin-left: 175px;">No record found</h4>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

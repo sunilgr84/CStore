@@ -1,0 +1,566 @@
+<div class="row">
+  <div class="col-md-6"></div>
+  <div class="col-md-3 dash-mat-sel">
+    <mat-form-field appearance="fill">
+      <mat-label>Select Stores</mat-label>
+      <mat-select [formControl]="selectedStores" multiple (selectionChange)="getDashboardData()">
+        <app-select-check-all [model]="selectedStores" [values]="storeLocationList"
+          (selectionChange)="getDashboardData()">
+        </app-select-check-all>
+        <!-- <mat-select-trigger>
+          {{selectedStores.value ? selectedStores.value[0].storeName : ''}}
+          <span *ngIf="selectedStores.value?.length > 1" class="example-additional-selection">
+            (+{{selectedStores.value.length - 1}} {{selectedStores.value?.length === 2 ? 'other' : 'others'}})
+          </span>
+        </mat-select-trigger> -->
+        <mat-option *ngFor="let store of storeLocationList" [value]="store"
+          matTooltip="Client ID : {{pad(selectedCompanyId.toString(),4) +'-'+ pad(store.storeLocationID.toString(),5)}}"
+          matTooltipPosition="left">
+          {{store.storeDetailName}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="col-md-3">
+    <label class="sales-dash w-100">
+      <app-daterangepicker [selectedDateRange]="selectedDateRange" [placement]="placement"
+        (dateRangeSelecetd)="dateRangeChange($event)">
+      </app-daterangepicker>
+    </label>
+  </div>
+</div>
+<div class="row mt-3">
+  <div class="col-md-4 pr-0">
+    <div class="pmc-container" style="border-radius: 4px;">
+      <div class="pmc-header pmc-container-primary gutters-between-small">
+        <div class="col-auto">
+          <div class="pmc-title-wrapper">
+            <span class="pmc-title font-weight-bolder">Store(s) KPI</span>
+          </div>
+        </div>
+      </div>
+      <div class="pmc-body gutters-between-small p-0">
+        <div class="card-sales bg-white">
+          <div class="card-body p-0 card-height">
+            <div class="badge sales-badge m-1 sales-bg-green">
+              <span>Gross Sales</span>
+              <h1 class="sales-badge-font">
+                <span [ngbTooltip]="grossSale" placement="bottom">${{dashboardData.grossSale}}</span>
+              </h1>
+              <ng-template #grossSale>${{dashboardData.grossSaleNF}}
+              </ng-template>
+            </div>
+            <div class="badge sales-badge m-1 sales-bg-green">
+              <span>Store Sales</span>
+              <h1 class="sales-badge-font">
+                <span [ngbTooltip]="storeSale" placement="bottom">${{dashboardData.storeSale}}</span>
+              </h1>
+              <ng-template #storeSale>${{dashboardData.storeSaleNF}}
+              </ng-template>
+            </div>
+            <div class="badge sales-badge m-1 sales-bg-orange">
+              <span>Fuel Sales</span>
+              <h1 class="sales-badge-font">
+                <span [ngbTooltip]="fuelSale" placement="bottom">${{dashboardData.fuelSale}}</span>
+              </h1>
+              <ng-template #fuelSale>${{dashboardData.fuelSaleNF}}
+              </ng-template>
+            </div>
+            <div class="badge sales-badge m-1 sales-bg-orange">
+              <span>Fuel Volume(Glns)</span>
+              <h1 class="sales-badge-font">
+                <span [ngbTooltip]="fuelGasVolume" placement="bottom">{{dashboardData.fuelGasVolume}}</span>
+              </h1>
+              <ng-template #fuelGasVolume>${{dashboardData.fuelGasVolume}}
+              </ng-template>
+            </div>
+            <div class="badge sales-badge m-1 sales-bg-yellow">
+              <span>Customers</span>
+              <h1 class="sales-badge-font">
+                <span [ngbTooltip]="customerCount" placement="bottom">{{dashboardData.customerCount}}</span>
+              </h1>
+              <ng-template #customerCount>{{dashboardData.customerCount}}
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="badge sales-badge m-1">
+      <span>Avg Cust Buy</span>
+      <h1 class="sales-badge-font">4.1K</h1>
+    </div> -->
+  </div>
+  <div class="col-md-4">
+    <div class="pmc-container" style="border-radius: 4px;">
+      <div class="pmc-header pmc-container-primary gutters-between-small">
+        <div class="col-auto">
+          <div class="pmc-title-wrapper">
+            <span class="pmc-title font-weight-bolder">Sales by Merchandise/Gas</span>
+          </div>
+        </div>
+      </div>
+      <div class="pmc-body gutters-between-small p-0" style="display: inherit;">
+        <div class="card-sales">
+          <div class="card-body p-0 card-height" style="width: 350;overflow-x: auto;">
+            <canvas *ngIf="showBarChart" baseChart [datasets]="barChartData" [labels]="barChartLabels"
+              [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType">
+            </canvas>
+            <div class="text-div-center" *ngIf="!showBarChart">No Data Available</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 pl-0">
+    <div class="pmc-container" style="border-radius: 4px;">
+      <div class="pmc-header pmc-container-primary gutters-between-small">
+        <div class="col-auto">
+          <div class="pmc-title-wrapper">
+            <span class="pmc-title font-weight-bolder">Method Of Payment</span>
+          </div>
+        </div>
+      </div>
+      <div class="pmc-body gutters-between-small p-0">
+        <div class="card-sales">
+          <div class="card-body p-0 card-height">
+            <div class="badge sales-badge m-1 sales-dark-blue">
+              <span>Cash</span>
+              <h1 class="sales-badge-font">
+                <span [ngbTooltip]="cash" placement="bottom">${{dashboardData.cash}}</span>
+              </h1>
+              <ng-template #cash>${{dashboardData.cashNF}}
+              </ng-template>
+            </div>
+            <div class="badge sales-badge m-1 sales-dark-blue">
+              <span>Network(Credit+Debit)</span>
+              <h1 class="sales-badge-font">
+                <span [ngbTooltip]="network" placement="bottom">${{dashboardData.network}}</span>
+              </h1>
+              <ng-template #network>${{dashboardData.networkNF}}
+              </ng-template>
+            </div>
+            <div class="badge sales-badge m-1 sales-dark-blue">
+              <span>Credit</span>
+              <h1 class="sales-badge-font">
+                <span [ngbTooltip]="credit" placement="bottom">${{dashboardData.credit}}</span>
+              </h1>
+              <ng-template #credit>${{dashboardData.creditNF}}
+              </ng-template>
+            </div>
+            <div class="badge sales-badge m-1 sales-dark-blue">
+              <span>Debit</span>
+              <h1 class="sales-badge-font">
+                <span [ngbTooltip]="debit" placement="bottom">${{dashboardData.debit}}</span>
+              </h1>
+              <ng-template #debit>${{dashboardData.debitNF}}
+              </ng-template>
+            </div>
+            <div class="badge sales-badge m-1 sales-bg-red">
+              <span>Void</span>
+              <h1 class="sales-badge-font">
+                <span [ngbTooltip]="voids" placement="bottom">${{dashboardData.voids}}</span>
+              </h1>
+              <ng-template #voids>${{dashboardData.voidsNF}}
+              </ng-template>
+            </div>
+            <div class="badge sales-badge m-1 sales-bg-red">
+              <span>Refunds</span>
+              <h1 class="sales-badge-font">
+                <span [ngbTooltip]="refunds" placement="bottom">${{dashboardData.refunds}}</span>
+              </h1>
+              <ng-template #refunds>${{dashboardData.refundsNF}}
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row mt-4">
+  <div class="col-md-12">
+    <div class="pmc-container" style="border-radius: 4px;">
+      <div class="pmc-header pmc-container-primary gutters-between-small">
+        <div class="col-auto">
+          <div class="pmc-title-wrapper">
+            <span class="pmc-title font-weight-bolder">Store Sales and Gas Volume Trend Lines</span>
+          </div>
+        </div>
+      </div>
+      <div class="pmc-body gutters-between-small p-0" style="display: inherit;">
+        <div class="card-sales">
+          <div class="card-body p-0">
+            <canvas baseChart *ngIf="showLineChart" height="50" [datasets]="lineChartData" [options]="lineChartOptions"
+              [colors]="lineChartColors" [legend]="lineChartLegend" [labels]="lineChartLabels"
+              [chartType]="lineChartType"></canvas>
+            <div class="text-div-center-line" *ngIf="!showLineChart">No Data Available</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 mt-4">
+    <div class="pmc-container" style="border-radius: 4px;">
+      <div class="pmc-header pmc-container-primary gutters-between-small">
+        <div class="col-auto">
+          <div class="pmc-title-wrapper">
+            <span class="pmc-title font-weight-bolder">Sales By Store</span>
+          </div>
+        </div>
+      </div>
+      <div class="pmc-body gutters-between-small p-0" style="display: inherit;">
+        <div class="card-sales">
+          <div class="card-body p-0 card-height">
+            <canvas *ngIf="showPieChart" baseChart [data]="pieChartData" [labels]="pieChartLabels"
+              [chartType]="pieChartType" [options]="pieChartOptions" [legend]="pieChartLegend"
+              [colors]="pieChartColors">
+            </canvas>
+            <div class="text-div-center" *ngIf="!showPieChart">No Data Available</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 mt-4">
+    <div class="pmc-container" style="border-radius: 4px;">
+      <div class="pmc-header pmc-container-primary gutters-between-small">
+        <div class="col-auto">
+          <div class="pmc-title-wrapper">
+            <span class="pmc-title font-weight-bolder">Store Wise Method Of Payment Analysis</span>
+          </div>
+        </div>
+      </div>
+      <div class="pmc-body gutters-between-small p-0" style="display: inherit;">
+        <div class="card-sales">
+          <div class="card-body p-0 card-height">
+            <div class="table-wrapper-scroll-y widget-scrollbar" *ngIf="dashboardResponse.length > 0">
+              <table class="table table-bordered table-striped mb-0 table-sm">
+                <thead>
+                  <tr>
+                    <th scope="col">Store Name</th>
+                    <th scope="col">Cash</th>
+                    <th scope="col">Credit</th>
+                    <th scope="col">Debit</th>
+                    <th scope="col">Network Card</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let response of dashboardResponse">
+                    <td>{{response.storeName}}</td>
+                    <td>{{response.cash}}</td>
+                    <td>{{response.credit}}</td>
+                    <td>{{response.debit}}</td>
+                    <td>{{response.network}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="text-div-center" *ngIf="dashboardResponse.length == 0">No Data Available</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 mt-4">
+    <div class="pmc-container" style="border-radius: 4px;">
+      <div class="pmc-header pmc-container-primary gutters-between-small">
+        <div class="col-auto">
+          <div class="pmc-title-wrapper">
+            <span class="pmc-title font-weight-bolder">Top Selling Items</span>
+          </div>
+        </div>
+      </div>
+      <div class="pmc-body gutters-between-small p-0" style="display: inherit;">
+        <div class="card-sales">
+          <div class="card-body p-0 card-height overflow-auto">
+            <table *ngIf="topSellingItems.length > 0" class="table table-bordered table-striped mb-0 table-sm">
+              <thead>
+                <tr>
+                  <th scope="col">UPC Code</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">Qty</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of topSellingItems">
+                  <td>{{item.fullUPCCode}}</td>
+                  <td>{{item.description}}</td>
+                  <td>{{item.tq}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="text-div-center" *ngIf="topSellingItems.length == 0">No Data Available</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="pmc-container" style="border-radius: 4px;">
+      <div class="pmc-header pmc-container-primary gutters-between-small">
+        <div class="col-auto">
+          <div class="pmc-title-wrapper">
+            <span class="pmc-title font-weight-bolder">Chart Of Account By Month</span>
+          </div>
+        </div>
+      </div>
+      <div class="pmc-body gutters-between-small p-0" style="display: inherit;">
+        <div class="card-sales">
+          <div class="card-body p-0 card-height overflow-auto">
+            <table *ngIf="chartOfAccountByMonthFinalList.length > 0"
+              class="table table-bordered table-striped mb-0 table-sm">
+              <thead>
+                <tr>
+                  <th scope="col" class="text-center">Category</th>
+                  <th scope="col" class="text-center">Total</th>
+                  <th scope="col" class="text-center">January</th>
+                  <th scope="col" class="text-center">February</th>
+                  <th scope="col" class="text-center">March</th>
+                  <th scope="col" class="text-center">April</th>
+                  <th scope="col" class="text-center">May</th>
+                  <th scope="col" class="text-center">June</th>
+                  <th scope="col" class="text-center">July</th>
+                  <th scope="col" class="text-center">August</th>
+                  <th scope="col" class="text-center">September</th>
+                  <th scope="col" class="text-center">October</th>
+                  <th scope="col" class="text-center">November</th>
+                  <th scope="col" class="text-center">December</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="text-right" *ngFor="let item of chartOfAccountByMonthFinalList">
+                  <td style="width: 250px;">{{item.CACCName}}</td>
+                  <td>${{item.total}}</td>
+                  <td>${{item.januaryAmount}}</td>
+                  <td>${{item.februaryAmount}}</td>
+                  <td>${{item.marchAmount}}</td>
+                  <td>${{item.aprilAmount}}</td>
+                  <td>${{item.mayAmount}}</td>
+                  <td>${{item.juneAmount}}</td>
+                  <td>${{item.julyAmount}}</td>
+                  <td>${{item.augustAmount}}</td>
+                  <td>${{item.septemberAmount}}</td>
+                  <td>${{item.octomberAmount}}</td>
+                  <td>${{item.novemberAmount}}</td>
+                  <td>${{item.decemberAmount}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="text-div-center" *ngIf="chartOfAccountByMonthFinalList.length == 0">No Data Available</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <!-- <div class="col-md-12" style="padding-right: 0px !important;padding-left: 0px !important;">
+      <div class="panel-label">Current Buydown Cycle</div>
+      <div class="card card-sales">
+        <div class="card-body p-0 overflow-auto">
+          <div style="padding: 4% 15%;" *ngIf="currentBuydownCycleList.length != 0"><span
+              [innerHTML]="currentBuydownCycle"></span></div>
+          <div style="padding: 4% 15%;" *ngIf="currentBuydownCycleList.length == 0">No Data Available</div>
+        </div>
+      </div>
+    </div> -->
+  </div>
+
+  <div class="col-md-6 mt-4">
+    <div class="pmc-container" style="border-radius: 4px;">
+      <div class="pmc-header pmc-container-primary gutters-between-small">
+        <div class="col-auto">
+          <div class="pmc-title-wrapper">
+            <span class="pmc-title font-weight-bolder">Max Suggest Retail Price By Manufacturer</span>
+          </div>
+        </div>
+      </div>
+      <div class="pmc-body gutters-between-small p-0" style="display: inherit;">
+        <div class="card-sales">
+          <div class="card-body p-0 card-height overflow-auto">
+            <table *ngIf="mRPByBrandList.length > 0" class="table table-bordered table-striped mb-0 table-sm">
+              <thead>
+                <tr>
+                  <th scope="col">Price group</th>
+                  <th scope="col">SRP</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of mRPByBrandList">
+                  <td *ngIf="item.MRP!=0">{{item.CompanyPriceGroupName}}</td>
+                  <td *ngIf="item.MRP!=0">$ {{item.MRP}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="text-div-center" *ngIf="mRPByBrandList.length == 0">No Data Available</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="pmc-container" style="border-radius: 4px;">
+      <div class="pmc-header pmc-container-primary gutters-between-small">
+        <div class="col-auto">
+          <div class="pmc-title-wrapper">
+            <span class="pmc-title font-weight-bolder">Top Selling Items By Department</span>
+          </div>
+        </div>
+      </div>
+      <div class="pmc-body gutters-between-small p-0" style="display: inherit;">
+        <div class="card-sales">
+          <div class="card-body p-0 card-height overflow-auto">
+            <table *ngIf="topSellingItemsByDept.length > 0" class="table table-bordered table-striped mb-0 table-sm">
+              <thead>
+                <tr>
+                  <th scope="col">Description</th>
+                  <th scope="col">Qty</th>
+                  <th scope="col" class="text-right">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of topSellingItemsByDept">
+                  <td>{{item.description}}</td>
+                  <td>{{item.tq}}</td>
+                  <td class="text-right">${{item.tAmount.toFixed(2)}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="text-div-center" *ngIf="topSellingItemsByDept.length == 0">No Data Available</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="pmc-container" style="border-radius: 4px;">
+      <div class="pmc-header pmc-container-primary gutters-between-small">
+        <div class="col-auto">
+          <div class="pmc-title-wrapper">
+            <span class="pmc-title font-weight-bolder">Buy Downs</span>
+          </div>
+        </div>
+      </div>
+      <div class="pmc-body gutters-between-small p-0" style="display: inherit;">
+        <div class="card-sales" style="min-height: 270px;">
+          <div class="card-body p-0 overflow-auto sales-dash-tabs">
+            <div *ngIf="currentBuydownCycleList.length == 0" class="text-div-center">No Data Available</div>
+            <div class="row m-0" *ngIf="currentBuydownCycleList.length != 0">
+              <div class="col-md-8 p-0">
+                <div class="downs-label">
+                  Current Cycle - From :
+                  <span class="font-weight-bold">{{currentBuydownCycleList[0].StartDate}}</span> TO :
+                  <span class="font-weight-bold">{{currentBuydownCycleList[0].EndDate}}</span>
+                </div>
+              </div>
+              <div class="col-md-4 p-0">
+                <div class="field-group gutter-bottom m-2" *ngIf="currentBuydownCycleList.length != 0">
+                  <div class="field-wrapper buydown-ddown">
+                    <ng-select [items]="storeLocationListBuyDown" bindLabel="storeName" placeholder="Select Store"
+                      name="storeName" [(ngModel)]="buyDownStoreLocationId" (change)="selectBuydownStore()">
+                    </ng-select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <ngb-tabset [destroyOnHide]="false" *ngIf="currentBuydownCycleList.length != 0">
+                <ngb-tab>
+                  <ng-template ngbTabTitle>PM USA</ng-template>
+                  <ng-template ngbTabContent>
+                    <div style="padding: 4% 15%;" *ngIf="buydownWidgetDetails4.length == 0">No Data Available</div>
+                    <div class="card br-0" *ngIf="buydownProgramOptionsList4.length > 0">
+                      <div class="card-header">
+                        <strong>Program Option {{buydownProgramOptionsList4[0].ProgramOption}}</strong>
+                      </div>
+                      <div class="card-body p-0">
+                        <table *ngIf="buydownWidgetDetails4.length > 0"
+                          class="table table-bordered table-striped mb-0 table-sm">
+                          <thead>
+                            <tr>
+                              <th scope="col" class="text-center">Price Group</th>
+                              <th scope="col" class="text-center">Buy Down</th>
+                              <th scope="col" class="text-center">SRP</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let detail of buydownWidgetDetails4">
+                              <td>{{detail.CompanyPriceGroupName}}</td>
+                              <td class="text-right">${{detail.BuydownAmt}}</td>
+                              <td class="text-right">${{detail.MRP}}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </ng-template>
+                </ngb-tab>
+                <ngb-tab>
+                  <ng-template ngbTabTitle>USSTS</ng-template>
+                  <ng-template ngbTabContent>
+                    <div style="padding: 4% 15%;" *ngIf="buydownProgramOptionsList70.length == 0">No Data Available
+                    </div>
+                    <div class="card br-0" *ngIf="buydownProgramOptionsList70.length > 0">
+                      <div class="card-header">
+                        <strong>Program Option {{buydownProgramOptionsList70[0].ProgramOption}}</strong>
+                      </div>
+                      <div class="card-body p-0">
+                        <table *ngIf="buydownWidgetDetails70.length > 0"
+                          class="table table-bordered table-striped mb-0 table-sm">
+                          <thead>
+                            <tr>
+                              <th scope="col" class="text-center">Price Group</th>
+                              <th scope="col" class="text-center">Buy Down</th>
+                              <th scope="col" class="text-center">SRP</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let detail of buydownWidgetDetails70">
+                              <td>{{detail.CompanyPriceGroupName}}</td>
+                              <td class="text-right">${{detail.BuydownAmt}}</td>
+                              <td class="text-right">${{detail.MRP}}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </ng-template>
+                </ngb-tab>
+                <ngb-tab>
+                  <ng-template ngbTabTitle>HELIX</ng-template>
+                  <ng-template ngbTabContent>
+                    <div style="padding: 4% 15%;" *ngIf="buydownProgramOptionsList77.length == 0">No Data Available
+                    </div>
+                    <div class="card br-0" *ngIf="buydownProgramOptionsList77.length > 0">
+                      <div class="card-header">
+                        <strong>Program Option {{buydownProgramOptionsList77[0].ProgramOption}}</strong>
+                      </div>
+                      <div class="card-body p-0">
+                        <table *ngIf="buydownWidgetDetails77.length > 0"
+                          class="table table-bordered table-striped mb-0 table-sm">
+                          <thead>
+                            <tr>
+                              <th scope="col" class="text-center">Price Group</th>
+                              <th scope="col" class="text-center">Buy Down</th>
+                              <th scope="col" class="text-center">SRP</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let detail of buydownWidgetDetails77">
+                              <td>{{detail.CompanyPriceGroupName}}</td>
+                              <td class="text-right">${{detail.BuydownAmt}}</td>
+                              <td class="text-right">${{detail.MRP}}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </ng-template>
+                </ngb-tab>
+              </ngb-tabset>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+  </div>
+
+</div>

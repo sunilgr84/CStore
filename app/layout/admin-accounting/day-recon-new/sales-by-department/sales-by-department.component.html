@@ -1,0 +1,81 @@
+<!-- <app-dialog [isOpen]="isOpen" [ngClass]="{'dialog-open': isOpen}" [fullscreen]="true" class="dialog-aside-panel"
+  dialogLabel="Sales By Department" (onClose)="onDialogClose($event)">
+  <app-dialog-header class="background-2" [headerTemplate]="dialogHeaderTemplate"></app-dialog-header>
+  <app-dialog-body class="background-1">
+
+    <div class="pmc-container" style="border-radius: 4px;">
+      <div class="pmc-header pmc-container-primary" style="border-radius: 4px 4px 0 0;">
+        <div class="col pmc-space-wrapper">
+          <div>
+            <strong class="mr-1">Inside Sales</strong>
+            <span class="text-label">83</span>
+            <span style="font-size: 0.875rem; color: #9B9C9E">&nbsp;Items</span>
+          </div>
+
+          <div style="font-size: 0.875rem;">
+            <span>Total Sales:&nbsp;</span>
+            <span style="color: #9B9C9E;">$10,256.23</span>
+          </div>
+
+          <div style="font-size: 0.875rem;">
+            <span>UPC Sales:&nbsp;</span>
+            <span style="color: #9B9C9E;">$6,256.23</span>
+          </div>
+
+          <div style="font-size: 0.875rem;">
+            <span>Non UPC Sales:&nbsp;</span>
+            <span style="color: #9B9C9E;">$4,000.00</span>
+          </div>
+        </div>
+        <div class="col-auto">
+          <button class="v-btn-icon">
+            <i class="flaticon-arrow-chevron-down"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="pmc-body p-0" style="border-radius: 0 0 4px 4px;">
+        <app-pagination-grid agGridTheme="border-less" [paginationGridOptions]="salesByDepartmentGridOptions"
+          [rowData]="salesByDepartmentGridRowData" (gridReady)="salesByDepartmentGridReady($event)"
+          [detailCellRenderers]="salesByDepartmentDetailCellRenderer" (onAction)="onAction($event)">
+        </app-pagination-grid>
+      </div>
+    </div>
+
+  </app-dialog-body>
+</app-dialog> -->
+
+<ng-template #dialogHeaderTemplate>
+  <header class="dialog-header-container">
+    <div class="col">
+      <div class="dialog-title-wrapper">
+        <div class="dialog-title space-wrapper">
+          <div>
+            <span>Total Sales by Departments:&nbsp;</span>
+            <span style="color: #9B9C9E">$18,113.03</span>
+          </div>
+
+          <div>
+            <span>Highest Sales:&nbsp;</span>
+            <span style="color: #9B9C9E">Candy</span>
+            /
+            <span class="color-success">$10,256.03</span>
+          </div>
+
+          <div>
+            <span>Lowest Sales:&nbsp;</span>
+            <span style="color: #9B9C9E">Alcohol</span>
+            /
+            <span class="color-danger">$5,852.02</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-auto">
+      <button class="v-btn-icon" (click)="onDialogClose($event)">
+        <i class="flaticon-cancel"></i>
+      </button>
+    </div>
+  </header>
+</ng-template>

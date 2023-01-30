@@ -1,0 +1,125 @@
+<form [formGroup]="purchaseReportForm">
+  <div class="card mt-3" style="min-height: 450px">
+    <div class="card-body">
+      <div class="row mb-4 ml-0">
+        <div class="col-sm-3 custom-control custom-radio">
+          <input type="radio" class="custom-control-input" (click)="purchaseByDeptClick()"
+            formControlName="purchaseReportType" id="purchaseByDeptReport" name="purchaseReportType"
+            value="purchaseByDeptReport">
+          <label class="custom-control-label" for="purchaseByDeptReport">Sales/Purchase By Department</label>
+        </div>
+
+        <div class="col-sm-4 custom-control custom-radio">
+          <input type="radio" class="custom-control-input" (click)="purchaseByDeptDetailClick()"
+            formControlName="purchaseReportType" id="purchaseByDeptReportDetail" name="purchaseReportType"
+            value="purchaseByDeptReportDetail">
+          <label class="custom-control-label" for="purchaseByDeptReportDetail">Sales/Purchase By Department
+            Detail</label>
+        </div>
+
+        <!-- <div class="col-sm-3 custom-control custom-radio">
+          <input type="radio" class="custom-control-input" (click)="purchaseByVendorClick()"
+            formControlName="purchaseReportType" id="purchaseByVendor" name="purchaseReportType" value="purchaseByVendor">
+          <label class="custom-control-label" for="purchaseByVendor">Sales/Purchase By Vendor</label>
+        </div> -->
+
+      </div>
+      <div class="row">
+        <div class="col-sm-3">
+          <label class="form-group has-float-label">
+            <app-daterangepicker [selectedDateRange]="selectedDateRange" (dateRangeSelecetd)="dateRangeChange($event)">
+            </app-daterangepicker>
+            <span> Select Date Range</span>
+          </label>
+        </div>
+        <div class="col-sm-4">
+          <label class="form-group has-float-label" *ngIf="storeLocationList && storeLocationList.length!==1">
+            <ng-select [items]="storeLocationList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+              bindLabel="storeName" placeholder="Store Location" formControlName="storeLocationIDs"
+              [selectableGroup]="true" [selectableGroupAsModel]="false">
+              <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+              </ng-template>
+              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                <div class="ng-value" *ngFor="let item of items | slice:0:9">
+                  <span class="ng-value-label">
+                    {{item.storeName}}</span>
+                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 9">
+                  <span class="ng-value-label">{{items.length - 9}} more...</span>
+                </div>
+              </ng-template>
+            </ng-select>
+            <span> Store Location</span>
+            <img src="assets/images/small-spinner.gif" *ngIf="isStoreLoading">
+          </label>
+          <label class="col-sm-12 form-group has-float-label" *ngIf="storeLocationList && storeLocationList.length===1">
+            <input readonly type="text" class="form-control" [value]="storeLocationList[0].storeName">
+            <span>Store Location</span>
+          </label>
+        </div>
+        <div *ngIf="isShowDepartment" class="col-sm-4">
+          <label class="form-group has-float-label">
+            <ng-select [items]="departmentList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+              bindLabel="departmentDescription" placeholder="Department" formControlName="departmentIDs"
+              [selectableGroup]="true" [selectableGroupAsModel]="false">
+              <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+              </ng-template>
+              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                <div class="ng-value" *ngFor="let item of items | slice:0:9">
+                  <span class="ng-value-label">
+                    {{item.departmentDescription}}</span>
+                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 9">
+                  <span class="ng-value-label">{{items.length - 9}} more...</span>
+                </div>
+              </ng-template>
+            </ng-select>
+            <span> Department</span>
+          </label>
+        </div>
+        <div *ngIf="isShowVendor" class="col-sm-4">
+          <label class="form-group has-float-label">
+            <ng-select [items]="vendorList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+              bindLabel="vendorName" placeholder="Vendor" formControlName="vendorIDs" [selectableGroup]="true"
+              [selectableGroupAsModel]="false">
+              <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+              </ng-template>
+              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                <div class="ng-value" *ngFor="let item of items | slice:0:9">
+                  <span class="ng-value-label">
+                    {{item.vendorName}}</span>
+                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 9">
+                  <span class="ng-value-label">{{items.length - 9}} more...</span>
+                </div>
+              </ng-template>
+            </ng-select>
+            <span> Vendor</span>
+          </label>
+        </div>
+        <div class="col-sm-1">
+          <button type="button" class="btn btn-md btn-primary btn-go" (click)="purchaseReport()">Go</button>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="this.purchaseReportRowData && this.purchaseReportRowData.length >0">
+        <div class="col-sm-12 mt-3">
+          <app-report-grid [rowData]="purchaseReportRowData" [expandableGridOptions]="gridOption"
+            (gridReady)="onGridReady($event)" (exportTo)="searchPurchaseReport($event)">
+          </app-report-grid>
+        </div>
+      </div>
+      <div class="row" *ngIf="this.purchaseReportRowData && this.purchaseReportRowData.length ===0">
+        <div class="col-sm-12 mt-3">
+          <strong>No Record Available</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

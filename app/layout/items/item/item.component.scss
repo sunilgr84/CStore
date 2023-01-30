@@ -1,0 +1,260 @@
+.custom-mt {
+  margin-top: 3rem;
+}
+.input-icon > i {
+  top: 18px;
+}
+.topPadding > i {
+  top: 48%;
+}
+.card-min-height {
+  min-height: 255px;
+  padding: 1rem;
+}
+
+// .custom-checkbox .custom-control-label::before {
+//   margin: 0.5rem;
+// }
+
+.custom-control-label {
+  margin: 0.5rem;
+}
+.custom-control {
+  padding-left: 1rem;
+}
+
+.custom-padding {
+  padding-left: 4px;
+}
+
+::ng-deep .header-text-wrap-1 {
+  line-height: normal !important;
+  padding: 0px !important;
+  .ag-header-cell-label {
+    width: calc(100%);
+  }
+}
+
+::ng-deep .ag-header-cell-label {
+  justify-content: center;
+}
+
+::ng-deep .fa-c::before {
+  font-family: Arial;
+  font-weight: bold;
+  content: "C";
+  background-color: #007bff;
+  color: white;
+  border-radius: 25px;
+  font-size: 12px;
+  padding: 4px;
+}
+
+::ng-deep .fa-p::before {
+  font-family: Arial;
+  font-weight: bold;
+  content: "P";
+  background-color: #007bff;
+  color: white;
+  border-radius: 25px;
+  font-size: 12px;
+  padding: 4px;
+}
+// .min_height {
+//   min-height: 600px;
+//   height: 600px;
+//   overflow-y: auto;
+// }
+
+::ng-deep .ag-theme-material .ag-cell {
+  line-height: 30px;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+::ng-deep .ag-theme-material .ag-cell-inline-editing {
+  height: 60px;
+  padding: 12px;
+}
+
+::ng-deep .ag-theme-material .ag-header-cell-label .ag-header-cell-text {
+  white-space: initial !important;
+}
+::ng-deep .ag-theme-material .header-text-wrap {
+  padding: 0px !important;
+}
+::ng-deep .ag-theme-material .ag-cell-value {
+  font-size: 12px !important;
+}
+::ng-deep .ag-theme-material .ag-header-cell,
+.ag-theme-material .ag-header-group-cell {
+  line-height: 40px;
+}
+
+::ng-deep .ag-theme-material .ag-header-cell-menu-button .ag-icon-menu {
+  height: 40px;
+}
+
+// ::ng-deep .ag-theme-material .ag-selection-checkbox span {
+//   border: #8f9193 solid 1px;
+//   width: 16px;
+//   opacity: 0.7;
+//   height: 16px;
+//   // background-size: 16px 16px;
+// }
+.relative-container {
+  position: relative !important;
+  margin-top: 4px !important;
+  margin-left: 0px !important;
+}
+.z_index {
+  z-index: 1002;
+}
+.close-button {
+  cursor: pointer;
+}
+::ng-deep app-item {
+  .mat-checkbox-layout {
+    margin-top: 0.35rem;
+    margin-bottom: 0rem;
+  }
+}
+
+.warning-badge {
+  padding: 0.3rem 1rem;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  background-color: #fdcb52;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.active-badge {
+  padding: 0.3rem 1rem;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  background-color: #34d382;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.info-badge {
+  padding: 0.3rem 1rem;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  background-color: #5288bd;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.danger-badge {
+  padding: 0.3rem 1rem;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  background-color: #ff8282;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.warning-badge h3,
+.danger-badge h3,
+.active-badge h3,
+.info-badge h3 {
+  margin-bottom: 0px;
+  line-height: 1;
+  font-weight: 400;
+}
+
+
+//New tooltip
+
+.wrapper{
+  position:relative;
+}
+.tooltip {
+  position: unset;
+  transform: none;
+  opacity: 1;
+  display: inline-block !important;
+  text-align: center;
+}
+
+.tooltip:hover > .tooltip-text, .tooltip:hover > .wrapper {
+  pointer-events: auto;
+  opacity: 1.0;
+}
+
+.tooltip > .tooltip-text, .tooltip >.wrapper {
+  display: block;
+  position: absolute;
+  z-index: 6000;
+  overflow: visible;
+  padding: 5px 8px;
+  margin-top: 10px;
+  line-height: 16px;
+  border-radius: 4px;
+  text-align: left;
+  color: #fff;
+  background: #000;
+  pointer-events: none;
+  opacity: 0.0;
+  -o-transition: all 0.3s ease-out;
+  -ms-transition: all 0.3s ease-out;
+  -moz-transition: all 0.3s ease-out;
+  -webkit-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
+}
+
+.tooltip > .tooltip-text, .tooltip >.wrapper {
+  display: block;
+  position: absolute;
+  z-index: 6000;
+  overflow: visible;
+  padding: 5px 8px;
+  margin-top: 10px;
+  line-height: 16px;
+  border-radius: 4px;
+  text-align: left;
+  color: #fff;
+  background: #000;
+  pointer-events: none;
+  opacity: 0.0;
+  -o-transition: all 0.3s ease-out;
+  -ms-transition: all 0.3s ease-out;
+  -moz-transition: all 0.3s ease-out;
+  -webkit-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
+}
+
+/* Arrow */
+.tooltip > .tooltip-text:before, .tooltip > .wrapper:before  {
+  display: inline;
+  top: -5px;
+  content: "";
+  position: absolute;
+  border: solid;
+  border-color: rgba(0, 0, 0, 1) transparent;
+  border-width: 0 .5em .5em .5em;
+  z-index: 6000;
+  left: 20px;
+}
+
+/* Invisible area so you can hover over tooltip */
+.tooltip > .tooltip-text:after, .tooltip > .wrapper:after  {
+  top: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  position: absolute;
+  width: 60px;
+  left: 20px;
+}
+
+.wrapper > .tooltip-text {
+  // overflow-y: auto;
+  height: 100%;
+  display: block;
+}

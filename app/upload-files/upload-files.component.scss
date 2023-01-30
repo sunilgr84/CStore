@@ -1,0 +1,142 @@
+.store-info {
+  height: 100%;
+  border: 1px solid rgb(210, 210,210);
+  padding: .5rem;
+  background-color: rgb(240,240,240);
+  text-align: center;
+}
+
+.store-info h4.store-heading {
+  margin-top: 13px;
+}
+
+.all-boxes {
+  column-gap: 1rem;
+  padding-left: 1rem;
+  align-items: center;
+}
+
+.all-boxes .address-box span {
+  font-size:.9rem;
+  font-weight:600;
+}
+.all-boxes .commondate {
+  font-size:.9rem;
+  font-weight: 650;
+}
+.all-boxes .commontime {
+  font-size:.9rem;
+  font-weight: 500;
+}
+
+.store-show {
+  display:flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  .preview {
+    border: 1px solid rgb(250, 91, 171);
+    color: rgb(250, 91, 171);
+    padding: 10px;
+    font-size: 25px;
+    cursor: pointer;
+    text-align: center;
+  }
+}
+
+.store-show .preview-data {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width:100px;
+  row-gap: .35rem;
+}
+
+.upload-wrapper,
+.download-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width:100px;
+}
+
+.download-wrapper {
+  cursor: pointer;
+
+  .fa-cloud-download {
+    font-size: 3.5rem;
+    color: #3636e5;
+    cursor: pointer;
+  }
+}
+
+.store-show .fa-plus {
+  color: #fff;
+  background-color: rgb(247, 64, 9);
+  border-radius: 50%;
+  width: 55px;
+  height: 55px;
+  padding: 10px;
+  font-size: 28px;
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.uploadicon {
+  width: 100%;
+}
+
+@media only screen and (max-width: 576px) {
+  .store-info {
+    text-align:left;
+  }
+
+  .store-show {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .all-boxes {
+    flex-direction: column;
+    align-items: flex-start;
+    row-gap: .75rem;
+    margin-top: .5rem;
+  }
+}
+
+input#addfile {
+  display: none;
+}
+
+.navbar {
+  background-image: linear-gradient(90.22deg, rgb(4, 80, 163) 0.01%, rgb(83, 188, 255) 100.34%);
+  height:70px;
+  font-family: "Roboto", sans-serif;
+  color: #fff;
+  box-shadow: 0px 1px 17px #e0e0e0;
+  width:100%;
+}
+
+.img-logo,
+.pdf-logo {
+  font-size: 3rem;
+}
+  
+.filename {
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.store-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+}

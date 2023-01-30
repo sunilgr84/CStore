@@ -1,0 +1,58 @@
+<form [formGroup]="fuelSalesReportForm">
+  <div class="card mt-3">
+    <div class="card-body" style="min-height: 400px">
+      <div class="col-sm-12">
+        <div class="row mt-3">
+
+          <div class="col-sm-4 row ">
+            <label class="col-sm-12 form-group has-float-label" *ngIf="!isSingalStore">
+              <ng-select [items]="storeLocationList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+                bindLabel="storeName" placeholder="Store Location" formControlName="storeLocation" groupBy="companyID"
+                [selectableGroup]="true" [selectableGroupAsModel]="false">
+                <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                  <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                </ng-template>
+                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                  <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                    <span class="ng-value-label">
+                      {{item.storeName}}</span>
+                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                  </div>
+                  <div class="ng-value" *ngIf="items.length > 2">
+                    <span class="ng-value-label">{{items.length - 2}} more...</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <span> Store Location</span>
+            </label>
+            <label class="col-sm-12 form-group has-float-label" *ngIf="isSingalStore">
+              <input type="text" readonly class="form-control" name="store" [value]="storeLocationList[0].storeName">
+              <span> Store Location</span>
+            </label>
+          </div>
+          
+          <div class="row col-sm-4">
+            <label class="col-sm-12 form-group has-float-label">
+              <app-daterangepicker [selectedDateRange]="selectedDateRange"
+                (dateRangeSelecetd)="dateRangeChange($event)">
+              </app-daterangepicker>
+              <span> Select Date Range</span>
+            </label>
+          </div>
+
+          <div class="col-sm-4">
+            <button type="button" class="btn btn-md btn-primary mr-3" (click)="searchPurchaseReport()"> Go</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="this.rowData && this.rowData.length >0">
+        <div class="col-sm-12 mt-3">
+          <app-report-grid [rowData]="rowData" [expandableGridOptions]="gridOption" (gridReady)="onGridReady($event)"
+            (exportTo)="searchSalesReport($event)">
+          </app-report-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,206 @@
+<div class="card">
+  <div class="card-body">
+    <!-- <app-page-header [heading]="'Upload EDI Invoice'" [icon]="'fa-bar-chart-o'"></app-page-header> -->
+
+    <div class="card" *ngIf="isEDIUpload">
+      <div class="card-body">
+        <div class="row">
+          <div class=" row col-sm-4">
+            <label class="form-group has-float-label col-sm-12"
+              *ngIf="storeLocationList && storeLocationList.length!==1">
+              <!-- <div class="col-sm-12"> -->
+              <ng-select [items]="storeLocationList" [closeOnSelect]="true" [hideSelected]="true" bindLabel="storeName"
+                bindValue="storeLocationID" placeholder="Store Location" name="storeLocationId"
+                [(ngModel)]="uploadForm.storeLocationId" #storeId="ngModel"
+                (change)="SelectStoreLocation(uploadForm.storeLocationId)"></ng-select>
+              <img src="assets/images/small-spinner.gif" *ngIf="isStoreLoading">
+              <!-- </div> -->
+              <span> Store Location</span>
+            </label>
+            <label class="form-group has-float-label col-sm-12"
+              *ngIf="storeLocationList && storeLocationList.length===1">
+              <input readonly type="text" class="form-control" [value]="storeLocationList[0].storeName">
+              <img src="assets/images/small-spinner.gif" *ngIf="isStoreLoading">
+              <span> Store Location</span>
+            </label>
+          </div>
+          <div class=" col-sm-4 row">
+            <label class="form-group has-float-label col-sm-12">
+              <!-- <div class="col-sm-12"> -->
+              <ng-select [items]="vendorItemList" [closeOnSelect]="true" [hideSelected]="true" bindLabel="vendorName"
+                bindValue="vendorCode" placeholder="Vendor" name="vendorCode" [(ngModel)]="uploadForm.vendorCode"
+                #vendorCodes="ngModel"></ng-select>
+              <img src="assets/images/small-spinner.gif" *ngIf="isVendorLoading">
+              <!-- </div> -->
+              <span> Vendor</span>
+            </label>
+          </div>
+          <div class="form-group col-sm-4">
+            <button type="button" class="btn btn-md btn-primary" (click)="VendorRoutering()"> Add Vendor</button>
+          </div>
+        </div>
+        <div class="">
+          <div class="mt-3">
+            <div class="card-title">
+              <h5>Upload EDI Invoice</h5>
+            </div>
+            <div class="row col-sm-12 mb-3">
+              <!-- <label for="customFile">Upload File</label> -->
+              <div class="custom-file col-sm-4">
+                <input type="file" class="custom-file-input" id="fileUpload" name="fileUpload"
+                  (change)="uploadFile(file.files)" #file ngModel>
+                <label class="custom-file-label" for="customFile">{{fileName}}</label>
+              </div>
+              <div class="ml-5">
+                <label class="">Upload Status= {{percentDone}}% </label>
+              </div>
+            </div>
+            <div>
+              <button type="button" class="btn btn-md btn-primary" (click)="Reset()"> Cancel</button>
+              <button type="button" class="btn btn-md btn-primary ml-3" (click)="basicUpload(fileUpload)">Upload
+                File</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- <div class="card">
+    <div class="col-sm-7"> -->
+
+    <div class="card mt-3 form-group mb-5">
+      <div class="card-body">
+        <div class="form-group card-title">
+          <h5> EDI Option </h5>
+        </div>
+        <div class="row mt-3">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <span>Update Item Desc from EDI and Vendor Invoice</span>
+            </div>
+            <div class="form-group">
+              <button type="button" class="btn btn-md btn-primary" (click)="AddProductNameForEDI()"> Add</button>
+            </div>
+
+            <div class="card">
+              <!-- <div class="card-header">Department</div>
+              <div class="card-body"></div> -->
+              <app-editable-grid [gridHeight]="'200px'" [rowData]="productNameForEDIRowData"
+                (delete)="deleteRowProductNameForEDI($event)" [editGridOptions]="editableProductNameForEDIGridOption"
+                (gridReady)="onProductNameForEDIReady($event)" (save)=SaveProductNameForEDI($event)
+                (edit)=SaveProductNameForEDI($event)>
+              </app-editable-grid>
+            </div>
+
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <span>Update Item Selling Price from EDI and Vendor Invoice</span>
+            </div>
+            <div class="form-group">
+              <button type="button" class="btn btn-md btn-primary" (click)="AddSellingPriceEDI()"> Add</button>
+            </div>
+            <div class="card">
+              <!-- <div class="card-header">Department</div>
+              <div class="card-body"></div> -->
+              <app-editable-grid [gridHeight]="'200px'" [rowData]="sellingPriceRowData"
+                [editGridOptions]="editableSellingPriceGridOption" (gridReady)="onSellingPriceReady($event)"
+                (edit)=SaveSellingPriceEDI($event) (save)=SaveSellingPriceEDI($event)
+                (delete)="deleteSellingPriceRow($event)">
+              </app-editable-grid>
+
+            </div>
+          </div>
+        </div>
+        <!-- <div class="col-sm-12 mt-2">
+            <button class="btn btn-md btn-primary"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button>
+          </div> -->
+      </div>
+      <!-- </div>
+    </div> -->
+    </div>
+    <div class="row" *ngIf="isGDIGridShow">
+      <div class="col-sm-12">
+        <div class="row justify-content-between">
+          <div class="col-sm-6">
+            <strong> {{'Process EDI Invoice'}}</strong>
+          </div>
+          <div class="col-sm-6">
+            <button type="button" class="btn btn-md btn-primary" (click)="ShowEDIUpload()">
+              <i class="fa fa-backward"></i> Show EDI Upload</button>
+          </div>
+        </div>
+
+      </div>
+      <div class="col-sm-8">
+        <app-cstore-grid [gridHeight]="'300px'" [rowData]="ediRowData" [cStoreGridOptions]="ediGridOption"
+          (gridReady)="onGridReady($event)" (clone)="cloneAction($event)">
+        </app-cstore-grid>
+      </div>
+    </div>
+    <div *ngIf="isProcessGDIGridShow">
+      <div class="row">
+        <div class="col-sm-12 mb-2">
+          <strong> {{'Process EDI Invoice'}}</strong>
+        </div>
+        <div class="col-sm-4">
+          <strong> {{'Invoice No : ' }} {{ediProcessRowData && ediProcessRowData.invoiceNo}}</strong>
+        </div>
+        <div class="col-sm-4">
+          <strong> {{'Invoice Date : ' }}
+            {{ediProcessRowData && ediProcessRowData.invoiceDate |date :'MM-dd-yyyy'}}</strong>
+        </div>
+
+        <div class="col-sm-12 mt-2">
+          <span style="color: red">{{' There are <
+              '}}</span>
+          <strong>{{ediProcessRowData && ediProcessRowData.invoiceDetails.length}}
+          </strong> <span style="color: red">{{' > new items in this invoice. Add them to the system by 
+      choosing the department and other attributes.'}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-8">
+          <app-cstore-grid [gridHeight]="'350px'" [rowData]="ediProcessRowData.invoiceDetails" [cStoreGridOptions]="ediProcessGridOption"
+            (gridReady)="onEDIGridReady($event)" (rowSelected)="onRowSelected($event)">
+          </app-cstore-grid>
+        </div>
+        <div class="col-sm-4">
+          <div class="row">
+            <div class="col-sm-6">
+              <button type="button" class="btn btn-md btn-primary" (click)="ShowEDIUpload()">
+                <i class="fa fa-backward"></i> Show EDI Upload</button>
+            </div>
+            <div class="col-sm-6">
+              <button type="button" class="btn btn-md btn-primary" (click)="BacktoEDIInvoice()">
+                <i class="fa fa-backward"></i> Back to EDI Invoice</button>
+            </div>
+          </div>
+          <div class="card row mt-3">
+            <div class="card-body">
+              <label class="form-group has-float-label col-sm-12">
+                <ng-select [items]="departmentList" bindValue="departmentID" placeholder="Select Department"
+                  bindLabel="departmentDescription" [(ngModel)]="uploadForm.departmentID" #departmentID="ngModel">
+                </ng-select>
+                <span>Department</span>
+              </label>
+            </div>
+          </div>
+          <div class="card text-center row mt-3">
+            <div class="card-body col-sm-12">
+              <div class="row justify-content-center">
+                <div class="col-sm-6">
+                  <button type="button" class="btn btn-success" (click)="SaveEDIFileProcess()">
+                    <i class="fa fa-save"></i>
+                    {{'Save Item'}}
+                  </button>
+                </div>
+              </div>
+              <label>Total selected items are <span style="color: red"> {{selectedItems}}</span> </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

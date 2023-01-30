@@ -1,0 +1,176 @@
+<div class="card" style="margin-bottom: 85px;">
+
+  <div class="card-body">
+    <div class="card-title form-group" [hidden]="this.isSoftCopy">
+      <div class="row">
+        <div class="col-sm-11">
+          <h5> {{title}} </h5>
+        </div>
+        <div class="col-sm-1 justify-content-end" *ngIf="isSoftCopy">
+          <button type="button" class="close" aria-label="Close" (click)="closePDF()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <form novalidate [formGroup]="invoiceForm" [hidden]="this.isSoftCopy">
+      <div class="row mt-2">
+        <div class="col-sm-7">
+          <div class="row">
+            <div class="col-sm-6">
+              <label class="form-group has-float-label ">
+                <div *ngIf="storeLocationList && storeLocationList.length !== 1">
+                  <ng-select [items]="storeLocationList" bindLabel="storeName" formControlName="storeLocationID"
+                    bindValue="storeLocationID" placeholder="Store Location"></ng-select>
+                </div>
+                <div *ngIf="submitted && invoiceF.storeLocationID.errors?.required" class="alert alert-danger">
+                  Store Location is required
+                </div>
+                <span> Store Location</span>
+              </label>
+              <label class="form-group has-float-label ">
+                <div *ngIf="storeLocationList && storeLocationList.length === 1">
+                  <input readonly type="text" class="form-control" [value]="storeLocationList[0].storeName">
+                  <span> Store Location</span>
+                </div>
+
+              </label>
+              <img src="assets/images/small-spinner.gif" *ngIf="isStoreLocationLoading">
+            </div>
+            <div class="col-sm-6">
+              <label class="form-group has-float-label">
+                <ng-select [items]="vendorList" bindValue="vendorID" formControlName="vendorID" bindLabel="vendorName"
+                  placeholder="Vendor"></ng-select>
+                <span>Vendor</span>
+                <img src="assets/images/small-spinner.gif" *ngIf="isVendorLoading">
+                <div *ngIf="submitted && invoiceF.vendorID.errors?.required" class="alert alert-danger">
+                  Vendor is required
+                </div>
+              </label>
+            </div>
+
+          </div>
+          <div class=" row">
+            <div class="col-sm-6">
+              <label class="form-group has-float-label">
+                <ng-select [items]="invoiceStatusList" bindLabel="invoiceStatusDescription" bindValue="invoiceStatusID"
+                  formControlName="invoiceStatusID" placeholder="Invoice Status"></ng-select>
+                <!-- <span> Invoice Status</span> -->
+                <img src="assets/images/small-spinner.gif" *ngIf="isInvoiceStatusLoading">
+                <div *ngIf="submitted && invoiceF.invoiceStatusID.errors?.required" class="alert alert-danger">
+                  Invoice status is required
+                </div>
+              </label>
+            </div>
+            <div class="col-sm-6">
+              <div class="input-icon">
+                <label class="form-group has-float-label currency">
+                  <input type="text" nagetiveFloatOnly class="form-control" formControlName="invoiceAmount" min="0"
+                    name="invoiceAmount" placeholder="Invoice Amount in $" id="invoiceAmount">
+                  <span for="invoiceAmount"> Invoice Amount </span>
+                  <div *ngIf="submitted && invoiceF.invoiceAmount.errors?.required" class="alert alert-danger">
+                    Invoice Amount is required
+                  </div>
+                </label>
+                <i *ngIf="invoiceForm.get('invoiceAmount').value">$</i>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <label class="form-group has-float-label">
+                <input type="text" class="form-control" formControlName="invoiceNo" placeholder="Invoice No."
+                  name="Invoice" id="Invoice">
+                <span for="Invoice">Invoice No</span>
+                <div *ngIf="submitted && invoiceF.invoiceNo.errors?.required" class="alert alert-danger">
+                  Invoice No is required
+                </div>
+              </label>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-group has-float-label">
+                <app-datepicker [inputDate]="invoiceDate" name="invoiceDate" id="invoiceDate"
+                  (dateChange)="dateChangeInvoice($event)">
+                </app-datepicker>
+                <span> Invoice Date</span>
+              </label>
+            </div>
+          </div>
+          <!-- <div class="row" *ngIf="isDisassociate && !invoiceDetail.isFileExist">
+            <div class="col-sm-6">
+              <div class="col-sm-12">
+            
+                <input type="file" class="custom-file-input" id="fileUpload" name="fileUpload"
+                  (change)="uploadFile(file.files)" #file>
+                <label class="custom-file-label" for="customFile">{{fileName}}</label>
+              
+              </div>
+            </div>
+            <div class="col-sm-6">
+            
+              <button class="btn btn-md btn-primary" (click)="uploadInvoiceFile(fileUpload)"> Upload invoice
+                file</button>
+          
+            </div>
+          </div> -->
+        </div>
+        <div class="col-sm-5">
+          <div>
+            <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (gridReady)="onGridReady($event)">
+            </app-cstore-grid>
+          </div>
+        </div>
+      </div>
+      <div class="mt-2 row">
+        <div class="col-sm-10">
+          <button type="button" class="btn btn-md btn-primary ml-3" (click)="editOrSave($event)">
+            {{isEdit?'Update':'Save'}} </button>&nbsp;
+          <button type="button" *ngIf="isDisassociate && invoiceDetail && invoiceDetail.isFileExist"
+            class="btn btn-md btn-primary ml-3" (click)="disassociate()"> Disassociate</button>
+
+
+          <button type="button" class="btn btn-md btn-primary ml-3" (click)="backToInvocieList()"> Back To List</button>
+        </div>
+        <div class="col-sm-2 align-self-end">
+          <div *ngIf="invoiceDetail && invoiceDetail.isFileExist && isEdit">
+            <button type="button" class="btn btn-md btn-primary ml-3" (click)="open()">View Invoice</button>
+          </div>
+        </div>
+      </div>
+
+    </form>
+
+    <div class="mt-2" *ngIf="isEdit">
+      <app-bin-vendor-invoice-detail [invoiceID]="_invoiceID" [_storeLocationId]="_storeLocationId"
+        [invoiceAmount]="this.invoiceForm.value.invoiceAmount" [_vendorId]="_vendorId" [_invoiceDetail]="invoiceDetail"
+        (changeInvoiceAmt)="onChangeInvoiceAmt($event)" [invoiceFileName]="invoiceFileName"
+        [isClickSoftCopy]="isClickSoftCopy" [isClickSoftCopyClick]="isClickSoftCopyClick" [isSoftCopy]="isSoftCopy"
+        [isClosePdf]="isClosePdf" (backToInvocieList)="backToInvocieList($event)"
+        (backToInvocie)="backToInvocie($event)">
+      </app-bin-vendor-invoice-detail>
+    </div>
+  </div>
+</div>
+<div class="row fixed" *ngIf="isEdit">
+  <div class="row body">
+    <label class="col-sm-3 ml-3"><strong> Total Cases Purchased:</strong></label>
+    <label class="col-sm-3"><strong>Total Cost:&nbsp; ${{this.summary._itemCost}}</strong></label>
+    <label class="col-sm-3"><strong>Amount Paid:&nbsp; ${{this.summary.amountPaid}} </strong></label>
+    <label class="col-sm-3 ml-3"><strong>Total Items Purchased</strong></label>
+    <label class="col-sm-3"><strong>Total Charges:&nbsp; ${{this.summary._invoiceChargeAmount}}</strong></label>
+    <label class="col-sm-3"><strong>Balance Amount to be Paid:
+        &nbsp;${{this.summary.sum-this.summary.amountPaid }}</strong></label>
+  </div>
+</div>
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Preview</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div id="iframeContainer">
+    </div>
+  </div>
+</ng-template>

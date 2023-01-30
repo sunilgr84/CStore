@@ -1,0 +1,444 @@
+<form [formGroup]="userForm">
+  <div class="row">
+    <div class="col-md-7">
+      <label class="form-group has-float-label col-sm-11">
+        <input autocomplete="username" type="text" class="form-control" formControlName="userName" maxlength="50"
+          placeholder="Add User Name Here" [ngClass]="{ 'is-invalid': submitted && f.userName.errors }"
+          pattern="^[A-Za-z0-9]+$" (blur)="ValidateUserName(f.userName.value)" #userName required>
+        <div *ngIf="submitted && f.userName.errors" class="invalid-feedback">
+          <div *ngIf="f.userName.errors.required">User Name is required</div>
+          <div *ngIf="f.userName.errors.pattern">Special Charactors not allowed</div>
+        </div>
+        <span for="userName">User Name</span>
+      </label>
+      <label class="form-group has-float-label col-sm-11">
+        <input type="password" autocomplete="new-password" class="form-control" required formControlName="password"
+          placeholder="Enter password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
+        <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+          <div *ngIf="f.password.errors.required">Password is required</div>
+          <div *ngIf="f.password.errors.minlength">Password must be at least 8 characters</div>
+          <div *ngIf="f.password.errors.pattern">Password must be at 1 uppercase ,1 lowercase ,1 numbers and 1 special
+            character</div>
+        </div>
+        <span for="password">Password</span>
+      </label>
+
+      <label class="form-group has-float-label col-sm-11">
+        <input type="password" autocomplete="new-password" class="form-control" required
+          formControlName="confirmPassword" placeholder="Confirm password"
+          [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }">
+        <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback">
+          <div *ngIf="f.confirmPassword.errors.required">Confirm Password is required</div>
+          <div *ngIf="f.confirmPassword.errors.mustMatch">Passwords must match</div>
+        </div>
+        <span for="confirmPassword">Confirm Password</span>
+      </label>
+      <label class="form-group has-float-label col-sm-11">
+        <input type="email" class="form-control" #emailId required formControlName="email" placeholder="Email"
+          [ngClass]="{ 'is-invalid': submitted && f.email.errors }" (blur)="ValidateEmail(f.email.value)"
+          pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
+        <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+          <div *ngIf="f.email.errors.required">Email is required</div>
+          <div *ngIf="f.email.errors.pattern">Email must be a valid email address</div>
+        </div>
+        <span for="email">Email</span>
+      </label>
+      <label class="form-group has-float-label col-sm-11">
+        <select class="form-control" formControlName="role" (change)="showGrid()"
+          [ngClass]="{ 'is-invalid': submitted && f.role.errors }">
+          <option value="">Select User's Role</option>
+          <option *ngFor="let role of roles" [value]="role.name">{{role.name}}</option>
+        </select>
+        <div *ngIf="submitted && f.role.errors" class="invalid-feedback">
+          <div *ngIf="f.role.errors.required">Role is required</div>
+        </div>
+        <img src="assets/images/small-spinner.gif" *ngIf="isRoleLoading">
+        <span for="role">Role</span>
+      </label>
+
+      <!-- <div class="col-sm-11" *ngIf="isStore"> -->
+      <label class="form-group has-float-label col-sm-11" *ngIf="isStore && storeList && storeList.length!==1">
+        <ng-select [items]="storeList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+          bindLabel="storeName" placeholder="Select Store Name" formControlName="stores"
+          (change)="onStoreSelect($event)">
+        </ng-select>
+        <span for="stores">Store</span>
+      </label>
+      <!-- <div class="overflow-box" *ngIf="storeList && storeList.length===1"> -->
+      <label class="form-group has-float-label col-sm-11" *ngIf="isStore && storeList && storeList.length===1">
+        <input readonly type="text" class="form-control" [value]="storeList[0].storeName">
+        <span>Store</span>
+      </label>
+      <!-- </div> -->
+      <img src="assets/images/small-spinner.gif" *ngIf="isStoreLoading">
+      <!-- </div> -->
+      <label class="form-group has-float-label col-sm-11" *ngIf="isShowCompany">
+        <ng-select #companySelect [items]="companyList" [selectOnTab]="true" [multiple]="true" bindLabel="companyName"
+          labelForId="companySelect" placeholder="Select Company" formControlName="companies">
+        </ng-select>
+        <img src="assets/images/small-spinner.gif" *ngIf="isCompanyLoading">
+        <span for="companySelect">Company</span>
+      </label>
+      <!-- <label class="form-group has-float-label col-sm-11" *ngIf="isShowCompany">
+        <ng-select #storeSelect [items]="storeListNew" [selectOnTab]="true" [multiple]="false" bindLabel="storeName"
+          labelForId="storeSelect" placeholder="Select Store" (change)="setStoreLocationId($event)"
+          formControlName="storeId">
+        </ng-select>
+        <img src="assets/images/small-spinner.gif" *ngIf="isCompanyLoading">
+        <span for="companySelect">Store List</span>
+      </label> -->
+    </div>
+    <div class="col-sm-3">
+      <div class="card mt-4">
+        <div class="card-body">
+
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.709 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18457 2.99721 7.13633 4.39828 5.49707C5.79935 3.85782 7.69279 2.71538 9.79619 2.24015C11.8996 1.76491 14.1003 1.98234 16.07 2.86"
+                  stroke="#03A678" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M22 4L12 14.01L9 11.01" stroke="#03A678" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              &nbsp; Company Details
+            </li>
+            <li class="list-group-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.709 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18457 2.99721 7.13633 4.39828 5.49707C5.79935 3.85782 7.69279 2.71538 9.79619 2.24015C11.8996 1.76491 14.1003 1.98234 16.07 2.86"
+                  stroke="#03A678" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M22 4L12 14.01L9 11.01" stroke="#03A678" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              &nbsp; Add Bank
+            </li>
+            <li class="list-group-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.709 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18457 2.99721 7.13633 4.39828 5.49707C5.79935 3.85782 7.69279 2.71538 9.79619 2.24015C11.8996 1.76491 14.1003 1.98234 16.07 2.86"
+                  stroke="#03A678" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M22 4L12 14.01L9 11.01" stroke="#03A678" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              &nbsp; User Management
+            </li>
+            <li class="list-group-item">
+              <svg width="20" height="20" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="8" r="7.5" stroke="black" />
+              </svg>
+              &nbsp; User Privileges
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--/.row-->
+  <div class="row">
+    <div class="col-md-7">
+      <span (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="advancedDetails">
+        <strong>Advanced Details
+        </strong>
+      </span> &nbsp;
+      <i [hidden]='isCollapsed' class="fa fa-chevron-down"></i>
+      <i [hidden]='!isCollapsed' class="fa fa-chevron-right"></i>
+    </div>
+  </div>
+  <div id="advancedDetails" class="row mt-3" [ngbCollapse]="isCollapsed" formGroupName="advancedDetails">
+    <div class="col-md-6">
+      <div class="form-group has-float-label col-sm-11">
+        <input type="text" class="form-control" formControlName="firstName" maxlength="50" placeholder="First Name">
+        <span for="firstName">First Name</span>
+      </div>
+      <label class="form-group has-float-label col-sm-11">
+        <input type="text" class="form-control" formControlName="lastName" maxlength="50" placeholder="Last Name">
+        <span for="lastName">Last Name</span>
+      </label>
+      <label class="form-group has-float-label col-sm-11">
+        <input type="text" class="form-control" formControlName="address" maxlength="250" placeholder="Address">
+        <span for="address">Address</span>
+      </label>
+      <span class="form-group has-float-label col-sm-11">
+        <input type="text" class="form-control" formControlName="city" maxlength="100" placeholder="City">
+        <span for="city">City</span>
+      </span>
+
+      <label class="form-group has-float-label col-sm-11">
+        <select placeholder="select State" formControlName="state" name="stateCode" class="form-control"
+          (change)="onStateChange()">
+          <option value="">Select State</option>
+          <option *ngFor="let item of stateList" [value]="item.stateCode">{{item.stateName}}</option>
+        </select>
+        <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+        <span for="state">State</span>
+      </label>
+
+      <label class="form-group has-float-label col-sm-11">
+        <input type="text" class="form-control" minlength="5" maxlength="5" formControlName="zipCode"
+          placeholder="ZIP Code">
+        <div *ngIf="advanced.controls.zipCode.errors?.minlength" class="alert alert-danger">
+          Zip code must be 5 digit.
+        </div>
+        <span for="zip">Zip</span>
+      </label>
+      <!-- (change)="onCountyChange(advanced.controls.country.value)" -->
+      <label class="form-group has-float-label col-sm-11">
+        <select placeholder="Select County" class="form-control" formControlName="country" name="countyCode">
+          <option value="">Select County</option>
+          <option *ngFor="let item of countyFilterList" [value]="item.countyCode">{{item.countyName}}</option>
+        </select>
+        <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+        <span for="country">Country</span>
+      </label>
+      <div class="input-icon  col-sm-11">
+        <label class="form-group has-float-label currency">
+          <input type="text" decimalOnly class="form-control" formControlName="totalTimeOffHours"
+            placeholder="Total Timeoff Hours">
+          <span for="totalTimeOffHours">Total Timeoff Hours</span>
+        </label>
+        <i *ngIf="advanced.get('totalTimeOffHours').value"></i>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <label class="form-group has-float-label col-sm-11">
+        <input type="text" class="form-control" name="phoneNo" formControlName="phoneNo"
+          (blur)="formatPhoneNumber(advanced.controls.phoneNo.value)" minlength="10" maxlength="20"
+          placeholder="Phone Number (000)000-0000" #phoneNo pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$">
+        <div *ngIf="advanced.controls.phoneNo.errors?.minlength" class="alert alert-danger">
+          Phone number must be 10 digit.
+        </div>
+        <div *ngIf="submitted && advanced.controls.phoneNo.errors?.pattern" class="alert alert-danger">
+          Phone number is not valid
+        </div>
+        <span for="phone">Phone Number</span>
+      </label>
+      <!-- <label class="col-sm-4 col-sm-label" for="dob">Date of Birth</label> -->
+      <div class="form-group  has-float-label col-sm-11">
+
+        <app-datepicker (dateChange)="dateChange($event,'dob')" [inputDate]="inputDOB" name="dob" id="dob">
+        </app-datepicker>
+        <span for="dob">Date of Birth</span>
+      </div>
+      <!-- <label class="col-sm-4 col-sm-label" for="hireDate">Hire Date</label> -->
+      <div class="form-group  has-float-label col-sm-11">
+
+        <app-datepicker (dateChange)="dateChange($event,'hireDate')" [inputDate]="inputHireDate" name="hireDate"
+          id="hireDate"></app-datepicker>
+        <span for="dob">Hire Date</span>
+      </div>
+      <!-- <label class="col-sm-4 col-sm-label" for="startDate">Start Date</label> -->
+      <div class="form-group  has-float-label col-sm-11">
+
+        <app-datepicker (dateChange)="dateChange($event,'startDate')" [inputDate]="inputStartDate" name="startDate"
+          id="startDate"></app-datepicker>
+        <span for="dob">Start Date</span>
+      </div>
+      <label class="form-group has-float-label col-sm-11">
+        <select placeholder=" County" class="form-control" formControlName="employeeType" name="countyCode">
+          <option value="">Employee Type</option>
+        </select>
+        <span for="startDate">Employee Type</span>
+      </label>
+      <div class="input-icon  col-sm-11">
+        <label class="form-group has-float-label currency">
+          <input type="text" decimalOnly class="form-control" formControlName="hourlyRate" placeholder="Hourly Rate($)">
+          <span for="hourlyRate">Hourly Rate</span>
+        </label>
+        <i *ngIf="advanced.get('hourlyRate').value">$</i>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3" *ngIf="isEdit && roleName!==roleNameSuperAdmin">
+    <div class="col-md-7">
+      <span (click)="isCollapsedPrivilege = !isCollapsedPrivilege" [attr.aria-expanded]="!isCollapsedPrivilege"
+        aria-controls="advancedDetails">
+        <strong>User Privileges
+        </strong>
+      </span> &nbsp;
+      <i [hidden]='isCollapsedPrivilege' class="fa fa-chevron-down"></i>
+      <i [hidden]='!isCollapsedPrivilege' class="fa fa-chevron-right"></i>
+    </div>
+  </div>
+  <div id="userprivilege" *ngIf="isEdit && roleName!==roleNameSuperAdmin" class="row mt-3"
+    [ngbCollapse]="isCollapsedPrivilege">
+    <div class="col-md-12">
+      <app-user-privilages [companyData]="this.companyData" [RoleId]="this.userForm.get('role').value"
+        [CompanyId]="this.companyId" [userId]="this.userForm.get('id').value"></app-user-privilages>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-7">
+      <span (click)="isCollapsedNotification = !isCollapsedNotification" [attr.aria-expanded]="!isCollapsedNotification"
+        aria-controls="notificationSettings">
+        <strong>Notification Settings
+        </strong>
+      </span> &nbsp;
+      <i [hidden]='isCollapsedNotification' class="fa fa-chevron-down"></i>
+      <i [hidden]='!isCollapsedNotification' class="fa fa-chevron-right"></i>
+    </div>
+  </div>
+
+
+  <div id="notificationSettings" class="row mt-3" [ngbCollapse]="isCollapsedNotification">
+    <div class="col-md-12">
+      <div class="row">
+        <div *ngFor="let data of masterReportList; let k=index" class="form-group has-float-label col-sm-12">
+          <div *ngFor="let data2 of data.masterReports ;let l=index" class="row">
+            <div class="col-md-2">
+              <h5 style="margin-top: 10px"><b>{{data2.masterReportName}}</b></h5>
+            </div>
+            <div class="col-md-1" style="text-align: center" *ngIf="k==0">
+              <h6>
+                <b>SMS</b>
+              </h6>
+            </div>
+            <div class="col-md-1" style="text-align: center" *ngIf="k==0">
+              <h6>
+                <b>WhatsApp</b>
+              </h6>
+            </div>
+            <div class="col-md-1" style="text-align: center" *ngIf="k==0">
+              <h6>
+                <b>Email</b>
+              </h6>
+            </div>
+            <div class="col-md-1" *ngIf="k==0">
+              <h6>
+                <b>Store</b>
+              </h6>
+            </div>
+            <div *ngFor="let data3 of data2.reports;let i=index" class="col-md-12 row">
+              <div class="col-md-2" style="
+              border: 1px solid;
+              padding-top: 7px;">
+                <input [formControlName]="data3.default" (change)="updateDefaultCheckBox(k,l,i,data3.default)"
+                  type="checkbox">
+                <span class="ml-2" for="firstName">{{data3.reportTypeName}}</span>
+              </div>
+              <div class="col-md-1" style="text-align: center;
+              border: 1px solid;
+              padding-top: 7px;">
+                <input style="margin-left: 10px;z-index: 99;" class="p-3" (change)="updateCheckBox(k,l,i,data3.sms)"
+                  [formControlName]="data3.sms" type="checkbox">
+              </div>
+              <div class="col-md-1" style="text-align: center;
+              border: 1px solid;
+              padding-top: 7px;">
+                <input style="margin-left: 10px;z-index: 99;" (change)="updateCheckBox(k,l,i,data3.whatsApp)"
+                  [formControlName]="data3.whatsApp" type="checkbox">
+              </div>
+              <div class="col-md-1" style="text-align: center;
+              border: 1px solid;
+              padding-top: 7px;">
+                <input style="margin-left: 10px;z-index: 99;" (change)="updateCheckBox(k,l,i,data3.email)"
+                  [formControlName]="data3.email" type="checkbox">
+              </div>
+              <div class="col-md-1" style="text-align: center;
+              border: 1px solid;
+              padding-top: 7px;">
+                <span style="cursor: pointer;text-align: center" (click)="addNotification(k,l,i,notificationModel)">
+                  <b style="color:blue"> {{data3.storeListCount}} of {{allStoreList.length}}</b>
+                </span>
+              </div>
+              <div class="col-md-1" style="text-align: center;
+              border: 1px solid;
+              padding-top: 0px;">
+                <button type="button" class="btn btn-md btn-cstorebo ml-2" (click)="addUserPreferences(k,l,i)">
+                  Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row justify-content-between mt-3">
+    <div class="col-sm-6">
+      <button type="button" [hidden]="isEdit" class="btn btn-md btn-cstorebo ml-2" (click)="cancel()">
+        Reset</button>
+      <button type="submit" class="btn btn-md btn-primary ml-2"
+        (click)="isEdit?updateCompanyUser():createCompanyUser()">
+        {{isEdit?'Update':'Save'}}</button>
+
+      <button type="submit" class="btn btn-md btn-primary ml-2"
+        (click)="isEdit?updateCompanyUser(true):createCompanyUser(true)">
+        {{isEdit?'Update & Close':'Save & Close'}}</button>
+      <button type="button" class="btn btn-md btn-cstorebo ml-2" (click)="backToList()">
+        Back To User List</button>
+    </div>
+
+  </div>
+  <ng-template #notificationModel let-modal>
+    <div class="mix-match modal-header">
+      <h4 class="modal-title">Store</h4>
+      <button type="button" class="mix-match close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form #storeFrom="ngForm" style="padding: 15px 5px">
+      <div class="row" *ngFor="let storeitem of allStoreList">
+        <div class="col-md-6">
+          <input style="margin-left: 10px;z-index: 99999;" [(ngModel)]="storeitem.flag"
+            (change)="changeStore(storeitem.StoreLocationID)" name="flag" type="checkbox">
+          <span style="margin-top: -16px;
+          margin-left: 11px;font-size: 17px" class="pl-3">{{storeitem.StoreName}}</span>
+        </div>
+
+      </div>
+    </form>
+    <!-- <form [formGroup]="buyDownForm" (ngSubmit)="saveBuyDown(buyDownForm)">
+      <div class="modal-body">
+        <div class="form-group mb-2">
+          <label>Buy Down Name<span style="color: red">*</span></label>
+          <input type="text" class="form-control" id="buyDownName" (keypress)="onBuyDownKeyPress($event)" maxlength="100"
+            autofocus aria-describedby="MixMatchName" placeholder="Give a name of a buy down"
+            formControlName="buyDownName">
+          <div *ngIf="buyDownName.invalid && (buyDownName.dirty || buyDownName.touched)" class="alert alert-danger">
+            <div *ngIf="buyDownName.errors.required">
+              Buy Down Name is required.
+            </div>
+            <div *ngIf="buyDownName.errors.minlength">
+              Name must be at least 4 characters long.
+            </div>
+          </div>
+        </div>
+        <div class="form-group mb-2">
+          <label>Select Manufacturer<span style="color: red">*</span></label>
+          <ng-select class="mix-match-custom-select" [items]="manufacturersList" [hideSelected]="true"
+            bindLabel="manufacturerName" bindValue="manufacturerID" placeholder="Select Manufacturer"
+            formControlName="manufacturerID">
+          </ng-select>
+          <div *ngIf="manufacturerID.invalid && (manufacturerID.dirty || manufacturerID.touched)"
+            class="alert alert-danger">
+            <div *ngIf="manufacturerID.errors.required">
+              Manufacturer Selection is required.
+            </div>
+          </div>
+        </div>
+        <div class="form-group mb-2">
+          <label>Select Price Group<span style="color: red">*</span></label>
+          <ng-select class="mix-match-custom-select" [items]="priceGroupList" [hideSelected]="true" (change)="setIdToList($event)"
+            bindLabel="CompanyPriceGroupName" bindValue="CompanyPriceGroupID" placeholder="Select Price Group"
+            formControlName="priceGroupIDs" [multiple]="true">
+          </ng-select>
+          <div *ngIf="priceGroupIDs.invalid && (priceGroupIDs.dirty || priceGroupIDs.touched)" class="alert alert-danger">
+            <div *ngIf="priceGroupIDs.errors.required">
+              Price Group Selection is required.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mix-match modal-footer">
+        <button type="button" class="btn btn-light" (click)="clear()">Clear</button>
+        <button type="submit" class="btn btn-primary"
+          [disabled]="!buyDownForm.valid">{{buyDownForm.value.buydownId===0?'Create':'Update'}}</button>
+      </div>
+    </form> -->
+  </ng-template>
+</form>
+<div>
+
+</div>

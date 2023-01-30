@@ -1,0 +1,287 @@
+<app-page-header [heading]="'Admin / Employee Setup'" [icon]="'fa-bar-chart-o'"></app-page-header>
+<div class="container-fluid">
+  <div *ngIf="!isNewEmployee">
+    <div class="row">
+      <div class="form-group col-md-6 row">
+        <label class="col-sm-4 col-sm-label" for="role">Employee Name</label>
+        <div class="col-sm-8  overflow-box">
+          <ng-select [items]="empNameList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true" bindLabel="empNameList"
+            placeholder="Select Employee Name" [(ngModel)]="selectedEmpList">
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <button type="button" class="btn btn-md btn-primary" (click)="searchEmp()"><i class="fa fa-search" aria-hidden="true"></i>
+          Search </button>
+      </div>
+    </div>
+    <div class="offse-sm-1 form-group">
+      <button type="addemployee" class="btn btn-md btn-primary" (click)="addNewEmployee()"><i class="fa fa-plus"></i>&nbsp;Add</button>
+    </div>
+    <div>
+      <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (gridReady)="onGridReady($event)" (edit)="editAction($event)"
+        (delete)="delAction($event)"></app-cstore-grid>
+    </div>
+  </div>
+
+  <!-- Add employee setup -->
+  <div *ngIf="isNewEmployee">
+    <form [formGroup]="userForm" (ngSubmit)="isEdit?updateComoany():createCompany()">
+      <div class="card">
+        <div class="card-header">
+          <strong>Add Employee Details</strong>
+          <small></small>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-4 col-sm-label" for="firstName">First Name</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" required formControlName="firstName" maxlength="50"
+                    placeholder="Enter first name" [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }">
+                  <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
+                    <div *ngIf="f.firstName.errors.required"> First name is required </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-sm-label" for="lastName">Last Name</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" required formControlName="lastName" maxlength="50"
+                    placeholder="Enter last name" [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }">
+                  <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
+                    <div *ngIf="f.lastName.errors.required"> Last name is required </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-sm-label" for="address">Address</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" required formControlName="address" maxlength="250"
+                    placeholder="Enter address" [ngClass]="{ 'is-invalid': submitted && f.address.errors }">
+                  <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
+                    <div *ngIf="f.address.errors.required"> Address is required </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-sm-label" for="city">City</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" formControlName="city" maxlength="100" required placeholder="Enter city"
+                    [ngClass]="{ 'is-invalid': submitted && f.city.errors }">
+                  <div *ngIf="submitted && f.city.errors" class="invalid-feedback">
+                    <div *ngIf="f.city.errors.required"> City is required </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-sm-label" for="country">Country</label>
+                <div class="col-sm-8">
+                  <select placeholder="Select County" class="form-control" formControlName="country" required name="countyCode"
+                    (change)="onCountyChange(advanced.country.value)" [ngClass]="{ 'is-invalid': submitted && f.country.errors }">
+                    <option value="">--Select County--</option>
+                    <option *ngFor="let item of countyList" [value]="item.countyCode">{{item.countyName}}</option>
+                  </select>
+                  <div *ngIf="submitted && f.country.errors" class="invalid-feedback">
+                    <div *ngIf="f.country.errors.required"> Country is required </div>
+                  </div>
+                  <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-sm-label" for="state">State</label>
+                <div class="col-sm-8">
+                  <select placeholder="select State" formControlName="state" name="stateCode" required class="form-control"
+                    (change)="onStateChange(advanced.state.value)" [ngClass]="{ 'is-invalid': submitted && f.state.errors }">
+                    <option value="">--Select State--</option>
+                    <option *ngFor="let item of stateList" [value]="item.stateCode">{{item.stateName}}</option>
+                  </select>
+                  <div *ngIf="submitted && f.state.errors" class="invalid-feedback">
+                    <div *ngIf="f.state.errors.required"> State is required </div>
+                  </div>
+                  <img src="assets/images/small-spinner.gif" *ngIf="isLoading">
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label class="col-sm-4 col-sm-label" for="zip">Zip</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" minlength="5" maxlength="5" required formControlName="zipCode"
+                    placeholder="Enter zip" [ngClass]="{ 'is-invalid': submitted && f.zipCode.errors }">
+                  <div *ngIf="submitted && f.zipCode.errors" class="invalid-feedback">
+                    <div *ngIf="f.zipCode.errors.required"> Zip code is required </div>
+                  </div>
+                  <div *ngIf="advanced.zipCode.errors?.minlength" class="invalid-feedback">
+                    Zip code must be 5 digit.
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-sm-label" for="phone">Phone Number</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" name="phoneNo" required formControlName="phoneNo" (blur)="formatPhoneNumber(advanced.phoneNo.value)"
+                    minlength="10" maxlength="20" placeholder="(000)000-0000" #phoneNo pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$"
+                    [ngClass]="{ 'is-invalid': submitted && f.phoneNo.errors }">
+                  <div *ngIf="submitted && f.phoneNo.errors" class="invalid-feedback">
+                    <div *ngIf="f.phoneNo.errors.required"> Phone Number is required </div>
+                    <div *ngIf="f.phoneNo.errors?.minlength"> Phone number must be 10 digit. </div>
+                    <div *ngIf=" f.phoneNo.errors?.pattern"> Phone number is not valid </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-sm-label" for="email">Email</label>
+                <div class="col-sm-8">
+                  <input type="email" class="form-control" required formControlName="email" #emailId placeholder="Enter email"
+                    (blur)="ValidateEmail(f.email.value)" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                    [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
+                  <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                    <div *ngIf="f.email.errors.required">Email is required</div>
+                    <div *ngIf="f.email.errors.pattern">Email must be a valid email address</div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-sm-label" for="dob">Date of Birth</label>
+                <div class="col-sm-8">
+                  <app-datepicker (dateChange)="dateChange($event,'dob')" [inputDate]="inputDOB" [ngClass]="{ 'is-invalid': submitted && f.dateOfBirth.errors }"
+                    name="dob" id="dob">
+                  </app-datepicker>
+                  <!-- <div *ngIf="submitted && advanced.dateOfBirth.errors.required" class="invalid-feedback">
+                    Date of Birth is required
+                  </div> -->
+                  <!-- formControlName="dateOfBirth" -->
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+
+              <div class="form-group row" *ngIf="!isEdit">
+                <label class="col-sm-4 col-sm-label" for="ssn">SSN</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" formControlName="ssn" required maxlength="250" placeholder="Enter ssn"
+                    [ngClass]="{ 'is-invalid': submitted && f.ssn.errors }">
+                  <div *ngIf="submitted && f.ssn.errors" class="invalid-feedback">
+                    <div *ngIf="f.ssn.errors.required"> SSN is required </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-sm-label" for="hourlyRate">Hourly Rate</label>
+                <div class="col-sm-8 input-icon">
+                  <input type="number" class="form-control" formControlName="hourlyRate" required placeholder="Enter hourly rate"
+                    [ngClass]="{ 'is-invalid': submitted && f.hourlyRate.errors }">
+                  <i>$</i>
+                  <div *ngIf="submitted && f.hourlyRate.errors" class="invalid-feedback">
+                    <div *ngIf="f.hourlyRate.errors.required"> Hourly Rate is required </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-sm-label" for="hireDate">Hire Date</label>
+                <div class="col-sm-8">
+                  <app-datepicker (dateChange)="dateChange($event,'hireDate')" [inputDate]="inputHireDate" name="hireDate"
+                    id="hireDate"></app-datepicker>
+
+                  <!-- <div *ngIf="submitted && f.hireDate.errors" class="invalid-feedback">
+                    <div *ngIf="f.hireDate.errors.required"> Hire Date is required </div>
+                  </div> -->
+                  <!-- formControlName="hireDate" -->
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-sm-label" for="startDate">Start Date</label>
+                <div class="col-sm-8">
+                  <app-datepicker (dateChange)="dateChange($event,'startDate')" [inputDate]="inputStartDate" name="startDate"
+                    id="startDate"></app-datepicker>
+                  <!-- <div *ngIf="submitted && advanced.startDate.errors.required" class="invalid-feedback">
+                    Start Date is required
+                  </div> -->
+                  <!-- formControlName="startDate" -->
+                </div>
+              </div>
+
+              <!-- <div class="col-md-5 col-sm-6"> -->
+              <div class="form-group row" *ngIf="!isEdit">
+                <label class="col-sm-4 col-form-label" for="userName">User Name</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" maxlength="50" placeholder="Enter user name" [ngClass]="{ 'is-invalid': submitted && f.userName.errors }"
+                    pattern="^[A-Za-z0-9]+$" required formControlName="userName" (blur)="ValidateUserName(f.userName.value)"
+                    #userName>
+                  <div *ngIf="submitted && f.userName.errors" class="invalid-feedback">
+                    <div *ngIf="f.userName.errors.required">User Name is required</div>
+                    <div *ngIf="f.userName.errors.pattern">Special Charactors not allowed</div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row" *ngIf="!isEdit">
+                <label class="col-sm-4 col-form-label" for="password">Password</label>
+                <div class="col-sm-8">
+                  <input type="password" class="form-control" required formControlName="password" placeholder="Enter password"
+                    [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
+                  <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                    <div *ngIf="f.password.errors.required">Password is required</div>
+                    <div *ngIf="f.password.errors.minlength">Password must be at least 8 characters</div>
+                    <div *ngIf="f.password.errors.pattern">Password must be at 1 uppercase ,1 lowercase ,1 numbers and
+                      1 special character</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group row" *ngIf="!isEdit">
+                <label class="col-sm-4 col-sm-label" for="confirmPassword">Confirm Password</label>
+                <div class="col-sm-8">
+                  <input type="password" class="form-control" required formControlName="confirmPassword" placeholder="Enter confirm password"
+                    [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }">
+                  <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback">
+                    <div *ngIf="f.confirmPassword.errors.required">Confirm Password is required</div>
+                    <div *ngIf="f.confirmPassword.errors.mustMatch">Passwords must match</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group row" *ngIf="!isEdit">
+                <label class="col-sm-4 col-sm-label" for="role">Role</label>
+                <div class="col-sm-8  overflow-box">
+                  <select class="form-control" formControlName="role" (change)="showGrid()" required [ngClass]="{ 'is-invalid': submitted && f.role.errors }">
+                    <option value="">--Select Role--</option>
+                    <option *ngFor="let role of roles" [value]="role.normalizedName">{{role.name}}</option>
+                  </select>
+                  <div *ngIf="submitted && f.role.errors" class="invalid-feedback">
+                    <div *ngIf="f.role.errors.required">Role is required</div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row" *ngIf="isStore">
+                <label class="col-sm-4 col-sm-label" for="role">Stores</label>
+                <div class="col-sm-8  overflow-box" *ngIf="storeList && storeList.length!==1">
+                  <ng-select [items]="storeList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+                    bindLabel="storeName" placeholder="Select Store Location" formControlName="stores" (change)="onStoreSelect($event)">
+                  </ng-select>
+                </div>
+                <div class="col-sm-8  overflow-box" *ngIf="storeList && storeList.length===1">
+                  <label><strong>{{storeList[0].storeName}}</strong></label>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="row justify-content-between">
+            <div class="col-sm-6">
+              <button type="submit" class="btn btn-md btn-success pl-2">
+                &nbsp;{{isEdit?'Update':'Save'}}</button>&nbsp;
+              <button type="button" class="btn btn-md btn-danger pl-2" (click)="cancel()">
+                Cancel</button>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="row justify-content-end">
+            <button type="button" class="btn btn-md btn-primary" (click)="backToList()">Back To List</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

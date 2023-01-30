@@ -1,0 +1,228 @@
+<div class="card">
+  <div class="card-body">
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="card ">
+          <div class="card-body">
+            <div class="">
+              <h5 class="card-title">{{title}}</h5>
+            </div>
+            <form [formGroup]="itemStockTransactionSearch">
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="row">
+                    <label class="form-group has-float-label col-sm-6">
+                      <app-daterangepicker [selectedDateRange]="selectedDateRange" (dateRangeSelecetd)="dateRangeChange($event)">
+                      </app-daterangepicker>
+                      <span> Select Date Range</span>
+                    </label>
+                    <label class="form-group has-float-label col-sm-6">
+                      <ng-select [items]="allStockTransactions" [selectOnTab]="true" bindLabel="stockTransactionTypeDescription"
+                        bindValue="stockTransactionTypeID" formControlName="stockTypeID" placeholder="Stock Transaction"
+                        (change)="selectStockType()">
+                      </ng-select>
+                      <span> Stock Transaction</span>
+                      <img src="assets/images/small-spinner.gif" *ngIf="isStockTransactionLoading">
+                    </label>
+
+                    <label class="form-group has-float-label col-sm-6" *ngIf="formStoreLocations && formStoreLocations.length !== 1">
+                      <ng-select [items]="formStoreLocations" [multiple]="true" formControlName="fromStoreLocationID"
+                        bindLabel="storeName" [closeOnSelect]="false" labelForId="formStore" placeholder="From Store"
+                        (change)="selectFormStore()">
+                      </ng-select>
+                      <span>From Store</span>
+                      <img src="assets/images/small-spinner.gif" *ngIf="isStoreLocationLoading">
+                    </label>
+                    <label class="form-group has-float-label col-sm-6" *ngIf="formStoreLocations && formStoreLocations.length === 1">
+                      <input readonly type="text" class="form-control" [value]="formStoreLocations[0].storeName">
+                      <img src="assets/images/small-spinner.gif" *ngIf="isStoreLocationLoading">
+                      <span>From Store</span>
+                    </label>
+                    <label class="form-group has-float-label col-sm-6" *ngIf="isToStores && formStoreLocations && formStoreLocations.length>1">
+                      <ng-select [items]="toStoreLocations" [multiple]="true" formControlName="toStoreLocationID"
+                        bindLabel="storeName" [closeOnSelect]="false" labelForId="toStore" placeholder="To Store">
+                      </ng-select>
+                      <img src="assets/images/small-spinner.gif" *ngIf="isStoreLocationLoading">
+                      <span> To Store</span>
+                    </label>
+                    <!-- </div> -->
+
+                    <label class="form-group has-float-label col-sm-6">
+                      <input type="text" placeholder="UPC Code" formControlName="uPCCode" class="form-control"
+                        maxlength="250" id="upcCode">
+                      <span for="upcCode"> UPC Code </span></label>
+                    <div class="form-group col-sm-2 offset-10">
+                      <button class="btn btn-primary float-right" type="submit" (click)="search()"> Search </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </form>
+
+            <!-- <div class="col-sm-8">
+              <button class="btn btn-md btn-primary" *ngIf="!addStockTransactionFlag" (click)="addStockTransaction();addStockTransactionFlag=!addStockTransactionFlag">+
+                Add New </button>
+            </div> -->
+
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div>
+
+          <div class="card">
+            <div class="card-body">
+              <div class="row col-sm-12 form-group">
+                <button type="button" class="btn btn-md btn-cstorebo btn-custom" (click)="addStockTransaction()">
+                  <i class="fa fa-plus"></i> </button>
+                <h5 class="card-title ml-3" (click)="addStockTransaction()">{{title2}}</h5>
+              </div>
+
+              <form [formGroup]="addStockTransactionForm" novalidate>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <!-- <div class=""> -->
+                    <label class="form-group has-float-label">
+                      <input type="text" class="form-control" id="posCode" name="posCode" formControlName="posCode"
+                        placeholder="UPC Code" maxlength="250" (blur)="getDescriptionByUPCCode($event.target.value)">
+                      <span for="posCode"> UPC Code</span>
+                    </label>
+                    <!-- </div> -->
+
+                    <div class="">
+                      <div class="col-sm-1"></div>
+                      <label class="form-group has-float-label">
+                        <!-- <div> -->
+                        <ng-select [items]="stockTransactions" [selectOnTab]="true" (change)="selectAddStockTransactionType()"
+                          bindLabel="stockTransactionTypeDescription" bindValue="stockTransactionTypeID"
+                          formControlName="stockTransactionTypeID" placeholder="Transaction Type">
+                        </ng-select>
+                        <img src="assets/images/small-spinner.gif" *ngIf="isStockTransactionLoading">
+                        <!-- </div> -->
+                        <span> Transaction Type</span>
+                      </label>
+                    </div>
+
+                    <div class="">
+                      <div class="col-sm-1"></div>
+                      <label *ngIf="formAddStoreLocations && formAddStoreLocations.length!==1" class="form-group has-float-label">
+                        <div *ngIf="formAddStoreLocations && formAddStoreLocations.length!==1">
+                          <ng-select [items]="formAddStoreLocations" [selectOnTab]="true" [hideSelected]="true"
+                            bindLabel="storeName" bindValue="storeLocationID" labelForId="storeLocationID"
+                            formControlName="fromStoreLocation" placeholder="From Store" (change)="selectAddFormStore()">
+                          </ng-select>
+                        </div>
+                        <span> From Store</span>
+                      </label>
+                      <div>
+                        <label *ngIf="formAddStoreLocations && formAddStoreLocations.length===1" class="form-group has-float-label">
+                          <input readonly type="text" class="form-control" [value]="formAddStoreLocations[0].storeName">
+                          <span>From Store</span>
+                        </label>
+                      </div>
+                      <img src="assets/images/small-spinner.gif" *ngIf="isStoreLocationLoading">
+                    </div>
+
+                    <div class="">
+                      <div class="col-sm-1"></div>
+                      <label class="form-group has-float-label">
+                        <input type="text" numbersOnly id="transactionQuantity" name="transactionQuantity" class="form-control"
+                          placeholder="Quantity" formControlName="transactionQuantity" required>
+                        <span for="transactionQuantity"> Quantity</span>
+                      </label>
+                    </div>
+
+                    <div class="">
+                      <div class="col-sm-1"></div>
+                      <label class="form-group has-float-label">
+                        <app-datepicker name="lastModifiedDateTime" id="transactionDate" [inputDate]="modifiedDate"
+                          (dateChange)="dateChange($event)"></app-datepicker>
+                        <span> Modified Date</span>
+                      </label>
+                    </div>
+
+                  </div>
+
+                  <div class="col-sm-6">
+                    <div class="">
+                      <div class="col-sm-1"></div>
+                      <label class="form-group has-float-label">
+                        <textarea type="text" class="form-control" id="description" rows="4" readonly name="description"
+                          placeholder="Description" formControlName="description" maxlength="512"></textarea>
+                        <span> Description</span>
+                      </label>
+                    </div>
+
+                    <div class="" *ngIf="isAddToStore">
+                      <div class="col-sm-1"></div>
+                      <label class="form-group has-float-label">
+                        <ng-select [items]="toAddStoreLocations" [selectOnTab]="true" [hideSelected]="true" bindLabel="storeName"
+                          bindValue="storeLocationID" labelForId="storeLocationID" formControlName="toStorelocation"
+                          placeholder="To Store">
+                        </ng-select>
+                        <span> To Store</span>
+                        <img src="assets/images/small-spinner.gif" *ngIf="isStoreLocationLoading">
+                      </label>
+                    </div>
+
+                    <!-- <div class="form-group row ">
+                <div class="col-sm-1"></div>
+                <label for="sellingPrice" class="col-sm-3 col-form-label">Selling Price</label>
+
+                <div class="col-sm-5">
+                  <input type="number" id="sellingPrice" name="sellingPrice" class="form-control" placeholder="Selling Price"
+                    formControlName="regularSellPrice">
+                </div>
+              </div> -->
+
+                    <div class="">
+                      <div class="col-sm-1"></div>
+                      <label class="form-group has-float-label">
+                        <textarea type="text" class="form-control" id="notes" name="notes" rows="4" placeholder="Notes"
+                          formControlName="notes"></textarea>
+                        <span> Notes</span>
+                      </label>
+                    </div>
+                    <div class="form-group row">
+                      <div class="col-sm-12">
+                        <button type="button" class="btn btn-md btn-primary float-right" (click)="Save()"> {{ checkIsEdit? 'Update' :
+                          'Save' }} </button>
+                      <button type="button" class="btn btn-md btn-primary float-right mr-2" (click)="reset()"> Reset </button>
+                     
+                    </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row mt-3 justify-content-end">
+      <div class="col-sm-12">
+        <div class="inner-addon right-addon" style="width: 230px; float: right;">
+          <span>
+            <i class="fa fa-search card-title" aria-hidden="true"></i>
+          </span>
+          <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+            placeholder="Filter Search" [(ngModel)]="filterText" name="filterText">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12" style="height: 100%; width:100%; padding-top: 25px; box-sizing: border-box;">
+        <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+          [textFilter]="filterText">
+        </app-cstore-grid>
+      </div>
+    </div>
+
+  </div>
+</div>

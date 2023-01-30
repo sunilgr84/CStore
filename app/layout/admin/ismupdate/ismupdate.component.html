@@ -1,0 +1,92 @@
+<div class="main-content-wrap d-flex flex-column">
+  <div class="main-content">
+    <div class="page-header">
+      <h1>ISM Update</h1>
+    </div>
+    <section>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card m-1">
+            <div class="row m-0 card-header">
+                <div class="col-sm-3 pl-0">
+                    <ng-select [(ngModel)]="companyID" (change)="getStoreLocationList(companyID)" [items]="companyList"
+                      [hideSelected]="true" bindLabel="companyName" placeholder="Select Company" bindValue="companyID">
+                    </ng-select>
+                  </div>
+
+              <div class="col-sm-3 pl-0">
+                <ng-select [(ngModel)]="storeId" (change)="getDepartmentByCompanyIdAndStoreId(companyID, storeId)" [items]="stores"
+                  [hideSelected]="true" bindLabel="storeName" placeholder="Select Store" bindValue="storeLocationID">
+                </ng-select>
+              </div>
+
+              <div class="col-sm-3 pl-0">
+                <ng-select (change)="getDepartmentById(departmentId)" [(ngModel)]="departmentId" [items]="departments"
+                  [multiple]="true" [closeOnSelect]="false" [hideSelected]="true" bindLabel="departmentDescription"
+                  placeholder="Select Department(s)" name="departmentDescription" groupBy="companyID"
+                  [selectableGroup]="true" [selectableGroupAsModel]="false">
+                  <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                    <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+                  </ng-template>
+                  <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                    <div class="ng-value" *ngFor="let item of items | slice:0:4">
+                      <span class="ng-value-label">
+                        {{item.departmentDescription}} </span>
+                      <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                    </div>
+                    <div class="ng-value" *ngIf="items.length > 2">
+                      <span class="ng-value-label">{{items.length - 2}} more...</span>
+                    </div>
+                  </ng-template>
+                </ng-select>
+                <!-- <span for="departmentDescription" class="z_index">Search By Department</span> -->
+              </div>
+
+              <div class="col-sm-3 pl-0 scandata-daterange">
+                <app-daterangepicker [selectedDateRange]="selectedDateRange" [placement]="'bottom-right'"
+                  (dateRangeSelecetd)="dateTimeRangeChange($event)"></app-daterangepicker>
+              </div>
+              <div class="col-sm-3 pl-0 pt-2">
+                <label class="form-label mt-2" for="isDayCloseLocation"> Day Close</label>
+                <input type="checkbox" class="checkbox ml-2" [(ngModel)]="dayClose">
+              </div>
+              <div class="col-md-3 pl-0 pt-2">
+                <button class="btn btn-action" (click)="searchISMData()"><i class="fa fa-search"></i>
+                  Search</button>
+              </div>
+             
+            </div>
+            <div class="card-body p-0">
+               
+              <div class="col-md-12 row mt-1 mb-1">
+                <div class="col-sm-8">
+                    <div class="col-sm-6 pl-0">
+                        <div class="input-group" *ngIf="showFilter">
+                          <input type="text" class="form-control" placeholder="Filter" aria-label="Filter"
+                            [(ngModel)]="filterText" name="filterText" (input)="onFilterTextBoxChanged()">
+                          <div class="input-group-append">
+                            <span class="input-group-text"><i class="fa fa-search"></i></span>
+                          </div>
+                        </div>
+                      </div>
+                </div>
+                <div class="col-sm-2 input-icon" *ngIf="ismSelectedItems.length>0">
+                  <input class="form-control" type="text" [(ngModel)]="buyingCost" placeholder="0" floatOnly>
+                  <i>$</i>
+                </div>
+                <div class="col-sm-2 p-0" *ngIf="ismSelectedItems.length>0">
+                  <button type="button" (click)="updateBuyingCost()" class="btn btn-primary">Update</button>
+                </div>
+              </div>
+              <div class="col-md-12 p-0" style="min-height: 300px;">
+                <app-pagination-grid [paginationGridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+                  [isPageSizeShow]="true" (rowSelected)="ismUpdateRowSelected($event)">
+                </app-pagination-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

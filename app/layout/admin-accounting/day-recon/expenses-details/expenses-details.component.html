@@ -1,0 +1,156 @@
+<div class="card mt-3">
+  <div class="card-body">
+    <div class="row">
+      <label [hidden]="true" class="has-float-label form-group col-sm-4">
+        <ng-select [items]="accountList" [multiple]="true" [closeOnSelect]="false" name="" [hideSelected]="true"
+          bindLabel="" placeholder="Type">
+        </ng-select>
+        <span>Type</span>
+      </label>
+    </div>
+    <div class="row" *ngIf="isShowGridWithForm">
+      <div class="col-sm-7">
+        <div class="col-sm-12">
+          <div class="row justify-content-end margin-bottom-5 ">
+            <div class="inner-addon right-addon">
+              <span> <i class="fa fa-search card-title" aria-hidden="true"></i> </span>
+              <input type="text" class="form-control" aria-label="Default" name="filterText"
+                aria-describedby="inputGroup-sizing-default" placeholder="Filter Search" [(ngModel)]="filterText">
+            </div>
+          </div>
+        </div>
+        <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+          (rowSelected)="rowSelected($event)" [textFilter]="filterText"></app-cstore-grid>
+      </div>
+      <div class="col-sm-5">
+        <form [formGroup]="expensesDetailForm">
+          <div class="row">
+            <div class="mt-2 col-sm-6">
+              <h6><strong>{{title}} Detail</strong></h6>
+            </div>
+            <div class="col-sm-6 row justify-content-end" style="padding: initial">
+              <button type="button" class="btn btn-cstorebo" (click)="closeForm()">
+                <i class="fa fa-times" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <label class="has-float-label form-group col-sm-12">
+              <textarea class="form-control" formControlName="description" placeholder="Description"></textarea>
+              <span>Description</span>
+            </label>
+            <!-- <label class="has-float-label form-group col-sm-6">
+              <ng-select [items]="chartOfAccountCategoriesdata" [multiple]="false" [closeOnSelect]="true"
+                [hideSelected]="true" bindLabel="chartOfAccountName" [groupBy]="groupByFn" [groupValue]="groupValueFn"
+                formControlName="accountId" placeholder="Account">
+
+                <ng-template ng-optgroup-tmp let-item="item">
+                  <span style="vertical-align: middle;">{{item.chartOfAccountName}}</span>
+                </ng-template>
+              </ng-select>
+              <span>Account</span>
+            </label> -->
+            <label class="has-float-label form-group col-sm-6">
+              <ng-select [items]="paymentSourceList" [multiple]="false" [closeOnSelect]="true" [hideSelected]="true"
+                bindValue="paymentSourceID" bindLabel="sourceName" formControlName="accountId" placeholder="Account">
+              </ng-select>
+              <span> Account</span>
+            </label>
+            <label class="has-float-label col-sm-6">
+              <app-datepicker [inputDate]="inputDate" name="date" id="date" (dateChange)="dateChange($event,'date')">
+              </app-datepicker>
+              <span>Date</span>
+            </label>
+            <label class="has-float-label form-group col-sm-6">
+              <ng-select [items]="accountStatusList" [multiple]="false" [closeOnSelect]="true" [hideSelected]="true"
+                bindValue="value" bindLabel="name" formControlName="accStatusId" (change)="changeDepositWith()"
+                placeholder="Deposit or Withdrawal">
+              </ng-select>
+              <span> Deposit or Withdrawal</span>
+            </label>
+            <label class="has-float-label form-group col-sm-6">
+              <input decimalOnly type="text" class="form-control" formControlName="amount" placeholder="Total Amount">
+              <span>Total Amount</span>
+            </label>
+            <label *ngIf="isAddVendor" class="has-float-label form-group col-sm-12">
+              <ng-select [items]="vendorList" [multiple]="false" [closeOnSelect]="true" [hideSelected]="true"
+                bindLabel="vendorName" bindValue="vendorID" (change)="getInvoiceNumber()" formControlName="vendorID"
+                placeholder="Vendor">
+              </ng-select>
+              <span>Vendor</span>
+            </label>
+            <label *ngIf="isAddVendor && !isInvoiceNoInput" class="has-float-label form-group col-sm-6">
+              <ng-select [items]="invoiceNumberList" [multiple]="false" [closeOnSelect]="true" [hideSelected]="true"
+                bindLabel="invoiceNo" bindValue="invoiceNo" formControlName="invoiceNo" placeholder="Invoice Number">
+              </ng-select>
+              <span>Invoice Number</span>
+              <img src="assets/images/small-spinner.gif" *ngIf="isInvoiceNumberLoading">
+            </label>
+            <label *ngIf="isAddVendor && isInvoiceNoInput" class="has-float-label form-group col-sm-6">
+              <input type="text" class="form-control" formControlName="invoiceNo" placeholder=" Invoice Number">
+              <span>Invoice Number</span>
+            </label>
+            <div class="row justify-content-end col-sm-12" *ngIf="expensesDetailForm.value.isExpense">
+              <span class=" card-title" style="cursor: pointer" (click)="addVendor(isAddVendor?false:true)">
+                {{isAddVendor? 'Remove' :'Add' }} Vendor</span>
+            </div>
+            <label class="has-float-label form-group col-sm-12" [hidden]="true">
+              <ng-select [items]="chartAccountViewDataList" [multiple]="false" [closeOnSelect]="true"
+                [hideSelected]="true" bindLabel="chartOfAccountName" [groupBy]="groupByFnAccView"
+                [groupValue]="groupValueFnAccView" formControlName="categoryId" placeholder="Category">
+                <!-- bindValue="chartOfAccountID" -->
+                <ng-template ng-optgroup-tmp let-item="item">
+                  <span style="vertical-align: middle;">{{item.chartOfAccountName}}</span>
+                </ng-template>
+              </ng-select>
+              <span> Category</span>
+            </label>
+            <div class="row col-sm-12 justify-content-center mb-2" [hidden]="true">
+              <label class="mr-3">Split this Withdrawal </label> <i class="fa mt-1 fa-info-circle"></i>
+            </div>
+            <label class="has-float-label form-group col-sm-12">
+              <textarea class="form-control" formControlName="notes" placeholder="Notes"></textarea>
+              <span>Notes</span>
+            </label>
+            <div class="col-sm-12">
+              <button type="button" class="btn btn-cstorebo mr-3" (click)="deleteIncomeExpenses()"> <i
+                  class="fa fa-trash-o"></i>
+              </button>
+              <button type="button" [hidden]="true" class="btn btn-cstorebo mr-3"> <i class="fa fa-clone"></i> </button>
+              <button type="button" [hidden]="true" class="btn mr-3 btn-primary"> <i class="fa fa-check"></i>
+                Mark as reviewed</button>
+              <button type="button" class="btn btn-primary" (click)="saveIncomeExpenses()">
+                {{expensesDetailForm.value.incomeExpenseID===0?'Save' :'Update'}}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div *ngIf="!isShowGridWithForm">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-sm-6">
+            <button type="button" class="btn btn-primary row mr-3" (click)="addNewRecord('Income')"> Add Pay In
+            </button>
+            <button type="button" class="btn btn-primary" (click)="addNewRecord('Expenses')"> Add Pay Out </button>
+          </div>
+          <div class="col-sm-6">
+            <div class="row justify-content-end margin-bottom-5 ">
+              <div class="inner-addon right-addon">
+                <span> <i class="fa fa-search card-title" aria-hidden="true"></i> </span>
+                <input type="text" class="form-control" aria-label="Default" name="filterText"
+                  aria-describedby="inputGroup-sizing-default" placeholder="Filter Search" [(ngModel)]="filterText">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+        (rowSelected)="rowSelected($event)" [textFilter]="filterText"></app-cstore-grid>
+    </div>
+    <div>
+      <button type="button" class="btn btn-primary" (click)="backToList()"> Back to List </button>
+    </div>
+  </div>
+</div>

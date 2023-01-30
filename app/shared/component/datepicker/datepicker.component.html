@@ -1,0 +1,24 @@
+<!-- <div>
+  <div class="input-group">
+    <input class="form-control" placeholder="MM-DD-YYYY" ngbDatepicker #dp #d="ngbDatepicker" (input)="onChange($event)"
+      (dateSelect)="onDateSelect($event)" />
+    <div class="input-group-append">
+      <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+    </div>
+  </div>
+</div> -->
+<!-- <input type="date" class="form-control" placeholder="MM-DD-YYYY"> -->
+<!-- <div class="input-group">
+    <div class="input-group-prepend">
+      <span class="input-group-text" id="basic-datetime"><i class="fa fa-calendar-o" aria-hidden="true"></i></span>
+    </div>
+    <input type="date" class="form-control" placeholder="MM-DD-YYYY" name="date" aria-label="date" aria-describedby="basic-datetime">
+  </div> -->
+<div class="input-group">
+  <mat-form-field>
+    <input class="form-control" matInput [max]="maxDate" [matDatepicker]="dp" placeholder="{{myplaceHolder}}" [formControl]="date"
+      (dateChange)="dateChangeEvent($event)">
+    <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+    <mat-datepicker [disabled]="disabled" #dp></mat-datepicker>
+  </mat-form-field>
+</div>

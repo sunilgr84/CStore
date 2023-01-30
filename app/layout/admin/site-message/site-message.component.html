@@ -1,0 +1,52 @@
+<app-page-header [heading]="'Admin / Site Messages'" [icon]="'fa-bar-chart-o'"></app-page-header>
+<div class="row" *ngIf="!isAddUpdate">
+  <div class="col-sm-12">
+    <button type="button" class="btn btn-md btn-primary" (click)="addNew(true)"><i class="fa fa-plus" aria-hidden="true"></i>Add
+      More</button>
+  </div>
+  <div class="col-sm-12">
+    <div style="height: 100%; padding-top: 25px; box-sizing: border-box;">
+      <app-cstore-grid [rowData]="rowData" [cStoreGridOptions]="gridOptions" (edit)="editAction($event)" (delete)="delAction($event)"></app-cstore-grid>
+      <!-- (gridReady)="onGridReady($event)" -->
+    </div>
+  </div>
+</div>
+<div class="container" *ngIf="isAddUpdate">
+  <form #siteMessage="ngForm" novalidate>
+    <div class="card">
+      <div class="card-header">
+        <strong>{{isEdit?'Editing-':'Add a New Site Message'}}</strong>
+      </div>
+      <div class="card-body">
+        <div class="form-group form-inline">
+          <label class="control-label col-sm-2">Message Header</label>
+          <input type="text" class="form-control col-sm-10" placeholder="Message Header">
+        </div>
+        <div class="form-group form-inline">
+          <label class="control-label col-sm-2">Message</label>
+          <textarea type="text" class="form-control col-sm-10" placeholder="Message"></textarea>
+        </div>
+        <div class="form-group form-inline">
+          <label for="effectiveFrom" class="control-label col-sm-2">Effective From</label>
+          <app-datepicker name="effectiveFrom" id="effectiveFrom"></app-datepicker>
+        </div>
+        <div class="form-group form-inline">
+          <label for="effectiveTill" class="control-label col-sm-2">Effective Till</label>
+          <app-datepicker name="effectiveTill" id="effectiveTill"></app-datepicker>
+        </div>
+        <div class="form-group form-inline">
+          <label class="control-label col-sm-2">Display Order</label>
+          <input type="number" class="form-control col-sm-3" placeholder="Display Order">
+        </div>
+      </div>
+      <div class="card-footer">
+        <button type="button" class="btn btn-md btn-success btnsub"><i class="fa fa-save"></i>
+          {{isEdit?'Update':'Save'}}</button>
+        <button type="button" class="btn btn-md btn-success btnsub"><i class="fa fa-save"></i>
+          {{isEdit?'Update & Close':'Save & Close'}}</button>
+        <button type="button" class="btn btn-md btn-primary btnsub" (click)="backToList()"><i class="fa fa-list"></i>
+          Back To List</button>
+      </div>
+    </div>
+  </form>
+</div>

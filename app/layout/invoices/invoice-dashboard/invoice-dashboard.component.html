@@ -1,0 +1,52 @@
+<div class="main-content-wrap d-flex flex-column">
+  <div class="main-content">
+    <section>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card m-1">
+            <div class="card-header">
+              <div class="col-sm-3">
+                <div class="date-range-border">
+                  <app-daterangepicker [selectedDateRange]="selectedDateRange"
+                    (dateRangeSelecetd)="dateRangeChange($event)">
+                  </app-daterangepicker>
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <label class="m-2 line-height-24" for="basic-switch">Is EDI Invoice </label>
+                <mat-slide-toggle class="m-2" [checked]="isEDIInvoice" (change)="onStatusChange($event)">
+                </mat-slide-toggle>
+              </div> 
+              <div class="col-sm-4">
+                <button class="btn btn-md btn-primary" (click)="getInvoiceDashboardDetails()"> Search</button>
+              </div>
+            </div>
+            <div class="pmc-container by-none">
+              <div class="pmc-header">
+                <div class="col-9 p-0">
+                </div>
+                <div class="col-3">
+                  <div class="inner-addon right-addon">
+                    <span>
+                      <i class="fa fa-search card-title" aria-hidden="true"></i>
+                    </span>
+                    <input type="text" class="form-control" aria-label="Default"
+                      aria-describedby="inputGroup-sizing-default" placeholder="Filter Search" [(ngModel)]="filterText"
+                      name="filterText" (input)="onFilterTextBoxChanged()">
+                  </div>
+                </div>
+              </div>
+              <div class="pmc-body pt-0">
+                <div class="col-12 p-0">
+                  <app-pagination-grid [paginationGridOptions]="paginationGridOptions"
+                    (gridReady)="onGridReady($event)">
+                  </app-pagination-grid>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

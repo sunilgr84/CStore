@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="col-sm-12 mt-1 text-right">
+    <button type="button" class="btn btn-md btn-cstorebo btnsub btn-custom" (click)="addRowLinked()">
+      <i class="fa fa-plus" aria-hidden="true"></i></button>
+    <span class="ml-2 mt-2 card-title" (click)="addRowLinked()">Add Linked Items</span>
+  </div>
+  <div class="col-sm-12 mt-2">
+    <app-editable-grid [rowData]="linkedIRowData" [editGridOptions]="linkedIGridOptions" [gridHeight]="'300px'"
+      (gridReady)="onLinkedGridReady($event)" (edit)="saveLocalLinkedItem($event)" (save)="saveLocalLinkedItem($event)"
+      (cellValueChanged)="onLinkedCellValueChanged($event)" (delete)="deleteLinkedAction($event)">
+    </app-editable-grid>
+  </div>
+</div>

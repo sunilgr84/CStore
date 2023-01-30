@@ -1,0 +1,10 @@
+<app-dialog [ngClass]="{'dialog-open': isDialogOpen}" [maxWidth]="maxWidth" [fullWidth]="fullWidth"
+  (onClose)="handleActionClick($event, 'cancel')">
+  <app-dialog-header [dialogTitle]="dialogTitle" [dialogSubTitle]="dialogSubTitle"
+    (onClose)="handleActionClick($event, 'cancel')" [headerTemplate]="customHeaderTemplate">
+  </app-dialog-header>
+  <app-dialog-footer>
+    <button class="v-btn-outlined" (click)="handleActionClick($event, 'cancel')">No</button>
+    <button class="v-btn-contained v-btn-secondary" (click)="handleActionClick($event, 'confirm')">Yes</button>
+  </app-dialog-footer>
+</app-dialog>

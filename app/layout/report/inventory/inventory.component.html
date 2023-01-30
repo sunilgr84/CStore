@@ -1,0 +1,32 @@
+<div>
+  <app-page-header [heading]="'Inventory'" [icon]="'fa-edit'"></app-page-header>
+  <div>
+    <ngb-tabset type="pills">
+      <ngb-tab title="Inventory Report">
+        <ng-template ngbTabContent>
+          <app-inventory-report></app-inventory-report>
+        </ng-template>
+      </ngb-tab>
+      <ngb-tab title="Unupdated Inventory Report">
+        <ng-template ngbTabContent>
+          <app-unupdated-inventory-report></app-unupdated-inventory-report>
+        </ng-template>
+      </ngb-tab>
+      <ngb-tab title="Item Transaction Report">
+        <ng-template ngbTabContent>
+          <app-item-txn-report></app-item-txn-report>
+        </ng-template>
+      </ngb-tab>
+      <ngb-tab title="Shrinkage Report">
+        <ng-template ngbTabContent>
+          <app-shrinkage-report></app-shrinkage-report>
+        </ng-template>
+      </ngb-tab>
+      <ngb-tab title="Sales/Purchase Report">
+        <ng-template ngbTabContent>
+          <app-purchase-report></app-purchase-report>
+        </ng-template>
+      </ngb-tab>
+    </ngb-tabset>
+  </div>
+</div>

@@ -1,0 +1,142 @@
+<div class="main-content-wrap d-flex flex-column">
+  <!-- ============ Body content start ============= -->
+  <div class="main-content">
+    <section>
+      <div class="row mt-3 ml-3 mr-3 mb-2">
+        <div class="col-md-3 p-0">
+          <div class="form-group mb-2" *ngIf="allStoreLocationList.length>1;else singleStore">
+            <label>Select Store</label>
+            <ng-select class="mix-match-custom-select" [items]="allStoreLocationList" [hideSelected]="true"
+              bindLabel="storeName" bindValue="storeLocationID" placeholder="Select Store Location"
+              [(ngModel)]="storeLocationId" (change)="storeLocationChange()">
+            </ng-select>
+          </div>
+          <ng-template #singleStore>
+            <div class="form-group mb-2">
+              <label>Store</label>
+              <div class="single-company">
+                <span> {{allStoreLocationList && allStoreLocationList[0] &&  allStoreLocationList[0].storeName}}</span>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+        <div class="col-md-5"></div>
+        <div class="col-md-4 text-right pr-0">
+          <div class="badge mix-match-badge mt-3">
+            <h3>{{expiredCount}}</h3>
+            Combo Deals Expired
+          </div>
+          <div class="badge expiring-badge">
+            <h3>{{goingToExpireCount}}</h3>
+            Expiring In 10 Days
+          </div>
+        </div>
+      </div>
+      <div class="card ml-3 mr-3 mb-3 mt-2">
+        <div class="card-header">
+          <div class="col-md-7 p-0">
+            <label class="mt-1">
+              <span class="fw-600 ml-1" *ngIf="!storeLocationId">Display Combo Deals of all the stores</span>
+              <span class="fw-600 ml-1" *ngIf="storeLocationId">Display Combo Deals of {{storeLocationName}} store </span>
+            </label>
+          </div>
+          <div class="col-md-5">
+            <div class="row">
+              <div class="col-md-8 p-0 pr-1 inner-addon right-addon">
+                <span>
+                  <i class="fa fa-search card-title" aria-hidden="true"></i>
+                </span>
+                <input type="text" #comboSearch class="form-control " aria-label="Search" aria-describedby="inputGroup-sizing-default"
+                  placeholder="Filter Search" >
+              </div>
+              <div class="col-md-4 p-0">
+                <button class="btn btn-action float-right" (click)="onNewComboDeal(comboDealModel)"><i
+                    class="fa fa-plus"></i> New Combo Deals</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body p-0">
+          <div class="col-md-12 p-2 mix-match-accordian">
+            <ngb-accordion [closeOthers]="true" (panelChange)="toggleAccordian($event)" activeIds="{{activePanelIds}}">
+              <ngb-panel *ngFor="let comboDeal of comboDeals;" id="{{comboDeal.ComboDealID}}">
+                <ng-template ngbPanelHeader>
+                  <div class="d-block">
+                    <label class="mt-1 mb-1">
+                      <i class="fa fa-folder blue-folder-color"></i>
+                      <span class="font-weight-bold ml-1">{{comboDeal.ComboDealName}}</span>
+                      <i class="fa fa-file gray-file-color ml-1"></i>
+                      <span class="ml-1 font-weight-bold">Item list:</span>
+                      <span class="ml-1">{{comboDeal.ItemListName}}</span>
+                      <span class="ml-1 badge badge-secondary">{{comboDeal.NoOfItems}}</span>
+                      <span class="ml-1">Items</span>
+                    </label>
+                    <div class="float-right">
+                      <!-- <button class="btn light-blue-color pl-1 pr-1"><i class="fa fa-plus"></i> Add Store</button> -->
+                      <button class="btn light-blue-color pl-1 pr-1"
+                        (click)="onEditComboDeal(comboDealModel,comboDeal)"><i class="fa fa-edit"></i></button>
+                      <button class="btn color-red pl-1 pr-1" (click)="deleteComboDeal(comboDeal.ComboDealID)"><i
+                          class="fa fa-trash"></i></button>
+                      <button ngbPanelToggle class="btn btn-link p-0 ml-3"><i
+                          class='fa {{ opened ? "fa-chevron-up" : "fa-chevron-down" }}'></i></button>
+                    </div>
+                  </div>
+                </ng-template>
+                <ng-template ngbPanelContent class="p-0">
+                  <app-pagination-grid class="comboDealDetail" [rowData]="childRowData"
+                    [paginationGridOptions]="childGridOptions" (gridReady)="onChildGridReady($event)"
+                    (save)="onBtStopEditing($event)" (delete)="deleteAction($event)" (cancel)="cancelAction($event)"
+                    (edit)="editAction($event)" (rowEditingStopped)="onRowEditingStopped($event)" (cellValueChanged)="onCellValueChanged($event)">
+                  </app-pagination-grid>
+                </ng-template>
+              </ngb-panel>
+            </ngb-accordion>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+<ng-template #comboDealModel let-modal>
+  <div class="mix-match modal-header">
+    <h4 class="modal-title">{{comboDealForm.value.comboDealID===0?'New':'Update'}} Combo Deal</h4>
+    <button type="button" class="mix-match close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button> 
+  </div>
+  <form [formGroup]="comboDealForm" (ngSubmit)="saveComboDeal(comboDealForm)">
+    <div class="modal-body">
+      <div class="form-group mb-2">
+        <label>Combo Deal Name<span style="color: red">*</span></label>
+        <input type="text" class="form-control" id="comboDealName" (keypress)="onComboDealKeyPress($event)" maxlength = "100" autofocus aria-describedby="comboDealName"
+          placeholder="Give a name of a combo deal" formControlName="comboDealName">
+        <div *ngIf="comboDealName.invalid && (comboDealName.dirty || comboDealName.touched)" class="alert alert-danger">
+          <div *ngIf="comboDealName.errors.required">
+            Combo Deal Name is required.
+          </div>
+          <div *ngIf="comboDealName.errors.minlength">
+            Name must be at least 4 characters long.
+          </div>
+        </div>
+      </div>
+      <div class="form-group mb-2">
+        <label>Select Item List<span style="color: red">*</span></label>
+        <ng-select class="mix-match-custom-select" [items]="promotionItemList" [hideSelected]="true"
+          bindLabel="Description" bindValue="ItemListID" placeholder="Select Item List Name"
+          formControlName="itemListId">
+        </ng-select>
+        <div *ngIf="itemListId.invalid && (itemListId.dirty || itemListId.touched)" class="alert alert-danger">
+          <div *ngIf="itemListId.errors.required">
+            Item List Selection is required.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mix-match modal-footer">
+      <!-- <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Clear</button> -->
+      <button type="button" class="btn btn-light" (click)="clear()">Clear</button>
+      <button type="submit" class="btn btn-primary"
+        [disabled]="!comboDealForm.valid">{{comboDealForm.value.comboDealID===0?'Create':'Update'}}</button>
+    </div>
+  </form>
+</ng-template>

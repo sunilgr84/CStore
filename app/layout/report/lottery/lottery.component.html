@@ -1,0 +1,18 @@
+<div>
+  <app-page-header [heading]="'Lottery'" [icon]="'fa-edit'"></app-page-header>
+  <div>
+    <ngb-tabset type="pills">
+      <ngb-tab title="Inventory Report">
+        <ng-template ngbTabContent>
+          <app-lottery-inventory-report></app-lottery-inventory-report>
+        </ng-template>
+      </ngb-tab>
+
+      <ngb-tab title="Sales Report">
+        <ng-template ngbTabContent>
+          <app-lottery-sales-report></app-lottery-sales-report>
+        </ng-template>
+      </ngb-tab>
+    </ngb-tabset>
+  </div>
+</div>

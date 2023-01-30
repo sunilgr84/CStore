@@ -1,0 +1,199 @@
+.main-content-wrap {
+    width: 100%;
+    float: right;
+    transition: all 0.24s ease-in-out;
+    position: relative;
+    min-height: auto;
+    background: transparent;
+}
+.main-content .page-header {
+    border-bottom: 0px solid #dcdcdc;
+    align-items: center;
+    padding: 8px 15px;
+    // margin-bottom:10px;
+}
+.main-content .page-header h1 {
+    margin: 0px;
+    font-size: 16px;
+    font-weight: 300;
+}
+.main-content {
+    border: 1px solid #dcdcdc;
+    padding: 0rem;
+    border-radius: 0.5rem;
+    background: #fff;
+}
+
+.main-content-wrap.sidenav-open {
+    width: calc(100% - 90px);
+}
+.main-content .card .card-header {
+    background: #eff2f8;
+    padding: 10px;
+}
+.card {
+    border-radius: 0.25rem !important;
+    box-shadow: none !important;
+}
+.card:hover {
+    box-shadow: none !important;
+}
+.card-header {
+    display: flex;
+    color: #212529 !important;
+}
+.card-header .left {
+    width: 50%;
+    margin-right: auto;
+}
+.card-header .right {
+    margin-left: auto;
+}
+
+.card-header-part-right {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right: 20px;
+}
+.card-footer {
+    display: flex;
+    padding: 10px;
+    background: #f9f9f9;
+    border-top: 1px solid #cfdbe3;
+}
+.card-footer .right {
+    margin-left: auto;
+}
+//Select Container
+::ng-deep .ng-select .ng-select-container {
+    border: 1px solid #e2e5ec;
+    border-radius: 4px !important;
+}
+
+.label {
+    font-size: 0.9rem !important;
+}
+.btn {
+    font-size: 0.9rem !important;
+}
+.fa {
+    font-size: 0.9rem !important;
+}
+.action-color {
+    color: #f9bc70;
+}
+.btn-action {
+    box-shadow: 0px 5px 16px 0px rgba(0, 0, 0, 0.1);
+    background-color: #f9bc70;
+    color: white;
+}
+.btn-primary {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+    border: 1px solid transparent !important;
+    border-radius: 0.25rem !important;
+}
+
+.input-group > .form-control {
+    border-right: none;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.form-control {
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #e2e5ec;
+    border-radius: 4px !important;
+    -webkit-transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+    transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+}
+
+.input-group > .input-group-append {
+    border-left: none;
+    cursor: pointer;
+}
+
+.input-group .input-group-text {
+    line-height: 0;
+}
+.input-group-text {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: 0.55rem 1rem;
+    margin-bottom: 0;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #74788d;
+    text-align: center;
+    white-space: nowrap;
+    background-color: #fff;
+    border: 1px solid #e2e5ec;
+    border-radius: 4px;
+}
+.form-control:active,
+.form-control:focus {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+.form-control:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #669cf7;
+    outline: 0;
+    -webkit-box-shadow: 0 0 0 0.2rem rgba(88, 103, 221, 0.25);
+    box-shadow: 0 0 0 0.2rem rgba(88, 103, 221, 0.25);
+}
+.form-group .form-text {
+    font-size: 0.9rem;
+}
+
+.form-group > label {
+    display: block !important;
+}
+
+::ng-deep .invoice-daterange > .input-group > .btn-date-selector {
+    background-color: white !important;
+    border: 1px solid #e2e5ec !important;
+    border-radius: 0.25rem !important;
+}
+
+.pmc-container {
+    width: 100% !important;
+    position: relative;
+    top: 0;
+    left: 0;
+    background-color: white;
+    border: 1px solid #cfdbe3;
+    border-radius: 0;
+    margin-left: 0px;
+    &.pmc-absolute-container {
+        top: 60px;
+        position: absolute;
+        border-radius: 0 0 8px 8px;
+        margin-top: -2px;
+    }
+}
+
+.fs-12 {
+    font-size: 1.2rem !important;
+}
+.mw-80 {
+    min-width: 80px;
+}
+::ng-deep .ag-theme-material .ag-icon-asc {
+    margin-top: 5px !important; 
+}
+::ng-deep.ag-theme-material .ag-icon-desc {
+    margin-top: 5px !important; 
+}

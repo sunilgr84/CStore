@@ -1,0 +1,56 @@
+<!-- <button class="btn btn-md btn-info" (click)="captureScreen()">Generate PDF</button> -->
+
+<div class="card">
+  <div class="card-body">
+    <div class="row form-group">
+      <div class="col-sm-3 custom-control custom-radio">
+        <input type="radio" class="custom-control-input" (click)="weeklySaleReportClick()" id="weeklySaleReport"
+          name="defaultExampleRadios">
+        <label class="custom-control-label" for="weeklySaleReport">Weekly Sale Report</label>
+      </div>
+      <div class="col-sm-3 custom-control custom-radio">
+        <input type="radio" class="custom-control-input" (click)="weeklySaleReportClick()" id="weeklyPurchaseReport"
+          name="defaultExampleRadios">
+        <label class="custom-control-label" for="weeklyPurchaseReport">Weekly Purchase Report</label>
+      </div>
+      <div class="col-sm-4 custom-control custom-radio">
+        <input type="radio" class="custom-control-input" (click)="weeklySaleByDepartmentTypeReportClick()"
+          id="weeklySaleByDepartmentTypeReport" name="defaultExampleRadios">
+        <label class="custom-control-label" for="weeklySaleByDepartmentTypeReport">Weekly Sale By DepartmentType
+          Report</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="row col-sm-5 ">
+        <label class="col-sm-4" for="date">Start Date</label>
+        <app-datepicker class="col-sm-8" [inputDate]="inputDate" name="formDate" id="fromDate"
+          (dateChange)="dateChange($event,'formDate')"></app-datepicker>
+      </div>
+      <div class="row col-sm-5 ">
+        <label class="col-sm-4" for="date">End Date</label>
+        <app-datepicker class="col-sm-8" [inputDate]="inputDate" name="toDate" id="toDate"
+          (dateChange)="dateChange($event,'toDate')"></app-datepicker>
+      </div>
+    </div>
+    <div class="row ">
+      <div class="col-sm-5 row ">
+        <label class="col-sm-4" for="storeLocation">Store Location</label>
+        <ng-select class="col-sm-8" [items]="LocationList" [(ngModel)]="formControl.storeNames" [multiple]="true"
+          [closeOnSelect]="false" [hideSelected]="true" bindLabel="storeName" placeholder="Store Location">
+        </ng-select>
+      </div>
+      <div *ngIf="isShowDepartmentType" class="row col-sm-5">
+        <label class="col-sm-4">Department Type</label>
+        <ng-select class="col-sm-8" [items]="departmentTypeList" [multiple]="true" [closeOnSelect]="false"
+          [hideSelected]="true" bindLabel="departmentTypeIds" placeholder="Department Type">
+        </ng-select>
+      </div>
+      <div>
+        <button type="button" class="btn-md btn btn-primary" (click)="PurchaseReportsByWeeklys()">Go</button>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <iframe id="iframePDF" type="application/pdf" src="" width="100%" height="500"></iframe>
+    </div>
+  </div>
+</div>

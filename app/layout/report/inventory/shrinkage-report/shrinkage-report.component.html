@@ -1,0 +1,88 @@
+<form [formGroup]="shrinkageReportForm">
+  <div class="card mt-3" style="min-height: 450px">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-sm-3">
+          <label class="form-group has-float-label">
+            <app-daterangepicker [selectedDateRange]="selectedDateRange" (dateRangeSelecetd)="dateRangeChange($event)">
+            </app-daterangepicker>
+            <span> Select Date Range</span>
+          </label>
+        </div>
+        <div class="col-sm-3">
+          <label class="form-group has-float-label" *ngIf="storeLocationList && storeLocationList.length!==1">
+            <ng-select [items]="storeLocationList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+              bindLabel="storeName" placeholder="Store Location" formControlName="storeLocationIDs" groupBy="companyID"
+              [selectableGroup]="true" [selectableGroupAsModel]="false">
+              <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+              </ng-template>
+              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                <div class="ng-value" *ngFor="let item of items | slice:0:9">
+                  <span class="ng-value-label">
+                    {{item.storeName}}</span>
+                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 9">
+                  <span class="ng-value-label">{{items.length - 9}} more...</span>
+                </div>
+              </ng-template>
+            </ng-select>
+            <span> Store Location</span>
+            <img src="assets/images/small-spinner.gif" *ngIf="isStoreLoading">
+          </label>
+          <label class="col-sm-12 form-group has-float-label" *ngIf="storeLocationList && storeLocationList.length===1">
+            <input readonly type="text" class="form-control" [value]="storeLocationList[0].storeName">
+            <span>Store Location</span>
+          </label>
+
+        </div>
+        <div class="col-sm-3">
+          <label class="form-group has-float-label">
+            <ng-select [items]="departmentList" [multiple]="true" [closeOnSelect]="false" [hideSelected]="true"
+              bindLabel="departmentDescription" placeholder="Department" formControlName="departmentIDs"
+              groupBy="companyID" [selectableGroup]="true" [selectableGroupAsModel]="false">
+              <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                <span id="item-{{index}}">&nbsp; &nbsp;&nbsp;{{'All' | uppercase}} </span>
+              </ng-template>
+              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                <div class="ng-value" *ngFor="let item of items | slice:0:9">
+                  <span class="ng-value-label">
+                    {{item.departmentDescription}}</span>
+                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 9">
+                  <span class="ng-value-label">{{items.length - 9}} more...</span>
+                </div>
+              </ng-template>
+            </ng-select>
+            <span> Department</span>
+          </label>
+        </div>
+        <div class="col-sm-2">
+          <label class="form-group has-float-label">
+            <input type="text" id="upcCode" class="form-control" maxlength="14" formControlName="upcCode"
+              placeholder="">
+            <span> UPC Code</span>
+          </label>
+        </div>
+        <div class="col-sm-1">
+          <button type="button" class="btn btn-md btn-primary btn-go" (click)="shrinkageReport()">Go</button>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="this.shrinkageReportRowData && this.shrinkageReportRowData.length >0">
+        <div class="col-sm-12 mt-3">
+          <app-report-grid [rowData]="shrinkageReportRowData" [expandableGridOptions]="gridOption"
+            (gridReady)="onGridReady($event)" (exportTo)="searchShrinkageReport($event)">
+          </app-report-grid>
+        </div>
+      </div>
+      <div class="row" *ngIf="this.shrinkageReportRowData && this.shrinkageReportRowData.length ===0">
+        <div class="col-sm-12 mt-3">
+          <strong>No Record Available</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

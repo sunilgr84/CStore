@@ -1,0 +1,71 @@
+<div class="row mt-2" *ngIf="!isAddNew">
+  <div class="col-md-4">
+    <button type="button" class="btn btn-md btn-cstorebo btnsub btn-custom" (click)="onInsertRowAt()">
+      <i class="fa fa-plus" aria-hidden="true"></i></button>
+    <span class="ml-2 card-title" (click)="onInsertRowAt()">Add New</span>
+  </div>
+</div>
+<div class="row col-sm-12 mt-4 mb-2" *ngIf="isAddNew">
+
+  <label class="form-group has-float-label col-sm-3">
+    <select class="form-control" [(ngModel)]="privilegeForm.roleName" name="roleName" #roleName="ngModel"
+      (change)="selectPrivilagesByUser()">
+      <option value="">Select User's Role</option>
+      <option *ngFor="let role of roles" [value]="role.name">{{role.name}}</option>
+    </select>
+    <span for="role">Role</span>
+  </label>
+  <div class="col-sm-3" *ngIf="privilegeForm.roleName">
+    <!-- bindValue="normaliseName" -->
+    <label class="form-group col-sm-12 has-float-label">
+      <ng-select [items]="parentPrivilegeList" [hideSelected]="true" bindLabel="name" placeholder="Privilege Title"
+        [(ngModel)]="privilegeForm.parentPrivilege" (change)="getChildPrivileges($event)">
+      </ng-select>
+      <span>Privilege Title</span>
+    </label>
+  </div>
+  <div class="col-sm-3" *ngIf="childPrivilegeList && childPrivilegeList.length > 0">
+    <!-- bindValue="normaliseName" -->
+    <label class="form-group col-sm-12 has-float-label">
+      <ng-select [items]="childPrivilegeList" [hideSelected]="true" bindLabel="name" placeholder="Privilege Sub Title"
+        (change)="showNormaliseName($event)" [(ngModel)]="privilegeForm.childPrivilege">
+      </ng-select>
+      <span>Privilege Sub Title</span>
+    </label>
+  </div>
+
+  <div class="col-sm-3">
+    <label class="form-group col-sm-12 has-float-label" *ngIf="privilegeForm.normaliseName">
+      <input type="text" readonly class="form-control" placeholder="Normalise Name"
+        [(ngModel)]="privilegeForm.normaliseName">
+      <span>Normalise Name</span>
+    </label>
+  </div>
+</div>
+<div class="row col-sm-12" *ngIf="isAddNew">
+  <div class="col-sm-6">
+    <button type="button" class="btn  btn-primary  mr-3 ml-3" (click)="closeForm()"> Close</button>
+    <button type="button" class="btn  btn-primary mr-3" (click)="reset()">Reset</button>
+    <button type="button" class="btn btn-primary mr-3" [disabled]="!privilegeForm.normaliseName" (click)="savePrivileges()">{{ isEdit? 'Update': 'Save'}}</button>
+  </div>
+</div>
+
+<div class="row" *ngIf="privilegeForm.roleName">
+
+  <div class="row justify-content-end col-md-8">
+    <div class="inner-addon right-addon" style="width: 230px; float: right;">
+      <span>
+        <i class="fa fa-search card-title" aria-hidden="true"></i>
+      </span>
+      <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+        placeholder="Filter Search" [(ngModel)]="filterText" name="filterText">
+    </div>
+  </div>
+</div>
+<div class="col-md-8" *ngIf="privilegeForm.roleName">
+  <div style="margin-top:1rem">
+    <app-cstore-grid [gridHeight]="'410px'" [rowData]="privilagesList" [cStoreGridOptions]="gridOptions"
+      (delete)="deleteAction($event)" (gridReady)="onGridReady($event)"></app-cstore-grid>
+
+  </div>
+</div>
